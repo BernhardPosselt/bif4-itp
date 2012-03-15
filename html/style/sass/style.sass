@@ -1,12 +1,58 @@
-ue: #3bbfce
-$margin: 16px
+/* mixins */
 
-.content-navigation
-  border-color: $blue
-  color: darken($blue, 9%)
 
-.border
-  padding: $margin / 2
-  margin: $margin / 2
-  border-color: $blue
+/* styling */
+html, body
+  margin: 0
+  padding: 0
+  height: 100%
+  width: 100%
 
+#site
+  background: red
+  height: 100%
+  width: 100%
+  
+  nav
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    left: 0
+    height: 30px
+    background-color: green
+    border:
+      bottom: 1px solid yellow
+  
+  #content
+    position: absolute
+    top: 30px
+    bottom: 0
+    left: 0
+    right: 0
+    
+    
+    #channels
+      height: 100%
+      background-color: cyan
+      width: 20%
+      float: left
+      overflow-y: auto
+      
+      
+    #stream
+      height: 100%
+      background-color: magenta
+      width: 60%
+      float: left
+      overflow-y: auto      
+    
+    #info
+      height: 100%
+      background-color: blue
+      width: 20%
+      float: left
+      overflow-y: auto
+      
+      
+    

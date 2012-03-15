@@ -1,0 +1,45 @@
+/* mixins */
+/* styling */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%; }
+
+#site {
+  background: red;
+  height: 100%;
+  width: 100%; }
+  #site nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    left: 0;
+    height: 30px;
+    background-color: green;
+    border-bottom: 1px solid yellow; }
+  #site #content {
+    position: absolute;
+    top: 30px;
+    bottom: 0;
+    left: 0;
+    right: 0; }
+    #site #content #channels {
+      height: 100%;
+      background-color: cyan;
+      width: 20%;
+      float: left;
+      overflow-y: auto; }
+    #site #content #stream {
+      height: 100%;
+      background-color: magenta;
+      width: 60%;
+      float: left;
+      overflow-y: auto; }
+    #site #content #info {
+      height: 100%;
+      background-color: blue;
+      width: 20%;
+      float: left;
+      overflow-y: auto; }
