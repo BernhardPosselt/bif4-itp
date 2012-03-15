@@ -21,3 +21,17 @@ Watch file to automatically let SASS compile css::
  $ sass --watch style/sass:style/css
 
 ``SASS Information``: http://sass-lang.com/tutorial.html
+
+
+Install CoffeeScript
+--------------------
+
+To run CoffeeScript you first have to install node.js::
+
+ $ sudo apt-get install node.js
+
+Then you can install the coffeescript compiler::
+ 
+ $ sudo npm install -g coffee-script
+
+``A reference for CoffeeScript`` is available at http://coffeescript.org/
