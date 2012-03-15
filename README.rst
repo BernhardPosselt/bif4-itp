@@ -19,4 +19,4 @@ Watch file to automatically let SASS compile css::
 
  $ sass --watch style/sass:style/css
 
-SASS Information: http://sass-lang.com/tutorial.html
+``SASS Information``: http://sass-lang.com/tutorial.html
