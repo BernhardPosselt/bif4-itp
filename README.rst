@@ -5,7 +5,7 @@ Developement Information
 Install SASS
 ------------
 
-Install ruby:
+Install ruby::
 
  $ sudo apt-get install ruby
 
@@ -15,7 +15,7 @@ Install SASS and add it to your path variable::
  $ export USR=$(whoami)
  $ echo 'export PATH=$PATH:/home/$USR/.gem/ruby/1.9.1/bin"
 
-Watch file to automatically let SASS compile css:
+Watch file to automatically let SASS compile css::
 
  $ sass --watch style/sass:style/css
 
