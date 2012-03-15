@@ -1,17 +1,12 @@
-
 /*
 This class handles the reloading of channels and messages
 */
+var Update;
 
-(function() {
-  var Update;
+Update = (function() {
 
-  Update = (function() {
+  function Update() {}
 
-    function Update() {}
+  return Update;
 
-    return Update;
-
-  })();
-
-}).call(this);
+})();

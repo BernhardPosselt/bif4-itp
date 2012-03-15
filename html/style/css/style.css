@@ -15,7 +15,6 @@ html, body {
     top: 0;
     left: 0;
     right: 0;
-    left: 0;
     height: 30px;
     background-color: green;
     border-bottom: 1px solid yellow; }
@@ -25,21 +24,16 @@ html, body {
     bottom: 0;
     left: 0;
     right: 0; }
+    #site #content div {
+      float: left;
+      overflow-y: auto;
+      height: 100%; }
     #site #content #channels {
-      height: 100%;
       background-color: cyan;
-      width: 20%;
-      float: left;
-      overflow-y: auto; }
+      width: 20%; }
     #site #content #stream {
-      height: 100%;
       background-color: magenta;
-      width: 60%;
-      float: left;
-      overflow-y: auto; }
+      width: 60%; }
     #site #content #info {
-      height: 100%;
       background-color: blue;
-      width: 20%;
-      float: left;
-      overflow-y: auto; }
+      width: 20%; }

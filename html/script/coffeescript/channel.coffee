@@ -2,7 +2,6 @@
 This class represents one channel
 ###
 
-
 class Channel
     
   @updates = 0
