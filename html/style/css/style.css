@@ -31,6 +31,17 @@ html, body {
     #site #content #channels {
       background-color: cyan;
       width: 20%; }
+      #site #content #channels ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0; }
+        #site #content #channels ul li a {
+          height: 30px;
+          line-height: 30px;
+          background-color: brown;
+          display: inline-block;
+          width: 100%;
+          text-decoration: none; }
     #site #content #stream {
       background-color: magenta;
       width: 60%; }
