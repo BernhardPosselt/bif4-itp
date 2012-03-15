@@ -34,7 +34,7 @@ Then you can install the coffeescript compiler::
  
  $ sudo npm install -g coffee-script
 
-Watch folder for changed (NOT newly generated) files and compile them:
+Watch folder for changed (NOT newly generated) files and compile them::
 
  $ coffee -wc -o script/js/ script/coffeescript/*.coffee
 
