@@ -1,50 +1,136 @@
+/* fonts */
+@font-face {
+  font-family: dejavusans;
+  src: url("font/DejaVuSansCondensed.ttf"); }
+
+@font-face {
+  font-family: dejavusans;
+  font-weight: bold;
+  src: url("font/DejaVuSans-Bold.ttf"); }
+
+/* variables */
 /* mixins */
 /* styling */
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  width: 100%; }
+  width: 100%;
+  font-family: dejavusans; }
 
 #site {
-  background: red;
   height: 100%;
-  width: 100%; }
+  width: 100%;
+  background-color: #fefefe; }
   #site nav {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 30px;
-    background-color: green;
-    border-bottom: 1px solid yellow; }
+    height: 40px;
+    background-color: #333333; }
+    #site nav ul {
+      list-type-style: none;
+      margin: 0;
+      padding: 0;
+      float: right;
+      margin-right: 50px; }
+      #site nav ul li {
+        display: inline-block;
+        color: black; }
+        #site nav ul li a {
+          color: black;
+          height: 40px;
+          line-height: 40px;
+          display: inline-block;
+          text-decoration: none; }
   #site #content {
     position: absolute;
-    top: 30px;
+    top: 40px;
     bottom: 0;
     left: 0;
     right: 0; }
-    #site #content div {
-      float: left;
-      overflow-y: auto;
-      height: 100%; }
     #site #content #channels {
-      background-color: cyan;
-      width: 20%; }
+      overflow-y: auto;
+      background-color: #8b9906;
+      width: 20%;
+      float: left;
+      height: 100%; }
       #site #content #channels ul {
         list-style-type: none;
         margin: 0;
         padding: 0; }
         #site #content #channels ul li a {
-          height: 30px;
-          line-height: 30px;
-          background-color: brown;
+          height: 40px;
+          line-height: 40px;
+          background-color: #333333;
           display: inline-block;
           width: 100%;
           text-decoration: none; }
     #site #content #stream {
-      background-color: magenta;
-      width: 60%; }
+      width: 60%;
+      position: relative;
+      float: left;
+      height: 100%; }
+      #site #content #stream #stream_meta {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 40px;
+        border-bottom: 1px solid black; }
+      #site #content #stream #stream_chat {
+        overflow-y: auto;
+        position: absolute;
+        top: 40px;
+        left: 0;
+        right: 0;
+        bottom: 150px;
+        background-color: #350c1f; }
+      #site #content #stream #stream_input {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 150px;
+        background-color: #c03600; }
+        #site #content #stream #stream_input #stream_input_options {
+          width: 100%;
+          height: 40px;
+          background-color: #ffffb7; }
+        #site #content #stream #stream_input #stream_input_field {
+          width: 83%;
+          height: 100px;
+          margin: 5px 0 5px 1%;
+          height: 100px;
+          float: left;
+          border: 0;
+          -webkit-border-radius: 2px;
+          -moz-border-radius: 2px;
+          border-radius: 2px; }
+        #site #content #stream #stream_input #stream_input_send {
+          width: 14%;
+          height: 100px;
+          margin: 5px 1%;
+          float: left;
+          border: 0;
+          -webkit-border-radius: 2px;
+          -moz-border-radius: 2px;
+          border-radius: 2px;
+          background-image: linear-gradient(top, #dddddd 0%, #fefefe 100%);
+          background-image: -o-linear-gradient(top, #dddddd 0%, #fefefe 100%);
+          background-image: -moz-linear-gradient(top, #dddddd 0%, #fefefe 100%);
+          background-image: -webkit-linear-gradient(top, #dddddd 0%, #fefefe 100%);
+          background-image: -ms-linear-gradient(top, #dddddd 0%, #fefefe 100%); }
+          #site #content #stream #stream_input #stream_input_send:active {
+            background-image: linear-gradient(top, #cccccc 0%, #fefefe 100%);
+            background-image: -o-linear-gradient(top, #cccccc 0%, #fefefe 100%);
+            background-image: -moz-linear-gradient(top, #cccccc 0%, #fefefe 100%);
+            background-image: -webkit-linear-gradient(top, #cccccc 0%, #fefefe 100%);
+            background-image: -ms-linear-gradient(top, #cccccc 0%, #fefefe 100%); }
     #site #content #info {
-      background-color: blue;
-      width: 20%; }
+      overflow-y: auto;
+      background-color: #ffffb7;
+      width: 20%;
+      float: left;
+      height: 100%; }
