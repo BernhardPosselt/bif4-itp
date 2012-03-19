@@ -13,7 +13,7 @@ Install SASS and add it to your path variable::
   
  $ gem install sass
  $ export USR=$(whoami)
- $ echo 'export PATH=$PATH:/home/$USR/.gem/ruby/1.9.1/bin' >> ~/.bashrc
+ $ echo "export PATH=$PATH:/home/$USR/.gem/ruby/1.9.1/bin" >> ~/.bashrc
  $ . ~/.bashrc
 
 Watch file to automatically let SASS compile css::
