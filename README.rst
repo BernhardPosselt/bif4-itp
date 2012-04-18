@@ -23,7 +23,7 @@ execute the specific commands.
 
 Then go: File -> New Module -> Import Existing Module and select the generated the webchat.iml
 
-``Eclipse``
+``Eclipse``::
 
  $ play eclipsify
 
