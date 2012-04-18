@@ -40,7 +40,7 @@ You can now access it on http://localhost:9000
 LESS
 ----
 
-LESS Files reside in the app/assets/stylesheet directory and are automatically
+LESS Files reside in the app/assets/stylesheets directory and are automatically
 compiled into public/stylesheet
 
 ``LESS Information``: http://lesscss.org/
