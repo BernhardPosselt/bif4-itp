@@ -1,6 +1,15 @@
 Developement Information
 ========================
 
+Install Play
+------------
+Download the latest Play zip (http://download.playframework.org/releases/play-2.0.zip) and extract it to your home directory. Then proceed with the install information for your operating system. 
+
+Install Linux::
+
+ $ sudo mv play-2.0/ /opt
+ $ sudo chmod a+x /opt/play-2.0/play
+ $ sudo ln -s /opt/play-2.0/play /usr/bin/play
 
 Install SASS
 ------------
