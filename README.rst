@@ -11,6 +11,32 @@ Install Linux::
  $ sudo chmod a+x /opt/play-2.0/play
  $ sudo ln -s /opt/play-2.0/play /usr/bin/play
 
+Generate IDE Project files
+--------------------------
+
+To generate the project files for your IDE, just cd into the webchat directory and
+execute the specific commands.
+
+``Intellij IDEA``::
+
+ $ play idea
+
+Then go: File -> New Module -> Import Existing Module and select the generated the webchat.iml
+
+``Eclipse``
+
+ $ play eclipsify
+
+
+Run developement server
+-----------------------
+
+You can run the developement server with::
+
+ $ play run
+ 
+You can now access it on http://localhost:9000
+
 Install SASS
 ------------
 
