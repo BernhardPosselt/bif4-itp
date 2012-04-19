@@ -10,7 +10,7 @@ class ChannelManager
 
 
 
-    update: (@list) ->
+    update: (data) ->
         # TODO: iterate through list, check if channel is
         # not in the channel list, if not push it into the channellist
         # update the elements properties

@@ -1,3 +1,3 @@
 $(document).ready ->
-    manager = new Manager(5)
+    manager = new MainManager(5)
 
