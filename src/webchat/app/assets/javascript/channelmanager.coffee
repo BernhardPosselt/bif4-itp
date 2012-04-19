@@ -7,7 +7,9 @@ class ChannelList
   constructor: () ->
     @dom_elem = $ "#channels ul"
     @list = []
-  
+
+
+
   update: (list) ->
     # TODO: iterate through list, check if channel is 
     # not in the channel list, if not push it into the channellist
