@@ -4,7 +4,9 @@
     "topic": "some random topic",
     "unread": 4,
     "sticky": true, 
-    "files": [0, 1]
+    "files": [0, 1],
+    "users": [0, 1],
+    "groups": [0,2]
   }, 
   "1": {
     "name": "channel2",
@@ -12,5 +14,7 @@
     "unread": 0,
     "sticky": false,
     "files": [1, 2]
+    "users": [0, 1],
+    "groups": [0,2]
   }
 }

@@ -2,7 +2,7 @@
 Manages all channel objects in the channellist
 ###
 
-class ChannelList
+class ChannelManager
 
   constructor: () ->
     @dom_elem = $ "#channels ul"
@@ -15,6 +15,7 @@ class ChannelList
     # not in the channel list, if not push it into the channellist
     # update the elements properties
     # sort the list by the last update date
+    alert list["0"]["name"]
   
   insert: (elem, position) ->
     @list[positions] = elem
