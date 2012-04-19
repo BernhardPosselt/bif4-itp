@@ -1,4 +1,4 @@
-class StreamCacheManager
+class CacheManager
 
     constructor: () ->
 

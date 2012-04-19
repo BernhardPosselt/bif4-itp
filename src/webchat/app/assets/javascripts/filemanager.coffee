@@ -1,5 +1,5 @@
 class FileManager
 
-    constructor: () ->
+    constructor: (data) ->
 
     update: (data) ->

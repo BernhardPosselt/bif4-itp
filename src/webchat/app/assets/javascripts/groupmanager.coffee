@@ -1,5 +1,5 @@
 class GroupManager
 
-    constructor: () ->
+    constructor: (data) ->
 
     update: (data) ->

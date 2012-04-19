@@ -1,6 +1,6 @@
 class UserManager
 
-    constructor: () ->
+    constructor: (data) ->
 
 
     update: (data) ->
