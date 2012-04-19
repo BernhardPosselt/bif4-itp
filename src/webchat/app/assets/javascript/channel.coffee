@@ -10,8 +10,6 @@ class Channel
     # values
     @id = 0
     @caption = ""
-    @unread_entries = 0
-    @sticky = false
     
   instance: (@id) ->
     @dom_elem = @channels.children("li") # FIXME

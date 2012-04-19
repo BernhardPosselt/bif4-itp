@@ -1,3 +1,3 @@
 $(document).ready ->
   item = new Channel()
-  item.create();
+  item.create()
