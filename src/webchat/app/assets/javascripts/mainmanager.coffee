@@ -54,6 +54,7 @@ class MainManager
     send_websocket: (msg) ->
         msg = JSON.stringify(msg)
         console.log("sending from websocket " + msg)
+        # TODO: check if auth information is available at the server
         @connection.send(msg)
 
 
