@@ -5,12 +5,13 @@ This handels all managers and the reloading of json data
 class MainManager
 
     # constructor
-    constructor: (@ssl=false) ->
+    constructor: (url="localhost/websocket/", @ssl=false) ->
         if @ssl
-            @websocket_uri = "ws://localhost/websocket/"
+            @websocket_url = "wss://" + url
             console.log("using ssl")
         else
-            @websocket_uri = "wss://localhost/websocket/"
+            @websocket_url = "ws://" + url
+
         @keep_alive_interval = 5 # ping in seconds
         @users = new UserManager()
         @channels = new ChannelManager()
@@ -18,29 +19,6 @@ class MainManager
         @files = new FileManager()
         @streams = new StreamManager()
         @init_websocket()
-
-
-    # loads the intial data for the managers
-    init_managers: () ->
-        console.log("initializing groups, users and channels")
-        # init users
-        init_users =
-            type: "init"
-            data:
-                type: "users"
-        @send_websocket(init_users)
-        # init channels
-        init_channels =
-            type: "init"
-            data:
-                type: "channels"
-        @send_websocket(init_channels)
-        # init groups
-        init_groups =
-            type: "init"
-            data:
-                type: "groups"
-        @send_websocket(init_groups)
 
 
     # Intitializes the update interval to call the update method
@@ -53,22 +31,26 @@ class MainManager
 
     # sets eventhandlers for websockets
     init_websocket: () ->
-        console.log("initializing websockets")
-        # TODO: handle websocket error with try and catch
-        @connection = new WebSocket(@websocket_uri)
-        @connection.onopen = =>
-            auth =
-                # FIXME: look for session cookie and send value
-                type: "auth"
-                data:
-                    sessionid: "abc"
-            console.log("authenticating")
-            if @send_websocket(auth)
-                @init_managers()
+        console.log("initializing websockets on " + @websocket_uri)
+        Socket = window['MozWebSocket'] || window['WebSocket']
+        try
+            @connection = new Socket(@websocket_url)
+            @connection.onopen = =>
+                auth =
+                    # FIXME: look for session cookie and send value
+                    type: "auth"
+                    data:
+                        sessionid: "abc"
+                console.log("authenticating")
                 @init_keep_alive()
-        # FIXME: only send to update after first ajax requests have been made to not lose information
-        @connection.onmessage = (event) =>
-            @rcv_websocket(JSON.parse(event.data))
+            @connection.onmessage = (event) =>
+                @rcv_websocket(JSON.parse(event.data))
+            @connection.onclose = =>
+                console.log("closed websocket")
+            @connection.onerror = =>
+                console.log("websocket error occured")
+        catch error
+            console.log("Cant connect to " + @websocket_url)
 
 
     # sends a json object to the webserver
@@ -81,13 +63,21 @@ class MainManager
     # is called when the websocket receives data. the data is in json format
     rcv_websocket: (data) ->
         console.log("received from websocket " + JSON.stringify(data))
-        switch data.type
-            when "message" then @streams.update(data.data)
-            when "user" then @users.update(data.data)
-            when "group" then @groups.update(data.data)
-            when "stream" then @streams.update(data.data)
-            when "channel" then @channels.update(data.data)
-            when "status" then @channels.status(data.data)
+        if data.init
+            switch data.type
+                when "user" then @users.init(data.data)
+                when "group" then @groups.init(data.data)
+                when "stream" then @streams.init(data.data)
+                when "channel" then @channels.init(data.data)
+                when "status" then @status_msg(data.data)
+        else
+            switch data.type
+                when "message" then @streams.update(data.data)
+                when "user" then @users.update(data.data)
+                when "group" then @groups.update(data.data)
+                when "stream" then @streams.update(data.data)
+                when "channel" then @channels.update(data.data)
+                when "status" then @status_msg(data.data)
 
 
     # closes the websocket connection
