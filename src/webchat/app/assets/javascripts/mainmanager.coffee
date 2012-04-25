@@ -21,6 +21,7 @@ class MainManager
         @init_websocket()
 
 
+
     # Intitializes the update interval to call the update method
     init_keep_alive: () ->
         console.log("setting keep alive interval to " + @keep_alive_interval + " seconds")

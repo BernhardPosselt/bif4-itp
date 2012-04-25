@@ -4,9 +4,9 @@ Manages all channel objects in the channellist
 
 class ChannelManager
 
-    constructor: (data) ->
+    constructor: () ->
         @dom_elem = $ "#channels ul"
-        @list = []
+        @cache = []
 
 
 
