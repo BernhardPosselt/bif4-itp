@@ -6,17 +6,26 @@ class ChannelManager
 
     constructor: () ->
         @dom_elem = $ "#channels ul"
+        @channel_list = null
         @cache = []
 
-
+    init: (data) ->
+        @channel_list = data
+        @process_cache()
 
     update: (data) ->
-        # TODO: iterate through list, check if channel is
-        # not in the channel list, if not push it into the channellist
-        # update the elements properties
-        # sort the list by the last update date
+        if @channel_list is null
+            # append to cache if init was not performed
+            #@cache[]
+        else
+            # 
+            # if @cache
+          #@
+          
+    # happens if an entry does exist but contains newer information 
+    migrate: (entry) ->
+      
+    # happens if an entry does not yet exist
+    insert: (entry) ->
 
-
-    insert: (elem, position) ->
-        @list[positions] = elem
   
