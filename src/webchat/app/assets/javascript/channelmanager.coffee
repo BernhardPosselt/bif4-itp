@@ -16,6 +16,7 @@ class ChannelManager
     # update the elements properties
     # sort the list by the last update date
     alert list["0"]["name"]
+	alert "hi"
   
   insert: (elem, position) ->
     @list[positions] = elem
