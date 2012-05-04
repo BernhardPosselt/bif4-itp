@@ -8,6 +8,7 @@ import play.db.ebean.Model;
 import play.data.format.*;
 import play.data.validation.*;
 
+@Entity
 public class File extends Model {
 
 	@Id

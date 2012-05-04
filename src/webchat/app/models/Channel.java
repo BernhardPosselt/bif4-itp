@@ -10,26 +10,40 @@ import play.db.ebean.Model;
 import play.data.format.*;
 import play.data.validation.*;
 
+@Entity
 public class Channel extends Model {
 
 	@Id
-	int id;
+	public int id;
 	
 	@Constraints.Required
-	String name;
+	public String name;
 	
 	@Constraints.Required
-	String topic;
+	public String topic;
 	
 	@Constraints.Required
-	Boolean read;
+	public Boolean isread;
 	
 	@ManyToMany(cascade=CascadeType.ALL)
 	public List<User> users;
 	
+	public List<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(User user) {
+		this.users.add(user);
+	}
+
 	@ManyToMany(cascade=CascadeType.ALL)
-	public List<File> groups;
+	public List<Groups> groups;
 	
 	@ManyToMany(cascade=CascadeType.ALL)
-	public List<Group> files;
+	public List<File> files;
+
+	public static Finder<Integer,Channel> find = new Finder<Integer,Channel>(
+			Integer.class, Channel.class
+	);
+	
 }

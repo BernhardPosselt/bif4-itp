@@ -6,36 +6,38 @@ import javax.validation.Constraint;
 import java.util.*;
 
 import play.db.ebean.Model;
+import play.db.ebean.Model.Finder;
 import play.data.format.*;
 import play.data.validation.*;
 
-/**
- * Created with IntelliJ IDEA. Scheiﬂ auf IntelliJ by Christpoh Lindmaier^^
- * User: Daniel
- * Date: 24.04.12
- * Time: 20:18
- * To change this template use File | Settings | File Templates.
- */
+@Entity
 public class User extends Model {
 	
 	@Id
-	int id;
+	public int id;
 	
 	@Constraints.Required
-	String username;
+	public String username;
 	
 	@Constraints.Required
-	Boolean online;
+	public Boolean online;
 	
 	@Constraints.Required
-	String prename;
+	public String prename;
 	
 	@Constraints.Required
-	String lastname;
+	public String lastname;
 	
 	@Constraints.Required
-	String email;
+	public String email;
 
 	@ManyToMany(mappedBy="users")
 	public List<Channel> channels;
+	
+	public static Finder<Integer,User> find = new Finder<Integer,User>(
+			Integer.class, User.class
+	);
+
 }
+
+	
