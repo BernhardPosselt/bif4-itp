@@ -5,22 +5,38 @@ This handels all managers and the reloading of json data
 class MainManager
 
     # constructor
-    constructor: (url="localhost/websocket/", @ssl=false) ->
+    constructor: (domain=document.location.host, path="/websocket", @ssl=false) ->
         if @ssl
-            @websocket_url = "wss://" + url
+            ws_url = "wss://" + domain + path
             console.log("using ssl")
         else
-            @websocket_url = "ws://" + url
+            ws_url = "ws://" + domain + path
 
-        @keep_alive_interval = 5 # ping in seconds
-        @users = new UserManager()
-        @channels = new ChannelManager()
-        @groups = new GroupManager()
-        @files = new FileManager()
-        @streams = new StreamManager()
-        @init_websocket()
+        @keep_alive_interval = 30 # ping in seconds
+        @groups = new GroupManager => 
+            @init_managers
+        @users = new UserManager => 
+            @init_managers
+        @channels = new ChannelManager => 
+            @init_managers
+        @files = new FileManager => 
+            @init_managers
+        @streams = new StreamManager => 
+            @init_managers
+        @managers_initialized = 0
+        @init_websocket(ws_url)
 
 
+    # runs all migration methods for the managers once they were initialized
+    init_managers: () ->
+        @managers_initialized++
+        if @managers_initialized == 5
+            console.log("All managers initialized")
+            @users.migrate_all
+            @channels.migrate_all
+            @streams.migrate_all
+            @groups.migrate_all
+            @files.migrate_all
 
     # Intitializes the update interval to call the update method
     init_keep_alive: () ->
@@ -31,14 +47,18 @@ class MainManager
 
 
     # sets eventhandlers for websockets
-    init_websocket: () ->
-        console.log("initializing websockets on " + @websocket_uri)
+    init_websocket: (ws_url) ->
+        console.log("initializing websockets on " + ws_url)
         Socket = window['MozWebSocket'] || window['WebSocket']
         try
-            @connection = new Socket(@websocket_url)
+            @connection = new Socket(ws_url)
             @connection.onopen = =>
+                # register a handler that tells the websocket that the user left
+                # the page
+                window.onbeforeunload = =>
+                    @send_part_msg
+                # FIXME: look for session cookie and send value
                 auth =
-                    # FIXME: look for session cookie and send value
                     type: "auth"
                     data:
                         sessionid: "abc"
@@ -51,7 +71,7 @@ class MainManager
             @connection.onerror = =>
                 console.log("websocket error occured")
         catch error
-            console.log("Cant connect to " + @websocket_url)
+            console.log("Cant connect to " + ws_url)
 
 
     # sends a json object to the webserver
@@ -94,17 +114,23 @@ class MainManager
             "data": {}
         @send_websocket(message)
 
+    # sends a part message to the server
+    send_part_msg: () ->
+        message = 
+            "type": "part"
+            "data": {}
+        @send_websocket(message)
+        @close_websocket
 
     # method to handle error messages from the websocket
     # data: the data array with the messages
     # returns: true if data level is ok, otherwise false
     status_msg: (data) ->
         console.log("received status " + JSON.stringify(data))
-        # TODO: alert message for signaling error
         if data.level is "ok"
             true
         else
-            false
+            alert(data.msg)
 
 
     # performs a json query and returns the data
