@@ -17,15 +17,15 @@ class MainManager
 
         @keep_alive_interval = 30 # ping in seconds
         @groups = new GroupManager => 
-            @init_managers
+            @init_managers()
         @users = new UserManager => 
-            @init_managers
+            @init_managers()
         @channels = new ChannelManager => 
-            @init_managers
+            @init_managers()
         @files = new FileManager => 
-            @init_managers
+            @init_managers()
         @streams = new StreamManager => 
-            @init_managers
+            @init_managers()
         @managers_initialized = 0
         @init_websocket(ws_url)
 
@@ -35,11 +35,11 @@ class MainManager
         @managers_initialized++
         if @managers_initialized == 5
             console.log("All managers initialized")
-            @users.migrate_all
-            @channels.migrate_all
-            @streams.migrate_all
-            @groups.migrate_all
-            @files.migrate_all
+            @users.migrate_all()
+            @channels.migrate_all()
+            @streams.migrate_all()
+            @groups.migrate_all()
+            @files.migrate_all()
 
     # Intitializes the update interval to call the update method
     init_keep_alive: () ->
@@ -58,7 +58,7 @@ class MainManager
             @connection = new Socket(ws_url)
             @connection.onopen = =>
                 window.onunload = =>
-                    @close_websocket
+                    @close_websocket()
                 auth =
                     type: "auth"
                     data:
@@ -118,13 +118,6 @@ class MainManager
             "data": {}
         @send_websocket(message)
 
-    # sends a part message to the server
-    send_part_msg: () ->
-        message = 
-            "type": "part"
-            "data": {}
-        @send_websocket(message)
-        @close_websocket
 
     # method to handle error messages from the websocket
     # data: the data array with the messages
