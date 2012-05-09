@@ -57,10 +57,8 @@ class MainManager
         try
             @connection = new Socket(ws_url)
             @connection.onopen = =>
-                # register a handler that tells the websocket that the user left
-                # the page
-                window.onbeforeunload = =>
-                    @send_part_msg
+                window.onunload = =>
+                    @close_websocket
                 auth =
                     type: "auth"
                     data:
