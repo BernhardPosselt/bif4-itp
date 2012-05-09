@@ -4,7 +4,11 @@ import play.*;
 
 import play.mvc.*;
 import views.html.*;
+import websockets.Channelverwaltung;
+
 import java.util.*;
+
+import org.codehaus.jackson.JsonNode;
 
 import models.*;
 
@@ -54,6 +58,30 @@ public class Application extends Controller {
 	  	    return ok(index.render());
 	  	    
 	 }
+	 
+	 public static Result chatRoom(String username) {
+	        if(username == null || username.trim().equals("")) {
+	            flash("error", "Please choose a valid username.");
+	            return redirect(routes.Application.index());
+	        }
+	        return ok(index.render());
+	    }
+	 
+	 public static WebSocket<JsonNode> chat() {
+	        return new WebSocket<JsonNode>() {
+	            
+	            // Called when the Websocket Handshake is done.
+	            public void onReady(WebSocket.In<JsonNode> in, WebSocket.Out<JsonNode> out){
+	                
+	                // Join the channel.
+	                try { 
+	                    Channelverwaltung.join(in, out);
+	                } catch (Exception ex) {
+	                    ex.printStackTrace();
+	                }
+	            }
+	        };
+	    }
 	
 
 }

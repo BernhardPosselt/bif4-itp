@@ -12,9 +12,11 @@ GET /Testdata controllers.Application.filltestdata()
 # WebSocket
 GET /WebSocket controllers.WebSocketHandling.index()
 
-# Json
-GET /Json/Channels controllers.JsonHandling.genMessage()
+GET /websocket controllers.Application.chat()
 
+# Json
+GET /Json/Channels controllers.JsonHandling.genAuth()
+GET /Json/Message controllers.JsonHandling.genMessage()
 
 # Map static resources from the /public folder to the /assets URL path
 GET /assets/*file controllers.Assets.at(path="/public", file)
