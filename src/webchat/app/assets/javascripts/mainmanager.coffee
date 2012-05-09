@@ -5,6 +5,9 @@ This handels all managers and the reloading of json data
 class MainManager
 
     # constructor
+    # domain: the domain with port, for instance www.example.com:9000
+    # path: the relative url to the websocket
+    # ssl: if true it will alter the websocket url to start with wss instead of ws
     constructor: (domain=document.location.host, path="/websocket", @ssl=false) ->
         if @ssl
             ws_url = "wss://" + domain + path
@@ -47,6 +50,7 @@ class MainManager
 
 
     # sets eventhandlers for websockets
+    # ws_url: the url to which we connect
     init_websocket: (ws_url) ->
         console.log("initializing websockets on " + ws_url)
         Socket = window['MozWebSocket'] || window['WebSocket']
@@ -57,12 +61,12 @@ class MainManager
                 # the page
                 window.onbeforeunload = =>
                     @send_part_msg
-                # FIXME: look for session cookie and send value
                 auth =
                     type: "auth"
                     data:
-                        sessionid: "abc"
+                        sessionid: $.cookie("session") || "no_session_id"
                 console.log("authenticating")
+                @send_websocket(auth)
                 @init_keep_alive()
             @connection.onmessage = (event) =>
                 @rcv_websocket(JSON.parse(event.data))
@@ -75,6 +79,7 @@ class MainManager
 
 
     # sends a json object to the webserver
+    # msg: the message whhich should be sent as json object
     send_websocket: (msg) ->
         msg = JSON.stringify(msg)
         console.log("sending from websocket " + msg)
@@ -82,6 +87,7 @@ class MainManager
 
 
     # is called when the websocket receives data. the data is in json format
+    # data: the received data json object
     rcv_websocket: (data) ->
         console.log("received from websocket " + JSON.stringify(data))
         if data.init
