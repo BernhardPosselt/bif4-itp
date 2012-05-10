@@ -114,8 +114,8 @@ class MainManager
     # sends a keep alive signal to signal online to the server
     send_keep_alive: () ->
         message =
-            "type": "ping"
-            "data": {}
+            type: "ping"
+            data: {}
         @send_websocket(message)
 
 
