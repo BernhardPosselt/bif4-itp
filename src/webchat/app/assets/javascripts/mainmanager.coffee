@@ -62,7 +62,7 @@ class MainManager
                 auth =
                     type: "auth"
                     data:
-                        sessionid: $.cookie("session") || "no_session_id"
+                        sessionid: $.cookie("sessionid") || "no_session_id"
                 console.log("authenticating")
                 @send_websocket(auth)
                 @init_keep_alive()
