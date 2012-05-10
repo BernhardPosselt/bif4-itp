@@ -52,8 +52,8 @@ public class LoginHandling extends Controller {
         else
         {
               User tmp = User.find.where().eq("username", form.get().getUsername()).findUnique();
-              session("username", tmp.getUsername());
-              session("userid", String.valueOf(tmp.getId()));
+              session("username", tmp.username);
+              session("userid", String.valueOf(tmp.id));
               return redirect(routes.Application.index());
         }
 
