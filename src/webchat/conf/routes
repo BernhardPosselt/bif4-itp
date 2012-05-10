@@ -5,10 +5,10 @@
 # Home page
 GET / controllers.Application.index()
 
-# Login
+#Login
 GET /login controllers.LoginHandling.login()
+GET /logout controllers.LoginHandling.logout()
 POST /login controllers.LoginHandling.submit()
-
 #TestData
 
 GET /Testdata controllers.Application.filltestdata()

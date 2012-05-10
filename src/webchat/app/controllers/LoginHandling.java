@@ -20,6 +20,21 @@ public class LoginHandling extends Controller {
 
     public static Result login()
     {
+        String user = session("username");
+        if(user != null)
+        {
+            return redirect(routes.Application.index());
+        }
+        else
+        {
+            return ok(login.render(form(Login.class)));
+        }
+
+    }
+
+    public static Result logout()
+    {
+        session().clear();
         return ok(login.render(form(Login.class)));
     }
 
