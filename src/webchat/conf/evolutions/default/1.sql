@@ -29,6 +29,7 @@ create table groups (
 create table user (
   id                        integer not null,
   username                  varchar(255),
+  password                  varchar(255),
   online                    boolean,
   prename                   varchar(255),
   lastname                  varchar(255),

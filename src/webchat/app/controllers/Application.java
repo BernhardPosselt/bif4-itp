@@ -1,12 +1,8 @@
 package controllers;
 
-import play.*;
-
 import play.mvc.*;
 import views.html.*;
 import websockets.Channelverwaltung;
-
-import java.util.*;
 
 import org.codehaus.jackson.JsonNode;
 
@@ -22,19 +18,21 @@ public class Application extends Controller {
 	 public static Result filltestdata()
 	 {
 		   User user = new User();
-	        user.username = "Glembo";
-	        user.email = "a.b@aon.at";
-	        user.lastname = "Huber";
-	        user.prename = "Ernst";
-	        user.online = false;
+	        user.setUsername("Glembo");
+            user.setPassword("test");
+	        user.setEmail("a.b@aon.at");
+	        user.setLastname("Huber");
+	        user.setPrename("Ernst");
+	        user.setOnline(false);
 	        user.save();
 	        
 	        User user1 = new User();
-	        user1.username = "MasterLindi";
-	        user1.email = "christoph.lindmaier@gmx.at";
-	        user1.lastname = "Lindmaier";
-	        user1.prename = "Christoph";
-	        user1.online = false;
+	        user1.setUsername("MasterLindi");
+            user1.setPassword("test");
+	        user1.setEmail("christoph.lindmaier@gmx.at");
+	        user1.setLastname("Lindmaier");
+	        user1.setPrename("Christoph");
+	        user1.setOnline(false);
 	        user1.save();
 	         
 	        Channel channel = new Channel();

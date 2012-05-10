@@ -27,10 +27,7 @@ import play.mvc.*;
 
 
 public class JsonHandling extends Controller {
-	
-	
-	
-	
+
 	public static Result genAuth(){
 		String json = "";	
 		try{
