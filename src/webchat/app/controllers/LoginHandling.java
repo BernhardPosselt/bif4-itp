@@ -35,7 +35,7 @@ public class LoginHandling extends Controller {
     public static Result logout()
     {
         session().clear();
-        return ok(login.render(form(Login.class)));
+        return redirect(routes.LoginHandling.login());
     }
 
     public static Result submit()
@@ -43,7 +43,10 @@ public class LoginHandling extends Controller {
         Form<Login> form = form(Login.class).bindFromRequest();
 
         if(!User.authenticate(form.field("username").value(), form.field("password").value()))
+        {
             form.reject("username", "Username or Password wrong!");
+        }
+
 
         if(form.hasErrors())
         {
@@ -52,8 +55,8 @@ public class LoginHandling extends Controller {
         else
         {
               User tmp = User.find.where().eq("username", form.get().getUsername()).findUnique();
-              session("username", tmp.getUsername());
-              session("userid", String.valueOf(tmp.getId()));
+              session("username", tmp.username);
+              session("userid", String.valueOf(tmp.id));
               return redirect(routes.Application.index());
         }
 
