@@ -5,22 +5,41 @@ This handels all managers and the reloading of json data
 class MainManager
 
     # constructor
-    constructor: (url="localhost/websocket/", @ssl=false) ->
+    # domain: the domain with port, for instance www.example.com:9000
+    # path: the relative url to the websocket
+    # ssl: if true it will alter the websocket url to start with wss instead of ws
+    constructor: (domain=document.location.host, path="/websocket", @ssl=false) ->
         if @ssl
-            @websocket_url = "wss://" + url
+            ws_url = "wss://" + domain + path
             console.log("using ssl")
         else
-            @websocket_url = "ws://" + url
+            ws_url = "ws://" + domain + path
 
-        @keep_alive_interval = 5 # ping in seconds
-        @users = new UserManager()
-        @channels = new ChannelManager()
-        @groups = new GroupManager()
-        @files = new FileManager()
-        @streams = new StreamManager()
-        @init_websocket()
+        @keep_alive_interval = 30 # ping in seconds
+        @groups = new GroupManager => 
+            @init_managers()
+        @users = new UserManager => 
+            @init_managers()
+        @channels = new ChannelManager => 
+            @init_managers()
+        @files = new FileManager => 
+            @init_managers()
+        @streams = new StreamManager => 
+            @init_managers()
+        @managers_initialized = 0
+        @init_websocket(ws_url)
 
 
+    # runs all migration methods for the managers once they were initialized
+    init_managers: () ->
+        @managers_initialized++
+        if @managers_initialized == 5
+            console.log("All managers initialized")
+            @users.migrate_all()
+            @channels.migrate_all()
+            @streams.migrate_all()
+            @groups.migrate_all()
+            @files.migrate_all()
 
     # Intitializes the update interval to call the update method
     init_keep_alive: () ->
@@ -31,18 +50,15 @@ class MainManager
 
 
     # sets eventhandlers for websockets
-    init_websocket: () ->
-        console.log("initializing websockets on " + @websocket_uri)
+    # ws_url: the url to which we connect
+    init_websocket: (ws_url) ->
+        console.log("initializing websockets on " + ws_url)
         Socket = window['MozWebSocket'] || window['WebSocket']
         try
-            @connection = new Socket(@websocket_url)
+            @connection = new Socket(ws_url)
             @connection.onopen = =>
-                auth =
-                    # FIXME: look for session cookie and send value
-                    type: "auth"
-                    data:
-                        sessionid: "abc"
-                console.log("authenticating")
+                window.onunload = =>
+                    @close_websocket()
                 @init_keep_alive()
             @connection.onmessage = (event) =>
                 @rcv_websocket(JSON.parse(event.data))
@@ -51,10 +67,11 @@ class MainManager
             @connection.onerror = =>
                 console.log("websocket error occured")
         catch error
-            console.log("Cant connect to " + @websocket_url)
+            console.log("Cant connect to " + ws_url)
 
 
     # sends a json object to the webserver
+    # msg: the message whhich should be sent as json object
     send_websocket: (msg) ->
         msg = JSON.stringify(msg)
         console.log("sending from websocket " + msg)
@@ -62,6 +79,7 @@ class MainManager
 
 
     # is called when the websocket receives data. the data is in json format
+    # data: the received data json object
     rcv_websocket: (data) ->
         console.log("received from websocket " + JSON.stringify(data))
         if data.init
@@ -70,6 +88,7 @@ class MainManager
                 when "group" then @groups.init(data.data)
                 when "stream" then @streams.init(data.data)
                 when "channel" then @channels.init(data.data)
+                when "file" then @files.init(data.data)
                 when "status" then @status_msg(data.data)
         else
             switch data.type
@@ -78,6 +97,7 @@ class MainManager
                 when "group" then @groups.update(data.data)
                 when "stream" then @streams.update(data.data)
                 when "channel" then @channels.update(data.data)
+                when "file" then @files.update(data.data)
                 when "status" then @status_msg(data.data)
 
 
@@ -90,8 +110,8 @@ class MainManager
     # sends a keep alive signal to signal online to the server
     send_keep_alive: () ->
         message =
-            "type": "ping"
-            "data": {}
+            type: "ping"
+            data: {}
         @send_websocket(message)
 
 
@@ -100,11 +120,10 @@ class MainManager
     # returns: true if data level is ok, otherwise false
     status_msg: (data) ->
         console.log("received status " + JSON.stringify(data))
-        # TODO: alert message for signaling error
         if data.level is "ok"
             true
         else
-            false
+            alert(data.msg)
 
 
     # performs a json query and returns the data
@@ -112,3 +131,16 @@ class MainManager
         console.log("querying " + url)
         $.getJSON url, (data) ->
             return data
+            
+    # sends a message to the server
+    # msg: the message which we want to send
+    # type: the type, text or java for instance
+    send_msg: (msg, type) ->
+        message =
+            type: "message"
+            data:
+                message: msg
+                type: type
+                # FIXME: get active channel
+                channel: [0]
+        @send_websocket(message)

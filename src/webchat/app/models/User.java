@@ -14,22 +14,25 @@ import play.data.validation.*;
 public class User extends Model {
 	
 	@Id
-	public int id;
+    private int id;
 	
 	@Constraints.Required
-	public String username;
+    private String username;
+
+    @Constraints.Required
+    private String password;
 	
 	@Constraints.Required
-	public Boolean online;
+    private Boolean online;
 	
 	@Constraints.Required
-	public String prename;
+    private String prename;
 	
 	@Constraints.Required
-	public String lastname;
+    private String lastname;
 	
 	@Constraints.Required
-	public String email;
+    private String email;
 
 	@ManyToMany(mappedBy="users")
 	public List<Channel> channels;
@@ -38,6 +41,70 @@ public class User extends Model {
 			Integer.class, User.class
 	);
 
+    public static boolean authenticate(String username, String password)
+    {
+        User tmp = find.where().eq("username", username).eq("password", password).findUnique();
+
+        if(tmp == null)
+            return false;
+        return true;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Boolean getOnline() {
+        return online;
+    }
+
+    public void setOnline(Boolean online) {
+        this.online = online;
+    }
+
+    public String getPrename() {
+        return prename;
+    }
+
+    public void setPrename(String prename) {
+        this.prename = prename;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
 
 	
