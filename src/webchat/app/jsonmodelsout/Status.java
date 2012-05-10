@@ -1,8 +1,8 @@
-package json_models;
+package jsonmodelsout;
 
 import flexjson.JSONException;
 import flexjson.JSONSerializer;
-import json_models.StatusData;
+import jsonmodelsout.StatusData;
 
 
 public class Status {

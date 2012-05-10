@@ -1,4 +1,4 @@
-package json_models;
+package jsonmodelsout;
 
 public class StatusData{
 	

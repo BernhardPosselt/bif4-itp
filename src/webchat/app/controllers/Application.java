@@ -1,8 +1,13 @@
 package controllers;
 
+import play.*;
+
 import play.mvc.*;
 import views.html.*;
 import websockets.Channelverwaltung;
+
+import java.nio.channels.MembershipKey;
+import java.util.*;
 
 import org.codehaus.jackson.JsonNode;
 
@@ -17,22 +22,20 @@ public class Application extends Controller {
 	 
 	 public static Result filltestdata()
 	 {
-		   User user = new User();
-	        user.setUsername("Glembo");
-            user.setPassword("test");
-	        user.setEmail("a.b@aon.at");
-	        user.setLastname("Huber");
-	        user.setPrename("Ernst");
-	        user.setOnline(false);
+		   	User user = new User();
+	        user.username = "Glembo";
+	        user.email = "a.b@aon.at";
+	        user.lastname = "Huber";
+	        user.prename = "Ernst";
+	        user.online = false;
 	        user.save();
 	        
 	        User user1 = new User();
-	        user1.setUsername("MasterLindi");
-            user1.setPassword("test");
-	        user1.setEmail("christoph.lindmaier@gmx.at");
-	        user1.setLastname("Lindmaier");
-	        user1.setPrename("Christoph");
-	        user1.setOnline(false);
+	        user1.username = "MasterLindi";
+	        user1.email = "christoph.lindmaier@gmx.at";
+	        user1.lastname = "Lindmaier";
+	        user1.prename = "Christoph";
+	        user1.online = false;
 	        user1.save();
 	         
 	        Channel channel = new Channel();
@@ -57,22 +60,14 @@ public class Application extends Controller {
 	  	    
 	 }
 	 
-	 public static Result chatRoom(String username) {
-	        if(username == null || username.trim().equals("")) {
-	            flash("error", "Please choose a valid username.");
-	            return redirect(routes.Application.index());
-	        }
-	        return ok(index.render());
-	    }
 	 
 	 public static WebSocket<JsonNode> chat() {
 	        return new WebSocket<JsonNode>() {
-	            
 	            // Called when the Websocket Handshake is done.
 	            public void onReady(WebSocket.In<JsonNode> in, WebSocket.Out<JsonNode> out){
 	                
-	                // Join the channel.
 	                try { 
+	                	Channelverwaltung.members.put(Integer.parseInt(session("userid")),out);
 	                    Channelverwaltung.join(in, out);
 	                } catch (Exception ex) {
 	                    ex.printStackTrace();
