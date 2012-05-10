@@ -14,28 +14,57 @@ import play.data.validation.*;
 public class User extends Model {
 	
 	@Id
-    public int id;
+	public int id;
 	
 	@Constraints.Required
-    public String username;
-
-    @Constraints.Required
-    public String password;
+	public String username;
 	
 	@Constraints.Required
-    public Boolean online;
+	private String password;
+	
+	public void setPassword(String newpassword) {
+		password = Crypto.sign(newpassword);
+	}
+	
+	public Boolean checkPassword(String newpassword) {
+		if(password == Crypto.sign(newpassword)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	@Constraints.Required
-    public String prename;
+	public String email;	
 	
 	@Constraints.Required
-    public String lastname;
+	public String firstname;
 	
 	@Constraints.Required
-    public String email;
+	public String lastname;
+	
+	@Constraints.Required
+	public Boolean online;
+	
+	@Constraints.Required
+	public Boolean admin;
+	
+	@Formats.DateTime(pattern = "dd-MM-yyyy HH:mm:ss")
+	public Date lastlogin;
 
 	@ManyToMany(mappedBy="users")
 	public List<Channel> channels;
+	
+	@ManyToMany(cascade=CascadeType.ALL)
+	public List<Groups> groups;
+	
+	public List<Groups> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(Groups group) {
+		this.groups.add(group);
+	}
 	
 	public static Finder<Integer,User> find = new Finder<Integer,User>(
 			Integer.class, User.class
