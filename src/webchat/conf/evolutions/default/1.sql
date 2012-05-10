@@ -4,32 +4,32 @@
 # --- !Ups
 
 create table channel (
-  id                        integer auto_increment not null,
+  id                        integer not null,
   name                      varchar(255),
   topic                     varchar(255),
-  isread                    tinyint(1) default 0,
+  isread                    boolean,
   constraint pk_channel primary key (id))
 ;
 
 create table file (
-  id                        integer auto_increment not null,
+  id                        integer not null,
   type                      varchar(255),
   size                      double,
   owner_id                  integer,
-  timestamp                 datetime,
+  timestamp                 timestamp,
   constraint pk_file primary key (id))
 ;
 
 create table groups (
-  id                        integer auto_increment not null,
+  id                        integer not null,
   name                      varchar(255),
   constraint pk_groups primary key (id))
 ;
 
 create table user (
-  id                        integer auto_increment not null,
+  id                        integer not null,
   username                  varchar(255),
-  online                    tinyint(1) default 0,
+  online                    boolean,
   prename                   varchar(255),
   lastname                  varchar(255),
   email                     varchar(255),
@@ -54,6 +54,14 @@ create table channel_file (
   file_id                        integer not null,
   constraint pk_channel_file primary key (channel_id, file_id))
 ;
+create sequence channel_seq;
+
+create sequence file_seq;
+
+create sequence groups_seq;
+
+create sequence user_seq;
+
 
 
 
@@ -71,21 +79,29 @@ alter table channel_file add constraint fk_channel_file_file_02 foreign key (fil
 
 # --- !Downs
 
-SET FOREIGN_KEY_CHECKS=0;
+SET REFERENTIAL_INTEGRITY FALSE;
 
-drop table channel;
+drop table if exists channel;
 
-drop table channel_user;
+drop table if exists channel_user;
 
-drop table channel_groups;
+drop table if exists channel_groups;
 
-drop table channel_file;
+drop table if exists channel_file;
 
-drop table file;
+drop table if exists file;
 
-drop table groups;
+drop table if exists groups;
 
-drop table user;
+drop table if exists user;
 
-SET FOREIGN_KEY_CHECKS=1;
+SET REFERENTIAL_INTEGRITY TRUE;
+
+drop sequence if exists channel_seq;
+
+drop sequence if exists file_seq;
+
+drop sequence if exists groups_seq;
+
+drop sequence if exists user_seq;
 

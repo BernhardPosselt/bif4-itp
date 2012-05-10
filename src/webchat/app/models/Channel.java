@@ -16,9 +16,9 @@ import flexjson.JSON;
 
 import java.util.*;
 
-import json_models.Auth;
-import json_models.Message;
-import json_models.Status;
+import jsonmodelsout.Auth;
+import jsonmodelsout.Message;
+import jsonmodelsout.Status;
 
 import play.db.ebean.Model;
 import play.data.format.*;

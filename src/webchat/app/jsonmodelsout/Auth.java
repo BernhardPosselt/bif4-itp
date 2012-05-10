@@ -1,4 +1,4 @@
-package json_models;
+package jsonmodelsout;
 
 import java.util.UUID;
 
@@ -17,7 +17,7 @@ public class Auth {
 		this.type = "auth";
 	}
 	
-	public static String genAuth(){
+	public static JsonNode genAuth(){
 		String json = "";	
 		try{
 			
@@ -32,6 +32,6 @@ public class Auth {
 		catch (JSONException e) {	 
 			 e.printStackTrace();
 		}
-		return json;
+		return Json.parse(json);
 	}
 }
