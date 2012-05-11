@@ -16,10 +16,6 @@ import flexjson.JSON;
 
 import java.util.*;
 
-import jsonmodelsout.Auth;
-import jsonmodelsout.Message;
-import jsonmodelsout.Status;
-
 import play.db.ebean.Model;
 import play.data.format.*;
 import play.data.validation.*;
@@ -28,6 +24,7 @@ import play.libs.F.Callback;
 import play.libs.F.Callback0;
 import play.libs.Json;
 import play.mvc.WebSocket;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 @Entity
 public class Channel extends Model {
@@ -44,6 +41,9 @@ public class Channel extends Model {
 	@Constraints.Required
 	public Boolean isread;
 	
+	@Constraints.Required
+	public Boolean priv;
+	
 	@ManyToMany(cascade=CascadeType.ALL)
 	public List<User> users;
 	
@@ -58,8 +58,35 @@ public class Channel extends Model {
 	@ManyToMany(cascade=CascadeType.ALL)
 	public List<Groups> groups;
 	
+	public List<Groups> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(Groups group) {
+		this.groups.add(group);
+	}
+	
+	@ManyToMany(cascade=CascadeType.ALL)
+	public List<Message> messages;
+	
+	public List<Message> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(Message message) {
+		this.messages.add(message);
+	}
+	
 	@ManyToMany(cascade=CascadeType.ALL)
 	public List<File> files;
+	
+	public List<File> getFiles() {
+		return files;
+	}
+
+	public void setFiles(File file) {
+		this.files.add(file);
+	}
 
 	public static Finder<Integer,Channel> find = new Finder<Integer,Channel>(
 			Integer.class, Channel.class

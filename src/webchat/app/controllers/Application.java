@@ -29,7 +29,7 @@ public class Application extends Controller {
 	        user.username = "Glembo";
 	        user.email = "a.b@aon.at";
 	        user.lastname = "Huber";
-	        user.prename = "Ernst";
+	        user.firstname = "Ernst";
 	        user.online = false;
 	        user.save();
 	        
@@ -37,7 +37,7 @@ public class Application extends Controller {
 	        user1.username = "MasterLindi";
 	        user1.email = "christoph.lindmaier@gmx.at";
 	        user1.lastname = "Lindmaier";
-	        user1.prename = "Christoph";
+	        user1.firstname = "Christoph";
 	        user1.online = false;
 	        user1.save();
 	         
