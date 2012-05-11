@@ -1,7 +1,5 @@
 package controllers;
 
-import play.*;
-
 import play.mvc.*;
 import views.html.*;
 import websockets.Channelverwaltung;
@@ -17,7 +15,7 @@ public class Application extends Controller {
   
 	 public static Result index() 
 	 {
-		    return ok(index.render());
+		    return ok(index.render(User.getUsername(Integer.parseInt(session("userid")))));
 	 }
 	 
 	 public static Result filltestdata()

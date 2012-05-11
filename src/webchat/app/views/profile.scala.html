@@ -1,10 +1,14 @@
-@(userForm : Form[User])
+@(userForm : Form[User], username: String)
 
 @import helper._
 @import helper.twitterBootstrap._
 
 
-@main(title = "Webchat") {
+@main(username, title = "Webchat") {
+
+<center><h2>Profile</h2></center>
+
+<div id="profile">
 
 @helper.form(action = routes.ProfileHandling.submit) {
 
@@ -43,5 +47,7 @@ userForm("lastname"),
 
 
 }
+
+</div>
 
 }

@@ -1,5 +1,6 @@
 package controllers;
 
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.data.*;
@@ -18,22 +19,24 @@ import models.*;
 public class LoginHandling extends Controller {
 
 
+
     public static Result login()
     {
-        String user = session("username");
+        String user = session("userid");
         if(user != null)
         {
             return redirect(routes.Application.index());
         }
         else
         {
-            return ok(login.render(form(Login.class)));
+            return ok(login.render(form(Login.class), ""));
         }
 
     }
 
     public static Result logout()
     {
+        Logger.info("User with ID " + session("userid") + " logged out.");
         session().clear();
         return redirect(routes.LoginHandling.login());
     }
@@ -47,15 +50,13 @@ public class LoginHandling extends Controller {
             form.reject("username", "Username or Password wrong!");
         }
 
-
         if(form.hasErrors())
         {
-              return badRequest(login.render(form));
+              return badRequest(login.render(form, ""));
         }
         else
         {
               User tmp = User.find.where().eq("username", form.get().getUsername()).findUnique();
-              session("username", tmp.username);
               session("userid", String.valueOf(tmp.id));
               return redirect(routes.Application.index());
         }

@@ -27,7 +27,7 @@ public class ProfileHandling extends Controller {
 
         if(form.hasErrors())
         {
-            return badRequest(profile.render(form));
+            return badRequest(profile.render(form, User.getUsername(Integer.parseInt(session("userid")))));
         }
         else
         {
@@ -49,14 +49,14 @@ public class ProfileHandling extends Controller {
 
     public static Result edit()
     {
-        String user = session("username");
+        String user = session("userid");
 
         if(user != null)
         {
-        int userid = Integer.parseInt(session("userid"));
+            int userid = Integer.parseInt(user);
 
-        User tmp = User.find.ref(userid);
-        return ok(profile.render(form(User.class).fill(tmp)));
+            User tmp = User.find.ref(userid);
+            return ok(profile.render(form(User.class).fill(tmp), User.getUsername(Integer.parseInt(session("userid")))));
         }
         else
         {

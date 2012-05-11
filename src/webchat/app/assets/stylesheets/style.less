@@ -57,7 +57,15 @@ html, body {
     left: 0;
     right: 0;
     height: 40px;
-    background-color: @darkgrey;
+    background-color: @lightgray1;
+
+    #username
+    {
+        height:40px;
+        line-height:40px;
+        float:left;
+        margin-left:10px;
+    }
 
 
     ul {
@@ -88,6 +96,26 @@ html, body {
     bottom: 0;
     left: 0;
     right: 0;
+
+    #login, #profile
+    {
+        width:550px;
+        border:2px solid @lightgray2;
+        .border_rad(5px);
+        margin:30px auto;
+        padding:50px;
+
+        div
+        {
+            margin:5px 0px;
+        }
+
+        label
+        {
+            float:left;
+            width:150px;
+        }
+    }
 
     #channels {
       overflow-y: auto;

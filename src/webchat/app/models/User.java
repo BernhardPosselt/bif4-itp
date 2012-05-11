@@ -20,8 +20,7 @@ public class User extends Model {
 
     @Constraints.Required
     public String password;
-	
-	@Constraints.Required
+
     public Boolean online;
 	
 	@Constraints.Required
@@ -39,6 +38,11 @@ public class User extends Model {
 	public static Finder<Integer,User> find = new Finder<Integer,User>(
 			Integer.class, User.class
 	);
+
+    public static String getUsername(int id)
+    {
+        return find.byId(id).username;
+    }
 
     public static boolean authenticate(String name, String pw)
     {
