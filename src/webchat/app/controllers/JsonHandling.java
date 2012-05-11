@@ -29,9 +29,7 @@ import play.mvc.*;
 
 
 public class JsonHandling extends Controller {
-	
-	
-	
+
 	
 	public static Result genAuth(){
 		String json = "";	
@@ -58,28 +56,21 @@ public class JsonHandling extends Controller {
 		ObjectNode jnode = Json.newObject();
 		ObjectNode data = jnode.objectNode();
 		ObjectNode channel = data.objectNode();
-		ObjectNode help = Json.newObject();
 		JsonNode mdata = channel.objectNode();
 		try{
 			im = new JSONDeserializer<InMessage>().deserialize(inmessage.toString(),InMessage.class);
 			MessageData m = new MessageData();
 			m.message = im.data.message;
 			m.type = im.data.type;
-			JSONSerializer aser = new JSONSerializer().include("*.channels");
+			JSONSerializer aser = new JSONSerializer().include("*.channel");
 			json = aser.exclude("*.class").serialize(m);
 			jnode.put("type", im.type);
 			mdata = Json.parse(json);
-			for (int messageid = 0; messageid < 3; messageid++)
-			{
-				channel.putObject(String.valueOf(messageid)).putAll(Json.fromJson(mdata,ObjectNode.class));
-				for (Iterator<Integer> iterator = im.data.channels.iterator(); iterator.hasNext();){
-					data.putObject(String.valueOf(iterator.next())).putAll(channel);
-				}		
+			int messageid = 3;
+			channel.putObject(String.valueOf(messageid)).putAll(Json.fromJson(mdata,ObjectNode.class));
+			for (Iterator<Integer> iterator = im.data.channel.iterator(); iterator.hasNext();){
+				data.putObject(String.valueOf(iterator.next())).putAll(channel);		
 			}
-			
-			
-			
-			
 			jnode.putObject("data").putAll(data);
 			} 
 		catch (JSONException e) {	 
@@ -92,11 +83,10 @@ public class JsonHandling extends Controller {
 	{
 		ObjectNode injson = Json.newObject();
 		ObjectNode data = injson.objectNode();
-		
 		ObjectNode dat = Json.newObject();
 		ArrayNode channel = data.arrayNode();
+		channel.add(0);
 		channel.add(1);
-		channel.add(2);
 		injson.put("type", "message");
 		dat.put("message", "Hello Chris!");
 		dat.put("type", "text");

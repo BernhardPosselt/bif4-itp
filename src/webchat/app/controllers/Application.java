@@ -8,6 +8,7 @@ import websockets.Channelverwaltung;
 
 import java.nio.channels.MembershipKey;
 import java.util.*;
+import play.mvc.Controller;
 
 import org.codehaus.jackson.JsonNode;
 
@@ -15,8 +16,10 @@ import models.*;
 
 public class Application extends Controller {
   
+	 static int userid;
 	 public static Result index() 
-	 {
+	 {		session("userid","9");
+	 		userid = Integer.parseInt(session("userid"));
 		    return ok(index.render());
 	 }
 	 
@@ -67,8 +70,8 @@ public class Application extends Controller {
 	            public void onReady(WebSocket.In<JsonNode> in, WebSocket.Out<JsonNode> out){
 	                
 	                try { 
-	                	Channelverwaltung.members.put(Integer.parseInt(session("userid")),out);
-	                    Channelverwaltung.join(in, out);
+	                	
+	                    Channelverwaltung.join(in, out, userid);
 	                } catch (Exception ex) {
 	                    ex.printStackTrace();
 	                }
