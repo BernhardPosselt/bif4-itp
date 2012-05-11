@@ -5,6 +5,7 @@ import javax.validation.Constraint;
 
 import java.util.*;
 
+import play.api.libs.Crypto;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
 import play.data.format.*;
