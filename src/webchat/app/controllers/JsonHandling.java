@@ -10,10 +10,12 @@ import org.codehaus.jackson.node.ObjectNode;
 
 
 
-import json_models.Auth;
-import json_models.AuthData;
-import json_models.Message;
-import json_models.MessageData;
+import jsonmodelsin.InMessage;
+import jsonmodelsin.InMessageData;
+import jsonmodelsout.Auth;
+import jsonmodelsout.AuthData;
+import jsonmodelsout.Message;
+import jsonmodelsout.MessageData;
 
 
 
@@ -27,7 +29,10 @@ import play.mvc.*;
 
 
 public class JsonHandling extends Controller {
-
+	
+	
+	
+	
 	public static Result genAuth(){
 		String json = "";	
 		try{
@@ -48,6 +53,43 @@ public class JsonHandling extends Controller {
 	
 	public static Result genMessage(){
 		String json = "";	
+		JsonNode inmessage = buildinmessage();
+		InMessage im = new InMessage();
+		ObjectNode jnode = Json.newObject();
+		ObjectNode data = jnode.objectNode();
+		ObjectNode channel = data.objectNode();
+		ObjectNode help = Json.newObject();
+		JsonNode mdata = channel.objectNode();
+		try{
+			im = new JSONDeserializer<InMessage>().deserialize(inmessage.toString(),InMessage.class);
+			MessageData m = new MessageData();
+			m.message = im.data.message;
+			m.type = im.data.type;
+			JSONSerializer aser = new JSONSerializer().include("*.channels");
+			json = aser.exclude("*.class").serialize(m);
+			jnode.put("type", im.type);
+			mdata = Json.parse(json);
+			for (int messageid = 0; messageid < 3; messageid++)
+			{
+				channel.putObject(String.valueOf(messageid)).putAll(Json.fromJson(mdata,ObjectNode.class));
+				for (Iterator<Integer> iterator = im.data.channels.iterator(); iterator.hasNext();){
+					data.putObject(String.valueOf(iterator.next())).putAll(channel);
+				}		
+			}
+			
+			
+			
+			
+			jnode.putObject("data").putAll(data);
+			} 
+		catch (JSONException e) {	 
+			 e.printStackTrace();
+		}
+		return ok(jnode);
+	}
+	
+	public static JsonNode buildinmessage()
+	{
 		ObjectNode injson = Json.newObject();
 		ObjectNode data = injson.objectNode();
 		
@@ -61,25 +103,7 @@ public class JsonHandling extends Controller {
 		dat.putArray("channels").addAll(channel);
 		data.putAll(dat);
 		injson.putObject("data").putAll(data);
-		Object [] test = null;
-		try{
-			Message m  = new Message();
-			MessageData md = new MessageData();
-			md.message = injson.findPath("message").asText();
-			md.type = injson.findPath("type").asText();
-		
-			test = injson.findValues("channels").toArray() ;
-			
-			//md.channels.add(Integer.parseInt(test.toString()));
-			md.channels.add(2);
-			m.data = md;
-			JSONSerializer aser = new JSONSerializer();
-			json = aser.exclude("*.class").serialize(m);
-			} 
-		catch (JSONException e) {	 
-			 e.printStackTrace();
-		}
-		return ok(test[0].toString());
+		return injson;
 	}
 
 	

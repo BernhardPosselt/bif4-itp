@@ -1,8 +1,13 @@
 package controllers;
 
+import play.*;
+
 import play.mvc.*;
 import views.html.*;
 import websockets.Channelverwaltung;
+
+import java.nio.channels.MembershipKey;
+import java.util.*;
 
 import org.codehaus.jackson.JsonNode;
 
@@ -57,22 +62,14 @@ public class Application extends Controller {
 	  	    
 	 }
 	 
-	 public static Result chatRoom(String username) {
-	        if(username == null || username.trim().equals("")) {
-	            flash("error", "Please choose a valid username.");
-	            return redirect(routes.Application.index());
-	        }
-	        return ok(index.render());
-	    }
 	 
 	 public static WebSocket<JsonNode> chat() {
 	        return new WebSocket<JsonNode>() {
-	            
 	            // Called when the Websocket Handshake is done.
 	            public void onReady(WebSocket.In<JsonNode> in, WebSocket.Out<JsonNode> out){
 	                
-	                // Join the channel.
 	                try { 
+	                	Channelverwaltung.members.put(Integer.parseInt(session("userid")),out);
 	                    Channelverwaltung.join(in, out);
 	                } catch (Exception ex) {
 	                    ex.printStackTrace();

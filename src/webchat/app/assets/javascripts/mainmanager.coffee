@@ -59,12 +59,6 @@ class MainManager
             @connection.onopen = =>
                 window.onunload = =>
                     @close_websocket()
-                auth =
-                    type: "auth"
-                    data:
-                        sessionid: $.cookie("sessionid") || "no_session_id"
-                console.log("authenticating")
-                @send_websocket(auth)
                 @init_keep_alive()
             @connection.onmessage = (event) =>
                 @rcv_websocket(JSON.parse(event.data))
@@ -94,6 +88,7 @@ class MainManager
                 when "group" then @groups.init(data.data)
                 when "stream" then @streams.init(data.data)
                 when "channel" then @channels.init(data.data)
+                when "file" then @files.init(data.data)
                 when "status" then @status_msg(data.data)
         else
             switch data.type
@@ -102,6 +97,7 @@ class MainManager
                 when "group" then @groups.update(data.data)
                 when "stream" then @streams.update(data.data)
                 when "channel" then @channels.update(data.data)
+                when "file" then @files.update(data.data)
                 when "status" then @status_msg(data.data)
 
 
@@ -135,3 +131,16 @@ class MainManager
         console.log("querying " + url)
         $.getJSON url, (data) ->
             return data
+            
+    # sends a message to the server
+    # msg: the message which we want to send
+    # type: the type, text or java for instance
+    send_msg: (msg, type) ->
+        message =
+            type: "message"
+            data:
+                message: msg
+                type: type
+                # FIXME: get active channel
+                channel: [0]
+        @send_websocket(message)

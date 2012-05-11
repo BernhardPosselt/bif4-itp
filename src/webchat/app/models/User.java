@@ -20,8 +20,8 @@ public class User extends Model {
 
     @Constraints.Required
     public String password;
-
-
+	
+	@Constraints.Required
     public Boolean online;
 	
 	@Constraints.Required
@@ -31,7 +31,6 @@ public class User extends Model {
     public String lastname;
 	
 	@Constraints.Required
-    @Constraints.Email
     public String email;
 
 	@ManyToMany(mappedBy="users")
@@ -49,6 +48,7 @@ public class User extends Model {
             return false;
         return true;
     }
+
 }
 
 	

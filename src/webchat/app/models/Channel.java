@@ -16,9 +16,9 @@ import flexjson.JSON;
 
 import java.util.*;
 
-import json_models.Auth;
-import json_models.Message;
-import json_models.Status;
+import jsonmodelsout.Auth;
+import jsonmodelsout.Message;
+import jsonmodelsout.Status;
 
 import play.db.ebean.Model;
 import play.data.format.*;
@@ -28,7 +28,6 @@ import play.libs.F.Callback;
 import play.libs.F.Callback0;
 import play.libs.Json;
 import play.mvc.WebSocket;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 @Entity
 public class Channel extends Model {
