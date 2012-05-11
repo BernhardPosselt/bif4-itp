@@ -25,10 +25,12 @@ public class LoginHandling extends Controller {
         String user = session("userid");
         if(user != null)
         {
+            Logger.info("User with ID" + user + " already logged in");
             return redirect(routes.Application.index());
         }
         else
         {
+            Logger.warn("User isn't logged in");
             return ok(login.render(form(Login.class), ""));
         }
 

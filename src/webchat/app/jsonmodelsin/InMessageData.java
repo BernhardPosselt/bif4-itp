@@ -6,5 +6,5 @@ import java.util.List;
 public class InMessageData {
 	public String message;
 	public String type;
-	public List<Integer> channels = new ArrayList<Integer>();
+	public List<Integer> channel = new ArrayList<Integer>();
 }

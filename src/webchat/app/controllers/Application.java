@@ -1,11 +1,14 @@
 package controllers;
 
+import play.*;
+
 import play.mvc.*;
 import views.html.*;
 import websockets.Channelverwaltung;
 
-import java.nio.channels.MembershipKey;
+//import java.nio.channels.MembershipKey;
 import java.util.*;
+import play.mvc.Controller;
 
 import org.codehaus.jackson.JsonNode;
 
@@ -13,28 +16,33 @@ import models.*;
 
 public class Application extends Controller {
   
+	 static int userid;
 	 public static Result index() 
 	 {
-		    return ok(index.render(User.getUsername(Integer.parseInt(session("userid")))));
+
+         userid = Integer.parseInt(session("userid"));
+
+         return ok(index.render(User.getUsername(Integer.parseInt(session("userid")))));
 	 }
 	 
 	 public static Result filltestdata()
 	 {
 		   User user = new User();
 	        user.username = "Glembo";
-            user.password = "test";
+            user.setPassword("test");
 	        user.email = "a.b@aon.at";
+
 	        user.lastname = "Huber";
-	        user.prename = "Ernst";
+	        user.firstname = "Ernst";
 	        user.online = false;
 	        user.save();
 	        
 	        User user1 = new User();
 	        user1.username = "MasterLindi";
-            user1.password = "test";
+            user.setPassword("test");
 	        user1.email = "christoph.lindmaier@gmx.at";
 	        user1.lastname = "Lindmaier";
-	        user1.prename = "Christoph";
+	        user1.firstname = "Christoph";
 	        user1.online = false;
 	        user1.save();
 	         
@@ -56,7 +64,7 @@ public class Application extends Controller {
 	  	    channel.setUsers(user); 
 	  	    channel.setUsers(user1);
 	  	    channel.saveManyToManyAssociations("users");
-	  	    return ok(index.render());
+	  	    return ok(index.render("testdata"));
 	  	    
 	 }
 	 
@@ -67,8 +75,8 @@ public class Application extends Controller {
 	            public void onReady(WebSocket.In<JsonNode> in, WebSocket.Out<JsonNode> out){
 	                
 	                try { 
-	                	Channelverwaltung.members.put(Integer.parseInt(session("userid")),out);
-	                    Channelverwaltung.join(in, out);
+	                	
+	                    Channelverwaltung.join(in, out, userid);
 	                } catch (Exception ex) {
 	                    ex.printStackTrace();
 	                }

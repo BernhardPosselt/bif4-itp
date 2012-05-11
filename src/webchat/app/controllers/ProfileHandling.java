@@ -19,10 +19,20 @@ public class ProfileHandling extends Controller {
     public static Result submit()
     {
         Form<User> form = form(User.class).bindFromRequest();
+        String pw;
 
         if(!form.field("password").value().equals(form.field("repeatpassword").value()))
         {
             form.reject("repeatpassword","Passwords not the same!");
+        }
+
+        if(form.field("password").value().equals("") && form.field("repeatpassword").value().equals(""))
+        {
+            pw = null;
+        }
+        else
+        {
+            pw = form.field("password").value();
         }
 
         if(form.hasErrors())
@@ -36,8 +46,8 @@ public class ProfileHandling extends Controller {
             User olduser = User.find.byId(userid);
 
             olduser.username = newuser.username;
-            olduser.password = newuser.password;
-            olduser.prename = newuser.prename;
+            olduser.setPassword(pw);
+            olduser.firstname = newuser.firstname;
             olduser.lastname = newuser.lastname;
             olduser.email = newuser.email;
 

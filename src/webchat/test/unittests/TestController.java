@@ -24,10 +24,10 @@ public class TestController {
 	    	   List<User> users = User.find.all();
 	    	   int oldlength = users.size();
 	           User user = new User();
-	           user.setEmail("a.b@aon.at");
-	           user.setLastname("Huber");
-	           user.setPrename("Ernst");
-	           user.setOnline(false);
+	           user.email = "a.b@aon.at";
+	           user.lastname = "Huber";
+	           user.firstname = "Ernst";
+	           user.online = false;
 	           user.save();
 	           
 	           Channel channel = new Channel();
@@ -44,9 +44,9 @@ public class TestController {
 	           User testuser = new User();
 	           testuser = User.find.byId(1);
 	           assertEquals(oldlength+1, users.size());
-	           assertEquals(testuser.getId(), 1);
-	           assertEquals(testuser.getEmail(), user.getEmail());
-	           assertEquals(testuser.getLastname(), user.getLastname());
+	           assertEquals(testuser.id, 1);
+	           assertEquals(testuser.email, user.email);
+	           assertEquals(testuser.lastname, user.lastname);
 	           assertEquals(channel.users.contains(testuser),true);
 	       }
 	    });
