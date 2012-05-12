@@ -43,8 +43,8 @@ public class Channelverwaltung {
         in.onClose(new Callback0() {
            public void invoke() {
                // Send a Quit message to the room.
-        	   JsonNode errorNode = Auth.genAuth();
-        	   notifyAllMembers(errorNode);
+        	   //JsonNode errorNode = Auth.genAuth();
+        	  // notifyAllMembers(errorNode);
                
            }
         });
@@ -62,7 +62,7 @@ public class Channelverwaltung {
 			
 		}
 		else if (type.equals("auth")){
-			
+			//notifyAllMembers(Auth.genAuth(level,msg));
 		}
 		else{
 			//Fehler

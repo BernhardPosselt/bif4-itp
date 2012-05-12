@@ -1,9 +1,7 @@
 package jsonmodelsout;
 
-import java.util.UUID;
 
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.node.ObjectNode;
 
 import play.libs.Json;
 import flexjson.JSONException;
@@ -15,17 +13,15 @@ public class Auth {
 	
 	public Auth(){
 		this.type = "auth";
+		this.data = new AuthData();
 	}
 	
-	public static JsonNode genAuth(){
+	public static JsonNode genAuth(String level,String msg){
 		String json = "";	
 		try{
-			
 			Auth a = new Auth();
-			AuthData ad = new AuthData();
-			UUID idOne = UUID.randomUUID();
-			ad.sessionid = idOne.toString();
-			a.data = ad;
+			a.data.level = level;
+			a.data.msg = msg;
 			JSONSerializer aser = new JSONSerializer();
 			json = aser.exclude("*.class").serialize(a);
 			} 

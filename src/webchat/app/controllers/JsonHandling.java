@@ -36,10 +36,8 @@ public class JsonHandling extends Controller {
 		try{
 			
 			Auth a = new Auth();
-			AuthData ad = new AuthData();
 			UUID idOne = UUID.randomUUID();
-			ad.sessionid = idOne.toString();
-			a.data = ad;
+			
 			JSONSerializer aser = new JSONSerializer();
 			json = aser.exclude("*.class").serialize(a);
 			} 

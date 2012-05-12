@@ -40,8 +40,11 @@ public class Message extends Model {
 	@Formats.DateTime(pattern = "dd-MM-yyyy HH:mm:ss")
 	public Date date;
 	
+	@Formats.DateTime(pattern = "dd-MM-yyyy HH:mm:ss")
+	public Date modified;
+	
 	@ManyToOne
-	public User uid;
+	public User user;
 	
 	@ManyToMany(mappedBy="messages")
 	public List<Channel> channels;

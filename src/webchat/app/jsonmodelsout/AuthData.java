@@ -1,6 +1,7 @@
 package jsonmodelsout;
 
 public class AuthData{
-	public String sessionid;
+	public String level;
+	public String msg;
 }
 

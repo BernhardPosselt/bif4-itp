@@ -8,6 +8,7 @@ import websockets.Channelverwaltung;
 
 import java.nio.channels.MembershipKey;
 import java.util.*;
+
 import play.mvc.Controller;
 
 import org.codehaus.jackson.JsonNode;
@@ -18,7 +19,9 @@ public class Application extends Controller {
   
 	 static int userid;
 	 public static Result index() 
-	 {		session("userid","9");
+	 {		Random generator = new Random();
+	 		int sess = generator.nextInt(1000);
+		 	session("userid",String.valueOf(sess));
 	 		userid = Integer.parseInt(session("userid"));
 		    return ok(index.render());
 	 }

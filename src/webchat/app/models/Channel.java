@@ -24,7 +24,7 @@ import play.libs.F.Callback;
 import play.libs.F.Callback0;
 import play.libs.Json;
 import play.mvc.WebSocket;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 
 @Entity
 public class Channel extends Model {
