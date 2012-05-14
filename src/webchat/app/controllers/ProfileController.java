@@ -14,7 +14,7 @@ import views.html.*;
  * Time: 13:08
  * To change this template use File | Settings | File Templates.
  */
-public class ProfileHandling extends Controller {
+public class ProfileController extends Controller {
 
     public static Result submit()
     {
@@ -70,7 +70,7 @@ public class ProfileHandling extends Controller {
         }
         else
         {
-            return redirect(routes.LoginHandling.login());
+            return redirect(routes.LoginController.login());
         }
     }
 

@@ -28,7 +28,7 @@ public class Application extends Controller {
              String user = User.getUsername(userid);
              return ok(index.render(user));
          } else {
-             return redirect(routes.LoginHandling.login());
+             return redirect(routes.LoginController.login());
          }
 	 }
 	 

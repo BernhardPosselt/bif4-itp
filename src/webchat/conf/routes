@@ -6,13 +6,13 @@
 GET / controllers.Application.index()
 
 #Login
-GET /login controllers.LoginHandling.login()
-GET /logout controllers.LoginHandling.logout()
-POST /login controllers.LoginHandling.submit()
+GET /login controllers.LoginController.login()
+GET /logout controllers.LoginController.logout()
+POST /login controllers.LoginController.submit()
 
 #Profile
-GET /profile controllers.ProfileHandling.edit()
-POST /profile controllers.ProfileHandling.submit()
+GET /profile controllers.ProfileController.edit()
+POST /profile controllers.ProfileController.submit()
 
 
 #TestData
