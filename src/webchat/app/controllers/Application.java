@@ -17,12 +17,19 @@ import models.*;
 public class Application extends Controller {
   
 	 static int userid;
-	 public static Result index() 
-	 {
 
-         userid = Integer.parseInt(session("userid"));
-
-         return ok(index.render(User.getUsername(Integer.parseInt(session("userid")))));
+    /**
+     * Displays the index page
+     * @return
+     */
+	 public static Result index() {
+         if(session("userid") != null){
+             userid = Integer.parseInt(session("userid"));
+             String user = User.getUsername(userid);
+             return ok(index.render(user));
+         } else {
+             return redirect(routes.LoginHandling.login());
+         }
 	 }
 	 
 	 public static Result filltestdata()
