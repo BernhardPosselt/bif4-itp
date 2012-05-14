@@ -10,12 +10,10 @@ import org.codehaus.jackson.node.ObjectNode;
 
 
 
-import jsonmodelsin.InMessage;
-import jsonmodelsin.InMessageData;
-import jsonmodelsout.Auth;
-import jsonmodelsout.AuthData;
-import jsonmodelsout.Message;
-import jsonmodelsout.MessageData;
+import websocket.json.in.InMessage;
+import websocket.json.out.Auth;
+import websocket.json.out.AuthData;
+import websocket.json.out.MessageData;
 
 
 
@@ -28,7 +26,7 @@ import play.libs.Json;
 import play.mvc.*;
 
 
-public class JsonHandling extends Controller {
+public class JsonTestController extends Controller {
 
 
 	public static Result genAuth(){

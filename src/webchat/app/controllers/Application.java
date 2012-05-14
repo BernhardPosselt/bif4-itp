@@ -1,13 +1,10 @@
 package controllers;
 
-import play.*;
-
 import play.mvc.*;
 import views.html.*;
-import websockets.Channelverwaltung;
+import websocket.WebsocketManager;
 
 //import java.nio.channels.MembershipKey;
-import java.util.*;
 import play.mvc.Controller;
 
 import org.codehaus.jackson.JsonNode;
@@ -76,20 +73,12 @@ public class Application extends Controller {
 	 }
 	 
 	 
-	 public static WebSocket<JsonNode> chat() {
-	        return new WebSocket<JsonNode>() {
-	            // Called when the Websocket Handshake is done.
-	            public void onReady(WebSocket.In<JsonNode> in, WebSocket.Out<JsonNode> out){
-	                
-	                try { 
-	                	
-	                    Channelverwaltung.join(in, out, userid);
-	                } catch (Exception ex) {
-	                    ex.printStackTrace();
-	                }
-	            }
-	        };
+	 public static WebSocket<JsonNode> websocket() {
+         int userId;
+         if(session("userid") != null){
+             userId = Integer.parseInt(session("userid"));
+            return WebsocketManager.getWebsocket(userId);
 	    }
-	
-
+	    return null;
+     }
 }
