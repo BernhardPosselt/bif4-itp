@@ -35,11 +35,11 @@ class MainManager
         @managers_initialized++
         if @managers_initialized == 5
             console.log("All managers initialized")
-            @users.migrate_all()
-            @channels.migrate_all()
-            @streams.migrate_all()
-            @groups.migrate_all()
-            @files.migrate_all()
+            @users.init_ui()
+            @channels.init_ui()
+            @streams.init_ui()
+            @groups.init_ui()
+            @files.init_ui()
 
     # Intitializes the update interval to call the update method
     init_keep_alive: () ->
@@ -92,12 +92,12 @@ class MainManager
                 when "status" then @status_msg(data.data)
         else
             switch data.type
-                when "message" then @streams.update(data.data)
-                when "user" then @users.update(data.data)
-                when "group" then @groups.update(data.data)
-                when "stream" then @streams.update(data.data)
-                when "channel" then @channels.update(data.data)
-                when "file" then @files.update(data.data)
+                when "message" then @streams.input(data.data, data.actions)
+                when "user" then @users.input(data.data, data.actions)
+                when "group" then @groups.input(data.data, data.actions)
+                when "channel" then @channels.input(data.data, data.actions)
+                when "file" then @files.input(data.data, data.actions)
+                when "stream" then @streams.input(data.data)                
                 when "status" then @status_msg(data.data)
 
 
@@ -141,6 +141,5 @@ class MainManager
             data:
                 message: msg
                 type: type
-                # FIXME: get active channel
-                channel: [0]
+                channel: [@channels.get_active_channel()]
         @send_websocket(message)
