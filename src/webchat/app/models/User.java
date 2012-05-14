@@ -15,7 +15,7 @@ import play.data.validation.*;
 public class User extends Model {
 	
 	@Id
-	public int id;
+    public int id;
 	
 	@Constraints.Required
 	public String username;
@@ -24,10 +24,14 @@ public class User extends Model {
 	private String password;
 	
 	public void setPassword(String newpassword) {
-		password = Crypto.sign(newpassword);
+        if(newpassword != null)
+        {
+		    password = Crypto.sign(newpassword);
+        }
 	}
 	
 	public Boolean checkPassword(String newpassword) {
+
 		if(password == Crypto.sign(newpassword)) {
 			return true;
 		} else {
@@ -43,11 +47,9 @@ public class User extends Model {
 	
 	@Constraints.Required
 	public String lastname;
-	
-	@Constraints.Required
+
 	public Boolean online;
-	
-	@Constraints.Required
+
 	public Boolean admin;
 	
 	@Formats.DateTime(pattern = "dd-MM-yyyy HH:mm:ss")
@@ -71,9 +73,15 @@ public class User extends Model {
 			Integer.class, User.class
 	);
 
-    public static boolean authenticate(String username, String password)
+    public static String getUsername(int id)
     {
-        User tmp = find.where().eq("username", username).eq("password", password).findUnique();
+        return find.byId(id).username;
+    }
+
+    public static boolean authenticate(String name, String pw)
+    {
+
+        User tmp = find.where().eq("username", name).eq("password", Crypto.sign(pw)).findUnique();
 
         if(tmp == null)
             return false;

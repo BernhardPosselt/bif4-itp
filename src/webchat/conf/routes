@@ -9,6 +9,12 @@ GET / controllers.Application.index()
 GET /login controllers.LoginHandling.login()
 GET /logout controllers.LoginHandling.logout()
 POST /login controllers.LoginHandling.submit()
+
+#Profile
+GET /profile controllers.ProfileHandling.edit()
+POST /profile controllers.ProfileHandling.submit()
+
+
 #TestData
 
 GET /Testdata controllers.Application.filltestdata()
@@ -19,8 +25,9 @@ GET /WebSocket controllers.WebSocketHandling.index()
 GET /websocket controllers.Application.chat()
 
 # Json
-GET /Json/Channels controllers.JsonHandling.genAuth()
+GET /Json/Auth controllers.JsonHandling.genAuth()
 GET /Json/Message controllers.JsonHandling.genMessage()
+GET /Json/Groups controllers.JsonHandling.genGroup()
 
 # Map static resources from the /public folder to the /assets URL path
 GET /assets/*file controllers.Assets.at(path="/public", file)

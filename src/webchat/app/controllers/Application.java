@@ -6,9 +6,8 @@ import play.mvc.*;
 import views.html.*;
 import websockets.Channelverwaltung;
 
-import java.nio.channels.MembershipKey;
+//import java.nio.channels.MembershipKey;
 import java.util.*;
-
 import play.mvc.Controller;
 
 import org.codehaus.jackson.JsonNode;
@@ -19,18 +18,20 @@ public class Application extends Controller {
   
 	 static int userid;
 	 public static Result index() 
-	 {		Random generator = new Random();
-	 		int sess = generator.nextInt(1000);
-		 	session("userid",String.valueOf(sess));
-	 		userid = Integer.parseInt(session("userid"));
-		    return ok(index.render());
+	 {
+
+         userid = Integer.parseInt(session("userid"));
+
+         return ok(index.render(User.getUsername(Integer.parseInt(session("userid")))));
 	 }
 	 
 	 public static Result filltestdata()
 	 {
-		   	User user = new User();
+		   User user = new User();
 	        user.username = "Glembo";
+            user.setPassword("test");
 	        user.email = "a.b@aon.at";
+
 	        user.lastname = "Huber";
 	        user.firstname = "Ernst";
 	        user.online = false;
@@ -38,6 +39,7 @@ public class Application extends Controller {
 	        
 	        User user1 = new User();
 	        user1.username = "MasterLindi";
+            user.setPassword("test");
 	        user1.email = "christoph.lindmaier@gmx.at";
 	        user1.lastname = "Lindmaier";
 	        user1.firstname = "Christoph";
@@ -62,7 +64,18 @@ public class Application extends Controller {
 	  	    channel.setUsers(user); 
 	  	    channel.setUsers(user1);
 	  	    channel.saveManyToManyAssociations("users");
-	  	    return ok(index.render());
+	  	    
+	  	    Date nowDate = new Date();
+	  	    Groups group = new Groups();
+	  	    group.modified = nowDate;
+	  	    group.name = "group1";
+	  	    group.users.add(user1);
+	  	    group.users.add(user);
+	  	    group.channels.add(channel);
+	  	    group.save();
+	  	    group.saveManyToManyAssociations("users");
+	  	    group.saveManyToManyAssociations("channels");
+	  	    return ok(index.render("testdata"));
 	  	    
 	 }
 	 

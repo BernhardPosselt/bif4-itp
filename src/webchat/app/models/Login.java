@@ -12,11 +12,11 @@ import play.data.validation.Constraints.*;
 
 public class Login {
 
-    @Required
+
     private
     String username;
 
-    @Required
+
     private
     String password;
 

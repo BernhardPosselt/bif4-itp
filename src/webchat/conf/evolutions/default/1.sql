@@ -25,6 +25,7 @@ create table file (
 create table groups (
   id                        integer not null,
   name                      varchar(255),
+  modified                  timestamp,
   constraint pk_groups primary key (id))
 ;
 

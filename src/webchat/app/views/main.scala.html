@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(username: String, title: String)(content: Html)
 
 <!DOCTYPE html>
 
@@ -25,10 +25,16 @@
     <body>
         <div id="site">
             <nav>
+
+                <div id="username">
+                @if(username != "") {
+                    Hi, @username
+                }
+                </div>
                 <ul>
                     <li><a href="">Settings</a> / </li>
-                    <li><a href="">Profile</a> / </li>
-                    <li><a href="">Logout</a></li>
+                    <li><a href="@routes.ProfileHandling.edit">Profile</a> / </li>
+                    <li><a href="@routes.LoginHandling.logout">Logout</a></li>
                 </ul>
             </nav>
             <div id="content">

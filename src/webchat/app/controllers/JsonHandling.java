@@ -4,6 +4,8 @@ package controllers;
 
 import java.util.*;
 
+import models.Groups;
+
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
@@ -14,14 +16,9 @@ import jsonmodelsin.InMessage;
 import jsonmodelsin.InMessageData;
 import jsonmodelsout.Auth;
 import jsonmodelsout.AuthData;
+import jsonmodelsout.GroupData;
 import jsonmodelsout.Message;
 import jsonmodelsout.MessageData;
-
-
-
-
-
-
 
 import flexjson.*;
 import play.libs.Json;
@@ -70,6 +67,36 @@ public class JsonHandling extends Controller {
 				data.putObject(String.valueOf(iterator.next())).putAll(channel);		
 			}
 			jnode.putObject("data").putAll(data);
+			} 
+		catch (JSONException e) {	 
+			 e.printStackTrace();
+		}
+		return ok(jnode);
+	}
+	
+	public static Result genGroup(){
+		int userid = 1;
+		String json = "";
+		ObjectNode jnode = Json.newObject(); //initalize Objectnodes
+		ObjectNode data = jnode.objectNode();
+		try{
+			for (Iterator<Groups> iterator = Groups.getUserGroups(userid).iterator(); iterator.hasNext();)
+			{
+				Groups group = new Groups();
+				group = iterator.next();
+				
+				JsonNode gdata = data.objectNode();
+				GroupData gd = new GroupData();
+				gd.name = group.name;
+				gd.modified = group.modified;
+				JSONSerializer gser = new JSONSerializer().include();
+				json = gser.exclude("*.class").serialize(gd);
+				gdata = Json.parse(json);
+				data.putObject(String.valueOf(group.id)).putAll(Json.fromJson(gdata,ObjectNode.class));
+				
+			}
+			jnode.put("type", "group");
+			jnode.putObject("data").putAll(data); //put the DataObject Node to the jnode
 			} 
 		catch (JSONException e) {	 
 			 e.printStackTrace();
