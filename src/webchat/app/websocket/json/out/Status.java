@@ -1,8 +1,7 @@
-package jsonmodelsout;
+package websocket.json.out;
 
 import flexjson.JSONException;
 import flexjson.JSONSerializer;
-import jsonmodelsout.StatusData;
 
 
 public class Status {

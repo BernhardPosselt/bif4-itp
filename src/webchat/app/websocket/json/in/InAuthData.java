@@ -1,4 +1,4 @@
-package jsonmodelsin;
+package websocket.json.in;
 
 public class InAuthData {
 

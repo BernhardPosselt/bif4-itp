@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @(username: String, title: String)(content: Html)
 
 <!DOCTYPE html>
@@ -43,3 +44,50 @@
         </div>
     </body>
 </html>
+=======
+@(username: String, title: String)(content: Html)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>@title</title>
+
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/style.css")">
+
+        <script src="@routes.Assets.at("javascripts/jquery-1.7.2.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/jquery.cookie.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/keycodes.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/main.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/mainmanager.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/channelmanager.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/usermanager.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/groupmanager.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/filemanager.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/streammanager.js")" type="text/javascript"></script>
+
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+
+    </head>
+    <body>
+        <div id="site">
+            <nav>
+
+                <div id="username">
+                @if(username != "") {
+                    Hi, @username
+                }
+                </div>
+                <ul>
+                    <li><a href="">Settings</a> / </li>
+                    <li><a href="@routes.ProfileController.edit">Profile</a> / </li>
+                    <li><a href="@routes.LoginController.logout">Logout</a></li>
+                </ul>
+            </nav>
+            <div id="content">
+                @content
+            </div>
+        </div>
+    </body>
+</html>
+>>>>>>> 8093ba07979d1814f2c729adc9561e1afbc5c03e

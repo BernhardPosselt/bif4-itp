@@ -1,4 +1,4 @@
-package jsonmodelsin;
+package websocket.json.in;
 
 public class InMessage {
 	public final String type;

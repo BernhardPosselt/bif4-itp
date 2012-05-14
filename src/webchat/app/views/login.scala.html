@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @(loginForm : Form[Login], username: String)
 
 @import helper._
@@ -32,4 +33,40 @@ loginForm("password"),
 
 </div>
 
+=======
+@(loginForm : Form[Login], username: String)
+
+@import helper._
+@import helper.twitterBootstrap._
+
+
+@main(username, title = "Webchat") {
+
+<center><h2>Login</h2></center>
+<div id="login">
+
+
+@helper.form(action = routes.LoginController.submit) {
+
+
+    @inputText(
+loginForm("username"),
+    '_label -> "Username",
+    '_showConstraints -> false
+    )
+
+    @inputPassword(
+loginForm("password"),
+    '_label -> "Password",
+    '_showConstraints -> false
+    )
+
+    <input type="submit" value="Login" />
+
+
+}
+
+</div>
+
+>>>>>>> 8093ba07979d1814f2c729adc9561e1afbc5c03e
 }

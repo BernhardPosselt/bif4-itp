@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @(userForm : Form[User], username: String)
 
 @import helper._
@@ -50,4 +51,58 @@ userForm("lastname"),
 
 </div>
 
+=======
+@(userForm : Form[User], username: String)
+
+@import helper._
+@import helper.twitterBootstrap._
+
+
+@main(username, title = "Webchat") {
+
+<center><h2>Profile</h2></center>
+
+<div id="profile">
+
+@helper.form(action = routes.ProfileController.submit) {
+
+
+@inputText(
+userForm("username"),
+'_label -> "Username"
+)
+
+@inputPassword(
+userForm("password"),
+'_label -> "Password"
+)
+
+@inputPassword(
+userForm("repeatpassword"),
+'_label -> "Repeat Password"
+)
+
+@inputText(
+userForm("email"),
+'_label -> "Email"
+)
+
+@inputText(
+userForm("firstname"),
+'_label -> "Prename"
+)
+
+@inputText(
+userForm("lastname"),
+'_label -> "Lastname"
+)
+
+<input type="submit" value="Save" />
+
+
+}
+
+</div>
+
+>>>>>>> 8093ba07979d1814f2c729adc9561e1afbc5c03e
 }

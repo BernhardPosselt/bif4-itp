@@ -13,7 +13,7 @@ import views.html.*;
 
 import models.*;
 
-public class WebSocketHandling extends Controller {
+public class WebSocketTestController extends Controller {
 	
 	public static WebSocket<String> index() {
 		  return new WebSocket<String>() {

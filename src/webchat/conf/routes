@@ -6,13 +6,13 @@
 GET / controllers.Application.index()
 
 #Login
-GET /login controllers.LoginHandling.login()
-GET /logout controllers.LoginHandling.logout()
-POST /login controllers.LoginHandling.submit()
+GET /login controllers.LoginController.login()
+GET /logout controllers.LoginController.logout()
+POST /login controllers.LoginController.submit()
 
 #Profile
-GET /profile controllers.ProfileHandling.edit()
-POST /profile controllers.ProfileHandling.submit()
+GET /profile controllers.ProfileController.edit()
+POST /profile controllers.ProfileController.submit()
 
 
 #TestData
@@ -20,14 +20,14 @@ POST /profile controllers.ProfileHandling.submit()
 GET /Testdata controllers.Application.filltestdata()
 
 # WebSocket
-GET /WebSocket controllers.WebSocketHandling.index()
+GET /WebSocket controllers.WebSocketTestController.index()
 
-GET /websocket controllers.Application.chat()
+GET /websocket controllers.Application.websocket()
 
 # Json
-GET /Json/Auth controllers.JsonHandling.genAuth()
-GET /Json/Message controllers.JsonHandling.genMessage()
-GET /Json/Groups controllers.JsonHandling.genGroup()
+GET /Json/Channels controllers.JsonTestController.genAuth()
+GET /Json/Message controllers.JsonTestController.genMessage()
 
 # Map static resources from the /public folder to the /assets URL path
 GET /assets/*file controllers.Assets.at(path="/public", file)
+

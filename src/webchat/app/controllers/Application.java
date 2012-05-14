@@ -1,13 +1,10 @@
 package controllers;
 
-import play.*;
-
 import play.mvc.*;
 import views.html.*;
-import websockets.Channelverwaltung;
+import websocket.WebsocketManager;
 
 //import java.nio.channels.MembershipKey;
-import java.util.*;
 import play.mvc.Controller;
 
 import org.codehaus.jackson.JsonNode;
@@ -17,12 +14,19 @@ import models.*;
 public class Application extends Controller {
   
 	 static int userid;
-	 public static Result index() 
-	 {
 
-         userid = Integer.parseInt(session("userid"));
-
-         return ok(index.render(User.getUsername(Integer.parseInt(session("userid")))));
+    /**
+     * Displays the index page
+     * @return
+     */
+	 public static Result index() {
+         if(session("userid") != null){
+             userid = Integer.parseInt(session("userid"));
+             String user = User.getUsername(userid);
+             return ok(index.render(user));
+         } else {
+             return redirect(routes.LoginController.login());
+         }
 	 }
 	 
 	 public static Result filltestdata()
@@ -64,36 +68,17 @@ public class Application extends Controller {
 	  	    channel.setUsers(user); 
 	  	    channel.setUsers(user1);
 	  	    channel.saveManyToManyAssociations("users");
-	  	    
-	  	    Date nowDate = new Date();
-	  	    Groups group = new Groups();
-	  	    group.modified = nowDate;
-	  	    group.name = "group1";
-	  	    group.users.add(user1);
-	  	    group.users.add(user);
-	  	    group.channels.add(channel);
-	  	    group.save();
-	  	    group.saveManyToManyAssociations("users");
-	  	    group.saveManyToManyAssociations("channels");
 	  	    return ok(index.render("testdata"));
 	  	    
 	 }
 	 
 	 
-	 public static WebSocket<JsonNode> chat() {
-	        return new WebSocket<JsonNode>() {
-	            // Called when the Websocket Handshake is done.
-	            public void onReady(WebSocket.In<JsonNode> in, WebSocket.Out<JsonNode> out){
-	                
-	                try { 
-	                	
-	                    Channelverwaltung.join(in, out, userid);
-	                } catch (Exception ex) {
-	                    ex.printStackTrace();
-	                }
-	            }
-	        };
+	 public static WebSocket<JsonNode> websocket() {
+         int userId;
+         if(session("userid") != null){
+             userId = Integer.parseInt(session("userid"));
+            return WebsocketManager.getWebsocket(userId);
 	    }
-	
-
+	    return null;
+     }
 }

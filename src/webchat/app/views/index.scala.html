@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @(username: String)
 
 @main(username, title = "Webchat") {
@@ -26,3 +27,33 @@
     
     </div>
 }
+=======
+@(username: String)
+
+@main(username, title = "Webchat") {
+
+    <div id="channel_sidebar">
+        <div id="channels"><ul></ul></div>
+        <div id="groups"></div>
+    </div>
+
+    <div id="stream">
+        <div id="stream_meta"></div>
+        <div id="stream_chat"></div>
+        <div id="stream_input">
+            <div id="stream_input_options">
+                <select>
+                    <option>text</option>
+                    <option>java</option>
+                </select>
+            </div>
+            <textarea id="stream_input_field"></textarea>
+            <input id="stream_input_send" type="button" value="chrisi" />
+        </div>
+    </div>
+    
+    <div id="stream_sidebar">
+    
+    </div>
+}
+>>>>>>> 8093ba07979d1814f2c729adc9561e1afbc5c03e

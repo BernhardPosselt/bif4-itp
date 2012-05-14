@@ -1,4 +1,4 @@
-package jsonmodelsout;
+package websocket.json.out;
 
 import flexjson.JSONException;
 import flexjson.JSONSerializer;
