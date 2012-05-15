@@ -52,10 +52,12 @@ public class LoginController extends Controller {
 
         if(form.hasErrors())
         {
+              Logger.error("Login wrong!");
               return badRequest(login.render(form, ""));
         }
         else
         {
+              Logger.info("Login correct!");
               User tmp = User.find.where().eq("username", form.get().getUsername()).findUnique();
               session("userid", String.valueOf(tmp.id));
               return redirect(routes.Application.index());
