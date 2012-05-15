@@ -3,26 +3,37 @@
 @main(username, title = "Webchat") {
 
     <div id="channel_sidebar">
-        <div id="channels"></div>
+        <div id="channels"><ul></ul></div>
         <div id="groups"></div>
     </div>
 
-    <div id="stream">
-        <div id="stream_meta"></div>
-        <div id="stream_chat">st</div>
-        <div id="stream_input">
-            <div id="stream_input_options">
-                <select>
-                    <option>text</option>
-                    <option>java</option>
-                </select>
+
+    <div id="stream_window">
+
+        <div id="streams">
+
+            <div class="stream">
+                <div class="stream_meta"></div>
+                <div class="stream_chat"></div>
             </div>
-            <textarea id="stream_input_field"></textarea>
-            <input id="stream_input_send" type="button" value="chrisi" />
+
         </div>
-    </div>
-    
-    <div id="stream_sidebar">
-    
+
+
+        <div id="input">
+            <select id="input_options">
+                <option>text</option>
+                <option>java</option>
+            </select>
+            <textarea id="input_field"></textarea>
+            <input id="input_send" type="button" value="chrisi" />
+        </div>
+
+        <div id="stream_sidebar">
+            <div class="stream">
+
+            </div>
+        </div>
+
     </div>
 }

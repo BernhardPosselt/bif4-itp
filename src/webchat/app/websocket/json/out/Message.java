@@ -1,18 +1,14 @@
-package jsonmodelsout;
+package websocket.json.out;
 
-import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
-import jsonmodelsin.InMessage;
+import websocket.json.in.InMessage;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 
 import play.libs.Json;
 
-import models.Channel;
 import flexjson.JSONDeserializer;
 import flexjson.JSONException;
 import flexjson.JSONSerializer;

@@ -10,12 +10,10 @@ import org.codehaus.jackson.node.ObjectNode;
 
 
 
-import jsonmodelsin.InMessage;
-import jsonmodelsin.InMessageData;
-import jsonmodelsout.Auth;
-import jsonmodelsout.AuthData;
-import jsonmodelsout.Message;
-import jsonmodelsout.MessageData;
+import websocket.json.in.InMessage;
+import websocket.json.out.Auth;
+import websocket.json.out.AuthData;
+import websocket.json.out.MessageData;
 
 
 
@@ -28,13 +26,13 @@ import play.libs.Json;
 import play.mvc.*;
 
 
-public class JsonHandling extends Controller {
+public class JsonTestController extends Controller {
 
-	
+
 	public static Result genAuth(){
-		String json = "";	
+		String json = "";
 		try{
-			
+
 			Auth a = new Auth();
 			AuthData ad = new AuthData();
 			UUID idOne = UUID.randomUUID();
@@ -42,13 +40,13 @@ public class JsonHandling extends Controller {
 			a.data = ad;
 			JSONSerializer aser = new JSONSerializer();
 			json = aser.exclude("*.class").serialize(a);
-			} 
-		catch (JSONException e) {	 
+			}
+		catch (JSONException e) {
 			 e.printStackTrace();
 		}
 		return ok(Json.parse(json));
 	}
-	
+
 	public static Result genMessage(){
 		String json = "";	
 		JsonNode inmessage = buildinmessage();
@@ -78,7 +76,7 @@ public class JsonHandling extends Controller {
 		}
 		return ok(jnode);
 	}
-	
+
 	public static JsonNode buildinmessage()
 	{
 		ObjectNode injson = Json.newObject();

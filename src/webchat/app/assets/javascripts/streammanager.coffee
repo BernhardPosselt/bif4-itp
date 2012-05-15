@@ -9,14 +9,7 @@ class StreamManager
     init: (@data) ->
         @callback_init
         
-    update: (user) -> 
+    input: (data) -> 
         
     
-    migrate_all: (data) ->
-        for id, value of @data
-            migrate(id)
-     
-    # user info can be in: the group tab and in the stream
-    # migrate updates all these entries if they exist, otherwise it creates them
-    migrate:(id) ->
-        value = @data[id]
+

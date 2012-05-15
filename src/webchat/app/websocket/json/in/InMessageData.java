@@ -1,4 +1,4 @@
-package jsonmodelsin;
+package websocket.json.in;
 
 import java.util.ArrayList;
 import java.util.List;

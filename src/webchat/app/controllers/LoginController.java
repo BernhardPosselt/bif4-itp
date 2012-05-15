@@ -16,9 +16,7 @@ import models.*;
  * Time: 09:36
  * To change this template use File | Settings | File Templates.
  */
-public class LoginHandling extends Controller {
-
-
+public class LoginController extends Controller {
 
     public static Result login()
     {
@@ -40,7 +38,7 @@ public class LoginHandling extends Controller {
     {
         Logger.info("User with ID " + session("userid") + " logged out.");
         session().clear();
-        return redirect(routes.LoginHandling.login());
+        return redirect(routes.LoginController.login());
     }
 
     public static Result submit()
