@@ -93,6 +93,15 @@ public class User extends Model {
             return true;
     }
 
+    public static int getUserID(String name)
+    {
+        User tmp = find.where().eq("username", name).findUnique();
+        if(tmp != null)
+            return tmp.id;
+
+        return -1;
+    }
+
 }
 
 	

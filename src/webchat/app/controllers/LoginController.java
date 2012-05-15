@@ -21,21 +21,22 @@ public class LoginController extends Controller {
     public static Result login()
     {
         String user = session("userid");
-        if(user != null)
+
+        if(user != null) //User logged in
         {
-            Logger.info("Login - already logged in, User ID " + user);
+            Logger.info("User with ID " + user + " already logged in - Redirect to Index Site");
             return redirect(routes.Application.index());
         }
-        else
+        else  //User not logged in
         {
-            Logger.warn("Login - not logged in");
+            Logger.warn("User not logged in - Show empty login form");
             return ok(login.render(form(Login.class), ""));
         }
     }
 
     public static Result logout()
     {
-        Logger.info("Logout - User ID: " + session("userid"));
+        Logger.info("User with ID " + session("userid") + " logged out - Redirect to Login Form");
         session().clear();
         return redirect(routes.LoginController.login());
     }
@@ -44,22 +45,24 @@ public class LoginController extends Controller {
     {
         Form<Login> form = form(Login.class).bindFromRequest();
 
+        //Authentication
         if(!User.authenticate(form.field("username").value(), form.field("password").value()))
         {
             form.reject("username", "Username or Password wrong!");
         }
 
+        //Error
         if(form.hasErrors())
         {
-              Logger.error("Login - wrong username or password");
+              Logger.error("Login not successful - Wrong username or password");
               return badRequest(login.render(form, ""));
         }
-        else
+        else //Authentication successful
         {
+              //Get UserID by Username
+              session("userid", String.valueOf(User.getUserID(form.get().getUsername())));
 
-              User tmp = User.find.where().eq("username", form.get().getUsername()).findUnique();
-              session("userid", String.valueOf(tmp.id));
-              Logger.info("Login - correct, User ID: " + tmp.id);
+              Logger.info("User with ID " + session("userid") + " logged in - Redirect to Index Site");
               return redirect(routes.Application.index());
         }
 
