@@ -43,7 +43,7 @@ public class Application extends Controller {
 	        
 	        User user1 = new User();
 	        user1.username = "MasterLindi";
-            user.setPassword("test");
+            user1.setPassword("test");
 	        user1.email = "christoph.lindmaier@gmx.at";
 	        user1.lastname = "Lindmaier";
 	        user1.firstname = "Christoph";

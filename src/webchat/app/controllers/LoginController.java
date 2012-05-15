@@ -31,7 +31,6 @@ public class LoginController extends Controller {
             Logger.warn("User isn't logged in");
             return ok(login.render(form(Login.class), ""));
         }
-
     }
 
     public static Result logout()
@@ -47,6 +46,7 @@ public class LoginController extends Controller {
 
         if(!User.authenticate(form.field("username").value(), form.field("password").value()))
         {
+            Logger.warn("Login with username " + form.field("username").value() + " and password " + form.field("password").value() + " wrong!");
             form.reject("username", "Username or Password wrong!");
         }
 
@@ -57,9 +57,10 @@ public class LoginController extends Controller {
         }
         else
         {
-              Logger.info("Login correct!");
+
               User tmp = User.find.where().eq("username", form.get().getUsername()).findUnique();
               session("userid", String.valueOf(tmp.id));
+              Logger.info("Login correct, User with ID " + tmp.id + " logged in!");
               return redirect(routes.Application.index());
         }
 

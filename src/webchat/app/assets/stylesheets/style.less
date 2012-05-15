@@ -73,7 +73,7 @@ html, body {
       margin: 0;
       padding: 0;
       float: right;
-      margin-right: 50px;
+      margin-right: 10px;
 
       li {
         display: inline-block;
@@ -117,10 +117,10 @@ html, body {
         }
     }
 
-    #channels {
+    #channel_sidebar {
       overflow-y: auto;
-      background-color: @col5;
-      width: 20%;
+      padding:1%;
+      width: 18%;
       float: left;
       height: 100%;
 
@@ -140,80 +140,46 @@ html, body {
         }
     }
 
+    #stream_window
+    {
+        width: 60%;
+        position:relative;
+        float:left;
+        height:100%;
 
+        #streams
+        {
+              width:100%;
+              height:100%;
 
-    #streams {
-      width: 60%;
-      position: relative;
-      float: left;
-      height: 100%;
+             .stream_meta
+             {
+                     position: absolute;
+                     left: 0;
+                     right: 0;
+                     top: 0;
+                     height: 40px;
+                     border-bottom: 1px solid @black;
+             }
 
-      .stream_meta {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        height: 40px;
-        border-bottom: 1px solid @black;
-      }
-
-      .stream_chat {
-        overflow-y: auto;
-        position: absolute;
-        top: 40px;
-        left: 0;
-        right: 0;
-        bottom: 150px;
-        background-color: @col1;
-      }
-
-      #stream_input {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 150px;
-        background-color: @col3;
-
-        #stream_input_options {
-          width: 100%;
-          height: 40px;
-          background-color: @col4;
+             .stream_chat
+             {
+                     overflow-y: auto;
+                     position: absolute;
+                     top: 40px;
+                     left: 0;
+                     right: 0;
+                     bottom: 50px;
+             }
         }
 
-        #stream_input_field {
-          width: 83%;
-          height: 100px;
-          margin: 5px 0 5px 1%;
-          height: 100px;
-          float: left;
-          border: 0;
-          .border_rad(2px);
+        #input
+        {
+             width:100%;
+             position:absolute;
+             bottom:0;
+             height:50px;
         }
-
-        #stream_input_send {
-          width: 14%;
-          height: 100px;
-          margin: 5px 1%;
-          float: left;
-          border: 0;
-          .border_rad(2px);
-          .grad(@lightgray1, @white);
-          
-          &:active {
-            .grad(@lightgray2, @white);
-          }
-        }
-      }
-    }
-        
-    
-    #channel_info {
-      overflow-y: auto;
-      background-color: @col4;
-      width: 20%;
-      float: left;
-      height: 100%;
     }
   }
 }
