@@ -23,19 +23,19 @@ public class LoginController extends Controller {
         String user = session("userid");
         if(user != null)
         {
-            Logger.info("User with ID" + user + " already logged in");
+            Logger.info("Login - already logged in, User ID " + user);
             return redirect(routes.Application.index());
         }
         else
         {
-            Logger.warn("User isn't logged in");
+            Logger.warn("Login - not logged in");
             return ok(login.render(form(Login.class), ""));
         }
     }
 
     public static Result logout()
     {
-        Logger.info("User with ID " + session("userid") + " logged out.");
+        Logger.info("Logout - User ID: " + session("userid"));
         session().clear();
         return redirect(routes.LoginController.login());
     }
@@ -46,13 +46,12 @@ public class LoginController extends Controller {
 
         if(!User.authenticate(form.field("username").value(), form.field("password").value()))
         {
-            Logger.warn("Login with username " + form.field("username").value() + " and password " + form.field("password").value() + " wrong!");
             form.reject("username", "Username or Password wrong!");
         }
 
         if(form.hasErrors())
         {
-              Logger.error("Login wrong!");
+              Logger.error("Login - wrong username or password");
               return badRequest(login.render(form, ""));
         }
         else
@@ -60,7 +59,7 @@ public class LoginController extends Controller {
 
               User tmp = User.find.where().eq("username", form.get().getUsername()).findUnique();
               session("userid", String.valueOf(tmp.id));
-              Logger.info("Login correct, User with ID " + tmp.id + " logged in!");
+              Logger.info("Login - correct, User ID: " + tmp.id);
               return redirect(routes.Application.index());
         }
 

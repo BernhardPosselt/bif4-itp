@@ -84,15 +84,13 @@ public class User extends Model {
     {
          User tmp = find.where().eq("username", name).eq("password", Crypto.sign(pw)).findUnique();
 
-         Logger.info("User exist: " + find.where().eq("username", name).findUnique().id);
-         Logger.info("Crypted password: " + find.where().eq("username", name).findUnique().password);
-         Logger.info("Entered pw" + Crypto.sign(pw));
+         Logger.info("Auth - User ID: " + find.where().eq("username", name).findUnique().id);
+         Logger.info("Auth - Stored password : " + find.where().eq("username", name).findUnique().password);
+         Logger.info("Auth - Entered password: " + Crypto.sign(pw));
 
             if(tmp == null)
                 return false;
             return true;
-
-
     }
 
 }
