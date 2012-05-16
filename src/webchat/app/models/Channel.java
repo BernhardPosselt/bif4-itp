@@ -92,4 +92,11 @@ public class Channel extends Model {
 			Integer.class, Channel.class
 	);
 	
+	public static List<Channel> getUserChannels(int userid)
+    {
+		List<Channel> tmp = new ArrayList<Channel>();
+        tmp =  find.where().eq("users.id", userid).findList();
+        return tmp;
+    }
+	
 }

@@ -40,7 +40,7 @@ public class Message {
 			dbmessage.modified = new Date();
 			dbmessage.type = im.data.type;
 			dbmessage.user = models.User.find.byId(userid);
-			for (Iterator<Integer> iterator = im.data.channels.iterator(); iterator
+			for (Iterator<Integer> iterator = im.data.channel.iterator(); iterator
 					.hasNext();) {
 				dbmessage.channels.add(models.Channel.find.byId(iterator.next()));
 			}
@@ -66,7 +66,7 @@ public class Message {
 			m.actions.put(dbmessage.id, "create");
 
 			// Put the Messages in the channels
-			for (Iterator<Integer> iterator = im.data.channels.iterator(); iterator
+			for (Iterator<Integer> iterator = im.data.channel.iterator(); iterator
 					.hasNext();) {
 				m.data.put(iterator.next(), mdata);
 			}
@@ -102,7 +102,7 @@ public class Message {
 			for (int messageid = 0; messageid < 4; messageid++) {
 				channel.putObject(String.valueOf(messageid)).putAll(
 						Json.fromJson(mdata, ObjectNode.class));
-				for (Iterator<Integer> iterator = im.data.channels.iterator(); iterator
+				for (Iterator<Integer> iterator = im.data.channel.iterator(); iterator
 						.hasNext();) {
 					data.putObject(String.valueOf(iterator.next())).putAll(
 							channel);

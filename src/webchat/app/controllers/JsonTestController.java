@@ -21,39 +21,14 @@ public class JsonTestController extends Controller {
 
 	
 	public static Result genAuth(){
-		String json = "";	
+		JsonNode json = null;	
 		try{
-			JsonNode inmessage = buildinmessage();
-			Message m = new Message();	
-			m.init = true;
-			MessageData md = new MessageData();
-			InMessage im = new InMessage();
-			im = new JSONDeserializer<InMessage>().deserialize(inmessage.toString(),InMessage.class);
-			md.date = new Date();
-			md.message = im.data.message;
-			md.modified = new Date();
-			md.type = im.data.type;
-			md.user_id = 1;
-			List<Integer> messageid = new ArrayList<Integer>();
-			messageid.add(1);
-			messageid.add(2);	
-			Map<Integer,MessageData> mdata = new HashMap<Integer, MessageData>();
-			for (Iterator<Integer> iterator = messageid.iterator(); iterator.hasNext();){
-				int value = iterator.next();
-				mdata.put(value, md);
-				m.actions.put(value,"create");
-			}
-			
-			for (Iterator<Integer> iterator = im.data.channels.iterator(); iterator.hasNext();){
-				m.data.put(iterator.next(), mdata);
-			}	
-			JSONSerializer aser = new JSONSerializer().include("*.data", "*.actions");
-			json = aser.exclude("*.class").serialize(m);
+			 json = User.genUser(2);
 			} 
 		catch (JSONException e) {	 
 			 e.printStackTrace();
 		}
-		return ok(Json.parse(json));
+		return ok(json);
 	}
 	
 	public static Result genMessage(){
@@ -108,7 +83,7 @@ public class JsonTestController extends Controller {
 		injson.put("type", "message");
 		dat.put("message", "Hello Chris!");
 		dat.put("type", "text");
-		dat.putArray("channels").addAll(channel);
+		dat.putArray("channel").addAll(channel);
 		data.putAll(dat);
 		injson.putObject("data").putAll(data);
 		return injson;
