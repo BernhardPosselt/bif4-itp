@@ -5,6 +5,8 @@ import javax.validation.Constraint;
 
 import java.util.*;
 
+import play.Logger;
+import play.Logger.*;
 import play.api.libs.Crypto;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
@@ -80,12 +82,24 @@ public class User extends Model {
 
     public static boolean authenticate(String name, String pw)
     {
+         User tmp = find.where().eq("username", name).eq("password", Crypto.sign(pw)).findUnique();
 
-        User tmp = find.where().eq("username", name).eq("password", Crypto.sign(pw)).findUnique();
+         Logger.info("Auth - User ID: " + find.where().eq("username", name).findUnique().id);
+         Logger.info("Auth - Stored password : " + find.where().eq("username", name).findUnique().password);
+         Logger.info("Auth - Entered password: " + Crypto.sign(pw));
 
-        if(tmp == null)
-            return false;
-        return true;
+            if(tmp == null)
+                return false;
+            return true;
+    }
+
+    public static int getUserID(String name)
+    {
+        User tmp = find.where().eq("username", name).findUnique();
+        if(tmp != null)
+            return tmp.id;
+
+        return -1;
     }
 
 }

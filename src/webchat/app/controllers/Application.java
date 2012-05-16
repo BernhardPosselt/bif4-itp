@@ -20,22 +20,24 @@ public class Application extends Controller {
      * @return
      */
 	 public static Result index() {
-         if(session("userid") != null){
+
+         if(session("userid") != null) //User logged in
+         {
              userid = Integer.parseInt(session("userid"));
-             String user = User.getUsername(userid);
-             return ok(index.render(user));
-         } else {
+             return ok(index.render(User.getUsername(userid)));
+         }
+         else //User doesn't logged in
+         {
              return redirect(routes.LoginController.login());
          }
 	 }
 	 
 	 public static Result filltestdata()
 	 {
-		   User user = new User();
+            User user = new User();
 	        user.username = "Glembo";
             user.setPassword("test");
 	        user.email = "a.b@aon.at";
-
 	        user.lastname = "Huber";
 	        user.firstname = "Ernst";
 	        user.online = false;
@@ -43,7 +45,7 @@ public class Application extends Controller {
 	        
 	        User user1 = new User();
 	        user1.username = "MasterLindi";
-            user.setPassword("test");
+            user1.setPassword("test");
 	        user1.email = "christoph.lindmaier@gmx.at";
 	        user1.lastname = "Lindmaier";
 	        user1.firstname = "Christoph";
