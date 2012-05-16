@@ -130,23 +130,25 @@ html, body {
         padding: 0;
 
         li a {
-          height: 40px;
-          line-height: 40px;
-          background-color: @darkgrey;
-          display: inline-block;
-          width: 100%;
-          text-decoration: none;
+            height: 40px;
+            line-height: 40px;
+            background-color: @darkgrey;
+            display: inline-block;
+            width: 100%;
+            text-decoration: none;
+            }
         }
-      }
     }
 
-    #stream {
+
+
+    #streams {
       width: 60%;
       position: relative;
       float: left;
       height: 100%;
 
-      #stream_meta {
+      .stream_meta {
         position: absolute;
         left: 0;
         right: 0;
@@ -155,7 +157,7 @@ html, body {
         border-bottom: 1px solid @black;
       }
 
-      #stream_chat {
+      .stream_chat {
         overflow-y: auto;
         position: absolute;
         top: 40px;

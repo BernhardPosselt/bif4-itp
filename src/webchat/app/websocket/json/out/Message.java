@@ -1,159 +1,97 @@
-<<<<<<< HEAD
-package jsonmodelsout;
-
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import jsonmodelsin.InMessage;
-
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.node.ObjectNode;
-
-import play.libs.Json;
-
-import models.Channel;
-import flexjson.JSONDeserializer;
-import flexjson.JSONException;
-import flexjson.JSONSerializer;
-
-
-public class Message{
-	public final String type;
-	public MessageData data;
-	
-	public Message(){
-		this.type = "message";
-		this.data = new MessageData();
-	}
-	
-	public static JsonNode genMessage(JsonNode inmessage, int userid)
-	{	String json = "";
-		int messageid = 5;
-		InMessage im = new InMessage();  //InMessage Object 
-		ObjectNode jnode = Json.newObject(); //initalize Objectnodes
-		ObjectNode data = jnode.objectNode();
-		ObjectNode channel = data.objectNode();
-		JsonNode mdata = channel.objectNode();
-		try{
-			im = new JSONDeserializer<InMessage>().deserialize(inmessage.toString(),InMessage.class); //Deserialize inmessage to Inmessage.class
-			MessageData md = new MessageData();
-			md.message = im.data.message;
-			md.type = im.data.type;	
-			md.user_id = userid;
-			JSONSerializer aser = new JSONSerializer().include("*.channel"); //Serialize MessageData
-			json = aser.exclude("*.class").serialize(md);
-			jnode.put("type", im.type);	//put type to jnode
-			mdata = Json.parse(json);	//serialized MessageData put to JsonNode
-			channel.putObject(String.valueOf(messageid)).putAll(Json.fromJson(mdata,ObjectNode.class)); //put MessageData Node as Object to a Message
-			for (Iterator<Integer> iterator = im.data.channel.iterator(); iterator.hasNext();){
-				data.putObject(String.valueOf(iterator.next())).putAll(channel);		
-			}
-			jnode.putObject("data").putAll(data); //put the DataObject Node to the jnode
-			} 
-		catch (JSONException e) {	 
-			 e.printStackTrace();
-		}
-		return jnode;
-	}
-	
-	public static JsonNode genmultipleMessage(JsonNode inmessage) //JsonNode-Generation for sending more messages at one time
-	{	String json = "";
-		InMessage im = new InMessage();
-		ObjectNode jnode = Json.newObject();
-		ObjectNode data = jnode.objectNode();
-		ObjectNode channel = data.objectNode();
-		JsonNode mdata = channel.objectNode();
-		try{
-			im = new JSONDeserializer<InMessage>().deserialize(inmessage.toString(),InMessage.class);
-			MessageData md = new MessageData();
-			md.message = im.data.message;
-			md.type = im.data.type;
-			JSONSerializer aser = new JSONSerializer().include("*.channel");
-			json = aser.exclude("*.class").serialize(md);
-			jnode.put("type", im.type);
-			mdata = Json.parse(json);
-			for (int messageid = 0; messageid <4; messageid ++)
-			{
-				channel.putObject(String.valueOf(messageid)).putAll(Json.fromJson(mdata,ObjectNode.class));
-				for (Iterator<Integer> iterator = im.data.channel.iterator(); iterator.hasNext();){
-					data.putObject(String.valueOf(iterator.next())).putAll(channel);		
-				}
-			}
-			jnode.putObject("data").putAll(data);
-		} 
-		catch (JSONException e) {	 
-			 e.printStackTrace();
-		}
-		return jnode;
-	}
-}
-=======
 package websocket.json.out;
 
-import java.util.Iterator;
+import java.util.*;
 
 import websocket.json.in.InMessage;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 
+import models.*;
 import play.libs.Json;
 
 import flexjson.JSONDeserializer;
 import flexjson.JSONException;
 import flexjson.JSONSerializer;
 
-
-public class Message{
+public class Message {
 	public final String type;
-	public MessageData data;
-	
-	public Message(){
+	public Map<Integer, Map<Integer, MessageData>> data = new HashMap<Integer, Map<Integer, MessageData>>();
+	public Boolean init;
+	public Map<Integer, String> actions = new HashMap<Integer, String>();
+
+	public Message() {
 		this.type = "message";
-		this.data = new MessageData();
+
 	}
-	
-	public static JsonNode genMessage(JsonNode inmessage, int userid)
-	{	String json = "";
-		int messageid = 5;
-		InMessage im = new InMessage();  //InMessage Object 
-		ObjectNode jnode = Json.newObject(); //initalize Objectnodes
-		ObjectNode data = jnode.objectNode();
-		ObjectNode channel = data.objectNode();
-		JsonNode mdata = channel.objectNode();
-		try{
-			im = new JSONDeserializer<InMessage>().deserialize(inmessage.toString(),InMessage.class); //Deserialize inmessage to Inmessage.class
-			MessageData md = new MessageData();
-			md.message = im.data.message;
-			md.type = im.data.type;	
-			md.user_id = userid;
-			JSONSerializer aser = new JSONSerializer().include("*.channel"); //Serialize MessageData
-			json = aser.exclude("*.class").serialize(md);
-			jnode.put("type", im.type);	//put type to jnode
-			mdata = Json.parse(json);	//serialized MessageData put to JsonNode
-			channel.putObject(String.valueOf(messageid)).putAll(Json.fromJson(mdata,ObjectNode.class)); //put MessageData Node as Object to a Message
-			for (Iterator<Integer> iterator = im.data.channel.iterator(); iterator.hasNext();){
-				data.putObject(String.valueOf(iterator.next())).putAll(channel);		
+
+	public static JsonNode genMessage(JsonNode inmessage, int userid) {
+		String json = "";
+		try {
+			// Map the incomeJsonMessage to a model
+			InMessage im = new InMessage();
+			im = new JSONDeserializer<InMessage>().deserialize(
+					inmessage.toString(), InMessage.class);
+			models.Message dbmessage = new models.Message();
+
+			// Create DB Message
+			dbmessage.content = im.data.message;
+			dbmessage.date = new Date();
+			dbmessage.modified = new Date();
+			dbmessage.type = im.data.type;
+			dbmessage.user = models.User.find.byId(userid);
+			for (Iterator<Integer> iterator = im.data.channels.iterator(); iterator
+					.hasNext();) {
+				dbmessage.channels.add(models.Channel.find.byId(iterator.next()));
 			}
-			jnode.putObject("data").putAll(data); //put the DataObject Node to the jnode
-			} 
-		catch (JSONException e) {	 
-			 e.printStackTrace();
-		}
-		return jnode;
-	}
+			// Save the Message to the DB
+			dbmessage.save();
+			dbmessage.saveManyToManyAssociations("channels");
+
+			// Create JsonMessage
+			Message m = new Message();
+			MessageData md = new MessageData();
+			m.init = true;
+			md.date = new Date();
+			md.message = im.data.message;
+			md.modified = new Date();
+			md.type = im.data.type;
+			md.user_id = userid;
+
+			// Put the Messages in the map
+			Map<Integer, MessageData> mdata = new HashMap<Integer, MessageData>();
+			mdata.put(dbmessage.id, md);
+
+			// Fill the Action Dict; always create by messages
+			m.actions.put(dbmessage.id, "create");
+
+			// Put the Messages in the channels
+			for (Iterator<Integer> iterator = im.data.channels.iterator(); iterator
+					.hasNext();) {
+				m.data.put(iterator.next(), mdata);
+			}
 	
-	public static JsonNode genmultipleMessage(JsonNode inmessage) //JsonNode-Generation for sending more messages at one time
-	{	String json = "";
+			// Generate the Json Message
+			JSONSerializer aser = new JSONSerializer().include("*.data",
+					"*.actions");
+			json = aser.exclude("*.class").serialize(m);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return Json.parse(json);
+	}
+
+	// JsonNode-Generation for sending more messages at one time
+	public static JsonNode genmultipleMessage(JsonNode inmessage) {
+		String json = "";
 		InMessage im = new InMessage();
 		ObjectNode jnode = Json.newObject();
 		ObjectNode data = jnode.objectNode();
 		ObjectNode channel = data.objectNode();
 		JsonNode mdata = channel.objectNode();
-		try{
-			im = new JSONDeserializer<InMessage>().deserialize(inmessage.toString(),InMessage.class);
+		try {
+			im = new JSONDeserializer<InMessage>().deserialize(
+					inmessage.toString(), InMessage.class);
 			MessageData md = new MessageData();
 			md.message = im.data.message;
 			md.type = im.data.type;
@@ -161,19 +99,19 @@ public class Message{
 			json = aser.exclude("*.class").serialize(md);
 			jnode.put("type", im.type);
 			mdata = Json.parse(json);
-			for (int messageid = 0; messageid <4; messageid ++)
-			{
-				channel.putObject(String.valueOf(messageid)).putAll(Json.fromJson(mdata,ObjectNode.class));
-				for (Iterator<Integer> iterator = im.data.channel.iterator(); iterator.hasNext();){
-					data.putObject(String.valueOf(iterator.next())).putAll(channel);		
+			for (int messageid = 0; messageid < 4; messageid++) {
+				channel.putObject(String.valueOf(messageid)).putAll(
+						Json.fromJson(mdata, ObjectNode.class));
+				for (Iterator<Integer> iterator = im.data.channels.iterator(); iterator
+						.hasNext();) {
+					data.putObject(String.valueOf(iterator.next())).putAll(
+							channel);
 				}
 			}
 			jnode.putObject("data").putAll(data);
-		} 
-		catch (JSONException e) {	 
-			 e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 		return jnode;
 	}
 }
->>>>>>> 8093ba07979d1814f2c729adc9561e1afbc5c03e

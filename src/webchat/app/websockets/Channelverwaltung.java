@@ -3,12 +3,10 @@ package websockets;
 import java.nio.channels.MembershipKey;
 import java.util.*;
 
-import jsonmodelsout.*;
-
 import models.Channel;
 import models.User;
-import jsonmodelsin.*;
-import jsonmodelsout.*;
+import websocket.json.in.*;
+import websocket.json.out.*;
 
 import org.apache.commons.lang.UnhandledException;
 import org.codehaus.jackson.JsonNode;

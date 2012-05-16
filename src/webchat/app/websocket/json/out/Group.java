@@ -1,9 +1,7 @@
-package jsonmodelsout;
+package websocket.json.out;
 
 import java.util.Iterator;
 
-import jsonmodelsin.InMessage;
-import jsonmodelsout.GroupData;
 import models.Groups;
 
 import org.codehaus.jackson.JsonNode;

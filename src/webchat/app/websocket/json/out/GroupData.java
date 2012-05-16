@@ -1,4 +1,4 @@
-package jsonmodelsout;
+package websocket.json.out;
 
 import java.util.Date;
 
