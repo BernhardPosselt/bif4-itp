@@ -1,5 +1,6 @@
 package controllers;
 
+import play.Logger;
 import play.mvc.*;
 import play.data.*;
 
@@ -37,6 +38,7 @@ public class ProfileController extends Controller {
 
         if(form.hasErrors())
         {
+            Logger.error("Profile can't be saved");
             return badRequest(profile.render(form, User.getUsername(Integer.parseInt(session("userid")))));
         }
         else
@@ -52,7 +54,7 @@ public class ProfileController extends Controller {
             olduser.email = newuser.email;
 
             olduser.save();
-
+            Logger.info("Profile for User with ID " + userid + " saved - Redirect to Index Site");
             return redirect(routes.Application.index());
         }
     }
@@ -66,10 +68,12 @@ public class ProfileController extends Controller {
             int userid = Integer.parseInt(user);
 
             User tmp = User.find.ref(userid);
+            Logger.info("Edit Profile for User with ID " + userid + " - Profile Form filled with userdata");
             return ok(profile.render(form(User.class).fill(tmp), User.getUsername(Integer.parseInt(session("userid")))));
         }
         else
         {
+            Logger.warn("Edit Profile not available, because User isn't logged in - Redirect to Login Form");
             return redirect(routes.LoginController.login());
         }
     }
