@@ -1,7 +1,7 @@
 class GroupManager
 
     constructor: (@callback_init) ->
-        @dom_elem = $ "#channel_sidebar #groups"
+        @dom_elem = $ "#channel_sidebar #groups ul"
         @data = {}
         @dom = {}
     
