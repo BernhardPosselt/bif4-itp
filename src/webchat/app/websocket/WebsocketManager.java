@@ -27,7 +27,8 @@ public class WebsocketManager {
 
 	        // Called when the Websocket Handshake is done.
 	        public void onReady(WebSocket.In<JsonNode> in, final WebSocket.Out<JsonNode> out){
-                // For each event received on the socket,
+                
+	        	// For each event received on the socket,
                 in.onMessage(new Callback<JsonNode>() {
                     public void invoke(JsonNode event) {
                         // Send a Talk message to the room.
@@ -44,9 +45,7 @@ public class WebsocketManager {
                 in.onClose(new Callback0() {
                     public void invoke() {
                         // Send a Quit message to the room.
-                        JsonNode errorNode = Auth.genAuth();
-                        notifyAllMembers(errorNode);
-
+                        System.out.println("Socket closed");
                     }
                 });
 	        };
