@@ -60,11 +60,12 @@ public class WebsocketManager {
 
     public static void onReceive(JsonNode inmessage, WebSocket.Out<JsonNode> out, int userid) throws Exception {
         if(!members.containsKey(userid)){
-        	  members.put(userid, out);
-        	  notifyAllMembers(Group.genGroup(userid));
-        	  notifyAllMembers(Channel.genChannel(userid));
-        	  notifyAllMembers(User.genUser(userid));
-        	  notifyAllMembers(Group.genGroup(userid));
+        	  String action = "create";
+        	  Boolean init = true;
+			  members.put(userid, out);
+			  notifyAllMembers(Group.genGroup(userid,action, init));
+			  notifyAllMembers(Channel.genChannel(userid,action, init));
+			  notifyAllMembers(User.genUser(userid,action, init));
         } 
         String type = inmessage.findPath("type").asText();
         if(type.equals("message")) {

@@ -19,11 +19,11 @@ public class User {
 	}
 	
 	
-	public static JsonNode genUser(int userid){
+	public static JsonNode genUser(int userid, String action, Boolean init){
 		String json = "";
 		try {
 			User user = new User();
-			user.init = true;
+			user.init = init;
 			models.User muser =  models.User.find.byId(userid);
 			
 			UserData udata = new UserData();
@@ -39,8 +39,7 @@ public class User {
 			}
 			
 			user.data.put(muser.id, udata);
-			
-	
+			user.actions.put(muser.id, action);
 			// Generate the Json Message
 			JSONSerializer aser = new JSONSerializer().include("*.data",
 					"*.actions", "*.groups");

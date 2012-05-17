@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.Date;
+
 import play.mvc.*;
 import views.html.*;
 import websocket.WebsocketManager;
@@ -40,6 +42,7 @@ public class Application extends Controller {
 	        user.email = "a.b@aon.at";
 	        user.lastname = "Huber";
 	        user.firstname = "Ernst";
+	        
 	        user.online = false;
 	        user.save();
 	        
@@ -70,8 +73,16 @@ public class Application extends Controller {
 	  	    channel.setUsers(user); 
 	  	    channel.setUsers(user1);
 	  	    channel.saveManyToManyAssociations("users");
+	  	   
+	  	    Groups group = new Groups();
+	  	    group.modified = new Date();
+	  	    group.name = "Group1";
+	  	    group.users.add(user);
+	  	    group.channels.add(channel);
+	  	    group.save();
+	  	    group.saveManyToManyAssociations("channels");
+	  	    group.saveManyToManyAssociations("users");
 	  	    return ok(index.render("testdata"));
-	  	    
 	 }
 	 
 	 

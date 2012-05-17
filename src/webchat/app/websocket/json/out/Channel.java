@@ -21,11 +21,11 @@ public class Channel {
 		this.type = "channel";
 	}
 	
-	public static JsonNode genChannel(int userid){
+	public static JsonNode genChannel(int userid, String action, Boolean init){
 		String json = "";
 		try {
 			Channel channel = new Channel();
-			channel.init = true;
+			channel.init = init;
 			for (Iterator<models.Channel> iterator = models.Channel.getUserChannels(userid).iterator(); iterator.hasNext();){
 				ChannelData cdata = new ChannelData();
 				models.Channel c = new models.Channel();
@@ -42,6 +42,7 @@ public class Channel {
 				cdata.name = c.name;
 				cdata.topic = c.topic;
 				cdata.modified = new Date();
+				channel.actions.put(c.id, action);
 				channel.data.put(c.id, cdata);
 			}
 	

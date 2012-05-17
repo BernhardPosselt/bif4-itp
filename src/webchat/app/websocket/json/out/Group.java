@@ -24,9 +24,10 @@ public class Group {
 		this.type = "group";
 	}
 	
-	public static JsonNode genGroup(int userid){
+	public static JsonNode genGroup(int userid, String action, Boolean init){
 		String json = "";
 		Group group = new Group();
+		group.init = init;
 		try{
 			for (Iterator<Groups> iterator = Groups.getUserGroups(userid).iterator(); iterator.hasNext();)
 			{
@@ -35,7 +36,7 @@ public class Group {
 				GroupData gdata = new GroupData();
 				gdata.modified = groups.modified;
 				gdata.name = groups.name;
-				
+				group.actions.put(groups.id, action);
 				group.data.put(groups.id, gdata);
 				
 			}
