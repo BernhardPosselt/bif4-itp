@@ -1,6 +1,6 @@
 package websocket.json.out;
 
-import java.util.Iterator;
+import java.util.*;
 
 import models.Groups;
 
@@ -16,39 +16,35 @@ import flexjson.JSONSerializer;
 
 public class Group {
 	public String type;
-	public GroupData data;
+	public Map<Integer,GroupData> data = new HashMap<Integer,GroupData>();
+	public Boolean init;
+	public Map<Integer,String> actions = new HashMap<Integer,String>();
 	
 	public Group(){
 		this.type = "group";
-		this.data = new GroupData();
 	}
 	
-	public JsonNode genGroup(int userid){
+	public static JsonNode genGroup(int userid){
 		String json = "";
-		ObjectNode jnode = Json.newObject(); //initalize Objectnodes
-		ObjectNode data = jnode.objectNode();
+		Group group = new Group();
 		try{
 			for (Iterator<Groups> iterator = Groups.getUserGroups(userid).iterator(); iterator.hasNext();)
 			{
-				Groups group = new Groups();
-				group = iterator.next();
+				models.Groups groups= new models.Groups();
+				groups = iterator.next();
+				GroupData gdata = new GroupData();
+				gdata.modified = groups.modified;
+				gdata.name = groups.name;
 				
-				JsonNode gdata = data.objectNode();
-				GroupData gd = new GroupData();
-				gd.name = group.name;
-				gd.modified = group.modified;
-				JSONSerializer gser = new JSONSerializer().include();
-				json = gser.exclude("*.class").serialize(gd);
-				gdata = Json.parse(json);
-				data.putObject(String.valueOf(group.id)).putAll(Json.fromJson(gdata,ObjectNode.class));
+				group.data.put(groups.id, gdata);
 				
 			}
-			jnode.put("type", "group");
-			jnode.putObject("data").putAll(data); //put the DataObject Node to the jnode
+			JSONSerializer gser = new JSONSerializer().include("*.actions", "*.data");
+			json = gser.exclude("*.class").serialize(group);
 			} 
 		catch (JSONException e) {	 
 			 e.printStackTrace();
 		}
-		return jnode;
+		return Json.parse(json);
 	}
 }
