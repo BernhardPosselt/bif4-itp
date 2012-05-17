@@ -156,23 +156,29 @@ html, body {
     }
 
     #channel_sidebar {
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
       position:relative;
       overflow-y: auto;
       width:20%;
       height:100%;
       float:left;
+      border:2px solid @blue3;
+      .border_rad(5px);
+
+      .tabbed_navi li {
+        display: inline-block;
+        list-display-style: none;
+      }
 
       #channels
       {
           position:absolute;
-          top:0;
+          padding:5px;
+          top:40px;
           left:0;
           bottom:0;
           right:0;
-          padding:5px;
-          margin:0px 10px;
-          border:2px solid @blue3;
-          .border_rad(5px);
 
           .heading
           {
@@ -197,6 +203,11 @@ html, body {
 
             }
           }
+      }
+      
+      #groups {
+        top: 20px;
+        display: none;
       }
     }
 
