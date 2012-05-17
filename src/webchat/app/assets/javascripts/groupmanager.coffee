@@ -7,7 +7,7 @@ class GroupManager
     
     # sets the initial data array
     init: (@data) ->
-        @callback_init
+        @callback_init()
         
         
     # writes initalized data into the ui

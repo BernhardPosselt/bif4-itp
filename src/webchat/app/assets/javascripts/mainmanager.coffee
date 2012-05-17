@@ -22,10 +22,8 @@ class MainManager
             @init_managers()
         @channels = new ChannelManager => 
             @init_managers()
-        @files = new FileManager => 
-            @init_managers()
-        @streams = new StreamManager => 
-            @init_managers()
+        @files = new FileManager()
+        @streams = new StreamManager()
         @managers_initialized = 0
         @init_websocket(ws_url)
 
@@ -33,13 +31,12 @@ class MainManager
     # runs all migration methods for the managers once they were initialized
     init_managers: () ->
         @managers_initialized++
-        if @managers_initialized == 5
+        if @managers_initialized == 3
             console.log("All managers initialized")
             @users.init_ui()
             @channels.init_ui()
-            @streams.init_ui()
             @groups.init_ui()
-            @files.init_ui()
+
 
     # Intitializes the update interval to call the update method
     init_keep_alive: () ->
@@ -60,6 +57,10 @@ class MainManager
                 window.onunload = =>
                     @close_websocket()
                 @init_keep_alive()
+                init_msg = 
+                    type: "init"
+                    data: {}
+                @send_websocket(init_msg)
             @connection.onmessage = (event) =>
                 @rcv_websocket(JSON.parse(event.data))
             @connection.onclose = =>
