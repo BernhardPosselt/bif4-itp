@@ -18,10 +18,13 @@ class MainManager
         @keep_alive_interval = 30 # ping in seconds
         @groups = new GroupManager => 
             @init_managers()
+        , this
         @users = new UserManager => 
             @init_managers()
+        , this
         @channels = new ChannelManager => 
             @init_managers()
+        , this
         @managers_initialized = 0
         @init_websocket(ws_url)
 

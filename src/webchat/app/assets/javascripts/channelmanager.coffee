@@ -4,7 +4,7 @@ Manages all channel objects in the channellist
 
 class ChannelManager
 
-    constructor: (@callback_init) ->
+    constructor: (@callback_init, @main_manager) ->
         @dom_elem = $ "#channels ul"
         @dom_reg = {}
         @data = {}
@@ -88,7 +88,12 @@ class ChannelManager
     
     
     # joins a channel
-    join_channel: (@active_channel) ->         
+    join_channel: (@active_channel) -> 
+        msg = 
+            type: "join"
+            data: 
+                channel: @active_channel
+        @main_manager.send_websocket(msg)        
         console.log("joined channel " + @data[@active_channel].name)
         
     

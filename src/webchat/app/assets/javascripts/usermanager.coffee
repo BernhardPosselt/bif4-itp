@@ -17,7 +17,7 @@ Users have the following attributes displayed:
 
 class UserManager
 
-    constructor: (@callback_init) ->
+    constructor: (@callback_init, @main_manager) ->
         @dom_elem = $ "#channel_sidebar #groups"
         @data = {}
         @dom_reg = {}
