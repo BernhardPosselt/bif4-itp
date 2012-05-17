@@ -8,6 +8,7 @@ import org.codehaus.jackson.JsonNode;
 import play.libs.F.Callback;
 import play.libs.F.Callback0;
 import play.mvc.WebSocket;
+import scala.collection.mutable.LinkedList;
 import websocket.json.out.Auth;
 import websocket.json.out.Channel;
 import websocket.json.out.Group;
@@ -16,7 +17,7 @@ import websocket.json.out.User;
 
 public class WebsocketManager {
 
-    public static Map<Integer, WebSocket.Out<JsonNode>> members = new HashMap<Integer, WebSocket.Out<JsonNode>>();
+    public static Map<WebSocket.Out<JsonNode>,Integer> members = new HashMap<WebSocket.Out<JsonNode>, Integer>();
 
     /**
      * Creates a new Websocket class and puts it in the map
@@ -46,7 +47,7 @@ public class WebsocketManager {
                     public void invoke() {
                         // Send a Quit message to the room.
                         System.out.println("Socket closed");
-                        members.clear();
+                     
                     }
                 });
 	        };
@@ -55,7 +56,7 @@ public class WebsocketManager {
 
     public static void onReceive(JsonNode inmessage, WebSocket.Out<JsonNode> out, int userid) throws Exception {
     	if(!members.containsKey(userid))
-    		members.put(userid, out);
+    		members.put(out, userid);
         String type = inmessage.findPath("type").asText();
         if(type.equals("message")) {
             notifyAllMembers(Message.genMessage(inmessage, userid));
@@ -77,11 +78,12 @@ public class WebsocketManager {
     }
 
 
-
     //Send a Json event to all members
     public static void notifyAllMembers(JsonNode inmessage) {
-        for(WebSocket.Out<JsonNode> socket: members.values()) {
-            socket.write(inmessage);
+    	WebSocket.Out<JsonNode> out = null;
+        for(Map.Entry<WebSocket.Out<JsonNode>, Integer> entry: members.entrySet()) {
+            out = (WebSocket.Out<JsonNode>)entry.getKey();
+            out.write(inmessage);
         }
     }
 }
