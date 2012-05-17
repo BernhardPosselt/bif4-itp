@@ -85,17 +85,17 @@ class MainManager
             switch data.type
                 when "user" then @users.init(data.data)
                 when "group" then @groups.init(data.data)
-                when "stream" then @channels.init_stream(data.data)
                 when "channel" then @channels.init(data.data)
-                when "file" then @files.init(data.data)
+                when "file" then @channels.file_init(data.data)
+                when "message" then @channels.init_stream(data.data)                
                 when "status" then @status_msg(data.data)
         else
             switch data.type
-                when "message" then @streams.input_stream(data.data, data.actions)
                 when "user" then @users.input(data.data, data.actions)
                 when "group" then @groups.input(data.data, data.actions)
                 when "channel" then @channels.input(data.data, data.actions)
-                when "file" then @files.input(data.data, data.actions)
+                when "file" then @channels.file_input(data.data, data.actions)
+                when "message" then @streams.input_stream(data.data, data.actions)
                 when "status" then @status_msg(data.data)
 
 
