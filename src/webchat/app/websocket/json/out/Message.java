@@ -51,7 +51,7 @@ public class Message {
 			// Create JsonMessage
 			Message m = new Message();
 			MessageData md = new MessageData();
-			m.init = true;
+			m.init = false;
 			md.date = new Date();
 			md.message = im.data.message;
 			md.modified = new Date();
@@ -82,36 +82,34 @@ public class Message {
 	}
 
 	// JsonNode-Generation for sending more messages at one time
-	public static JsonNode genmultipleMessage(JsonNode inmessage) {
+	public static JsonNode genjoinMessage(int channelid) {
 		String json = "";
-		InMessage im = new InMessage();
-		ObjectNode jnode = Json.newObject();
-		ObjectNode data = jnode.objectNode();
-		ObjectNode channel = data.objectNode();
-		JsonNode mdata = channel.objectNode();
 		try {
-			im = new JSONDeserializer<InMessage>().deserialize(
-					inmessage.toString(), InMessage.class);
-			MessageData md = new MessageData();
-			md.message = im.data.message;
-			md.type = im.data.type;
-			JSONSerializer aser = new JSONSerializer().include("*.channel");
-			json = aser.exclude("*.class").serialize(md);
-			jnode.put("type", im.type);
-			mdata = Json.parse(json);
-			for (int messageid = 0; messageid < 4; messageid++) {
-				channel.putObject(String.valueOf(messageid)).putAll(
-						Json.fromJson(mdata, ObjectNode.class));
-				for (Iterator<Integer> iterator = im.data.channel.iterator(); iterator
-						.hasNext();) {
-					data.putObject(String.valueOf(iterator.next())).putAll(
-							channel);
-				}
+			Message m = new Message();
+			Map<Integer, MessageData> mdata = new HashMap<Integer, MessageData>();
+			m.init = true;
+			for (Iterator<models.Message> mit = models.Message.getallChannelMessages(channelid).iterator(); mit.hasNext();){
+				models.Message dbmessage = new models.Message();
+				dbmessage = mit.next();
+				MessageData md = new MessageData();
+				md.date = dbmessage.date;
+				md.message = dbmessage.content;
+				md.modified = dbmessage.modified;
+				md.type = dbmessage.type;
+				md.user_id = dbmessage.user.id;
+				mdata.put(dbmessage.id, md);
+				m.actions.put(dbmessage.id, "create");
+				
 			}
-			jnode.putObject("data").putAll(data);
+			m.data.put(channelid, mdata);
+	
+			// Generate the Json Message
+			JSONSerializer aser = new JSONSerializer().include("*.data",
+					"*.actions");
+			json = aser.exclude("*.class").serialize(m);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		return jnode;
+		return Json.parse(json);
 	}
 }

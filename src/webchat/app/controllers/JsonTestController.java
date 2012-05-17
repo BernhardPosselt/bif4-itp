@@ -19,7 +19,7 @@ public class JsonTestController extends Controller {
 	public static Result genAuth() {
 		JsonNode json = null;
 		try {
-			json = User.genUser(1, "create", true);
+			json = Message.genjoinMessage(1);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -29,7 +29,7 @@ public class JsonTestController extends Controller {
 	public static Result genMessage() {
 		JsonNode json = null;
 		try {
-			json = Message.genMessage(buildinmessage(), 2);
+			json = File.genjoinFile(2, "create", true, 2);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -104,4 +104,15 @@ public class JsonTestController extends Controller {
 		return Json.parse(json);
 	}
 
+	public static JsonNode buildjoin(){
+		String json= "";
+		InJoin inj = new InJoin();
+		inj.type = "join";
+		InJoinData jdata = new InJoinData();
+		jdata.channel = 2;
+		inj.data = jdata;
+		JSONSerializer jser = new JSONSerializer().include("*.data");
+		json = jser.exclude("*.class").serialize(inj);
+		return Json.parse(json);
+	}
 }

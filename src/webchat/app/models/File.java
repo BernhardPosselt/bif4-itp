@@ -37,9 +37,10 @@ public class File extends Model {
 			Integer.class, File.class
 	);
 	
-	public static List<File> getUserFiles (int channelid){
+	public static List<File> getChannelFiles (int channelid){
 		List<File> files = new ArrayList<File>();
-		files = find.where().ieq("channels.id", String.valueOf(channelid)).findList();
+		files = find.where().eq("channels.id", String.valueOf(channelid)).findList();
 		return files;
 	}
+	
 }

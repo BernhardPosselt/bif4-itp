@@ -8,6 +8,9 @@ import org.apache.commons.lang.UnhandledException;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 
+import com.avaje.ebean.Expression;
+import com.avaje.ebean.ExpressionList;
+
 import akka.actor.Actor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
@@ -95,7 +98,8 @@ public class Channel extends Model {
 	public static List<Channel> getUserChannels(int userid)
     {
 		List<Channel> tmp = new ArrayList<Channel>();
-        tmp =  find.where().eq("users.id", userid).findList();
+		String query = "find channel where users.id =:userid or priv=false";
+        tmp =  find.setQuery(query).setParameter("userid", userid).findList();
         return tmp;
     }
 	

@@ -24,10 +24,10 @@ public class Group {
 		this.type = "group";
 	}
 	
-	public static JsonNode genGroup(int userid, String action, Boolean init){
-		String json = "";
+	public static JsonNode geninitGroup(int userid){
+		String json = "",action = "create";
 		Group group = new Group();
-		group.init = init;
+		group.init = true;
 		try{
 			for (Iterator<Groups> iterator = Groups.getUserGroups(userid).iterator(); iterator.hasNext();)
 			{

@@ -9,8 +9,10 @@ import play.libs.F.Callback;
 import play.libs.F.Callback0;
 import play.mvc.WebSocket;
 import scala.collection.mutable.LinkedList;
+import websocket.json.in.InJoin;
 import websocket.json.out.Auth;
 import websocket.json.out.Channel;
+import websocket.json.out.File;
 import websocket.json.out.Group;
 import websocket.json.out.Message;
 import websocket.json.out.User;
@@ -23,7 +25,7 @@ public class WebsocketManager {
      * Creates a new Websocket class and puts it in the map
      * @return the newly intialized websocket
      */
-    public static WebSocket getWebsocket(final int userId){
+    public static WebSocket<JsonNode> getWebsocket(final int userId){
         return new WebSocket<JsonNode>() {
 
 	        // Called when the Websocket Handshake is done.
@@ -62,14 +64,16 @@ public class WebsocketManager {
             notifyAllMembers(Message.genMessage(inmessage, userid));
         }
         else if (type.equals("init")){
-        	 String action = "create";
-          	 Boolean init = true;
-        	 notifyAllMembers(Group.genGroup(userid,action, init));
-      		 notifyAllMembers(Channel.genChannel(userid,action, init));
-      		 notifyAllMembers(User.genUser(userid,action, init));
+        	models.User.setUseronline(userid);
+        	notifyAllMembers(Group.geninitGroup(userid));
+        	notifyAllMembers(Channel.geninitChannel(userid));
+      	 	notifyAllMembers(User.geninitUser(userid));
         }
-        else if (type.equals("auth")){
-
+        else if (type.equals("join")){
+        	int channelid = InJoin.getchannel(inmessage);
+        	//notifyAllMembers(File.genjoinFile(userid, "create", true, channelid));
+        	notifyAllMembers(Message.genjoinMessage(channelid));
+        	
         }
         else{
             //Fehler

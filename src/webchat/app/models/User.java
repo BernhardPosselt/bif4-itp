@@ -101,6 +101,27 @@ public class User extends Model {
 
         return -1;
     }
+    
+    public static void setUseronline(int userid){
+    	User user = new User();
+    	user = find.byId(userid);
+    	user.online = true;
+    	user.lastlogin = new Date();
+    	user.update();
+    }
+    
+    public static void setUseroffline(int userid){
+    	User user = new User();
+    	user = find.byId(userid);
+    	user.online = false;
+    	user.update();
+    }
+    
+    public static List<User> getonlineUsers (){
+    	List<User> users = new ArrayList<User>();
+    	users = find.where().eq("online", true).findList();
+    	return users;
+    }
 
 }
 

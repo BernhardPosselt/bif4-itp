@@ -19,27 +19,29 @@ public class User {
 	}
 	
 	
-	public static JsonNode genUser(int userid, String action, Boolean init){
-		String json = "";
+	public static JsonNode geninitUser(int userid){
+		String json = "", action = "create";
 		try {
 			User user = new User();
-			user.init = init;
-			models.User muser =  models.User.find.byId(userid);
+			user.init = true;
+			for (Iterator<models.User> uit = models.User.getonlineUsers().iterator(); uit.hasNext();){
+				models.User muser = uit.next();
+				
+				UserData udata = new UserData();
+				udata.email = muser.email;
+				udata.lastname = muser.lastname;
+				udata.username = muser.username;
+				udata.prename = muser.firstname;
+				udata.online = muser.online;
+				udata.modified = new Date();
 			
-			UserData udata = new UserData();
-			udata.email = muser.email;
-			udata.lastname = muser.lastname;
-			udata.username = muser.username;
-			udata.prename = muser.firstname;
-			udata.online = muser.online;
-			udata.modified = new Date();
-		
-			for (Iterator<models.Groups> itgroup = muser.groups.iterator(); itgroup.hasNext();){
-				udata.groups.add(itgroup.next().id);
-			}
-			
-			user.data.put(muser.id, udata);
-			user.actions.put(muser.id, action);
+				for (Iterator<models.Groups> itgroup = muser.groups.iterator(); itgroup.hasNext();){
+					udata.groups.add(itgroup.next().id);
+				}
+				
+				user.data.put(muser.id, udata);
+				user.actions.put(muser.id, action);
+			}	
 			// Generate the Json Message
 			JSONSerializer aser = new JSONSerializer().include("*.data",
 					"*.actions", "*.groups");
