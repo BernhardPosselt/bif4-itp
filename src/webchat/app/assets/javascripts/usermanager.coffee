@@ -24,7 +24,7 @@ class UserManager
     
     # sets the initial data array
     init: (@data) ->
-        @callback_init
+        @callback_init()
         
     update: (user) -> 
         

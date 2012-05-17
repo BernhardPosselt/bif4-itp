@@ -4,7 +4,7 @@ Manages all channel objects in the channellist
 
 class ChannelManager
 
-    constructor: () ->
+    constructor: (@callback_init) ->
         @dom_elem = $ "#channels ul"
         @dom_reg = {}
         @data = {}
@@ -13,7 +13,7 @@ class ChannelManager
 
     # sets the initial data array
     init: (@data) ->
-        @callback_init
+        @callback_init()
 
         
     # writes initalized data into the ui
