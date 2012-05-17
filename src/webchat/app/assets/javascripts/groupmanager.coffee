@@ -3,7 +3,7 @@ class GroupManager
     constructor: (@callback_init) ->
         @dom_elem = $ "#channel_sidebar #groups ul"
         @data = {}
-        @dom = {}
+        @dom_reg = {}
     
     # sets the initial data array
     init: (@data) ->
@@ -39,7 +39,7 @@ class GroupManager
         elem = $('<li>')
         elem.html( data.name )
         elem.bind 'click', =>
-            @join_channel(id)
+            #@join_channel(id)
         @dom_reg[id] = elem
         @dom_elem.append(elem)
         console.log("Created group " + data.name)        

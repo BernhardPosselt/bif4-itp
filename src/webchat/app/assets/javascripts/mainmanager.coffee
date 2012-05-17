@@ -22,8 +22,6 @@ class MainManager
             @init_managers()
         @channels = new ChannelManager => 
             @init_managers()
-        @files = new FileManager()
-        @streams = new StreamManager()
         @managers_initialized = 0
         @init_websocket(ws_url)
 
@@ -54,7 +52,7 @@ class MainManager
         try
             @connection = new Socket(ws_url)
             @connection.onopen = =>
-                window.onunload = =>
+                window.onbeforeunload = =>
                     @close_websocket()
                 @init_keep_alive()
                 init_msg = 
@@ -87,18 +85,17 @@ class MainManager
             switch data.type
                 when "user" then @users.init(data.data)
                 when "group" then @groups.init(data.data)
-                when "stream" then @streams.init(data.data)
+                when "stream" then @channels.init_stream(data.data)
                 when "channel" then @channels.init(data.data)
                 when "file" then @files.init(data.data)
                 when "status" then @status_msg(data.data)
         else
             switch data.type
-                when "message" then @streams.input(data.data, data.actions)
+                when "message" then @streams.input_stream(data.data, data.actions)
                 when "user" then @users.input(data.data, data.actions)
                 when "group" then @groups.input(data.data, data.actions)
                 when "channel" then @channels.input(data.data, data.actions)
                 when "file" then @files.input(data.data, data.actions)
-                when "stream" then @streams.input(data.data)                
                 when "status" then @status_msg(data.data)
 
 

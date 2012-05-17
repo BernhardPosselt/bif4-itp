@@ -9,6 +9,8 @@ class ChannelManager
         @dom_reg = {}
         @data = {}
         @active_channel = undefined
+        @streams = new StreamManager()
+        @files = new FileManager()
 
 
     # sets the initial data array
@@ -89,4 +91,21 @@ class ChannelManager
     join_channel: (@active_channel) ->         
         console.log("joined channel " + @data[@active_channel].name)
         
+    
+    # initializes a stream with data
+    init_stream: (data) ->
+        #@streams.init(data)    
+    
+    
+    # receives input for a stream
+    input_stream: (data, action) ->
+    
+    
+    # initializes a stream with data
+    init_file: (data) ->
+        #@streams.init(data)    
+    
+    
+    # receives input for a stream
+    input_file: (data, action) ->
   
