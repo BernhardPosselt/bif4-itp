@@ -9,7 +9,10 @@ import play.libs.F.Callback;
 import play.libs.F.Callback0;
 import play.mvc.WebSocket;
 import websocket.json.out.Auth;
+import websocket.json.out.Channel;
+import websocket.json.out.Group;
 import websocket.json.out.Message;
+import websocket.json.out.User;
 
 public class WebsocketManager {
 
@@ -56,8 +59,13 @@ public class WebsocketManager {
 
 
     public static void onReceive(JsonNode inmessage, WebSocket.Out<JsonNode> out, int userid) throws Exception {
-        if(!members.containsKey(userid))
-            members.put(userid, out);
+        if(!members.containsKey(userid)){
+        	  members.put(userid, out);
+        	  notifyAllMembers(Group.genGroup(userid));
+        	  notifyAllMembers(Channel.genChannel(userid));
+        	  notifyAllMembers(User.genUser(userid));
+        	  notifyAllMembers(Group.genGroup(userid));
+        } 
         String type = inmessage.findPath("type").asText();
         if(type.equals("message")) {
             notifyAllMembers(Message.genMessage(inmessage, userid));
