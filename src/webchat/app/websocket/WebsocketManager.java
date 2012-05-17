@@ -27,16 +27,19 @@ public class WebsocketManager {
 
 	        // Called when the Websocket Handshake is done.
 	        public void onReady(WebSocket.In<JsonNode> in, final WebSocket.Out<JsonNode> out){
-                // TODO: add join event
+	        	try {
+	        		socketonReady(out, userId);
+	        	  } catch (Exception e) {
+                      e.printStackTrace();
+                  }
 
                 // For each event received on the socket,
                 in.onMessage(new Callback<JsonNode>() {
                     public void invoke(JsonNode event) {
                         // Send a Talk message to the room.
                         try {
-                            onReceive(event, out, userId);
+                            onReceive(event, userId);
                         } catch (Exception e) {
-                            // TODO Auto-generated catch block
                             e.printStackTrace();
                         }
 
@@ -57,16 +60,18 @@ public class WebsocketManager {
     }
 
 
-
-    public static void onReceive(JsonNode inmessage, WebSocket.Out<JsonNode> out, int userid) throws Exception {
-        if(!members.containsKey(userid)){
-        	  String action = "create";
-        	  Boolean init = true;
-			  members.put(userid, out);
-			  notifyAllMembers(Group.genGroup(userid,action, init));
-			  notifyAllMembers(Channel.genChannel(userid,action, init));
-			  notifyAllMembers(User.genUser(userid,action, init));
-        } 
+    public static void socketonReady(WebSocket.Out<JsonNode> out, int userid){
+	  if(!members.containsKey(userid)){
+    	  String action = "create";
+    	  Boolean init = true;
+		  members.put(userid, out);
+		  notifyAllMembers(Group.genGroup(userid,action, init));
+		  notifyAllMembers(Channel.genChannel(userid,action, init));
+		  notifyAllMembers(User.genUser(userid,action, init));
+    } 
+    }
+    public static void onReceive(JsonNode inmessage, int userid) throws Exception {
+      
         String type = inmessage.findPath("type").asText();
         if(type.equals("message")) {
             notifyAllMembers(Message.genMessage(inmessage, userid));
