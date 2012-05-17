@@ -1,8 +1,6 @@
 $(document).ready ->
     manager = new MainManager()
     keycodes = new KeyCodes()
-    manager.channels.init({"1": {"name": "abc"}})
-    manager.channels.init_ui()
 
     # channel sidebar navigation
     $(".channels_link").click ->
@@ -14,8 +12,7 @@ $(document).ready ->
         if not $("#channel_sidebar #groups").is(":visible")
             $("#channel_sidebar #channels").fadeOut "fast", ->
                 $("#channel_sidebar #groups").fadeIn "fast"
-        false;        
-        
+        false;                
 
     # submit input
     $("#input_field").keyup (e) ->
