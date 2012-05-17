@@ -36,4 +36,10 @@ public class File extends Model {
 	public static Finder<Integer,File> find = new Finder<Integer,File>(
 			Integer.class, File.class
 	);
+	
+	public static List<File> getUserFiles (int channelid){
+		List<File> files = new ArrayList<File>();
+		files = find.where().ieq("channels.id", String.valueOf(channelid)).findList();
+		return files;
+	}
 }

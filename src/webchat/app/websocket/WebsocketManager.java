@@ -27,18 +27,12 @@ public class WebsocketManager {
 
 	        // Called when the Websocket Handshake is done.
 	        public void onReady(WebSocket.In<JsonNode> in, final WebSocket.Out<JsonNode> out){
-	        	try {
-	        		socketonReady(out, userId);
-	        	  } catch (Exception e) {
-                      e.printStackTrace();
-                  }
-
                 // For each event received on the socket,
                 in.onMessage(new Callback<JsonNode>() {
                     public void invoke(JsonNode event) {
                         // Send a Talk message to the room.
                         try {
-                            onReceive(event, userId);
+                            onReceive(event, out, userId);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -59,25 +53,19 @@ public class WebsocketManager {
         };
     }
 
-
-    public static void socketonReady(WebSocket.Out<JsonNode> out, int userid){
-	  if(!members.containsKey(userid)){
-    	  String action = "create";
-    	  Boolean init = true;
-		  members.put(userid, out);
-		  notifyAllMembers(Group.genGroup(userid,action, init));
-		  notifyAllMembers(Channel.genChannel(userid,action, init));
-		  notifyAllMembers(User.genUser(userid,action, init));
-    } 
-    }
-    public static void onReceive(JsonNode inmessage, int userid) throws Exception {
-      
+    public static void onReceive(JsonNode inmessage, WebSocket.Out<JsonNode> out, int userid) throws Exception {
+    	if(!members.containsKey(userid))
+    		members.put(userid, out);
         String type = inmessage.findPath("type").asText();
         if(type.equals("message")) {
             notifyAllMembers(Message.genMessage(inmessage, userid));
         }
-        else if (type.equals("ping")){
-
+        else if (type.equals("init")){
+        	 String action = "create";
+          	 Boolean init = true;
+        	 notifyAllMembers(Group.genGroup(userid,action, init));
+      		 notifyAllMembers(Channel.genChannel(userid,action, init));
+      		 notifyAllMembers(User.genUser(userid,action, init));
         }
         else if (type.equals("auth")){
 
