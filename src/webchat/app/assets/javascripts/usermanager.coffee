@@ -87,5 +87,7 @@ class UserManager
         console.log("Removed group " + elem.html())
         elem.remove()
 
+    get_user: (id) ->
+        return @data[id]
         
     

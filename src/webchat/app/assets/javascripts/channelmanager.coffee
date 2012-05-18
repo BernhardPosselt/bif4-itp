@@ -147,21 +147,20 @@ class ChannelManager
     
     # joins the first channel in the list or displays nothing
     join_first_channel: () ->
-        console.log("join first channel")
-        console.log(@_get_dict_size(@channel_data))
-        
-        if @_get_dict_size(@channel_data) != 0
-            for id in @channel_data
+        console.log("joined first channel")
+        if @_get_dict_size(@channel_data) > 0
+            for id, value of @channel_data
                 @join_channel(id)
                 break
         else
+            console.log("no channel found, can not join initial channel")
             # TODO: display message that no channel is being found
    
    
    # returns the size of a dictionairy 
     _get_dict_size: (dict) ->
         size = 0
-        for key in dict  
+        for key of dict
             if dict.hasOwnProperty(key)
                 size++
         return size
@@ -181,50 +180,76 @@ class ChannelManager
         list_entry = @dom_reg_channel_list[@active_channel]
         list_entry.removeClass("unread")
         # fade out inactive ones and fade in active one 
-        @dom_stream.children(".stream").fadeOut "fast", ->
+        @dom_stream.children(".stream").fadeOut "fast", =>
             @dom_reg_stream[@active_channel].fadeIn "fast"
-        @dom_stream_sidebar_users.children(".users").fadeOut "fast", ->
+        @dom_stream_sidebar_users.children(".users").fadeOut "fast", =>
             @dom_reg_stream_sidebar_users[@active_channel].fadeIn "fast"
-        @dom_stream_sidebar_files.children(".files").fadeOut "fast", ->
+        @dom_stream_sidebar_files.children(".files").fadeOut "fast", =>
             @dom_reg_stream_sidebar_files[@active_channel].fadeIn "fast"
-        console.log("joined channel " + @data[@active_channel].name)
+        console.log("joined channel " + @channel_data[@active_channel].name)
         
     
     # initializes a stream with data
     init_stream: (data) ->
         for id, stream_data of data
-            @streams.init(id, stream_data, @data[id])    
+            @create_stream(id, stream_data)    
     
     
     # receives input for a stream
-    input_stream: (data, action) ->
-        for id, method of actions
-            switch method
-                when "create" then create_stream(id, data[id])
+    input_stream: (data, actions) ->
+        # messages can only be created, so ignore the actions array
+        for id, msg_data of data
+            @create_stream(id, msg_data)
 
     
     # creates the values for a message
     create_stream: (id, data) ->
         # if channel is loaded append message
-        if not @loaded_channels[id] == undefined
+        if @loaded_channels[id]
             for key, value of data
+                if not @stream_data[id]
+                    @stream_data[id] = {}
                 @stream_data[id][key] = value
                 @create_stream_dom(id, key, value)
         # if channel is not the active one, add the unread class
-        if not id == @active_channel
-            if not @dom_reg_channel_list[id].hasClass("unread")
-                @dom_reg_channel_list[id].addClass("unread")
+        if id != @active_channel
+            elem = @dom_reg_channel_list[id]
+            console.log elem
+            if not elem.hasClass("unread")
+                elem.addClass("unread")
              
     
     # creates the dom for a message
     create_stream_dom: (channel_id, msg_id) ->
-        # TODO: fix message dom to include user, type and date
         data = @stream_data[channel_id][msg_id]
         stream = @dom_reg_stream[channel_id]
-        msg = $("<div>")
+        line = $("<p>")
+        line.addClass("line")
+        user = $("<span>")
+        user.addClass("user")
+        date = $("<span>")
+        date.addClass("date")
+        msg = $("<span>")
         msg.addClass("message")
-        msg.html(data.user_id + ": " + data.message)
-        stream.append(msg)
+        msg.html(": " + data.message)
+        # convert unixtimestamp to date
+        date_string = new Date(data.date)
+        year = date_string.getFullYear()
+        month = date_string.getMonth()
+        day = date_string.getDay()
+        hours = date_string.getHours()
+        minutes = date_string.getMinutes()
+        seconds = date_string.getSeconds()
+        date_string = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds
+        date.html(date_string)
+        # get username
+        user_data = @main_manager.users.get_user(data.user_id)
+        user_name = " " + user_data.prename + " " + user_data.lastname
+        user.html(user_name)
+        line.append(date)
+        line.append(user)
+        line.append(msg)
+        stream.append(line)
     
     
     # initializes a stream with data
