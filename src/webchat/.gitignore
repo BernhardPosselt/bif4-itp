@@ -3,7 +3,6 @@ project/project
 project/target
 conf/evolutions/default/*.sql
 target
-out
 tmp
 .history
 dist

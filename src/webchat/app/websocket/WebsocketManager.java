@@ -8,13 +8,12 @@ import org.codehaus.jackson.JsonNode;
 import play.libs.F.Callback;
 import play.libs.F.Callback0;
 import play.mvc.WebSocket;
-import scala.collection.mutable.LinkedList;
 import websocket.json.in.InJoin;
-import websocket.json.out.Auth;
 import websocket.json.out.Channel;
 import websocket.json.out.File;
 import websocket.json.out.Group;
 import websocket.json.out.Message;
+import websocket.json.out.Status;
 import websocket.json.out.User;
 
 public class WebsocketManager {
@@ -30,7 +29,6 @@ public class WebsocketManager {
 
 	        // Called when the Websocket Handshake is done.
 	        public void onReady(WebSocket.In<JsonNode> in, final WebSocket.Out<JsonNode> out){
-                System.out.println("Socket opened");
 	        	// For each event received on the socket,
                 in.onMessage(new Callback<JsonNode>() {
                     public void invoke(JsonNode event) {
@@ -48,7 +46,9 @@ public class WebsocketManager {
                 in.onClose(new Callback0() {
                     public void invoke() {
                         // Send a Quit message to the room.
-                        System.out.println("Socket closed");
+                    	notifyAllMembers(User.genUserchanged(userId, "delete"));
+                    	members.remove(userId);
+                        out.write(Status.genStatus("ok", "WebSocket Closed"));
                      
                     }
                 });

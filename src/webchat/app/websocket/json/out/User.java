@@ -51,4 +51,37 @@ public class User {
 		}
 		return Json.parse(json);
 	}
+	
+	public static JsonNode genUserchanged(int userid, String action){
+		String json = "";
+		try {
+			User user = new User();
+			user.init = false;
+		
+			models.User muser = models.User.find.byId(userid);
+			
+			UserData udata = new UserData();
+			udata.email = muser.email;
+			udata.lastname = muser.lastname;
+			udata.username = muser.username;
+			udata.prename = muser.firstname;
+			udata.online = muser.online;
+			udata.modified = new Date();
+		
+			for (Iterator<models.Groups> itgroup = muser.groups.iterator(); itgroup.hasNext();){
+				udata.groups.add(itgroup.next().id);
+			}
+			
+			user.data.put(muser.id, udata);
+			user.actions.put(muser.id, action);
+		
+			// Generate the Json Message
+			JSONSerializer aser = new JSONSerializer().include("*.data",
+					"*.actions", "*.groups");
+			json = aser.exclude("*.class").serialize(user);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return Json.parse(json);
+	}
 }
