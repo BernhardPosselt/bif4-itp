@@ -133,14 +133,17 @@ class MainManager
         $.getJSON url, (data) ->
             return data
             
+            
     # sends a message to the server
     # msg: the message which we want to send
     # type: the type, text or java for instance
     send_msg: (msg, type) ->
-        message =
-            type: "message"
-            data:
-                message: msg
-                type: type
-                channel: [@channels.get_active_channel()]
-        @send_websocket(message)
+        channel_id = @channels.get_active_channel()
+        if channel_id != undefined
+            message =
+                type: "message"
+                data:
+                    message: msg
+                    type: type
+                    channel: [parseInt(channel_id)]
+            @send_websocket(message)

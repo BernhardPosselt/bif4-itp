@@ -20,10 +20,7 @@
     </div>
 
     <div id="stream_window">
-        <div id="streams">
-            <div class="stream_meta"><strong>Channel Name</strong> - Topic</div>
-            <div class="stream_chat"></div>
-        </div>
+        <div id="streams"></div>
 
         <div id="input">
             <select id="input_options">
@@ -37,10 +34,18 @@
 
     <div id="info_sidebar">
         <div id="channel_info">
-            <div class="heading">Users</div>
+            <fieldset>
+                <legend>Users</legend>
+                <div id="channel_users">
+                </div>
+            </fieldset>
         </div>
         <div id="file_info">
-            <div class="heading">Files</div>
+            <fieldset>
+                <legend>Files</legend>
+                <div id="channel_files">
+                </div>
+            </fieldset>
         </div>
     </div>
 }
