@@ -66,9 +66,9 @@ public class WebsocketManager {
         }
         else if (type.equals("init")){
         	models.User.setUseronline(userid);
-        	notifyAllMembers(Group.geninitGroup(userid));
-        	notifyAllMembers(Channel.geninitChannel(userid));
-      	 	notifyAllMembers(User.geninitUser(userid));
+        	out.write(Group.geninitGroup(userid));
+        	out.write(Channel.geninitChannel(userid));
+      	 	out.write(User.geninitUser(userid));
         }
         else if (type.equals("join")){
         	int channelid = InJoin.getchannel(inmessage);
