@@ -208,6 +208,14 @@ html, body {
       #groups {
         top: 20px;
         display: none;
+        
+        .online {
+            background-color: green;
+        }
+        
+        .offline {
+            background-color: red;
+        }
       }
     }
 
@@ -346,6 +354,10 @@ html, body {
             margin:0px 10px;
             padding:5px;
             .border_rad(5px);
+            
+            .users {
+                display: none;
+            }
         }
 
         #file_info
@@ -361,6 +373,9 @@ html, body {
             padding:5px;
             .border_rad(5px);
 
+            .files {
+                display: none;
+            }
         }
     }
   }

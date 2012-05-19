@@ -7,6 +7,7 @@ class ChannelManager
     constructor: (@callback_init, @main_manager) ->
         # dom parent elements to which we append
         @dom_channel_list = $ "#channels ul"
+        @dom_group_list = $ "#groups"
         @dom_stream = $ "#streams"
         @dom_stream_sidebar_users = $ "#info_sidebar #channel_users"
         @dom_stream_sidebar_files = $ "#info_sidebar #channel_files"
@@ -38,10 +39,13 @@ class ChannelManager
     init_ui:() ->
         @dom_channel_list.empty()
         @dom_stream.empty()
-        @dom_stream_sidebar_users.empty()
         @dom_stream_sidebar_files.empty()
+        # create dom for channel list
         for id, value of @channel_data
             @create_dom(id, value)
+        # create dom for users and groups
+        @rewrite_user_group_dom()
+        # create dom for first channel
         @join_first_channel()
 
 
@@ -96,7 +100,16 @@ class ChannelManager
         @dom_reg_stream[id] = stream
         @dom_stream.append(stream)
         
-        # creat stream sidebar
+        # create stream sidebar
+        users_sidebar = $("<div>")
+        users_sidebar.addClass("users")
+        @dom_reg_stream_sidebar_users[id] = users_sidebar
+        @dom_stream_sidebar_users.append(users_sidebar)
+        
+        files_sidebar = $("<div>")
+        files_sidebar.addClass("files")
+        @dom_reg_stream_sidebar_files[id] = files_sidebar
+        @dom_stream_sidebar_files.append(files_sidebar)
         
         console.log("Created channel " + channel_data.name)        
 
@@ -163,15 +176,6 @@ class ChannelManager
         else
             console.log("no channel found, can not join initial channel")
             # TODO: display message that no channel is being found
-   
-   
-   # returns the size of a dictionairy 
-    _get_dict_size: (dict) ->
-        size = 0
-        for key of dict
-            if dict.hasOwnProperty(key)
-                size++
-        return size
               
     
     # joins a channel
@@ -277,25 +281,155 @@ class ChannelManager
         stream.append(line)
 
 ################################################################################
+# Groups and Users
+################################################################################
+
+    rewrite_user_group_dom: ->
+        console.log("rewriting groups and users")
+        @dom_group_list.empty()
+        @dom_stream_sidebar_users.children(".users").empty()
+        # loop through all users and sort them by prename + space + lastname
+        sorted_users = {}
+        for id, data of @user_data
+            user_name = data.prename + " " + data.lastname
+            sorted_users[user_name] = id
+        sorted_users = @_sort_by_keys(sorted_users)
+        
+        # now loop through all users and push them into their groups
+        groups = {}
+        all_users = new Array()
+        for name, id of sorted_users
+            user = @user_data[id]
+            for group_id in user.groups
+                # if group array does not exist
+                if groups[group_id] == undefined
+                    groups[group_id] = new Array()
+                groups[group_id].push(id)
+            all_users.push(id)
+            
+        # finally iterate over all groups and create their dom
+        for group_id, users of groups
+            heading = $("<h1>")
+            heading.html(@group_data[group_id].name)
+            user_list = $("<ul>")
+            for user_id in users
+                user = @user_data[user_id]
+                user_entry = $("<li>")
+                user_entry.html(user.prename + " " + user.lastname)
+                if user.online == true
+                    user_entry.addClass("online")
+                else
+                    user_entry.addClass("offline")
+                user_list.append(user_entry)                
+            # TODO: add list of users in the channels
+            @dom_group_list.append(heading)
+            @dom_group_list.append(user_list)    
+            
+        # create group with all users
+        user_list = $("<ul>")
+        heading = $("<h1>")
+        heading.html("All users")
+        for user_id in all_users
+            user = @user_data[user_id]
+            user_entry = $("<li>")
+            user_entry.html(user.prename + " " + user.lastname)
+            if user.online == true
+                user_entry.addClass("online")
+            else
+                user_entry.addClass("offline")
+            user_list.append(user_entry)
+        @dom_group_list.append(heading)
+        @dom_group_list.append(user_list) 
+        
+        # create groups in the stream users sidebar
+        for channel_id, channels of @channel_data
+            dom_users = @dom_reg_stream_sidebar_users[channel_id]
+            for group_id in channels.groups
+                group = @group_data[group_id]
+                heading = $("<h1>")
+                heading.html(group.name)
+                user_list = $("<ul>")
+                for user_id in groups[group_id]
+                    user = @user_data[user_id]
+                    user_entry = $("<li>")
+                    user_entry.html(user.prename + " " + user.lastname)
+                    if user.online == true
+                        user_entry.addClass("online")
+                    else
+                        user_entry.addClass("offline")
+                    user_list.append(user_entry)
+                           
+                dom_users.append(heading)    
+                dom_users.append(user_list)
+             # create users in stream users sidebar
+             heading = $("<h1>")
+             heading.html("Other users")
+             user_list = $("<ul>")   
+             for user_id in channels.users
+                user = @user_data[user_id]
+                user_entry = $("<li>")
+                user_entry.html(user.prename + " " + user.lastname)
+                if user.online == true
+                    user_entry.addClass("online")
+                else
+                    user_entry.addClass("offline")
+                user_list.append(user_entry)       
+                dom_users.append(heading)    
+                dom_users.append(user_list)                   
+  
+        
+
+################################################################################
 # Groups                           
 ################################################################################
 
     # sets the initial data array
-    init_groups: (@group_data) ->
+    init_group: (@group_data) ->
         @callback_init()
 
+    input_group: (data, actions) ->
+        for id, method of actions
+            switch method
+                when "create" then @create_group(id, data[id])
+                when "update" then @update_group(id, data[id])
+                when "delete" then @delete_group(id)       
 
+    create_group: (id, data) ->
+        @group_data[id] = data
+        @rewrite_user_group_dom()
+    
+    update_group: (id, data) ->
+        @group_data[id] = data
+        @rewrite_user_group_dom()
+
+    delete_group: (id) ->
+        delete @group_data[id]
+        @rewrite_user_group_dom()
 
 ################################################################################
 # Users                           
 ################################################################################
 
     # sets the initial data array
-    init_users: (@user_data) ->
+    init_user: (@user_data) ->
         @callback_init()
 
+    input_group: (data, actions) ->
+        for id, method of actions
+            switch method
+                when "create" then @create_user(id, data[id])
+                when "update" then @update_user(id, data[id])
+                when "delete" then @delete_user(id)       
 
-
+    create_user: (id, data) ->
+        @rewrite_user_group_dom()
+    
+    update_user: (id, data) ->
+        @rewrite_user_group_dom()
+        
+    delete_user: (id) ->
+        @rewrite_user_group_dom()
+        
     get_user: (id) ->
         return @user_data[id]
     
@@ -310,5 +444,44 @@ class ChannelManager
     
     
     # receives input for a stream
-    input_file: (data, action) ->
-  
+    input_file: (data, actions) ->
+        for id, method of actions
+            switch method
+                when "create" then @create_file(id, data[id])
+                when "update" then @update_file(id, data[id])
+                when "delete" then @delete_file(id)       
+
+    create_file: (id, data) ->
+    
+    update_file: (id, data) ->
+
+    delete_file: (id) ->
+    
+    
+################################################################################
+# utilities
+################################################################################
+
+    # sorts a hashmap by keys
+    _sort_by_keys: (dict) ->
+        sortedKeys = new Array()
+        sortedObj = {}
+        
+        for key of dict
+            sortedKeys.push(key)
+            
+        sortedKeys.sort()
+        
+        for key in sortedKeys
+            sortedObj[key] = dict[key]
+            
+        return sortedObj
+
+
+    # returns the size of a dictionairy 
+    _get_dict_size: (dict) ->
+        size = 0
+        for key of dict
+            if dict.hasOwnProperty(key)
+                size++
+        return size

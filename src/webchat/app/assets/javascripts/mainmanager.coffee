@@ -78,16 +78,16 @@ class MainManager
         console.log("received from websocket " + JSON.stringify(data))
         if data.init
             switch data.type
-                when "user" then @channels.init_users(data.data)
-                when "group" then @channels.init_groups(data.data)
+                when "user" then @channels.init_user(data.data)
+                when "group" then @channels.init_group(data.data)
                 when "channel" then @channels.init(data.data)
                 when "file" then @channels.init_file(data.data)
                 when "message" then @channels.init_stream(data.data)                
                 when "status" then @status_msg(data.data)
         else
             switch data.type
-                when "user" then @channels.input_users(data.data, data.actions)
-                when "group" then @channels.input_groups(data.data, data.actions)
+                when "user" then @channels.input_user(data.data, data.actions)
+                when "group" then @channels.input_group(data.data, data.actions)
                 when "channel" then @channels.input(data.data, data.actions)
                 when "file" then @channels.input_file(data.data, data.actions)
                 when "message" then @channels.input_stream(data.data, data.actions)
