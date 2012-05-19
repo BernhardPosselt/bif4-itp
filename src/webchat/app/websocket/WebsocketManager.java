@@ -7,6 +7,7 @@ import org.codehaus.jackson.JsonNode;
 
 import play.libs.F.Callback;
 import play.libs.F.Callback0;
+import play.mvc.Http.Session;
 import play.mvc.WebSocket;
 import websocket.json.in.InJoin;
 import websocket.json.out.Channel;

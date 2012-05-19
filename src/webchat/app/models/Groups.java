@@ -39,7 +39,7 @@ public class Groups extends Model {
     public static List<Groups> getUserGroups(int userid)
     {
 		List<Groups> tmp = new ArrayList<Groups>();
-        tmp =  find.filterMany("users").eq("id", userid).findList();
+        tmp =  find.where().eq("users.id", userid).findList();
         
         return tmp;
     }
