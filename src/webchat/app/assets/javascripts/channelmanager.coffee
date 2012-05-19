@@ -18,6 +18,8 @@ class ChannelManager
         @stream_sidebar_users_data = {}
         @stream_sidebar_files_data = {}
         @active_channel = undefined
+        @last_msg_user = undefined
+        @last_msg_class = 0
         @loaded_channels = {}
 
 
@@ -222,7 +224,7 @@ class ChannelManager
     # creates the dom for a message
     create_stream_dom: (channel_id, msg_id) ->
         data = @stream_data[channel_id][msg_id]
-        stream = @dom_reg_stream[channel_id]
+        stream = @dom_reg_stream[channel_id].children(".stream_field").children(".stream_chat")
         line = $("<p>")
         line.addClass("line")
         user = $("<span>")
@@ -246,6 +248,18 @@ class ChannelManager
         user_data = @main_manager.users.get_user(data.user_id)
         user_name = " " + user_data.prename + " " + user_data.lastname
         user.html(user_name)
+        # check if we have to alternate the class for setting
+        # the background of the message
+        if @last_msg_user == undefined
+            @last_msg_user = data.user_id
+            line.addClass("line0")
+        else
+            if @last_msg_user == data.user_id
+                line.addClass("line" + @last_msg_class)
+            else
+                @last_msg_class = (@last_msg_class + 1) % 2
+                line.addClass("line" + @last_msg_class)
+            @last_msg_user = data.user_id
         line.append(date)
         line.append(user)
         line.append(msg)
