@@ -7,7 +7,7 @@
 @font-face {
   font-family: dejavusans;
   font-weight: bold;
-  src: url('../fonts/DejaVuSans-Bold.ttf');
+  src: url('../fonts/DejaVuSansCondensed-Bold.ttf');
 }
 
 /* variables */
@@ -216,7 +216,7 @@ html, body {
             {
                 height: 30px;
                 line-height: 30px;
-                border:2px solid @blue3;
+                border:1px solid @blue3;
                 display: inline-block;
                 width: 98%;
                 margin:4px 0px;
@@ -242,7 +242,7 @@ html, body {
 
         h1
         {
-            border:2px solid @blue3;
+            border:1px solid @blue3;
             border-bottom:none;
             padding:5px;
             text-align:center;
@@ -257,12 +257,17 @@ html, body {
         ul
         {
             list-style-type:none;
-            border: 2px solid @blue3;
+            border: 1px solid @blue3;
             margin:0;
             padding:5px;
             .shadow(3px, 3px, 4px, 1px, @blue4);
             z-index:2;
             background-color:@white1;
+
+            li
+            {
+                padding:3px 5px;
+            }
         }
         
         .online {
@@ -293,6 +298,7 @@ html, body {
                      border:2px solid @blue3;
                      height:32px;
                      margin:0;
+                     background-color:@white2;
               }
 
               .stream {
@@ -308,6 +314,8 @@ html, body {
                      height: 45px;
                      line-height:45px;
                      padding:5px 10px 0px 10px;
+                     font-weight:bold;
+
              }
 
              .stream_chat
@@ -321,6 +329,7 @@ html, body {
                      bottom: 71px;
                      border: 2px solid @blue3;
                      border-top:none;
+                     .shadow(7px, 9px, 4px, 1px, @lightgray2);
 
                 .line
                 {
@@ -416,7 +425,7 @@ html, body {
             left:0;
             right:0;
             bottom:50%;
-            margin:0px 10px;
+            margin:0px 15px;
 
             fieldset
             {
@@ -436,7 +445,7 @@ html, body {
             left:0;
             right:0;
             bottom:0;
-            margin:0px 10px;
+            margin:0px 15px;
             margin-top:5px;
 
             fieldset
