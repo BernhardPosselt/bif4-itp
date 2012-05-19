@@ -125,7 +125,10 @@ class ChannelManager
         channel_data = @data[id]
         channel_list = @dom_reg_channel_list[id]
         channel_list.html( channel_data.name )
-        # TODO: update stream and sidebar
+        stream = @dom_reg_stream[id]
+        stream.children(".stream_field").children(".stream_name").html(channel_data.name)
+        stream.children(".stream_field").children(".stream_meta").html(channel_data.topic)
+        # TODO: update sidebar files
         console.log("Updated channel " + channel_data.name)
         
 
@@ -321,7 +324,6 @@ class ChannelManager
                 else
                     user_entry.addClass("offline")
                 user_list.append(user_entry)                
-            # TODO: add list of users in the channels
             @dom_group_list.append(heading)
             @dom_group_list.append(user_list)    
             
