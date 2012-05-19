@@ -5,18 +5,24 @@ Manages all channel objects in the channellist
 class ChannelManager
 
     constructor: (@callback_init, @main_manager) ->
+        # dom parent elements to which we append
         @dom_channel_list = $ "#channels ul"
         @dom_stream = $ "#streams"
         @dom_stream_sidebar_users = $ "#info_sidebar #channel_users"
         @dom_stream_sidebar_files = $ "#info_sidebar #channel_files"
+        # dom elements which we append
         @dom_reg_channel_list = {}
         @dom_reg_stream = {}
         @dom_reg_stream_sidebar_users = {}
         @dom_reg_stream_sidebar_files = {}
+        # json data
         @channel_data = {}
         @stream_data = {}
+        @user_data = {}
+        @group_data = {}
         @stream_sidebar_users_data = {}
         @stream_sidebar_files_data = {}
+        # other stuff
         @active_channel = undefined
         @last_msg_user = undefined
         @last_msg_class = 0
@@ -189,7 +195,12 @@ class ChannelManager
         @dom_stream_sidebar_files.children(".files").fadeOut "fast", =>
             @dom_reg_stream_sidebar_files[@active_channel].fadeIn "fast"
         console.log("joined channel " + @channel_data[@active_channel].name)
-        
+    
+    
+     
+################################################################################
+# Streams                           
+################################################################################
     
     # initializes a stream with data
     init_stream: (data) ->
@@ -245,7 +256,7 @@ class ChannelManager
         date_string = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds
         date.html(date_string)
         # get username
-        user_data = @main_manager.users.get_user(data.user_id)
+        user_data = @get_user(data.user_id)
         user_name = " " + user_data.prename + " " + user_data.lastname
         user.html(user_name)
         # check if we have to alternate the class for setting
@@ -264,7 +275,34 @@ class ChannelManager
         line.append(user)
         line.append(msg)
         stream.append(line)
+
+################################################################################
+# Groups                           
+################################################################################
+
+    # sets the initial data array
+    init_groups: (@group_data) ->
+        @callback_init()
+
+
+
+################################################################################
+# Users                           
+################################################################################
+
+    # sets the initial data array
+    init_users: (@user_data) ->
+        @callback_init()
+
+
+
+    get_user: (id) ->
+        return @user_data[id]
     
+
+################################################################################
+# Files                           
+################################################################################    
     
     # initializes a stream with data
     init_file: (data) ->

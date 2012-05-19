@@ -16,12 +16,6 @@ class MainManager
             ws_url = "ws://" + domain + path
 
         @keep_alive_interval = 30 # ping in seconds
-        @groups = new GroupManager => 
-            @init_managers()
-        , this
-        @users = new UserManager => 
-            @init_managers()
-        , this
         @channels = new ChannelManager => 
             @init_managers()
         , this
@@ -34,9 +28,7 @@ class MainManager
         @managers_initialized++
         if @managers_initialized == 3
             console.log("All managers initialized")
-            @users.init_ui()
             @channels.init_ui()
-            @groups.init_ui()
 
 
     # Intitializes the update interval to call the update method
@@ -86,16 +78,16 @@ class MainManager
         console.log("received from websocket " + JSON.stringify(data))
         if data.init
             switch data.type
-                when "user" then @users.init(data.data)
-                when "group" then @groups.init(data.data)
+                when "user" then @channels.init_users(data.data)
+                when "group" then @channels.init_groups(data.data)
                 when "channel" then @channels.init(data.data)
                 when "file" then @channels.init_file(data.data)
                 when "message" then @channels.init_stream(data.data)                
                 when "status" then @status_msg(data.data)
         else
             switch data.type
-                when "user" then @users.input(data.data, data.actions)
-                when "group" then @groups.input(data.data, data.actions)
+                when "user" then @channels.input_users(data.data, data.actions)
+                when "group" then @channels.input_groups(data.data, data.actions)
                 when "channel" then @channels.input(data.data, data.actions)
                 when "file" then @channels.input_file(data.data, data.actions)
                 when "message" then @channels.input_stream(data.data, data.actions)
