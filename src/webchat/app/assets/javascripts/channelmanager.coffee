@@ -416,7 +416,7 @@ class ChannelManager
     init_user: (@user_data) ->
         @callback_init()
 
-    input_group: (data, actions) ->
+    input_user: (data, actions) ->
         for id, method of actions
             switch method
                 when "create" then @create_user(id, data[id])
