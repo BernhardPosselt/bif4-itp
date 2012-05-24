@@ -6,3 +6,5 @@ class KeyCodes
 
     constructor: () ->
         @enter = 13
+
+    

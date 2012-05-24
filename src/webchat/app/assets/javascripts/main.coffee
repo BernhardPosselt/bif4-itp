@@ -17,7 +17,8 @@ $(document).ready ->
 
     # submit input
     $("#input_field").keyup (e) ->
-        if e.keyCode == keycodes.enter
+        if e.keyCode == keycodes.enter and not e.shiftKey
+            console.log keycodes.shift_pressed
             submit()
     $("#input_send").click (e) ->
         submit()
@@ -28,7 +29,9 @@ $(document).ready ->
         msg = $("#input_field").val()
         msg = msg.slice(0, -1) # remove \n
         $("#input_field").val("")
-        manager.send_msg(msg, type)
+        # only send when there is min 1 char
+        if msg.length > 0
+            manager.send_msg(msg, type)
         
     # right sidebar util links
     $("#info_sidebar #channel_info .utils .invite").click ->

@@ -29,6 +29,7 @@ class ChannelManager
         @last_msg_class = {}
         @last_post_minute = {}
         @loaded_channels = {}
+        @max_shown_code_lines = 10
 
 
     # sets the initial data array
@@ -255,11 +256,25 @@ class ChannelManager
         if data.type == "text"
             msg.html(@sugar_text(data.message))
         else
+            code_container = $("<div>")
             code = $("<pre>")
             code.html(data.message)
             code.addClass("brush: " + data.type)
-            msg.append(code)
-            # TODO: only show x lines and show link to show rest
+            # check if code has more than X lines, hide it
+            if data.message.split("\n").length > @max_shown_code_lines
+                console.log "hid line"
+                show_code = $("<a>")
+                show_code.html("Show/Hide Code")
+                show_code.attr("href", "#")
+                show_code.addClass("show_code")
+                show_code.click ->
+                    code_container.slideToggle "fast"
+                    return false;
+                msg.append(show_code)
+                # dont display code
+                code_container.css("display", "none")
+            code_container.append(code)
+            msg.append(code_container)
         # convert unixtimestamp to date
         date_string = new Date(data.date)
         year = date_string.getFullYear()
