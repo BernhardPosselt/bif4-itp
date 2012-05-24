@@ -7,6 +7,8 @@ import org.apache.commons.lang.UnhandledException;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 
+import com.avaje.ebean.validation.Length;
+
 import akka.actor.Actor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
@@ -32,6 +34,7 @@ public class Message extends Model {
 	public int id;
 	
 	@Constraints.Required
+	@Column(columnDefinition = "LONGTEXT")
 	public String content;
 	
 	@Constraints.Required
