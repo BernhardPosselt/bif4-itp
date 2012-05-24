@@ -38,7 +38,7 @@ public class Message {
 			models.Message dbmessage = new models.Message();
 	
 			// Create DB Message
-			dbmessage.content = StringEscapeUtils.escapeHtml(im.data.message);
+			dbmessage.content = StringEscapeUtils.escapeSql(im.data.message);
 			dbmessage.date = new Date();
 			dbmessage.modified = new Date();
 			dbmessage.type = im.data.type;
@@ -57,7 +57,7 @@ public class Message {
 			m.init = false;
 			md.date = new Date();
 		
-			md.message = StringEscapeUtils.escapeSql(im.data.message);
+			md.message = StringEscapeUtils.escapeHtml(im.data.message);
 			md.modified = new Date();
 			md.type = im.data.type;
 			md.user_id = userid;
@@ -97,7 +97,7 @@ public class Message {
 				dbmessage = mit.next();
 				MessageData md = new MessageData();
 				md.date = dbmessage.date;
-				md.message = dbmessage.content;
+				md.message = StringEscapeUtils.escapeHtml(dbmessage.content);
 				md.modified = dbmessage.modified;
 				md.type = dbmessage.type;
 				md.user_id = dbmessage.user.id;
