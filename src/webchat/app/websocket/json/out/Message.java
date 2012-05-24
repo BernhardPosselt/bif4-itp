@@ -2,10 +2,13 @@ package websocket.json.out;
 
 import java.util.*;
 
+import javax.swing.text.html.HTML;
+
 import websocket.json.in.InMessage;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import models.*;
 import play.libs.Json;
@@ -33,9 +36,9 @@ public class Message {
 			im = new JSONDeserializer<InMessage>().deserialize(
 					inmessage.toString(), InMessage.class);
 			models.Message dbmessage = new models.Message();
-
+	
 			// Create DB Message
-			dbmessage.content = im.data.message;
+			dbmessage.content = StringEscapeUtils.escapeHtml(im.data.message);
 			dbmessage.date = new Date();
 			dbmessage.modified = new Date();
 			dbmessage.type = im.data.type;
@@ -53,7 +56,8 @@ public class Message {
 			MessageData md = new MessageData();
 			m.init = false;
 			md.date = new Date();
-			md.message = im.data.message;
+		
+			md.message = StringEscapeUtils.escapeSql(im.data.message);
 			md.modified = new Date();
 			md.type = im.data.type;
 			md.user_id = userid;
