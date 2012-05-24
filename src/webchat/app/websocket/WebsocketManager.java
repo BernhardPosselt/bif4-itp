@@ -47,7 +47,8 @@ public class WebsocketManager {
                 in.onClose(new Callback0() {
                     public void invoke() {
                         // Send a Quit message to the room.
-                    	notifyAllMembers(User.genUserchanged(userId, "delete"));
+                    	models.User.setUseroffline(userId);
+                    	notifyAllMembers(User.genUserchanged(userId, "update"));
                     	members.remove(userId);
                         out.write(Status.genStatus("ok", "WebSocket Closed"));
                      
@@ -68,7 +69,7 @@ public class WebsocketManager {
         	models.User.setUseronline(userid);
         	out.write(Group.geninitGroup(userid));
         	out.write(Channel.geninitChannel(userid));
-      	 	out.write(User.geninitUser(userid));
+      	 	notifyAllMembers(User.geninitUser(userid));
         }
         else if (type.equals("join")){
         	int channelid = InJoin.getchannel(inmessage);

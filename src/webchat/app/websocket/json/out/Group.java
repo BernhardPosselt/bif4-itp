@@ -29,7 +29,7 @@ public class Group {
 		Group group = new Group();
 		group.init = true;
 		try{
-			for (Iterator<Groups> iterator = Groups.getUserGroups(userid).iterator(); iterator.hasNext();)
+			for (Iterator<Groups> iterator = Groups.find.all().iterator(); iterator.hasNext();)
 			{
 				models.Groups groups= new models.Groups();
 				groups = iterator.next();

@@ -42,7 +42,7 @@ public class JsonTestController extends Controller {
 		ObjectNode jnode = Json.newObject(); // initalize Objectnodes
 		ObjectNode data = jnode.objectNode();
 		try {
-			for (Iterator<Groups> iterator = Groups.getUserGroups(userid)
+			for (Iterator<Groups> iterator = Groups.find.all()
 					.iterator(); iterator.hasNext();) {
 				Groups group = new Groups();
 				group = iterator.next();
