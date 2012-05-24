@@ -320,7 +320,6 @@ html, body {
 
              .stream_chat
              {
-                     padding:5px;
                      overflow-y: auto;
                      position: absolute;
                      top: 50px;
@@ -330,11 +329,37 @@ html, body {
                      border: 2px solid @blue3;
                      border-top:none;
                      .shadow(7px, 9px, 4px, 1px, @lightgray2);
+                     margin: 0;
 
+                div {
+                    margin: 0;
+                }
+    
+                .date {
+                    padding-left: 20%;
+                }
+    
                 .line
                 {
-                    padding:5px;
-                    margin:2px 0px;
+                    margin: 0;
+                    box-sizing: border-box;
+                    float: left;
+                    width: 100%;
+                
+                    .user {
+                        min-height: 20px;
+                        box-sizing: border-box;
+                        float: left;
+                        width: 20%;
+                    }
+                    
+                    .message {
+                        box-sizing: border-box;
+                        border-left: 2px solid #ccc;
+                        float: left;
+                        word-wrap: break-word;
+                        width: 80%;
+                    }
                 }
              
                 .line0 {
@@ -343,6 +368,11 @@ html, body {
                 
                 .line1 {
                     background-color: @blue2;
+                }
+                
+                a img {
+                    height: 100px;
+                    float: right;
                 }
                 
              }

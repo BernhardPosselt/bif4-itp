@@ -25,8 +25,9 @@ class ChannelManager
         @stream_sidebar_files_data = {}
         # other stuff
         @active_channel = undefined
-        @last_msg_user = undefined
-        @last_msg_class = 0
+        @last_msg_user = {}
+        @last_msg_class = {}
+        @last_post_minute = {}
         @loaded_channels = {}
 
 
@@ -243,15 +244,22 @@ class ChannelManager
     create_stream_dom: (channel_id, msg_id) ->
         data = @stream_data[channel_id][msg_id]
         stream = @dom_reg_stream[channel_id].children(".stream_field").children(".stream_chat")
-        line = $("<p>")
+        line = $("<div>")
         line.addClass("line")
-        user = $("<span>")
+        user = $("<div>")
         user.addClass("user")
-        date = $("<span>")
+        date = $("<div>")
         date.addClass("date")
-        msg = $("<span>")
+        msg = $("<div>")
         msg.addClass("message")
-        msg.html(": " + data.message)
+        if data.type == "text"
+            msg.html(@sugar_text(data.message))
+        else
+            code = $("<pre>")
+            code.html(data.message)
+            code.addClass("brush: " + data.type)
+            msg.append(code)
+            # TODO: only show x lines and show link to show rest
         # convert unixtimestamp to date
         date_string = new Date(data.date)
         year = date_string.getFullYear()
@@ -265,23 +273,53 @@ class ChannelManager
         # get username
         user_data = @get_user(data.user_id)
         user_name = " " + user_data.prename + " " + user_data.lastname
-        user.html(user_name)
+        user.html(user_name + ": ")
         # check if we have to alternate the class for setting
         # the background of the message
-        if @last_msg_user == undefined
-            @last_msg_user = data.user_id
-            line.addClass("line0")
+        if @last_msg_user[channel_id] == undefined
+            @last_msg_class[channel_id] = 0
+        if @last_msg_user[channel_id] == data.user_id
+            msg.addClass("line" + @last_msg_class[channel_id])
+            # if the last message was from the last user, dont write his
+            # name again
+            user.html("")
         else
-            if @last_msg_user == data.user_id
-                line.addClass("line" + @last_msg_class)
-            else
-                @last_msg_class = (@last_msg_class + 1) % 2
-                line.addClass("line" + @last_msg_class)
-            @last_msg_user = data.user_id
-        line.append(date)
+            @last_msg_class[channel_id] = (@last_msg_class[channel_id] + 1) % 2
+            msg.addClass("line" + @last_msg_class[channel_id])
+        @last_msg_user[channel_id] = data.user_id
+        # only append date if the last minute wasnt the same as this one
+        if @last_post_minute[channel_id] == undefined
+            @last_post_minute[channel_id] = -1
+        if @last_post_minute[channel_id] != minutes
+            @last_post_minute[channel_id] = minutes
+            stream.append(date)
         line.append(user)
         line.append(msg)
         stream.append(line)
+        # highlight and scroll to the bottom of the div
+        SyntaxHighlighter.highlight()
+        streamElem = stream[0]
+        streamElem.scrollTop = streamElem.scrollHeight;
+
+
+    # wraps links in <a> tags, pictures in <img> tags 
+    # msg: the message we search
+    # return: the final message
+    sugar_text: (msg) ->
+        # first place all urls in <a> tags
+        url_regex = /\b((?:https?|ftp):\/\/[a-z0-9+&@#\/%?=~_|!:,.;-]*[a-z0-9+&@#\/%=~_|-])/gim
+        pseudo_url_regex = /(^|[^\/])(www\.[\S]+(\b|$))/gim
+        email_regex = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/gim
+        msg = msg.replace(url_regex, '<a href="$1">$1</a>')
+        msg = msg.replace(pseudo_url_regex, '$1<a href="http://$2">$2</a>')
+        msg = msg.replace(email_regex, '<a href="mailto:$&">$&</a>')
+        # now replace all images in <a> tags with <img> tags
+        pictures = ["png", "jpg", "jpeg", "gif"]
+        for pic in pictures
+            pic_regex = new RegExp('<a href="(.*\.' + pic + ')">(.*)<\/a>', "gim")
+            msg = msg.replace(pic_regex, '<a href="$1"><img src="$1" /></a>')
+        return msg
+        
 
 ################################################################################
 # Groups and Users
