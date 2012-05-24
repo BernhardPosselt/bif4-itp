@@ -424,12 +424,15 @@ class ChannelManager
                 when "delete" then @delete_user(id)       
 
     create_user: (id, data) ->
+        @user_data[id] = data
         @rewrite_user_group_dom()
     
     update_user: (id, data) ->
+        @user_data[id] = data
         @rewrite_user_group_dom()
         
     delete_user: (id) ->
+        delete @user_data[id]
         @rewrite_user_group_dom()
         
     get_user: (id) ->

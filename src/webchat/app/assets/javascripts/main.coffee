@@ -2,7 +2,7 @@ $(document).ready ->
     manager = new MainManager()
     keycodes = new KeyCodes()
 
-    # channel sidebar navigation
+    # left channel sidebar navigation
     $(".channels_link").click ->
         if not $("#channel_sidebar #channels").is(":visible")
             $("#channel_sidebar #groups").fadeOut "fast", ->
@@ -28,3 +28,11 @@ $(document).ready ->
         msg = msg.slice(0, -1) # remove \n
         $("#input_field").val("")
         manager.send_msg(msg, type)
+        
+    # right sidebar util links
+    $("#info_sidebar #channel_info .utils .invite").click ->
+        $("#add_wrapper").fadeIn "fast"
+        $("#add_form").fadeIn "fast"
+    $("#add_buttons #add_cancel").click ->
+        $("#add_wrapper").fadeOut "fast"
+        $("#add_form").fadeOut "fast"
