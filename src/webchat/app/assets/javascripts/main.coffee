@@ -1,7 +1,6 @@
 $(document).ready ->
     manager = new MainManager()
     keycodes = new KeyCodes()
-    SyntaxHighlighter.all()
 
     # left channel sidebar navigation
     $(".channels_link").click ->
@@ -20,6 +19,11 @@ $(document).ready ->
         if e.keyCode == keycodes.enter and not e.shiftKey
             console.log keycodes.shift_pressed
             submit()
+    # dont jump on hitting enter on an empty input field
+    $("#input_field").keydown (e) ->
+        if e.keyCode == keycodes.enter
+            if $(@).val() == ""
+                return false
     $("#input_send").click (e) ->
         submit()
             

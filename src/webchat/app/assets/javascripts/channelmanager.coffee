@@ -245,6 +245,13 @@ class ChannelManager
     create_stream_dom: (channel_id, msg_id) ->
         data = @stream_data[channel_id][msg_id]
         stream = @dom_reg_stream[channel_id].children(".stream_field").children(".stream_chat")
+        # check if we got to scroll, we only scroll when the scroll bar is 
+        # at the bottom before the message arrives
+        scroll = false
+        scrollBottom = stream.height() + stream.scrollTop()
+        if scrollBottom == stream.prop("scrollHeight")
+            scroll = true
+        # add dom
         line = $("<div>")
         line.addClass("line")
         user = $("<div>")
@@ -307,14 +314,22 @@ class ChannelManager
             @last_post_minute[channel_id] = -1
         if @last_post_minute[channel_id] != minutes
             @last_post_minute[channel_id] = minutes
-            stream.append(date)
+            date_line = $("<div>")
+            date_line.addClass("line")
+            date_user_placeholder = $("<div>")
+            date_user_placeholder.addClass("user")
+            date_line.append(date_user_placeholder)
+            date_line.append(date)
+            stream.append(date_line)
         line.append(user)
         line.append(msg)
         stream.append(line)
-        # highlight and scroll to the bottom of the div
-        SyntaxHighlighter.highlight()
-        streamElem = stream[0]
-        streamElem.scrollTop = streamElem.scrollHeight;
+        # highlight only when type is not text
+        if data.type != "text"
+            SyntaxHighlighter.highlight()
+        #scroll to the bottom of the div
+        if scroll
+            stream.scrollTop(stream.prop("scrollHeight")); 
 
 
     # wraps links in <a> tags, pictures in <img> tags 
@@ -331,8 +346,9 @@ class ChannelManager
         # now replace all images in <a> tags with <img> tags
         pictures = ["png", "jpg", "jpeg", "gif"]
         for pic in pictures
+            # put a br before and after the image
             pic_regex = new RegExp('<a href="(.*\.' + pic + ')">(.*)<\/a>', "gim")
-            msg = msg.replace(pic_regex, '<a href="$1"><img src="$1" /></a>')
+            msg = msg.replace(pic_regex, '<br/><a href="$1"><img alt="$1" src="$1" /></a><br/>')
         return msg
         
 
