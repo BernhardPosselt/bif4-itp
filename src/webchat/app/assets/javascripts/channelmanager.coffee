@@ -343,11 +343,21 @@ class ChannelManager
         msg = msg.replace(url_regex, '<a href="$1">$1</a>')
         msg = msg.replace(pseudo_url_regex, '$1<a href="http://$2">$2</a>')
         msg = msg.replace(email_regex, '<a href="mailto:$&">$&</a>')
+        # add smileys
+        smileys = new Smileys()
+        for key, smile of smileys.get_smileys()
+            img = '<img alt="' + key + '" src="' + smileys.get_smiley(key) + '" />'
+            msg = msg.replace(" " + key + " ", " " + img + " ")
+            msg = msg.replace(key + "<br />", img + '<br />')
+            end_line_regex = new RegExp( "(.*)" + @_regex_esc(key) + "$", "g")
+            msg = msg.replace(end_line_regex, "$1" + img)
+            start_line_regex = new RegExp( "^" + @_regex_esc(key) + "(.*)$", "g")
+            msg = msg.replace(start_line_regex, img + "$1")
         # now replace all images in <a> tags with <img> tags
         pictures = ["png", "jpg", "jpeg", "gif"]
         for pic in pictures
             # put a br before and after the image
-            pic_regex = new RegExp('<a href="(.*\.' + pic + ')">(.*)<\/a>', "gim")
+            pic_regex = new RegExp('<a href="(.*\.' + @_regex_esc(pic) + ')">(.*)<\/a>', "gim")
             msg = msg.replace(pic_regex, '<br/><a href="$1"><img alt="$1" src="$1" /></a><br/>')
         return msg
         
@@ -559,3 +569,7 @@ class ChannelManager
             if dict.hasOwnProperty(key)
                 size++
         return size
+        
+    # escapes chars when put into regex
+    _regex_esc: (string) ->
+        return (string+'').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
