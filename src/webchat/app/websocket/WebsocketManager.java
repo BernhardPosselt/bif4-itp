@@ -69,7 +69,8 @@ public class WebsocketManager {
         	models.User.setUseronline(userid);
         	out.write(Group.geninitGroup(userid));
         	out.write(Channel.geninitChannel(userid));
-      	 	notifyAllMembers(User.geninitUser(userid));
+      	 	out.write(User.geninitUser(userid));
+      	 	notifyAllMembers(User.genUserchanged(userid, "update"));
         }
         else if (type.equals("join")){
         	int channelid = InJoin.getchannel(inmessage);

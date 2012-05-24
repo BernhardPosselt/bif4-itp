@@ -24,7 +24,7 @@ public class User {
 		try {
 			User user = new User();
 			user.init = true;
-			for (Iterator<models.User> uit = models.User.getonlineUsers().iterator(); uit.hasNext();){
+			for (Iterator<models.User> uit = models.User.find.all().iterator(); uit.hasNext();){
 				models.User muser = uit.next();
 				
 				UserData udata = new UserData();
