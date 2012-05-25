@@ -10,6 +10,7 @@ import play.libs.F.Callback0;
 import play.mvc.Http.Session;
 import play.mvc.WebSocket;
 import websocket.json.in.InJoin;
+import websocket.json.out.ActiveUser;
 import websocket.json.out.Channel;
 import websocket.json.out.File;
 import websocket.json.out.Group;
@@ -70,6 +71,7 @@ public class WebsocketManager {
         	out.write(Group.geninitGroup(userid));
         	out.write(Channel.geninitChannel(userid));
       	 	out.write(User.geninitUser(userid));
+      	 	out.write(ActiveUser.genActiveUser(userid));
       	 	notifyAllMembers(User.genUserchanged(userid, "update"));
         }
         else if (type.equals("join")){
