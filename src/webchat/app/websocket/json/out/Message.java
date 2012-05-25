@@ -58,7 +58,8 @@ public class Message {
 			md.date = new Date();
 		
 			md.message = StringEscapeUtils.escapeHtml(im.data.message);
-			md.message = md.message.replaceAll("\n", "<br/>");
+			if (im.data.type.equals("text"))
+				md.message = md.message.replaceAll("\n", "<br/>");
 			md.modified = new Date();
 			md.type = im.data.type;
 			md.user_id = userid;
