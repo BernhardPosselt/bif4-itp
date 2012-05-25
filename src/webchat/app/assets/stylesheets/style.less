@@ -539,8 +539,40 @@ html, body {
 
             fieldset
             {
-                 border:2px solid @blue3;
-                 .shadow(7px, 9px, 4px, 1px, @lightgray2);
+                 height:100%;
+                 .box-sizing(border-box);
+                 border: 1px solid #aaa;
+                 margin:0;
+                 padding:0;
+
+                 legend
+                 {
+                    margin-left:10px;
+                 }
+            }
+
+            #channel_users
+            {
+                padding:5px;
+                overflow-y:auto;
+            }
+
+            .utils
+            {
+                position:absolute;
+                bottom:0;
+                left:0;
+                border:1px solid #ccc;
+                margin:4px;
+                padding:3px 10px;
+                .grad(#444, #222);
+                color:@white1;
+
+                a
+                {
+                    color:@white1;
+                    text-decoration:none;
+                }
             }
             
             .users {
@@ -555,13 +587,20 @@ html, body {
             left:0;
             right:0;
             bottom:0;
-            margin:0px 15px;
-            margin-top:5px;
+            margin:5px 15px 15px 15px;
 
             fieldset
             {
-                 border:2px solid @blue3;
-                 .shadow(7px, 9px, 4px, 1px, @lightgray2);
+                 height:100%;
+                 .box-sizing(border-box);
+                 border: 1px solid #aaa;
+                 margin:0;
+                 padding:0;
+
+                 legend
+                 {
+                    margin-left:10px;
+                 }
             }
 
             .files {
@@ -579,51 +618,65 @@ html, body {
         z-index:10;
         left:0;
         right:0;
-        bottom:-15px;
-        top:-60px;
-
-        #add_form
-        {
-            position:relative;
-            width:500px;
-            height:500px;
-            margin:auto;
-            margin-top:5%;
-            background-color:@white1;
-
-            #add_meta
-            {
-                height:30px;
-                line-height:30px;
-                padding:0px 10px;
-                border-bottom:1px solid @blue4;
-            }
-
-            #add_members
-            {
-                height:250px;
-                padding:10px;
-                border-bottom:1px solid @blue4;
-
-            }
-
-            #add_selected
-            {
-                padding:10px;
-                height:240px;
-            }
-
-            #add_buttons
-            {
-                position:absolute;
-                bottom:0;
-                left:0;
-                right:0;
-                padding:10px;
-            }
-        }
-
+        bottom:0;
+        top:-55px;
     }
+
+     #add_form
+            {
+                position:relative;
+                display:none;
+                width:500px;
+                height:500px;
+                margin:auto;
+                margin-top:5%;
+                background-color:@white1;
+                z-index:20;
+
+                #add_meta
+                {
+                    position:absolute;
+                    top:0;
+                    left:0;
+                    right:0;
+                    height:30px;
+                    line-height:30px;
+                    padding:0px 10px;
+                    border-bottom:1px solid @blue4;
+                }
+
+                #add_members
+                {
+                    position:absolute;
+                    left:0;
+                    right:0;
+                    top:30px;
+                    height:200px;
+                    padding:10px;
+                    border-bottom:1px solid @blue4;
+
+                }
+
+                #add_selected
+                {
+                    position:absolute;
+                    left:0;
+                    right:0;
+                    top:250px;
+                    padding:10px;
+                    height:190px;
+                }
+
+                #add_buttons
+                {
+                    position:absolute;
+                    bottom:0;
+                    left:0;
+                    right:0;
+                    padding:10px;
+                    text-align:right;
+                }
+            }
 
   }
 }
