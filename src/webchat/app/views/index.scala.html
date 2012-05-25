@@ -42,7 +42,10 @@
         <div id="file_info">
             <fieldset>
                 <legend>Files</legend>
-                <div id="channel_files"></div>
+                <div id="channel_files">
+
+                </div>
+                <div class="utils"><a class="upload" href="#" >Upload</a></div>
             </fieldset>
         </div>
     </div>
@@ -98,6 +101,25 @@
 
               <input id="newchannel_cancel" type="button" value="Cancel"/>
               <input id="newchannel" type="button" value="Create"/>
+        </div>
+    </div>
+
+    <!-- Upload form -->
+    <div id="upload_wrapper">
+
+    </div>
+    <div id="upload_form">
+        <div id="upload_meta">Upload a file</div>
+        <div id="upload_data">
+            <div class="field">
+                <label for="upload_file">File:</label>
+                <input id="upload_file" type="file" size="30" name="upload_file" />
+            </div>
+
+        </div>
+        <div id="upload_buttons">
+            <input id="upload_cancel" type="button" value="Cancel"/>
+            <input id="upload" type="button" value="Upload"/>
         </div>
     </div>
 }

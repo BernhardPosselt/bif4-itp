@@ -52,6 +52,16 @@ $(document).ready ->
         $("#newchannel_wrapper").fadeOut "fast"
         $("#newchannel_form").fadeOut "fast"
 
+    $("#info_sidebar #file_info .utils .upload").click ->
+        $("#upload_wrapper").fadeIn "fast"
+        $("#upload_form").fadeIn "fast"
+    $("#upload_buttons #upload_cancel").click ->
+        $("#upload_wrapper").fadeOut "fast"
+        $("#upload_form").fadeOut "fast"
+    $("#upload_wrapper").click ->
+        $("#upload_wrapper").fadeOut "fast"
+        $("#upload_form").fadeOut "fast"
+
     # right sidebar util links
     $("#info_sidebar #channel_info .utils .invite").click ->
         $("#add_wrapper").fadeIn "fast"

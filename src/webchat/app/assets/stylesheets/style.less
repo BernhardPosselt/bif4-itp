@@ -665,10 +665,31 @@ html, body {
             .files {
                 display: none;
             }
+
+            .utils
+            {
+                position:absolute;
+                bottom:0;
+                left:0;
+                right:0;
+                height:35px;
+                border-top:1px solid #ccc;
+
+                a
+                {
+                    display:inline-block;
+                    text-decoration:none;
+                    border:1px solid #ccc;
+                    margin:5px;
+                    padding:3px 10px;
+                    .grad(#444, #222);
+                    color:@white1;
+                }
+            }
         }
     }
 
-    #add_wrapper, #newchannel_wrapper
+    #add_wrapper, #newchannel_wrapper, #upload_wrapper
     {
         display:none;
         background-color:#aaa;
@@ -797,5 +818,62 @@ html, body {
          }
      }
 
+     #upload_form
+     {
+         position:relative;
+         display:none;
+         width:350px;
+         height:150px;
+         margin:auto;
+         margin-top:5%;
+         background-color:@white1;
+         z-index:20;
+
+         .field
+         {
+            width:100%;
+            padding:5px 0px;
+
+            label
+            {
+                float:left;
+                width:70px;
+            }
+         }
+
+         #upload_meta
+         {
+            position:absolute;
+            top:0;
+            left:0;
+            right:0;
+            height:30px;
+            line-height:30px;
+            padding:0px 10px;
+            border-bottom:1px solid @blue4;
+            .grad(#444, #222);
+            color:@white1;
+         }
+
+         #upload_data
+         {
+            position:absolute;
+            padding:10px;
+            top:30px;
+            left:0;
+            right:0;
+            bottom:50px;
+         }
+
+         #upload_buttons
+         {
+            position:absolute;
+            bottom:0;
+            left:0;
+            right:0;
+            padding:10px;
+            text-align:right;
+         }
+     }
   }
 }
