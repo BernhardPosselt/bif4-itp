@@ -10,6 +10,8 @@
   src: url('../fonts/DejaVuSansCondensed-Bold.ttf');
 }
 
+/* palette http://www.colourlovers.com/palette/373610/mellon_ball_surprise ? */
+
 /* variables */
 @white1:#ffffff;
 @black: #000000;
@@ -89,7 +91,7 @@ html, body {
     left: 0;
     right: 0;
     height: 40px;
-    background-color: @blue3;
+    .grad(#444, #222);
     color:@white1;
     text-shadow:1px 1px 1px @black;
     .shadow(0px, 3px, 4px, 2px, @lightgray2);
@@ -291,6 +293,7 @@ html, body {
         position:relative;
         float:left;
         height:100%;
+        
 
         #streams
         {
@@ -298,86 +301,142 @@ html, body {
               height:100%;
               position:relative;
 
-              fieldset
-              {
-                     border:2px solid @blue3;
-                     height:32px;
-                     margin:0;
-                     background-color:@white2;
-              }
-
               .stream {
                   display: none;
               }
 
+
+              .stream_field
+              {
+                    margin:0;
+              }
+
+             .stream_name {
+                     .grad(#444, #222);
+                     color: #fefefe;
+                     position: absolute;
+                     left: 0;
+                     right: 0;
+                     top: 10px;
+                     height: 25px;
+                     line-height:25px;
+                     padding:5px 10px 0px 10px;
+                     font-weight:bold;
+                     color: #fefefe;             
+             }
+    
              .stream_meta
              {
                      position: absolute;
                      left: 0;
                      right: 0;
-                     top: 5px;
+                     top: 40px;
                      height: 45px;
                      line-height:45px;
                      padding:5px 10px 0px 10px;
-                     font-weight:bold;
+                     background-color: @white1;
+                     color: #000;
 
              }
 
              .stream_chat
              {
+                    color: #000;
                      overflow-y: auto;
                      position: absolute;
-                     top: 50px;
+                     top: 90px;
                      left: 0;
                      right: 0;
-                     bottom: 71px;
-                     border: 2px solid @blue3;
+                     bottom: 114px;
+                     border: 1px solid #ccc;
                      border-top:none;
-                     .shadow(7px, 9px, 4px, 1px, @lightgray2);
                      margin: 1px 0 0 0;
 
                 div {
                     margin: 0;
                 }
     
-                .date {
-                    .box-sizing(border-box);
-                    border-left: 1px solid #ccc;
-                    float: left;
-                }
     
                 .line
                 {
                     .box-sizing(border-box);
                     float: left;
                     width: 100%;
-                
+                    border-bottom: 1px solid #bbb;
+
+                    
                     .user {
-                        min-height: 1em;
+                        min-height: 17px;
                         float: left;
-                        width: 175px;
-                        padding-left: 5px;
+                        width: 165px;
+                        padding: 5px;
+                        padding-left: 10px;
+                        font-weight: bold;
+
+                        display: inline-block;
                     }
                     
                     .message {
                         .box-sizing(border-box);
-                        border-left: 1px solid #ccc;
+                        border-left: 1px solid #bbb;
                         word-wrap: break-word;
                         width: auto;
-                        margin-left: 180px;
+                        padding: 5px 5px 5px 10px;
+                        display: inline-block;
+                        
+                        .code_container {
+                            border: 1px solid #bbb;
+                            
+                            syntaxhighlighter {
+                                margin: 0 !important;
+                            }
+                        }
                     }
+                    
+                    .date {
+                        color: #888;
+                        padding: 5px;
+                        margin-left: 180px;
+                        border-left: 1px solid #bbb;
+                    
+                        .year {
+                            padding: 2px 5px 0 5px;
+                            display: inline-block;
+                            float: right;
+                        }
+                        
+                        .time {
+                            padding: 2px 15px 0 5px;
+                            font-weight: bold;
+                            display: inline-block;
+                        }
+                        
+                        
+                    }
+                    
+                    
                 }
              
+                .date_line0 {
+                    
+                    border-bottom: 1px solid #bbb;
+                }
+                
+                .date_line1 {
+                    border-bottom: 1px solid #bbb;
+                }
+                
+                
                 .line0 {
-                    background-color: @blue1;
+                    background-color: #D1F2A5;
                 }
                 
                 .line1 {
-                    background-color: @blue2;
+                    background-color: #Fefefe;
                 }
                 
                 a img {
-                    height: 100px;
+                    height: 300px;
                 }
                 
              }
@@ -390,15 +449,16 @@ html, body {
              width:100%;
              position:absolute;
              bottom:15px;
-             height:53px;
+             height:100px;
+             .grad(#ccc, #aaa);
 
              #input_options
              {
                   position:absolute;
-                  left:2px;
-                  top:0;
-                  width:60px;
-                  border:1px solid @blue3;
+                  left:10px;
+                  top:10px;
+                  width:100px;
+                  border:1px solid #aaa;
                   margin:0;
                   padding:0;
              }
@@ -406,12 +466,14 @@ html, body {
              #input_field_wrap
              {
                 position:absolute;
-                border:1px solid @blue3;
-                height:48px;
+                top: 10px;
+                border:1px solid #aaa;
+                bottom: 10px;
                 margin:0;
-                left:64px;
-                right:54px;
+                left:114px;
+                right:114px;
                 padding:0;
+
 
                 #input_field
                 {
@@ -428,14 +490,14 @@ html, body {
              #input_send
              {
                 position:absolute;
-                border:1px outset @blue3;
-                background-color:@white1;
-                height:50px;
-                width:50px;
+                border: 1px solid #aaa;
+                background-color: #fefefe;
                 margin:0;
                 padding:0;
-                right:2px;
-                top:0;
+                top: 10px;
+                right: 10px;
+                bottom: 10px;
+                width: 100px;
              }
 
              #input_send:active

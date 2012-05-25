@@ -29,6 +29,7 @@ class ChannelManager
         @last_msg_class = {}
         @last_post_minute = {}
         @loaded_channels = {}
+        @scrolled_channels = {}
         @max_shown_code_lines = 10
 
 
@@ -83,9 +84,9 @@ class ChannelManager
         stream = $("<div>")
         stream.addClass("stream")
         # create fieldset around content
-        stream_field = $("<fieldset>")
+        stream_field = $("<div>")
         stream_field.addClass("stream_field")
-        stream_label = $("<legend>")
+        stream_label = $("<div>")
         stream_label.addClass("stream_name")
         stream_label.html(channel_data.name)
         # create div data in fielset
@@ -94,6 +95,8 @@ class ChannelManager
         stream_meta.html(channel_data.topic)
         stream_chat = $("<div>")
         stream_chat.addClass("stream_chat")
+        stream_chat.scroll =>
+            @scrolled(id)
         # now build dom to add
         stream_field.append(stream_label)
         stream_field.append(stream_meta)
@@ -245,12 +248,6 @@ class ChannelManager
     create_stream_dom: (channel_id, msg_id) ->
         data = @stream_data[channel_id][msg_id]
         stream = @dom_reg_stream[channel_id].children(".stream_field").children(".stream_chat")
-        # check if we got to scroll, we only scroll when the scroll bar is 
-        # at the bottom before the message arrives
-        scroll = false
-        scrollBottom = stream.height() + stream.scrollTop()
-        if scrollBottom == stream.prop("scrollHeight")
-            scroll = true
         # add dom
         line = $("<div>")
         line.addClass("line")
@@ -264,6 +261,7 @@ class ChannelManager
             msg.html(@sugar_text(data.message))
         else
             code_container = $("<div>")
+            code_container.addClass("code_container")
             code = $("<pre>")
             code.html(data.message)
             code.addClass("brush: " + data.type)
@@ -290,24 +288,32 @@ class ChannelManager
         hours = date_string.getHours()
         minutes = date_string.getMinutes()
         seconds = date_string.getSeconds()
-        date_string = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds
-        date.html(date_string)
+        year_span = $("<span>")
+        year_span.html(year + "-" + month + "-" + day)
+        year_span.addClass("year")
+        time_span = $("<span>")
+        time_span.html(hours + ":" + minutes)
+        time_span.addClass("time")
+        date.append(year_span)
+        date.append(time_span) 
         # get username
         user_data = @get_user(data.user_id)
         user_name = " " + user_data.prename + " " + user_data.lastname
-        user.html(user_name + ": ")
+        user.html(user_name)
         # check if we have to alternate the class for setting
         # the background of the message
         if @last_msg_user[channel_id] == undefined
             @last_msg_class[channel_id] = 0
         if @last_msg_user[channel_id] == data.user_id
             msg.addClass("line" + @last_msg_class[channel_id])
+            line.addClass("line" + @last_msg_class[channel_id])
             # if the last message was from the last user, dont write his
             # name again
             user.html("")
         else
             @last_msg_class[channel_id] = (@last_msg_class[channel_id] + 1) % 2
             msg.addClass("line" + @last_msg_class[channel_id])
+            line.addClass("line" + @last_msg_class[channel_id])
         @last_msg_user[channel_id] = data.user_id
         # only append date if the last minute wasnt the same as this one
         if @last_post_minute[channel_id] == undefined
@@ -316,9 +322,11 @@ class ChannelManager
             @last_post_minute[channel_id] = minutes
             date_line = $("<div>")
             date_line.addClass("line")
-            date_user_placeholder = $("<div>")
-            date_user_placeholder.addClass("user")
-            date_line.append(date_user_placeholder)
+            date_line.addClass("date_line" + @last_msg_class[channel_id])
+            date_user = $("<div>")
+            date_user.addClass("user")
+            #date_user.html(user_name)
+            date_line.append(date_user)
             date_line.append(date)
             stream.append(date_line)
         line.append(user)
@@ -327,10 +335,30 @@ class ChannelManager
         # highlight only when type is not text
         if data.type != "text"
             SyntaxHighlighter.highlight()
-        #scroll to the bottom of the div
-        if scroll
-            stream.scrollTop(stream.prop("scrollHeight")); 
+        #scroll to the bottom of the div at start or when users moves scroll down
+        if @scrolled_channels[channel_id] == true or @scrolled_channels[channel_id] == undefined
+            @scroll_to_bottom(channel_id)
 
+
+    # decides if a new message scrolls to the stream to the bottom
+    scrolled: (channel_id) ->
+        stream = @dom_reg_stream[channel_id].children(".stream_field").children(".stream_chat")
+        if @scrolled_channels[channel_id] == undefined
+            @scrolled_channels[channel_id] = true
+        scrollBottom = stream.height() + stream.scrollTop()
+        if scrollBottom == stream.prop("scrollHeight")
+            @scrolled_channels[channel_id] = true
+            console.log("autoscroll activated")
+        else
+            @scrolled_channels[channel_id] = false
+            console.log("autoscroll deactivated")
+            
+            
+    # scrolls a stream to the bottom
+    scroll_to_bottom: (channel_id) ->
+        stream = @dom_reg_stream[channel_id].children(".stream_field").children(".stream_chat")
+        stream.scrollTop(stream.prop("scrollHeight")); 
+        
 
     # wraps links in <a> tags, pictures in <img> tags 
     # msg: the message we search
