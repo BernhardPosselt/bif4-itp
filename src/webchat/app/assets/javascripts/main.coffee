@@ -40,7 +40,18 @@ $(document).ready ->
         # only send when there is min 1 char
         if msg.length > 0
             manager.send_msg(msg, type)
-        
+
+    # left sidebar util links
+    $("#channel_sidebar #channels .utils .newchannel").click ->
+        $("#newchannel_wrapper").fadeIn "fast"
+        $("#newchannel_form").fadeIn "fast"
+    $("#newchannel_buttons #newchannel_cancel").click ->
+        $("#newchannel_wrapper").fadeOut "fast"
+        $("#newchannel_form").fadeOut "fast"
+    $("#newchannel_wrapper").click ->
+        $("#newchannel_wrapper").fadeOut "fast"
+        $("#newchannel_form").fadeOut "fast"
+
     # right sidebar util links
     $("#info_sidebar #channel_info .utils .invite").click ->
         $("#add_wrapper").fadeIn "fast"

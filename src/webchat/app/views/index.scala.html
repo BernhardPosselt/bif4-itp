@@ -10,6 +10,7 @@
             </ul>
         </div>
         <div id="channels">
+            <div class="utils"><a class="newchannel" href="#" >New channel</a></div>
             <ul></ul>
         </div>
         <div id="groups">
@@ -49,25 +50,46 @@
     <div id="add_wrapper">
 
     </div>
-<div id="add_form">
-    <div id="add_meta">Add to Channel</div>
-    <div id="add_members">
-        <select>
-            <option>Users</option>
-            <option>Groups</option>
-        </select>
-        <input id="add_search" type="text" value="Search..." />
+    <div id="add_form">
+        <div id="add_meta">Add to Channel</div>
+        <div id="add_members">
+            <select>
+                <option>Users</option>
+                <option>Groups</option>
+            </select>
+            <input id="add_search" type="text" value="Search..." />
+        </div>
+        <div id="add_selected">
+            Selected users
+            <select>
+                <option>Channel 1</option>
+                <option>Channel 2</option>
+            </select>
+        </div>
+        <div id="add_buttons">
+            <input id="add_cancel" type="button" value="Cancel" />
+            <input id="add" type="button" value="Add" />
+        </div>
     </div>
-    <div id="add_selected">
-        Selected users
-        <select>
-            <option>Channel 1</option>
-            <option>Channel 2</option>
-        </select>
+
+    <div id="newchannel_wrapper">
+
     </div>
-    <div id="add_buttons">
-        <input id="add_cancel" type="button" value="Cancel" />
-        <input id="add" type="button" value="Add" />
+    <div id="newchannel_form">
+        <div id="newchannel_meta">New channel</div>
+        <div id="newchannel_data">
+            <div class="field">
+                <label for="newchannel_name">Name:</label>
+                <input id="newchannel_name" type="text" size="30" name="newchannel_name" />
+            </div>
+            <div class="field">
+                <label for="newchannel_topic">Topic:</label>
+                <input id="newchannel_topic" type="text" size="30" name="newchannel_topic" />
+            </div>
+        </div>
+        <div id="newchannel_buttons">
+              <input id="newchannel_cancel" type="button" value="Cancel"/>
+              <input id="newchannel" type="button" value="Create"/>
+        </div>
     </div>
-</div>
 }
