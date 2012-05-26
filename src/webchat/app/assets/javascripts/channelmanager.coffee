@@ -82,13 +82,13 @@ class ChannelManager
     # creates a new element in the data tree and udpates the dom
     create: (id, data) ->
         @channel_data[id] = data
-        @create_dom(id)
+        @create_dom(id, data)
         
 
     # creates an element in the channel list and in the appropriate places
-    create_dom: (id) ->
+    create_dom: (id, data) ->
         # create channel list item
-        channel_data = @channel_data[id]
+        channel_data = data
         list_entry = $("<li>")
         list_entry.html( channel_data.name )
         list_entry.bind 'click', =>
@@ -149,19 +149,18 @@ class ChannelManager
     # updates an element in the data tree and udpates the dom
     update: (id, data) ->
         @channel_data[id] = data
-        @update_dom(id)
+        @update_dom(id, data)
         
 
     # updates an element in the channel list and in the appropriate places
-    update_dom: (id) ->
-        channel_data = @data[id]
+    update_dom: (id, data) ->
         channel_list = @dom_reg_channel_list[id]
-        channel_list.html( channel_data.name )
+        channel_list.html( data.name )
         stream = @dom_reg_stream[id]
-        stream.children(".stream_field").children(".stream_name").html(channel_data.name)
-        stream.children(".stream_field").children(".stream_meta").html(channel_data.topic)
+        stream.children(".stream_field").children(".stream_name").html(data.name)
+        stream.children(".stream_field").children(".stream_meta").html(data.topic)
         @rewrite_files_dom(id)
-        console.log("Updated channel " + channel_data.name)
+        console.log("Updated channel " + data.name)
         
 
     # creates a new element in the data tree and udpates the dom
@@ -213,25 +212,32 @@ class ChannelManager
             console.log("no channel found, can not join initial channel")
     
     # joins a channel
-    join_channel: (@active_channel) -> 
+    join_channel: (channel_id) -> 
         # check if we need to get data to init the stream
-        if @loaded_channels[@active_channel] == undefined
+        if @loaded_channels[channel_id] == undefined
             msg = 
                 type: "join"
                 data: 
-                    channel: @active_channel
+                    channel: channel_id
             @main_manager.send_websocket(msg)      
-            @loaded_channels[@active_channel] = true
+            @loaded_channels[channel_id] = true
         # remove unread flag    
-        list_entry = @dom_reg_channel_list[@active_channel]
+        list_entry = @dom_reg_channel_list[channel_id]
         list_entry.removeClass("unread")
-        # fade out inactive ones and fade in active one 
-        @dom_stream.children(".stream").fadeOut "fast", =>
-            @dom_reg_stream[@active_channel].fadeIn "fast"
-        @dom_stream_sidebar_users.children(".users").fadeOut "fast", =>
-            @dom_reg_stream_sidebar_users[@active_channel].fadeIn "fast"
-        @dom_stream_sidebar_files.children(".files").fadeOut "fast", =>
-            @dom_reg_stream_sidebar_files[@active_channel].fadeIn "fast"
+        # fade out inactive ones and fade in active one
+        active_channel_id = @get_active_channel()
+        if active_channel_id == undefined
+            @dom_reg_stream[channel_id].fadeIn "fast"
+            @dom_reg_stream_sidebar_users[channel_id].fadeIn "fast"
+            @dom_reg_stream_sidebar_files[channel_id].fadeIn "fast"
+        else if channel_id != active_channel_id
+            @dom_reg_stream[active_channel_id].fadeOut "fast", =>
+                @dom_reg_stream[channel_id].fadeIn "fast"
+            @dom_reg_stream_sidebar_users[active_channel_id].fadeOut "fast", =>
+                @dom_reg_stream_sidebar_users[channel_id].fadeIn "fast"
+            @dom_reg_stream_sidebar_files[active_channel_id].fadeOut "fast", =>
+                @dom_reg_stream_sidebar_files[channel_id].fadeIn "fast"
+        @active_channel = channel_id            
         console.log("joined channel " + @channel_data[@active_channel].name)
     
     
