@@ -295,6 +295,12 @@ class ChannelManager
         hours = date_string.getHours()
         minutes = date_string.getMinutes()
         seconds = date_string.getSeconds()
+        # add preceding zeros when < 10
+        month = if month < 10 then "0" + month else month
+        day = if day < 10 then "0" + day else day
+        hours = if hours < 10 then "0" + hours else hours
+        minutes = if minutes < 10 then "0" + minutes else minutes
+        seconds = if seconds < 10 then "0" + seconds else seconds
         year_span = $("<span>")
         year_span.html(year + "-" + month + "-" + day)
         year_span.addClass("year")
