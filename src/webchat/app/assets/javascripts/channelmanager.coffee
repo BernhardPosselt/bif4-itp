@@ -81,7 +81,7 @@ class ChannelManager
 
     # creates a new element in the data tree and udpates the dom
     create: (id, data) ->
-        @data[id] = data
+        @channel_data[id] = data
         @create_dom(id)
         
 
@@ -148,7 +148,7 @@ class ChannelManager
 
     # updates an element in the data tree and udpates the dom
     update: (id, data) ->
-        @data[id] = data
+        @channel_data[id] = data
         @update_dom(id)
         
 
