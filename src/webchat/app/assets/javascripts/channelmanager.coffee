@@ -136,9 +136,10 @@ class ChannelManager
         # create div data in fielset
         stream_meta = $("<div>")
         stream_meta.addClass("stream_meta")
+        stream_meta.html("Topic: ")
         stream_topic = $("<span>")
         stream_topic.addClass("topic")
-        stream_topic.html(channel_data.topic)
+        stream_topic.html(@linkify_text(channel_data.topic))
         stream_meta.append(stream_topic)
         stream_chat = $("<div>")
         stream_chat.addClass("stream_chat")
@@ -181,7 +182,7 @@ class ChannelManager
         channel_list.html( data.name )
         stream = @dom_reg_stream[id]
         stream.children(".stream_field").children(".stream_name").children(".name").html(data.name)
-        stream.children(".stream_field").children(".stream_meta").children(".topic").html(data.topic)
+        stream.children(".stream_field").children(".stream_meta").children(".topic").html(@linkify_text(data.topic))
         @rewrite_files_dom(id)
         @rewrite_user_group_dom()
         console.log("Updated channel " + data.name)
@@ -439,12 +440,7 @@ class ChannelManager
     # return: the final message
     sugar_text: (msg) ->
         # first place all urls in <a> tags
-        url_regex = /\b((?:https?|ftp):\/\/[a-z0-9+&@#\/%?=~_|!:,.;-]*[a-z0-9+&@#\/%=~_|-])/gi
-        pseudo_url_regex = /(^|[^\/])(www\.[\S]+(\b|$))/gi
-        email_regex = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/gi
-        msg = msg.replace(url_regex, '<a href="$1">$1</a>')
-        msg = msg.replace(pseudo_url_regex, '$1<a href="http://$2">$2</a>')
-        msg = msg.replace(email_regex, '<a href="mailto:$&">$&</a>')
+        msg = @linkify_text(msg)
         # add smileys
         smileys = new Smileys()
         for key, smile of smileys.get_smileys()
@@ -466,6 +462,15 @@ class ChannelManager
         msg = msg.replace(yt_regex, '<br/><iframe width="560" height="315" src="http://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe><br/>')
         return msg
         
+    # replaces links and emails with html links
+    linkify_text:(msg) ->
+        url_regex = /\b((?:https?|ftp):\/\/[a-z0-9+&@#\/%?=~_|!:,.;-]*[a-z0-9+&@#\/%=~_|-])/gi
+        pseudo_url_regex = /(^|[^\/])(www\.[\S]+(\b|$))/gi
+        email_regex = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/gi
+        msg = msg.replace(url_regex, '<a href="$1">$1</a>')
+        msg = msg.replace(pseudo_url_regex, '$1<a href="http://$2">$2</a>')
+        msg = msg.replace(email_regex, '<a href="mailto:$&">$&</a>')    
+        return msg
 
 ################################################################################
 # Groups and Users
