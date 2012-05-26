@@ -133,12 +133,25 @@ class MainManager
     send_msg: (msg, type) ->
         channel_id = @channels.get_active_channel()
         if channel_id != undefined
-            message =
-                type: "message"
-                data:
-                    message: msg
-                    type: type
-                    channel: [parseInt(channel_id)]
+            channel_id = parseInt(channel_id)
+            # check for cmd prefixes
+            # topic changes the channel topic
+            message = {}
+            if msg.indexOf("/topic ") == 0
+                message =
+                    type: "channeltopic"
+                    data:
+                        topic: msg.substr(7)
+                        channel: [channel_id]
+            
+            # no prefix, then this is a normal message
+            else
+                message =
+                    type: "message"
+                    data:
+                        message: msg
+                        type: type
+                        channel: [channel_id]
             @send_websocket(message)
       
       
