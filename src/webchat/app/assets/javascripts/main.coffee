@@ -50,8 +50,7 @@ $(document).ready ->
         $(".popup_window").fadeOut "fast"
 
     # new channel window
-    $("#streams a.change_topic").click ->
-        alert "hi"
+    $("#streams a.change_topic").live "click", ->
         $(".popup_wrapper").fadeIn "fast"
         $("#change_topic_window").fadeIn "fast"
         topic = $(@).siblings(".topic").val()
