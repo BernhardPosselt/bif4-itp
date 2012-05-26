@@ -140,7 +140,7 @@
     <div id="delete_channel_window" class="popup_window">
         <div class="popup_window_title">Delete channel</div>
         <div class="popup_window_content">
-            <p>Do you really want to delete the channel: <span id="delete_channel">?</span></p>
+            <p>Do you really want to delete the channel: <span id="delete_channel"></span>?</p>
         </div>
         <div id="delete_channel_buttons" class="popup_window_buttons">
               <input id="delete_channel_cancel" type="button" value="Cancel"/>
@@ -148,6 +148,18 @@
         </div>
     </div>
 
+    <!-- Close channel form -->
+    <div id="close_channel_window" class="popup_window">
+        <div class="popup_window_title">Delete channel</div>
+        <div class="popup_window_content">
+            <p>Do you really want to close the channel: <span id="close_channel"></span>?
+            A closed channel will be moved into the archives.</p>
+        </div>
+        <div id="close_channel_buttons" class="popup_window_buttons">
+              <input id="close_channel_cancel" type="button" value="Cancel"/>
+              <input id="close_channel_close" type="button" value="Close"/>
+        </div>
+    </div>
 
     <!-- Create new channel form -->
     <div id="newchannel_window" class="popup_window">

@@ -53,7 +53,7 @@ $(document).ready ->
     $("#streams a.change_topic").live "click", ->
         $(".popup_wrapper").fadeIn "fast"
         $("#change_topic_window").fadeIn "fast"
-        topic = $(@).siblings(".topic").html()
+        topic = $(@).parent().parent().siblings(".stream_meta").children(".topic").html()
         $("#change_topic_window #change_topic").val(topic)
     $("#change_topic_buttons #change_topic_cancel").click ->
         $(".popup_wrapper").fadeOut "fast"
@@ -92,6 +92,21 @@ $(document).ready ->
         manager.delete_channel()
         $(".popup_wrapper").fadeOut "fast"
         $("#delete_channel_window").fadeOut "fast"    
+
+    # close channel name window
+    $("#streams a.close_channel").live "click", ->
+        $(".popup_wrapper").fadeIn "fast"
+        $("#close_channel_window").fadeIn "fast"
+        name = $(@).parent().siblings("span").html()
+        $("#close_channel_window #close_channel").html(name)
+    $("#close_channel_buttons #close_channel_cancel").click ->
+        $(".popup_wrapper").fadeOut "fast"
+        $("#close_channel_window").fadeOut "fast"
+    $("#close_channel_window #close_channel_buttons #close_channel_close").click ->
+        manager.close_channel()
+        $(".popup_wrapper").fadeOut "fast"
+        $("#close_channel_window").fadeOut "fast"    
+
 
     # new channel window
     $("#channel_sidebar #channels .utils .newchannel").click ->

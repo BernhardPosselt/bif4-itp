@@ -127,40 +127,6 @@ class MainManager
             return data
           
           
-    # changes the topic for the channel
-    # topic: the new topic text
-    # channel_id: the id of the channel where the topic should be changed
-    change_topic: (topic, channel_id=@channels.get_active_channel()) ->
-        message =
-            type: "channeltopic"
-            data:
-                topic: topic
-                channel: channel_id
-        @send_websocket(message)
-
-
-    # changes the name for the channel
-    # name: the new channel name
-    # channel_id: the id of the channel where the topic should be changed
-    change_channel_name: (name, channel_id=@channels.get_active_channel()) ->
-        message =
-            type: "channelname"
-            data:
-                name: name
-                channel: channel_id
-        @send_websocket(message)
-        
-    # deletes a channel
-    # channel_id: the id of the channel where the topic should be changed
-    delete_channel: (channel_id=@channels.get_active_channel()) ->
-        message =
-            type: "channeldelete"
-            data:
-                name: name
-                channel: channel_id
-        @send_websocket(message)
-
-        
     # sends a message to the server
     # msg: the message which we want to send
     # type: the type, text or java for instance
@@ -219,3 +185,45 @@ class MainManager
                 is_public: is_public
         if name != ""
             @send_websocket(msg)
+            
+            
+    # changes the topic for the channel
+    # topic: the new topic text
+    # channel_id: the id of the channel where the topic should be changed
+    change_topic: (topic, channel_id=@channels.get_active_channel()) ->
+        message =
+            type: "channeltopic"
+            data:
+                topic: topic
+                channel: channel_id
+        @send_websocket(message)
+
+
+    # changes the name for the channel
+    # name: the new channel name
+    # channel_id: the id of the channel that should be renamed
+    change_channel_name: (name, channel_id=@channels.get_active_channel()) ->
+        message =
+            type: "channelname"
+            data:
+                name: name
+                channel: channel_id
+        @send_websocket(message)
+        
+    # deletes a channel
+    # channel_id: the id of the channel that should be deleted
+    delete_channel: (channel_id=@channels.get_active_channel()) ->
+        message =
+            type: "channeldelete"
+            data:
+                channel: channel_id
+        @send_websocket(message)
+        
+    # closes a channel
+    # channel_id: the id of the channel that should be closed 
+    close_channel: (channel_id=@channels.get_active_channel()) ->
+        message =
+            type: "channelclose"
+            data:
+                channel: channel_id
+        @send_websocket(message)
