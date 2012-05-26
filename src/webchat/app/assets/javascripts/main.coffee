@@ -68,17 +68,30 @@ $(document).ready ->
     $("#streams a.change_channel_name").live "click", ->
         $(".popup_wrapper").fadeIn "fast"
         $("#change_channel_name_window").fadeIn "fast"
-        topic = $(@).siblings(".channel_name").html()
-        $("#change_channel_name_window #change_channel_name").val(topic)
-    $("#change_channel_name_buttons #change_topic_cancel").click ->
+        name = $(@).parent().siblings("span").html()
+        $("#change_channel_name_window #change_channel_name").val(name)
+    $("#change_channel_name_buttons #change_channel_name_cancel").click ->
         $(".popup_wrapper").fadeOut "fast"
         $("#change_channel_name_window").fadeOut "fast"
     $("#change_channel_name_window #change_channel_name_buttons #change_channel_name_change").click ->
-        topic = $("#change_channel_name_window #change_channel_name").val()
-        manager.change_channel_name(topic)
+        name = $("#change_channel_name_window #change_channel_name").val()
+        manager.change_channel_name(name)
         $(".popup_wrapper").fadeOut "fast"
-        $("#change_channel_name_window").fadeOut "fast"     
-
+        $("#change_channel_name_window").fadeOut "fast"   
+      
+    # delete channel name window
+    $("#streams a.delete_channel").live "click", ->
+        $(".popup_wrapper").fadeIn "fast"
+        $("#delete_channel_window").fadeIn "fast"
+        name = $(@).parent().siblings("span").html()
+        $("#delete_channel_window #delete_channel").html(name)
+    $("#delete_channel_buttons #delete_channel_cancel").click ->
+        $(".popup_wrapper").fadeOut "fast"
+        $("#delete_channel_window").fadeOut "fast"
+    $("#delete_channel_window #delete_channel_buttons #delete_channel_delete").click ->
+        manager.delete_channel()
+        $(".popup_wrapper").fadeOut "fast"
+        $("#delete_channel_window").fadeOut "fast"    
 
     # new channel window
     $("#channel_sidebar #channels .utils .newchannel").click ->

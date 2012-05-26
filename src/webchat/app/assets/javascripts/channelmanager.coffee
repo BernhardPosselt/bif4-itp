@@ -99,12 +99,29 @@ class ChannelManager
         # create the stream div
         stream = $("<div>")
         stream.addClass("stream")
-        # create fieldset around content
+        # create div around content
         stream_field = $("<div>")
         stream_field.addClass("stream_field")
+        # create title field
         stream_label = $("<div>")
         stream_label.addClass("stream_name")
-        stream_label.html(channel_data.name)
+        stream_name = $("<span>")
+        stream_name.html(channel_data.name)
+        stream_label.append(stream_name)
+        # create links for deleting and renaming the channel
+        stream_utils = $("<div>")
+        stream_utils.addClass("utils")
+        change_name = $("<a>")
+        change_name.attr("href", "#")
+        change_name.addClass("change_channel_name")
+        change_name.html("Rename")
+        delete_channel = $("<a>")
+        delete_channel.attr("href", "#")
+        delete_channel.addClass("delete_channel")
+        delete_channel.html("Delete")
+        stream_utils.append(delete_channel)
+        stream_utils.append(change_name)
+        stream_label.append(stream_utils)
         # create div data in fielset
         stream_meta = $("<div>")
         stream_meta.addClass("stream_meta")
@@ -175,6 +192,7 @@ class ChannelManager
         delete @stream_sidebar_users_data[id]
         delete @loaded_channels[id]
         delete @scrolled_channels[id]
+        delete @init_channels[id]
         @delete_dom(id)
 
     # deletes an item from the dom     

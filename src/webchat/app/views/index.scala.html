@@ -126,13 +126,25 @@
         <div class="popup_window_title">Change channel name</div>
         <div class="popup_window_content">
             <div class="field">
-                <label for="change_channel_name">Channel name:</label>
+                <label for="change_channel_name">Name:</label>
                 <input id="change_channel_name" type="text" size="30" name="change_channel_name" />
             </div>
         </div>
-        <div id="change_topic_buttons" class="popup_window_buttons">
+        <div id="change_channel_name_buttons" class="popup_window_buttons">
               <input id="change_channel_name_cancel" type="button" value="Cancel"/>
               <input id="change_channel_name_change" type="button" value="Change"/>
+        </div>
+    </div>
+
+    <!-- Delete channel form -->
+    <div id="delete_channel_window" class="popup_window">
+        <div class="popup_window_title">Delete channel</div>
+        <div class="popup_window_content">
+            <p>Do you really want to delete the channel: <span id="delete_channel">?</span></p>
+        </div>
+        <div id="delete_channel_buttons" class="popup_window_buttons">
+              <input id="delete_channel_cancel" type="button" value="Cancel"/>
+              <input id="delete_channel_delete" type="button" value="Delete"/>
         </div>
     </div>
 
