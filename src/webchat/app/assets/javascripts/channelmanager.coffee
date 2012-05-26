@@ -181,6 +181,7 @@ class ChannelManager
         stream.children(".stream_field").children(".stream_name").children(".name").html(data.name)
         stream.children(".stream_field").children(".stream_meta").children(".topic").html(data.topic)
         @rewrite_files_dom(id)
+        @rewrite_user_group_dom()
         console.log("Updated channel " + data.name)
         
 
