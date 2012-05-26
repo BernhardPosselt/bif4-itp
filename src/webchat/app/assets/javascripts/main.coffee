@@ -70,6 +70,7 @@ $(document).ready ->
         $("#add_wrapper").fadeIn "fast"
         $("#add_form").fadeIn "fast"
         $("#add_search").focus()
+        manager.reset_invite_selection()
     $("#add_buttons #add_cancel").click ->
         $("#add_wrapper").fadeOut "fast"
         $("#add_form").fadeOut "fast"

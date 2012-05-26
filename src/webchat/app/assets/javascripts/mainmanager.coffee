@@ -158,3 +158,7 @@ class MainManager
     # returns the completed name of a person in the channel if possible
     complete_name: (val) ->
         return @channels.complete_name(val)
+    
+    # moves all users and groups from selected to unselected
+    reset_invite_selection: ->
+        @channels.reset_invite_selection()

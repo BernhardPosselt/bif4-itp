@@ -11,11 +11,17 @@ class ChannelManager
         @dom_stream = $ "#streams"
         @dom_stream_sidebar_users = $ "#info_sidebar #channel_users"
         @dom_stream_sidebar_files = $ "#info_sidebar #channel_files"
+        @dom_invite_users = $ "#add_form #selected_preview .users ul"
+        @dom_invite_groups = $ "#add_form #selected_preview .groups ul"
+        @dom_invite_selected_users = $ "#add_form #add_selected .users ul"
+        @dom_invite_selected_groups = $ "#add_form #add_selected .groups ul"
         # dom elements which we append
         @dom_reg_channel_list = {}
         @dom_reg_stream = {}
         @dom_reg_stream_sidebar_users = {}
         @dom_reg_stream_sidebar_files = {}
+        @dom_reg_invite_groups = {}
+        @dom_reg_invite_users = {}
         # json data
         @channel_data = {}
         @stream_data = {}
@@ -23,6 +29,7 @@ class ChannelManager
         @group_data = {}
         @stream_sidebar_users_data = {}
         @stream_sidebar_files_data = {}
+        @file_data = {}
         # other stuff
         @active_channel = undefined
         @last_msg_user = {}
@@ -46,6 +53,12 @@ class ChannelManager
         # create dom for channel list
         for id, value of @channel_data
             @create_dom(id, value)
+        for id, value of @user_data
+            @create_user_dom(id, value)
+        for id, value of @group_data
+            @create_group_dom(id, value)
+        for id, value of @file_data
+            @create_file_dom(id, value)
         # create dom for users and groups
         @rewrite_user_group_dom()
         # create dom for first channel
@@ -387,7 +400,7 @@ class ChannelManager
         # add smileys
         smileys = new Smileys()
         for key, smile of smileys.get_smileys()
-            img = '<img alt="' + key + '" src="' + smileys.get_smiley(key) + '" />'
+            img = '<img width="50" height="50" alt="' + key + '" src="' + smileys.get_smiley(key) + '" />'
             msg = msg.replace(" " + key + " ", " " + img + " ")
             msg = msg.replace(key + "<br />", img + '<br />')
             end_line_regex = new RegExp( "(.*)" + @_regex_esc(key) + "$", "g")
@@ -407,6 +420,8 @@ class ChannelManager
 # Groups and Users
 ################################################################################
 
+    # this method rewrites the dom for places where updating is complicated, so
+    # every create, update or delete, the complete dom is being rewriten
     rewrite_user_group_dom: ->
         console.log("rewriting groups and users")
         @dom_group_list.empty()
@@ -499,8 +514,6 @@ class ChannelManager
                 dom_users.append(heading)    
                 dom_users.append(user_list)                   
   
-        
-
 ################################################################################
 # Groups                           
 ################################################################################
@@ -519,14 +532,50 @@ class ChannelManager
     create_group: (id, data) ->
         @group_data[id] = data
         @rewrite_user_group_dom()
+        @create_group_dom(id, data)
     
+    create_group_dom: (id, data) ->
+        list_entry = $("<li>")
+        list_entry.html(data.name)
+        list_entry.click =>
+            @toggle_select_invite_group(id)
+        @dom_reg_invite_groups[id] =
+            dom: list_entry
+            selected: false
+        @dom_invite_groups.append(list_entry)
+        
     update_group: (id, data) ->
         @group_data[id] = data
         @rewrite_user_group_dom()
+        @update_group_dom(id, data)
+
+    # updates the dom for a group
+    update_group_dom: (id, data) ->
+        list_entry = @dom_reg_invite_groups[id].dom
+        list_entry.html(data.name)
 
     delete_group: (id) ->
         delete @group_data[id]
         @rewrite_user_group_dom()
+        @delete_group_dom(id)
+
+    # deletes the group dom entries
+    delete_group_dom: (id) ->
+        @dom_reg_invite_groups[id].dom.remove()
+
+    # moves the user into the selected area or moves him back if hes already
+    # in it
+    toggle_select_invite_group: (id) ->
+        list_entry = @dom_reg_invite_groups[id]
+        dom_elem = list_entry.dom
+        if list_entry.selected
+            list_entry.selected = false
+            dom_elem.detach()
+            @dom_invite_groups.append(dom_elem)
+        else
+            list_entry.selected = true        
+            dom_elem.detach()
+            @dom_invite_selected_groups.append(dom_elem)
 
 ################################################################################
 # Users                           
@@ -541,6 +590,7 @@ class ChannelManager
     init_user: (@user_data) ->
         @callback_init()
 
+    # receives the json input and decides which actions to perform
     input_user: (data, actions) ->
         for id, method of actions
             switch method
@@ -548,30 +598,69 @@ class ChannelManager
                 when "update" then @update_user(id, data[id])
                 when "delete" then @delete_user(id)       
 
+    # creates the dom for one user
     create_user: (id, data) ->
         @user_data[id] = data
         @rewrite_user_group_dom()
+        @create_user_dom(id, data)
     
+    
+    # this creates only the dom in the invite dialogue
+    create_user_dom: (id, data) ->
+        list_entry = $("<li>")
+        list_entry.html(data.prename + " " + data.lastname)
+        list_entry.click =>
+            @toggle_select_invite_user(id)
+        @dom_reg_invite_users[id] =
+            dom: list_entry
+            selected: false
+        @dom_invite_users.append(list_entry)
+    
+    # updates the user data
     update_user: (id, data) ->
         @user_data[id] = data
         @rewrite_user_group_dom()
+        @update_user_dom(id, data)
         
+    # updates the dom for a user
+    update_user_dom: (id, data) ->
+        list_entry = @dom_reg_invite_users[id].dom
+        list_entry.html(data.prename + " " + data.lastname)
+        
+    # deletes the user
     delete_user: (id) ->
         delete @user_data[id]
         @rewrite_user_group_dom()
+        @delete_user_dom(id)
         
+    # deletes the users dom entries
+    delete_user_dom: (id) ->
+        @dom_reg_invite_users[id].dom.remove()
+        
+    # returns the user data
     get_user: (id) ->
         return @user_data[id]
     
+    # moves the user into the selected area or moves him back if hes already
+    # in it
+    toggle_select_invite_user: (id) ->
+        list_entry = @dom_reg_invite_users[id]
+        dom_elem = list_entry.dom
+        if list_entry.selected
+            list_entry.selected = false
+            dom_elem.detach()
+            @dom_invite_users.append(dom_elem)
+        else
+            list_entry.selected = true        
+            dom_elem.detach()
+            @dom_invite_selected_users.append(dom_elem)
 
 ################################################################################
 # Files                           
 ################################################################################    
     
     # initializes a stream with data
-    init_file: (data) ->
-        #@streams.init(data)    
-    
+    init_file: (@file_data) ->
     
     # receives input for a stream
     input_file: (data, actions) ->
@@ -582,6 +671,8 @@ class ChannelManager
                 when "delete" then @delete_file(id)       
 
     create_file: (id, data) ->
+    
+    create_file_dom: (id, data) ->
     
     update_file: (id, data) ->
 
@@ -629,6 +720,15 @@ class ChannelManager
         return val
     
     
+    # moves all users and groups from selected to unselected    
+    reset_invite_selection: ->
+        for id, elems of @dom_reg_invite_users
+            if elems.selected
+                @toggle_select_invite_user(id)
+        for id, elems of @dom_reg_invite_groups
+            if elems.selected
+                @toggle_select_invite_group(id)
+
 ################################################################################
 # utilities
 ################################################################################
