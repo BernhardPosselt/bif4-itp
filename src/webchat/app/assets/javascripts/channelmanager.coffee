@@ -83,6 +83,7 @@ class ChannelManager
     create: (id, data) ->
         @channel_data[id] = data
         @create_dom(id, data)
+        @rewrite_user_group_dom()
         
 
     # creates an element in the channel list and in the appropriate places
@@ -165,6 +166,7 @@ class ChannelManager
         @dom_stream_sidebar_files.append(files_sidebar)
         
         console.log("Created channel " + channel_data.name)        
+
 
 
     # updates an element in the data tree and udpates the dom
