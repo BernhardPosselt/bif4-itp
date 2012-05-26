@@ -1,5 +1,5 @@
 ###
-Maps keycodes to attributes
+Maps keycodes to smileys
 ###
 
 class Smileys

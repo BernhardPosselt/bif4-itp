@@ -10,8 +10,8 @@
             </ul>
         </div>
         <div id="channels">
-            <div class="utils"><a class="newchannel" href="#" >New channel</a></div>
             <ul></ul>
+            <div class="utils"><a class="newchannel" href="#" >New channel</a></div>
         </div>
         <div id="groups">
         </div>
@@ -22,9 +22,27 @@
 
         <div id="input">
             <select id="input_options">
-                <option value="text">Text</option>
+                <option value="as3">ActionScript 3</option>
+                <option value="bash">Bash</option>
+                <option value="cpp">C++</option>
+                <option value="csharp">C#</option>
+                <option value="css">CSS</option>
+                <option value="diff">Diff</option>
+                <option value="erlang">Erlang</option>
+                <option value="groovy">Groovy</option>
                 <option value="java">Java</option>
                 <option value="js">JavaScript</option>
+                <option value="perl">Perl</option>
+                <option value="php">Php</option>
+                <option value="powershell">Powershell</option>
+                <option value="python">Python</option>
+                <option value="ruby">Ruby</option>
+                <option value="sass">SASS</option>
+                <option value="scala">Scala</option>
+                <option value="sql">SQL</option>
+                <option value="text" selected="selected">Text</option>
+                <option value="vb">Visual Basic</option>
+                <option value="xml">XML</option>
             </select>
             <div id="input_field_wrap"><textarea id="input_field"></textarea></div>
             <input id="input_send" type="button" value="Send" />
@@ -60,32 +78,32 @@
             <input id="add_search" type="text" placeholder="Filter" />
         </div>
         <div id="selected_preview">
-            <div class="select_list">
-                <h1>Users</h1>
+            <div class="select_list groups">
+                <h1>Groups</h1>
                 <ul>
                 </ul>
             </div>
-            <div class="select_list">
-                <h1>Groups</h1>
+            <div class="select_list users">
+                <h1>Users</h1>
                 <ul>
                 </ul>
             </div>
         </div>
         <div id="add_selected">
-            <div class="select_list">
-                <h1>Selected users</h1>
+            <div class="select_list groups">
+                <h1>Selected groups</h1>
                 <ul>
                 </ul>
             </div>
-            <div class="select_list">
-                <h1>Selected groups</h1>
+            <div class="select_list users">
+                <h1>Selected users</h1>
                 <ul>
                 </ul>
             </div>
         </div>
         <div id="add_buttons">
             <input id="add_cancel" type="button" value="Cancel" />
-            <input id="add" type="button" value="Add" />
+            <input id="add" type="button" value="Invite" />
         </div>
     </div>
 
@@ -113,7 +131,7 @@
         <div id="newchannel_buttons">
 
               <input id="newchannel_cancel" type="button" value="Cancel"/>
-              <input id="newchannel" type="button" value="Create"/>
+              <input id="newchannel_create" type="button" value="Create"/>
         </div>
     </div>
 

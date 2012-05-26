@@ -44,17 +44,56 @@ $(document).ready ->
         if msg.length > 0
             manager.send_msg(msg, type)
 
-    # left sidebar util links
+
+    # new channel window
     $("#channel_sidebar #channels .utils .newchannel").click ->
         $("#newchannel_wrapper").fadeIn "fast"
         $("#newchannel_form").fadeIn "fast"
+        $("#newchannel_form #newchannel_name").val("")
+        $("#newchannel_form #newchannel_topic").val("")
     $("#newchannel_buttons #newchannel_cancel").click ->
         $("#newchannel_wrapper").fadeOut "fast"
         $("#newchannel_form").fadeOut "fast"
     $("#newchannel_wrapper").click ->
         $("#newchannel_wrapper").fadeOut "fast"
         $("#newchannel_form").fadeOut "fast"
+    $("#newchannel_form #newchannel_buttons #newchannel_create").click ->
+        name = $("#newchannel_form #newchannel_name").val()
+        topic = $("#newchannel_form #newchannel_topic").val()
+        manager.create_channel(name, topic)
+        $("#newchannel_wrapper").fadeOut "fast"
+        $("#newchannel_form").fadeOut "fast"        
 
+    # invite window
+    $("#info_sidebar #channel_info .utils .invite").click ->
+        $("#add_wrapper").fadeIn "fast"
+        $("#add_form").fadeIn "fast"
+        $("#add_search").focus()
+        manager.reset_invite_selection()
+        # reset invite filter
+        $("#add_form #add_search").val("")
+        $("#add_form #selected_preview .select_list ul li").each ->
+            $(@).show()
+    $("#add_buttons #add_cancel").click ->
+        $("#add_wrapper").fadeOut "fast"
+        $("#add_form").fadeOut "fast"
+    $("#add_buttons #add").click ->
+        $("#add_wrapper").fadeOut "fast"
+        $("#add_form").fadeOut "fast"
+        manager.invite_selection()
+    $("#add_wrapper").click ->
+        $("#add_wrapper").fadeOut "fast"
+        $("#add_form").fadeOut "fast"
+    $("#add_form #add_search").keyup ->
+        text = $(@).val()
+        console.log text
+        $("#add_form #selected_preview .select_list ul li").each ->
+            if $(@).html().toLowerCase().indexOf(text) != -1
+                $(@).show()
+            else
+                $(@).hide()
+        
+    # file upload window
     $("#info_sidebar #file_info .utils .upload").click ->
         $("#upload_wrapper").fadeIn "fast"
         $("#upload_form").fadeIn "fast"
@@ -64,15 +103,3 @@ $(document).ready ->
     $("#upload_wrapper").click ->
         $("#upload_wrapper").fadeOut "fast"
         $("#upload_form").fadeOut "fast"
-
-    # right sidebar util links
-    $("#info_sidebar #channel_info .utils .invite").click ->
-        $("#add_wrapper").fadeIn "fast"
-        $("#add_form").fadeIn "fast"
-        $("#add_search").focus()
-    $("#add_buttons #add_cancel").click ->
-        $("#add_wrapper").fadeOut "fast"
-        $("#add_form").fadeOut "fast"
-    $("#add_wrapper").click ->
-        $("#add_wrapper").fadeOut "fast"
-        $("#add_form").fadeOut "fast"

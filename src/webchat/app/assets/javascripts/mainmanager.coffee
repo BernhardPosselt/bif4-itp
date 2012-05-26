@@ -158,3 +158,34 @@ class MainManager
     # returns the completed name of a person in the channel if possible
     complete_name: (val) ->
         return @channels.complete_name(val)
+    
+    # moves all users and groups from selected to unselected
+    reset_invite_selection: ->
+        @channels.reset_invite_selection()
+    
+    # invites all selected groups and users
+    invite_selection: ->
+        selected_users_and_groups = @channels.get_invite_selection()
+        active_channel = @channels.get_active_channel()
+        data = {}
+        data[active_channel] = 
+            users: selected_users_and_groups.users
+            groups: selected_users_and_groups.groups
+        msg = 
+            type: "invite"
+            data: data
+        # only send if there min 1 user or 1 group
+        if data[active_channel].users.length > 0 or data[active_channel].groups.length > 0
+            @send_websocket(msg)
+            
+    # creates a new channel
+    create_channel: (name, topic) ->
+        msg = 
+            type: "newchannel"
+            data: 
+                name: name
+                topic: topic
+                groups: []
+                users: []
+        if name != ""
+            @send_websocket(msg)

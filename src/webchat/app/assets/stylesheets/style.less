@@ -220,20 +220,25 @@ html, body {
             padding-bottom:5px;
           }
 
-          .newchannel
-          {
-            background-image:url(../images/create.png);
-            background-repeat:no-repeat;
-            background-position:85% center;
-            border:1px solid #ccc;
-            width:98%;
-            display:block;
-            line-height:30px;
-            color:@black;
-            text-decoration:none;
-            text-align:center;
-            margin-bottom:5px;
-
+          .utils {
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              border-top: 1px solid #aaa;
+              text-align: right;
+                
+              .newchannel {
+                border:1px solid #ccc;
+                display:block;
+                text-decoration:none;
+                margin-bottom:5px;
+                .grad(#444, #222);
+                color: #fff;
+                display: inline-block;
+                margin: 5px;
+                padding: 3px 10px;
+              }
           }
 
           ul
@@ -252,6 +257,10 @@ html, body {
                 margin:4px 0px;
                 text-align:center;
                 cursor:pointer;
+            }
+            
+            .unread {
+                background-color: #FFC48C;
             }
           }
       }
@@ -384,7 +393,7 @@ html, body {
                 }
     
                 .highlight {
-                    background-color: #FF9F80 !important;
+                    background-color: #FFC48C !important;
                 }
     
                 .line

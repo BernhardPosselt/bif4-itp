@@ -11,11 +11,17 @@ class ChannelManager
         @dom_stream = $ "#streams"
         @dom_stream_sidebar_users = $ "#info_sidebar #channel_users"
         @dom_stream_sidebar_files = $ "#info_sidebar #channel_files"
+        @dom_invite_users = $ "#add_form #selected_preview .users ul"
+        @dom_invite_groups = $ "#add_form #selected_preview .groups ul"
+        @dom_invite_selected_users = $ "#add_form #add_selected .users ul"
+        @dom_invite_selected_groups = $ "#add_form #add_selected .groups ul"
         # dom elements which we append
         @dom_reg_channel_list = {}
         @dom_reg_stream = {}
         @dom_reg_stream_sidebar_users = {}
         @dom_reg_stream_sidebar_files = {}
+        @dom_reg_invite_groups = {}
+        @dom_reg_invite_users = {}
         # json data
         @channel_data = {}
         @stream_data = {}
@@ -23,15 +29,19 @@ class ChannelManager
         @group_data = {}
         @stream_sidebar_users_data = {}
         @stream_sidebar_files_data = {}
+        @file_data = {}
         # other stuff
         @active_channel = undefined
         @last_msg_user = {}
         @last_msg_class = {}
         @last_post_minute = {}
         @loaded_channels = {}
+        @init_channels = {}
         @scrolled_channels = {}
         @max_shown_code_lines = 10
-
+        @notify_audio = $("<audio>")
+        @notify_audio.attr("src", "/assets/audio/75639__jobro__attention03.ogg")
+        @mimetypes = new MimeTypes()
 
     # sets the initial data array
     init: (@channel_data) ->
@@ -46,6 +56,12 @@ class ChannelManager
         # create dom for channel list
         for id, value of @channel_data
             @create_dom(id, value)
+        for id, value of @user_data
+            @create_user_dom(id, value)
+        for id, value of @group_data
+            @create_group_dom(id, value)
+        for id, value of @file_data
+            @create_file_dom(id, value)
         # create dom for users and groups
         @rewrite_user_group_dom()
         # create dom for first channel
@@ -113,6 +129,8 @@ class ChannelManager
         
         files_sidebar = $("<div>")
         files_sidebar.addClass("files")
+        files_list = $("<ul>")
+        files_sidebar.append(files_list)
         @dom_reg_stream_sidebar_files[id] = files_sidebar
         @dom_stream_sidebar_files.append(files_sidebar)
         
@@ -133,7 +151,7 @@ class ChannelManager
         stream = @dom_reg_stream[id]
         stream.children(".stream_field").children(".stream_name").html(channel_data.name)
         stream.children(".stream_field").children(".stream_meta").html(channel_data.topic)
-        # TODO: update sidebar files
+        @rewrite_files_dom(id)
         console.log("Updated channel " + channel_data.name)
         
 
@@ -184,8 +202,6 @@ class ChannelManager
                 break
         else
             console.log("no channel found, can not join initial channel")
-            # TODO: display message that no channel is being found
-              
     
     # joins a channel
     join_channel: (@active_channel) -> 
@@ -219,8 +235,8 @@ class ChannelManager
     init_stream: (data) ->
         for id, stream_data of data
             @create_stream(id, stream_data)    
-    
-    
+            @init_channels[id] = true    
+
     # receives input for a stream
     input_stream: (data, actions) ->
         # messages can only be created, so ignore the actions array
@@ -249,6 +265,10 @@ class ChannelManager
     create_stream_dom: (channel_id, msg_id) ->
         data = @stream_data[channel_id][msg_id]
         stream = @dom_reg_stream[channel_id].children(".stream_field").children(".stream_chat")
+        # check if we have to add an unread flag to a channel the user is not in
+        if @init_channels[channel_id] and channel_id != @get_active_channel()
+            list_entry = @dom_reg_channel_list[channel_id]
+            list_entry.addClass("unread")
         # add dom
         line = $("<div>")
         line.addClass("line")
@@ -264,6 +284,7 @@ class ChannelManager
             highlight_string = "@" + current_user.prename + current_user.lastname
             if data.message.indexOf(highlight_string) != -1
                 line.addClass("highlight")
+                @notify(channel_id)
             # replace known links, smileys etc
             msg.html(@sugar_text(data.message))
         else
@@ -378,16 +399,16 @@ class ChannelManager
     # return: the final message
     sugar_text: (msg) ->
         # first place all urls in <a> tags
-        url_regex = /\b((?:https?|ftp):\/\/[a-z0-9+&@#\/%?=~_|!:,.;-]*[a-z0-9+&@#\/%=~_|-])/gim
-        pseudo_url_regex = /(^|[^\/])(www\.[\S]+(\b|$))/gim
-        email_regex = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/gim
+        url_regex = /\b((?:https?|ftp):\/\/[a-z0-9+&@#\/%?=~_|!:,.;-]*[a-z0-9+&@#\/%=~_|-])/gi
+        pseudo_url_regex = /(^|[^\/])(www\.[\S]+(\b|$))/gi
+        email_regex = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/gi
         msg = msg.replace(url_regex, '<a href="$1">$1</a>')
         msg = msg.replace(pseudo_url_regex, '$1<a href="http://$2">$2</a>')
         msg = msg.replace(email_regex, '<a href="mailto:$&">$&</a>')
         # add smileys
         smileys = new Smileys()
         for key, smile of smileys.get_smileys()
-            img = '<img alt="' + key + '" src="' + smileys.get_smiley(key) + '" />'
+            img = '<img width="50" height="50" alt="' + key + '" src="' + smileys.get_smiley(key) + '" />'
             msg = msg.replace(" " + key + " ", " " + img + " ")
             msg = msg.replace(key + "<br />", img + '<br />')
             end_line_regex = new RegExp( "(.*)" + @_regex_esc(key) + "$", "g")
@@ -400,6 +421,9 @@ class ChannelManager
             # put a br before and after the image
             pic_regex = new RegExp('<a href="(.*\.' + @_regex_esc(pic) + ')">(.*)<\/a>', "gim")
             msg = msg.replace(pic_regex, '<br/><a href="$1"><img alt="$1" src="$1" /></a><br/>')
+        # replace youtube links with embedded video
+        yt_regex = /<a href=".*youtube.com\/watch\?v=([0-9a-zA-Z_-]{11}).*">.*<\/a>/gi
+        msg = msg.replace(yt_regex, '<br/><iframe width="560" height="315" src="http://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe><br/>')
         return msg
         
 
@@ -407,6 +431,8 @@ class ChannelManager
 # Groups and Users
 ################################################################################
 
+    # this method rewrites the dom for places where updating is complicated, so
+    # every create, update or delete, the complete dom is being rewriten
     rewrite_user_group_dom: ->
         console.log("rewriting groups and users")
         @dom_group_list.empty()
@@ -499,8 +525,6 @@ class ChannelManager
                 dom_users.append(heading)    
                 dom_users.append(user_list)                   
   
-        
-
 ################################################################################
 # Groups                           
 ################################################################################
@@ -519,14 +543,50 @@ class ChannelManager
     create_group: (id, data) ->
         @group_data[id] = data
         @rewrite_user_group_dom()
+        @create_group_dom(id, data)
     
+    create_group_dom: (id, data) ->
+        list_entry = $("<li>")
+        list_entry.html(data.name)
+        list_entry.click =>
+            @toggle_select_invite_group(id)
+        @dom_reg_invite_groups[id] =
+            dom: list_entry
+            selected: false
+        @dom_invite_groups.append(list_entry)
+        
     update_group: (id, data) ->
         @group_data[id] = data
         @rewrite_user_group_dom()
+        @update_group_dom(id, data)
+
+    # updates the dom for a group
+    update_group_dom: (id, data) ->
+        list_entry = @dom_reg_invite_groups[id].dom
+        list_entry.html(data.name)
 
     delete_group: (id) ->
         delete @group_data[id]
         @rewrite_user_group_dom()
+        @delete_group_dom(id)
+
+    # deletes the group dom entries
+    delete_group_dom: (id) ->
+        @dom_reg_invite_groups[id].dom.remove()
+
+    # moves the user into the selected area or moves him back if hes already
+    # in it
+    toggle_select_invite_group: (id) ->
+        list_entry = @dom_reg_invite_groups[id]
+        dom_elem = list_entry.dom
+        if list_entry.selected
+            list_entry.selected = false
+            dom_elem.detach()
+            @dom_invite_groups.append(dom_elem)
+        else
+            list_entry.selected = true        
+            dom_elem.detach()
+            @dom_invite_selected_groups.append(dom_elem)
 
 ################################################################################
 # Users                           
@@ -541,6 +601,7 @@ class ChannelManager
     init_user: (@user_data) ->
         @callback_init()
 
+    # receives the json input and decides which actions to perform
     input_user: (data, actions) ->
         for id, method of actions
             switch method
@@ -548,30 +609,69 @@ class ChannelManager
                 when "update" then @update_user(id, data[id])
                 when "delete" then @delete_user(id)       
 
+    # creates the dom for one user
     create_user: (id, data) ->
         @user_data[id] = data
         @rewrite_user_group_dom()
+        @create_user_dom(id, data)
     
+    
+    # this creates only the dom in the invite dialogue
+    create_user_dom: (id, data) ->
+        list_entry = $("<li>")
+        list_entry.html(data.prename + " " + data.lastname)
+        list_entry.click =>
+            @toggle_select_invite_user(id)
+        @dom_reg_invite_users[id] =
+            dom: list_entry
+            selected: false
+        @dom_invite_users.append(list_entry)
+    
+    # updates the user data
     update_user: (id, data) ->
         @user_data[id] = data
         @rewrite_user_group_dom()
+        @update_user_dom(id, data)
         
+    # updates the dom for a user
+    update_user_dom: (id, data) ->
+        list_entry = @dom_reg_invite_users[id].dom
+        list_entry.html(data.prename + " " + data.lastname)
+        
+    # deletes the user
     delete_user: (id) ->
         delete @user_data[id]
         @rewrite_user_group_dom()
+        @delete_user_dom(id)
         
+    # deletes the users dom entries
+    delete_user_dom: (id) ->
+        @dom_reg_invite_users[id].dom.remove()
+        
+    # returns the user data
     get_user: (id) ->
         return @user_data[id]
     
+    # moves the user into the selected area or moves him back if hes already
+    # in it
+    toggle_select_invite_user: (id) ->
+        list_entry = @dom_reg_invite_users[id]
+        dom_elem = list_entry.dom
+        if list_entry.selected
+            list_entry.selected = false
+            dom_elem.detach()
+            @dom_invite_users.append(dom_elem)
+        else
+            list_entry.selected = true        
+            dom_elem.detach()
+            @dom_invite_selected_users.append(dom_elem)
 
 ################################################################################
 # Files                           
 ################################################################################    
     
     # initializes a stream with data
-    init_file: (data) ->
-        #@streams.init(data)    
-    
+    init_file: (@file_data) ->
     
     # receives input for a stream
     input_file: (data, actions) ->
@@ -581,11 +681,44 @@ class ChannelManager
                 when "update" then @update_file(id, data[id])
                 when "delete" then @delete_file(id)       
 
+    # create file does not add any dom data since the file belongs to a chanel
+    # who has the files list. he will receive an update as well to display the 
+    # file
     create_file: (id, data) ->
-    
-    update_file: (id, data) ->
+        @file_data[id] = data
 
+    update_file: (id, data) ->
+        @file_data[id] = data        
+        
     delete_file: (id) ->
+        delete @file_data[id]    
+    
+    # rewrites all files of all channels
+    @rewrite_files: () ->
+        for channel_id, data of @channel_data
+            @rewrite_files_dom(channel_id)
+    
+    # rewrites all files of one channel
+    rewrite_files_dom: (channel_id) ->
+        files_ul = @dom_reg_stream_sidebar_files[channel_id].children("ul")
+        files_ul.empty()
+        for file_id in @channel_data[channel_id].files
+            file_id += ""
+            file = @file_data[file_id]
+            list_entry = $("<li>")
+            list_entry.css("background-image", @mimetypes.get_mimetype_icon_path(file.type))
+            file_name = $("<a>")
+            file_name.addClass("name")
+            file_name.html(file.name)
+            # TODO: add link to the file
+            file_name.attr("href")
+            file_size = $("<span>")
+            file_name.addClass("size")
+            file_size.html(@_kb_to_human_readable(file.size, 2))
+            list_entry.append(file_name)
+            list_entry.append(file_size)
+            files_ul.append(list_entry)
+            
 
 ################################################################################
 # Other
@@ -629,6 +762,37 @@ class ChannelManager
         return val
     
     
+    # moves all users and groups from selected to unselected    
+    reset_invite_selection: ->
+        for id, elems of @dom_reg_invite_users
+            if elems.selected
+                @toggle_select_invite_user(id)
+        for id, elems of @dom_reg_invite_groups
+            if elems.selected
+                @toggle_select_invite_group(id)
+
+
+    # returns all selected and groups and users in the invite window
+    get_invite_selection: ->
+        users = []
+        groups = []
+        for id, elems of @dom_reg_invite_users
+            if elems.selected
+                users.push(parseInt(id))
+        for id, elems of @dom_reg_invite_groups
+            if elems.selected
+                @toggle_select_invite_group(id)
+                groups.push(parseInt(id))
+        data = 
+            users: users
+            groups: groups
+        return data
+        
+        
+    notify: (channel_id) ->
+        if @init_channels[channel_id]
+            @notify_audio[0].play()
+        
 ################################################################################
 # utilities
 ################################################################################
@@ -665,4 +829,20 @@ class ChannelManager
         
     # escapes chars when put into regex
     _regex_esc: (string) ->
-        return (string+'').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+        return (string+'').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")
+        
+        
+    # returns kilobyte to a human readable format
+    _kb_to_human_readable: (kilobytes, precision) ->
+        megabyte = 1024;
+        gigabyte = megabyte * 1024;
+        terabyte = gigabyte * 1024;
+   
+        if kilobytes >= megabyte and kilobytes < gigabyte
+            return (kilobytes / megabyte).toFixed(precision) + ' MB'
+        else if kilobytes >= gigabyte and kilobytes < terabyte
+            return (kilobytes / gigabyte).toFixed(precision) + ' GB'
+        else if kilobytes >= terabyte
+            return (kilobytes / terabyte).toFixed(precision) + ' TB'
+        else
+            return kilobytes + ' KB'
