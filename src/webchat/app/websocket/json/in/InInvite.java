@@ -29,13 +29,16 @@ public class InInvite {
 			for (Iterator<Integer> useriter = ininv.data.users.iterator(); useriter.hasNext();){
 				User user = new User();
 				user = User.find.byId(useriter.next());
-				users.add(user.id);
-				chan.users.add(user);
+				if (!chan.users.contains(user)){
+					chan.users.add(user);
+					users.add(user.id);
+				}
 			}
 			for (Iterator<Integer> groupiter = ininv.data.groups.iterator(); groupiter.hasNext();){
 				Groups group = new Groups();
 				group = Groups.find.byId(groupiter.next());
-				chan.groups.add(group);
+				if (!chan.groups.contains(group))
+					chan.groups.add(group);
 			}
 			
 			chan.update();
