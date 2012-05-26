@@ -413,6 +413,9 @@ class ChannelManager
             # put a br before and after the image
             pic_regex = new RegExp('<a href="(.*\.' + @_regex_esc(pic) + ')">(.*)<\/a>', "gim")
             msg = msg.replace(pic_regex, '<br/><a href="$1"><img alt="$1" src="$1" /></a><br/>')
+        # replace youtube links with embedded video
+        yt_regex = /<a href=".*youtube.com\/watch\?v=([0-9a-zA-Z_-]{11}).*">.*<\/a>/gim
+        msg = msg.replace(yt_regex, '<br/><iframe width="560" height="315" src="http://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe><br/>')
         return msg
         
 
