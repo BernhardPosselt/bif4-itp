@@ -22,6 +22,7 @@ class ChannelManager
         @dom_reg_stream_sidebar_files = {}
         @dom_reg_invite_groups = {}
         @dom_reg_invite_users = {}
+        @dom_reg_channel_files = {}
         # json data
         @channel_data = {}
         @stream_data = {}
@@ -41,6 +42,7 @@ class ChannelManager
         @max_shown_code_lines = 10
         @notify_audio = $("<audio>")
         @notify_audio.attr("src", "/assets/audio/75639__jobro__attention03.ogg")
+        @mimetypes = new MimeTypes()
 
     # sets the initial data array
     init: (@channel_data) ->
@@ -128,6 +130,8 @@ class ChannelManager
         
         files_sidebar = $("<div>")
         files_sidebar.addClass("files")
+        files_list = $("<ul>")
+        files_sidebar.append(files_list)
         @dom_reg_stream_sidebar_files[id] = files_sidebar
         @dom_stream_sidebar_files.append(files_sidebar)
         
@@ -148,7 +152,7 @@ class ChannelManager
         stream = @dom_reg_stream[id]
         stream.children(".stream_field").children(".stream_name").html(channel_data.name)
         stream.children(".stream_field").children(".stream_meta").html(channel_data.topic)
-        # TODO: update sidebar files
+        @rewrite_files_dom(id)
         console.log("Updated channel " + channel_data.name)
         
 
@@ -199,8 +203,6 @@ class ChannelManager
                 break
         else
             console.log("no channel found, can not join initial channel")
-            # TODO: display message that no channel is being found
-              
     
     # joins a channel
     join_channel: (@active_channel) -> 
@@ -680,13 +682,44 @@ class ChannelManager
                 when "update" then @update_file(id, data[id])
                 when "delete" then @delete_file(id)       
 
+    # create file does not add any dom data since the file belongs to a chanel
+    # who has the files list. he will receive an update as well to display the 
+    # file
     create_file: (id, data) ->
-    
-    create_file_dom: (id, data) ->
-    
-    update_file: (id, data) ->
+        @file_data[id] = data
 
+    update_file: (id, data) ->
+        @file_data[id] = data        
+        
     delete_file: (id) ->
+        delete @file_data[id]    
+    
+    # rewrites all files of all channels
+    @rewrite_files: () ->
+        for channel_id, data of @channel_data
+            @rewrite_files_dom(channel_id)
+    
+    # rewrites all files of one channel
+    rewrite_files_dom: (channel_id) ->
+        files_ul = @dom_reg_stream_sidebar_files[channel_id].children("ul")
+        files_ul.empty()
+        for file_id in @channel_data[channel_id].files
+            file_id += ""
+            file = @file_data[file_id]
+            list_entry = $("<li>")
+            list_entry.css("background-image", @mimetypes.get_mimetype_icon_path(file.type))
+            file_name = $("<a>")
+            file_name.addClass("name")
+            file_name.html(file.name)
+            # TODO: add link to the file
+            file_name.attr("href")
+            file_size = $("<span>")
+            file_name.addClass("size")
+            file_size.html(@_kb_to_human_readable(file.size, 2))
+            list_entry.append(file_name)
+            list_entry.append(file_size)
+            files_ul.append(list_entry)
+            
 
 ################################################################################
 # Other
@@ -797,5 +830,20 @@ class ChannelManager
         
     # escapes chars when put into regex
     _regex_esc: (string) ->
-        return (string+'').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+        return (string+'').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")
         
+        
+    # returns kilobyte to a human readable format
+    _kb_to_human_readable: (kilobytes, precision) ->
+        megabyte = 1024;
+        gigabyte = megabyte * 1024;
+        terabyte = gigabyte * 1024;
+   
+        if kilobytes >= megabyte and kilobytes < gigabyte
+            return (kilobytes / megabyte).toFixed(precision) + ' MB'
+        else if kilobytes >= gigabyte and kilobytes < terabyte
+            return (kilobytes / gigabyte).toFixed(precision) + ' GB'
+        else if kilobytes >= terabyte
+            return (kilobytes / terabyte).toFixed(precision) + ' TB'
+        else
+            return kilobytes + ' KB'
