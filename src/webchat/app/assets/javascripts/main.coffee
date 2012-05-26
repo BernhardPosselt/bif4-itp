@@ -44,28 +44,26 @@ $(document).ready ->
         if msg.length > 0
             manager.send_msg(msg, type)
 
-    # left sidebar util links
+
+    # new channel window
     $("#channel_sidebar #channels .utils .newchannel").click ->
         $("#newchannel_wrapper").fadeIn "fast"
         $("#newchannel_form").fadeIn "fast"
+        $("#newchannel_form #newchannel_name").val("")
+        $("#newchannel_form #newchannel_topic").val("")
     $("#newchannel_buttons #newchannel_cancel").click ->
         $("#newchannel_wrapper").fadeOut "fast"
         $("#newchannel_form").fadeOut "fast"
     $("#newchannel_wrapper").click ->
         $("#newchannel_wrapper").fadeOut "fast"
         $("#newchannel_form").fadeOut "fast"
+    $("#newchannel_form #newchannel_buttons #newchannel_create").click ->
+        name = $("#newchannel_form #newchannel_name").val()
+        topic = $("#newchannel_form #newchannel_topic").val()
+        manager.create_channel(name, topic)
+        $("#newchannel_wrapper").fadeOut "fast"
+        $("#newchannel_form").fadeOut "fast"        
 
-    $("#info_sidebar #file_info .utils .upload").click ->
-        $("#upload_wrapper").fadeIn "fast"
-        $("#upload_form").fadeIn "fast"
-    $("#upload_buttons #upload_cancel").click ->
-        $("#upload_wrapper").fadeOut "fast"
-        $("#upload_form").fadeOut "fast"
-    $("#upload_wrapper").click ->
-        $("#upload_wrapper").fadeOut "fast"
-        $("#upload_form").fadeOut "fast"
-
-    # right sidebar util links
     # invite window
     $("#info_sidebar #channel_info .utils .invite").click ->
         $("#add_wrapper").fadeIn "fast"
@@ -95,4 +93,13 @@ $(document).ready ->
             else
                 $(@).hide()
         
-
+    # file upload window
+    $("#info_sidebar #file_info .utils .upload").click ->
+        $("#upload_wrapper").fadeIn "fast"
+        $("#upload_form").fadeIn "fast"
+    $("#upload_buttons #upload_cancel").click ->
+        $("#upload_wrapper").fadeOut "fast"
+        $("#upload_form").fadeOut "fast"
+    $("#upload_wrapper").click ->
+        $("#upload_wrapper").fadeOut "fast"
+        $("#upload_form").fadeOut "fast"

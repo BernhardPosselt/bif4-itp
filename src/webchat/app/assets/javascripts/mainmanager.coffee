@@ -177,3 +177,15 @@ class MainManager
         # only send if there min 1 user or 1 group
         if data[active_channel].users.length > 0 or data[active_channel].groups.length > 0
             @send_websocket(msg)
+            
+    # creates a new channel
+    create_channel: (name, topic) ->
+        msg = 
+            type: "newchannel"
+            data: 
+                name: name
+                topic: topic
+                groups: []
+                users: []
+        if name != ""
+            @send_websocket(msg)
