@@ -80,7 +80,7 @@ public class Channel {
 			for (Iterator<models.User> ituser = mchan.users.iterator(); ituser.hasNext();){
 				cdata.users.add(ituser.next().id);
 			}
-			channel.data.put(1, cdata);
+			channel.data.put(channelid, cdata);
 			
 			// Generate the Json Message
 			JSONSerializer aser = new JSONSerializer().include("*.data",

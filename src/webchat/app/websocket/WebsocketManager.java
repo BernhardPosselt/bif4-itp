@@ -91,7 +91,7 @@ public class WebsocketManager {
         }
         else if (type.equals("newchannel")){
         	int channelid = InNewChannel.createnewchannel(inmessage);
-        	notifyAllMembers(Channel.genChannel("create", channelid));
+        	out.write(Channel.genChannel("create", channelid));
         }
         else if (type.equals("channeltopic")){
         	int channelid = InChanneltopic.savetopicchange(inmessage);
