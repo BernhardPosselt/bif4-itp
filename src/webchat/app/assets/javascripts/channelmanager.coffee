@@ -38,7 +38,8 @@ class ChannelManager
         @loaded_channels = {}
         @scrolled_channels = {}
         @max_shown_code_lines = 10
-
+        @notify_audio = $("<audio>")
+        @notify_audio.attr("src", "/assets/audio/75639__jobro__attention03.ogg")
 
     # sets the initial data array
     init: (@channel_data) ->
@@ -277,6 +278,7 @@ class ChannelManager
             highlight_string = "@" + current_user.prename + current_user.lastname
             if data.message.indexOf(highlight_string) != -1
                 line.addClass("highlight")
+                @notify()
             # replace known links, smileys etc
             msg.html(@sugar_text(data.message))
         else
@@ -391,9 +393,9 @@ class ChannelManager
     # return: the final message
     sugar_text: (msg) ->
         # first place all urls in <a> tags
-        url_regex = /\b((?:https?|ftp):\/\/[a-z0-9+&@#\/%?=~_|!:,.;-]*[a-z0-9+&@#\/%=~_|-])/gim
-        pseudo_url_regex = /(^|[^\/])(www\.[\S]+(\b|$))/gim
-        email_regex = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/gim
+        url_regex = /\b((?:https?|ftp):\/\/[a-z0-9+&@#\/%?=~_|!:,.;-]*[a-z0-9+&@#\/%=~_|-])/gi
+        pseudo_url_regex = /(^|[^\/])(www\.[\S]+(\b|$))/gi
+        email_regex = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/gi
         msg = msg.replace(url_regex, '<a href="$1">$1</a>')
         msg = msg.replace(pseudo_url_regex, '$1<a href="http://$2">$2</a>')
         msg = msg.replace(email_regex, '<a href="mailto:$&">$&</a>')
@@ -414,7 +416,7 @@ class ChannelManager
             pic_regex = new RegExp('<a href="(.*\.' + @_regex_esc(pic) + ')">(.*)<\/a>', "gim")
             msg = msg.replace(pic_regex, '<br/><a href="$1"><img alt="$1" src="$1" /></a><br/>')
         # replace youtube links with embedded video
-        yt_regex = /<a href=".*youtube.com\/watch\?v=([0-9a-zA-Z_-]{11}).*">.*<\/a>/gim
+        yt_regex = /<a href=".*youtube.com\/watch\?v=([0-9a-zA-Z_-]{11}).*">.*<\/a>/gi
         msg = msg.replace(yt_regex, '<br/><iframe width="560" height="315" src="http://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe><br/>')
         return msg
         
@@ -748,6 +750,11 @@ class ChannelManager
             users: users
             groups: groups
         return data
+        
+        
+    notify: () ->
+        @notify_audio[0].play()
+        
 ################################################################################
 # utilities
 ################################################################################
@@ -785,3 +792,4 @@ class ChannelManager
     # escapes chars when put into regex
     _regex_esc: (string) ->
         return (string+'').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+        
