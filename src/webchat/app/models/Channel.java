@@ -99,5 +99,13 @@ public class Channel extends Model {
         tmp =  find.setQuery(query).setParameter("userid", userid).findList();
         return tmp;
     }
+
+	public static List<Integer> getChannelUsers(int channelid) {
+		List<Integer> users = new ArrayList<Integer>();
+		for (Iterator<User> iterator= find.byId(channelid).users.iterator(); iterator.hasNext();){
+			users.add(iterator.next().id);
+		}
+		return users;
+	}
 	
 }
