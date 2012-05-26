@@ -26,7 +26,7 @@ class MainManager
     # runs all migration methods for the managers once they were initialized
     init_managers: () ->
         @managers_initialized++
-        if @managers_initialized == 3
+        if @managers_initialized == 4
             console.log("All managers initialized")
             @channels.init_ui()
 
@@ -79,6 +79,7 @@ class MainManager
         if data.init
             switch data.type
                 when "user" then @channels.init_user(data.data)
+                when "activeuser" then @channels.init_active_user(data.data)
                 when "group" then @channels.init_group(data.data)
                 when "channel" then @channels.init(data.data)
                 when "file" then @channels.init_file(data.data)
@@ -139,3 +140,8 @@ class MainManager
                     type: type
                     channel: [parseInt(channel_id)]
             @send_websocket(message)
+      
+      
+    # returns the completed name of a person in the channel if possible
+    complete_name: (val) ->
+        return @channels.complete_name(val)

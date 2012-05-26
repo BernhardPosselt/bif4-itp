@@ -258,6 +258,12 @@ class ChannelManager
         msg = $("<div>")
         msg.addClass("message")
         if data.type == "text"
+            # check msg contains @PrenameLastname and highlight if true
+            current_user = @user_data["" + @active_user]
+            highlight_string = "@" + current_user.prename + current_user.lastname
+            if msg.indexOf(highlight_string) != -1
+                line.addClass("highlight")
+            # replace known links, smileys etc
             msg.html(@sugar_text(data.message))
         else
             code_container = $("<div>")
@@ -520,6 +526,11 @@ class ChannelManager
 ################################################################################
 
     # sets the initial data array
+    init_active_user: (data) ->
+        @active_user = data.id
+        @callback_init()
+
+    # sets the initial data array
     init_user: (@user_data) ->
         @callback_init()
 
@@ -568,11 +579,58 @@ class ChannelManager
     update_file: (id, data) ->
 
     delete_file: (id) ->
+
+################################################################################
+# Other
+################################################################################
+
+    # checks all users in the active channel for autocompletion of the name
+    complete_name: (val) ->
+        # get the last part behind the at
+        words = val.split("@")
+        if words.length == 0
+            return val
+        word = words[words.length-1]
+        if word.length < 2
+            return val
+        words.pop()
+        channel = @channel_data[@get_active_channel()]
+        # generate userlist
+        user_list = {}
+        for user_id, data of @user_data
+            groups = data.groups
+            for group_id in groups
+                if parseInt(group_id) in channel.groups
+                    user_list[user_id] = true
+            if parseInt(user_id) in channel.users
+                user_list[user_id] = true
+        # now loop through users
+        for user_id, bool of user_list
+            user = @user_data[user_id]
+            name = user.prename + user.lastname
+            # only autocomplete if unique
+            matches = 0
+            ret = ""
+            if @_starts_with(name, word)
+                matches += 1
+                # rebuild the original message
+                for item in words
+                    ret += item + "@"
+                ret += name
+            if matches == 1
+                return ret
+        return val
     
     
 ################################################################################
 # utilities
 ################################################################################
+
+    # checks if a word starts with a word
+    _starts_with: (word, needle) ->
+        word = word.toLowerCase()
+        needle = needle.toLowerCase()
+        return word.indexOf(needle) == 0
 
     # sorts a hashmap by keys
     _sort_by_keys: (dict) ->

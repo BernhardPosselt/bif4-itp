@@ -16,11 +16,15 @@ $(document).ready ->
 
     # submit input
     $("#input_field").keyup (e) ->
+        if e.keyCode == keycodes.tab
+            $(@).val(manager.complete_name($(@).val()))
         if e.keyCode == keycodes.enter and not e.shiftKey
             console.log keycodes.shift_pressed
             submit()
     # dont jump on hitting enter on an empty input field
     $("#input_field").keydown (e) ->
+        if e.keyCode == keycodes.tab
+            return false
         if e.keyCode == keycodes.enter
             if $(@).val() == ""
                 return false
