@@ -125,8 +125,20 @@ class MainManager
         console.log("querying " + url)
         $.getJSON url, (data) ->
             return data
-            
-            
+          
+          
+    # changes the topic for the channel
+    # topic: the new topic text
+    # channel_id: the id of the channel where the topic should be changed
+    change_topic: (topic, channel_id=@channels.get_active_channel()) ->
+        message =
+            type: "channeltopic"
+            data:
+                topic: topic
+                channel: [channel_id]
+        @send_websocket(message)
+        
+        
     # sends a message to the server
     # msg: the message which we want to send
     # type: the type, text or java for instance
@@ -138,11 +150,7 @@ class MainManager
             # topic changes the channel topic
             message = {}
             if msg.indexOf("/topic ") == 0 and type == "text"
-                message =
-                    type: "channeltopic"
-                    data:
-                        topic: msg.substr(7)
-                        channel: [channel_id]
+                @change_topic(msg.substr(7))
             
             # no prefix, then this is a normal message
             else
@@ -152,7 +160,7 @@ class MainManager
                         message: msg
                         type: type
                         channel: [channel_id]
-            @send_websocket(message)
+                @send_websocket(message)
       
       
     # returns the completed name of a person in the channel if possible

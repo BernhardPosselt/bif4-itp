@@ -1,3 +1,5 @@
+/* palette http://www.colourlovers.com/palette/373610/mellon_ball_surprise ? */
+
 /* fonts */
 @font-face {
   font-family: dejavusans;
@@ -9,8 +11,6 @@
   font-weight: bold;
   src: url('../fonts/DejaVuSansCondensed-Bold.ttf');
 }
-
-/* palette http://www.colourlovers.com/palette/373610/mellon_ball_surprise ? */
 
 /* variables */
 @white1:#ffffff;
@@ -86,6 +86,165 @@ html, body {
   font-family: dejavusans;
 }
 
+/**
+ * Common classes
+ */
+input, textarea {
+    border: 1px solid #aaa;
+}
+
+/**
+ * Links that look like buttons
+ */
+.link_button {
+    display: inline-block;
+    text-decoration: none;
+    border:1px solid #ccc;
+    margin: 5px;
+    padding:3px 10px;
+    .grad(#444, #222);
+    color:@white1;
+    line-height: 18px;
+}
+
+/**
+ * Black background for popups
+ */
+.popup_wrapper {
+    display:none;
+    background-color:#000;
+    opacity:0.7;
+    position:absolute;
+    z-index:10;
+    left:0;
+    right:0;
+    bottom:0;
+    top:-55px;
+}
+
+/**
+ * Popup windows
+ */
+.popup_window {
+    margin: auto;
+    background-color:@white1;
+    z-index:20;
+    border: 1px solid #aaa;
+    position:absolute;
+    display:none;
+    left: 50%;
+    top: 50%;
+     
+    .popup_window_title {
+        .box-sizing(border-box);
+        width: 100%;
+        height:30px;
+        line-height:30px;
+        padding:0px 10px;
+        border-bottom:1px solid @blue4;
+        .grad(#444, #222);
+        color:@white1;
+    }
+    
+    .popup_window_content {
+        padding:10px;
+        width: 100%;
+        .box-sizing(border-box);
+    }
+    
+    .popup_window_buttons {
+        position: absolute;
+        bottom: 0;
+        .box-sizing(border-box);
+        border-top:1px solid #aaa;
+        width: 100%;
+        height:35px;
+        padding:5px;
+        text-align:right;
+        background-color: #eee;
+    }
+}
+
+/**
+ * Popup form for a new channel
+ */
+#newchannel_window {
+    width: 400px;
+    height:200px;
+    margin-left: -200px;
+    margin-top: -100px;
+
+    .field {
+        width:100%;
+        padding:5px 0px;
+            
+        label {
+            float:left;
+            width:70px;
+        }
+    }
+
+}
+
+/**
+ * Popup for an invite dialogue
+ */
+#invite_window {
+    width:500px;
+    height:618px;
+    margin-left: -250px;
+    margin-top: -309px;    
+
+    #invite_toolbar {
+        .box-sizing(border-box);
+        width: 100%;
+        height:35px;
+        padding:5px;
+        border-top: 1px solid #aaa;
+        border-bottom: 1px solid #aaa;
+        background-color: #eee; 
+    }
+    
+    .select_list {
+        .box-sizing(border-box);
+        width: 50%;
+        float: left;
+        height: 230px;
+                    
+        h1 {
+            font-size: 13pt;
+            margin: 0;
+            padding: 0;
+            font-weight: normal;
+        }
+                
+        ul {
+            overflow: auto;
+        }
+    }
+
+
+    #selected_preview {
+        .box-sizing(border-box);
+        width: 100%;
+        height: 270px;
+        padding: 10px;
+        border-bottom: 1px solid #aaa;
+    }
+
+    #invite_selected {
+        .box-sizing(border-box);
+        padding:10px;
+        height:250px;
+        .box-sizing(border-box);
+        width: 100%;
+     }
+     
+}
+
+/**
+ * Site styling
+ */
 #site {
   height: 100%;
   width: 100%;
@@ -228,17 +387,6 @@ html, body {
               border-top: 1px solid #aaa;
               text-align: right;
                 
-              .newchannel {
-                border:1px solid #ccc;
-                display:block;
-                text-decoration:none;
-                margin-bottom:5px;
-                .grad(#444, #222);
-                color: #fff;
-                display: inline-block;
-                margin: 5px;
-                padding: 3px 10px;
-              }
           }
 
           ul
@@ -645,16 +793,6 @@ html, body {
                 height:35px;
                 border-top:1px solid #ccc;
 
-                a
-                {
-                    display:inline-block;
-                    text-decoration:none;
-                    border:1px solid #ccc;
-                    margin:5px;
-                    padding:3px 10px;
-                    .grad(#444, #222);
-                    color:@white1;
-                }
             }
             
             .users {
@@ -662,8 +800,7 @@ html, body {
             }
         }
 
-        #file_info
-        {
+        #file_info {
             position:absolute;
             top:50%;
             left:0;
@@ -671,16 +808,14 @@ html, body {
             bottom:0;
             margin:5px 15px 15px 15px;
 
-            fieldset
-            {
+            fieldset {
                  height:100%;
                  .box-sizing(border-box);
                  border: 1px solid #aaa;
                  margin:0;
                  padding:0;
 
-                 legend
-                 {
+                 legend {
                     margin-left:10px;
                  }
             }
@@ -698,250 +833,8 @@ html, body {
                 height:35px;
                 border-top:1px solid #ccc;
 
-                a
-                {
-                    display:inline-block;
-                    text-decoration:none;
-                    border:1px solid #ccc;
-                    margin:5px;
-                    padding:3px 10px;
-                    .grad(#444, #222);
-                    color:@white1;
-                }
             }
         }
     }
-
-    #add_wrapper, #newchannel_wrapper, #upload_wrapper
-    {
-        display:none;
-        background-color:#000;
-        opacity:0.7;
-        position:absolute;
-        z-index:10;
-        left:0;
-        right:0;
-        bottom:0;
-        top:-55px;
     }
-
-     #add_form
-            {
-                position:relative;
-                display:none;
-                width:500px;
-                height:618px;
-                margin:auto;
-                margin-top:2%;
-                background-color:@white1;
-                z-index:20;
-                border: 1px solid #aaa;
-                
-                input[type=text] {
-                    border: 1px solid #aaa;
-                }
-
-                #add_meta
-                {
-                    position:absolute;
-                    top:0;
-                    left:0;
-                    right:0;
-                    height:30px;
-                    line-height:30px;
-                    padding:0px 10px;
-                    border-bottom:1px solid #aaa;
-                    .grad(#444, #222);
-                    color:@white1;
-                }
-
-                #add_members
-                {
-                    position:absolute;
-                    left:0;
-                    right:0;
-                    top:30px;
-                    height:24px;
-                    padding:10px;
-                    border-top:1px solid #aaa;
-                    background-color: #eee; 
-                }
-
-                #selected_preview {
-                    position: absolute;
-                    top: 74px;
-                    left: 0;
-                    right: 0;
-                    height: 270px;
-                    border-top:1px solid #aaa;
-                    padding: 10px;
-                }
-
-                .select_list {
-                    .box-sizing(border-box);
-                    width: 50%;
-                    float: left;
-                    height: 230px;
-                    
-                    h1 {
-                        font-size: 13pt;
-                        margin: 0;
-                        padding: 0;
-                        font-weight: normal;
-                    }
-                    
-                    ul {
-                        overflow: auto;
-                    }
-                }
-
-                #add_selected
-                {
-                    position:absolute;
-                    left:0;
-                    right:0;
-                    top:324px;
-                    padding:10px;
-                    height:250px;
-                    .box-sizing(border-box);
-                    .add_to
-                    {
-                        position:absolute;
-                        left:10px;
-                        right:10px;
-                        bottom:5px;
-                    }
-                    border-top:1px solid #aaa;
-                }
-
-                #add_buttons
-                {
-                    border-top:1px solid #aaa;
-                    position:absolute;
-                    bottom:0;
-                    left:0;
-                    right:0;
-                    height:24px;
-                    padding:10px;
-                    text-align:right;
-                    background-color: #eee;
-                }
-            }
-
-     #newchannel_form
-     {
-         position:relative;
-         display:none;
-         width:300px;
-         height:200px;
-         margin:auto;
-         margin-top:2%;
-         background-color:@white1;
-         z-index:20;
-
-         .field
-         {
-            width:100%;
-            padding:5px 0px;
-
-            label
-            {
-                float:left;
-                width:70px;
-            }
-         }
-
-         #newchannel_meta
-         {
-            position:absolute;
-            top:0;
-            left:0;
-            right:0;
-            height:30px;
-            line-height:30px;
-            padding:0px 10px;
-            border-bottom:1px solid @blue4;
-            .grad(#444, #222);
-            color:@white1;
-         }
-
-         #newchannel_data
-         {
-            position:absolute;
-            padding:10px;
-            top:30px;
-            left:0;
-            right:0;
-            bottom:50px;
-         }
-
-         #newchannel_buttons
-         {
-            position:absolute;
-            bottom:0;
-            left:0;
-            right:0;
-            padding:10px;
-            text-align:right;
-         }
-     }
-
-     #upload_form
-     {
-         position:relative;
-         display:none;
-         width:350px;
-         height:150px;
-         margin:auto;
-         margin-top:2%;
-         background-color:@white1;
-         z-index:20;
-
-         .field
-         {
-            width:100%;
-            padding:5px 0px;
-
-            label
-            {
-                float:left;
-                width:70px;
-            }
-         }
-
-         #upload_meta
-         {
-            position:absolute;
-            top:0;
-            left:0;
-            right:0;
-            height:30px;
-            line-height:30px;
-            padding:0px 10px;
-            border-bottom:1px solid @blue4;
-            .grad(#444, #222);
-            color:@white1;
-         }
-
-         #upload_data
-         {
-            position:absolute;
-            padding:10px;
-            top:30px;
-            left:0;
-            right:0;
-            bottom:50px;
-         }
-
-         #upload_buttons
-         {
-            position:absolute;
-            bottom:0;
-            left:0;
-            right:0;
-            padding:10px;
-            text-align:right;
-         }
-     }
-  }
 }

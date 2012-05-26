@@ -11,10 +11,10 @@ class ChannelManager
         @dom_stream = $ "#streams"
         @dom_stream_sidebar_users = $ "#info_sidebar #channel_users"
         @dom_stream_sidebar_files = $ "#info_sidebar #channel_files"
-        @dom_invite_users = $ "#add_form #selected_preview .users ul"
-        @dom_invite_groups = $ "#add_form #selected_preview .groups ul"
-        @dom_invite_selected_users = $ "#add_form #add_selected .users ul"
-        @dom_invite_selected_groups = $ "#add_form #add_selected .groups ul"
+        @dom_invite_users = $ "#invite_window #selected_preview .users ul"
+        @dom_invite_groups = $ "#invite_window #selected_preview .groups ul"
+        @dom_invite_selected_users = $ "#invite_window #invite_selected .users ul"
+        @dom_invite_selected_groups = $ "#invite_window #invite_selected .groups ul"
         # dom elements which we append
         @dom_reg_channel_list = {}
         @dom_reg_stream = {}
@@ -108,7 +108,16 @@ class ChannelManager
         # create div data in fielset
         stream_meta = $("<div>")
         stream_meta.addClass("stream_meta")
-        stream_meta.html(channel_data.topic)
+        stream_topic = $("<span>")
+        stream_topic.addClass("topic")
+        stream_topic.html(channel_data.topic)
+        stream_topic_change_link = $("<a>")
+        stream_topic_change_link.html("Change topic")
+        stream_topic_change_link.addClass("link_button")
+        stream_topic_change_link.addClass("change_topic")
+        stream_topic_change_link.attr("href", "#")
+        stream_meta.append(stream_topic_change_link)
+        stream_meta.append(stream_topic)
         stream_chat = $("<div>")
         stream_chat.addClass("stream_chat")
         stream_chat.scroll =>
@@ -793,6 +802,7 @@ class ChannelManager
         if @init_channels[channel_id]
             @notify_audio[0].play()
         
+
 ################################################################################
 # utilities
 ################################################################################

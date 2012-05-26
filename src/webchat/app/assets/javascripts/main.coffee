@@ -45,61 +45,66 @@ $(document).ready ->
             manager.send_msg(msg, type)
 
 
+    $(".popup_wrapper").click ->
+        $(".popup_wrapper").fadeOut "fast"
+        $(".popup_window").fadeOut "fast"
+
+    # new channel window
+    $("#streams a.change_topic").click ->
+        alert "hi"
+        $(".popup_wrapper").fadeIn "fast"
+        $("#change_topic_window").fadeIn "fast"
+        topic = $(@).siblings(".topic").val()
+        $("#change_topic_window #change_topic").val(topic)
+    $("#change_topic_buttons #change_topic_cancel").click ->
+        $(".popup_wrapper").fadeOut "fast"
+        $("#change_topic_window").fadeOut "fast"
+    $("#change_topic_window #change_topic_buttons #change_topic_change").click ->
+        topic = $("#change_topic_window #change_topic").val()
+        manager.change_topic(topic)
+        $(".popup_wrapper").fadeOut "fast"
+        $("#change_topic_window").fadeOut "fast"     
+
+
     # new channel window
     $("#channel_sidebar #channels .utils .newchannel").click ->
-        $("#newchannel_wrapper").fadeIn "fast"
-        $("#newchannel_form").fadeIn "fast"
-        $("#newchannel_form #newchannel_name").val("")
-        $("#newchannel_form #newchannel_topic").val("")
+        $(".popup_wrapper").fadeIn "fast"
+        $("#newchannel_window").fadeIn "fast"
+        $("#newchannel_window #newchannel_name").val("")
+        $("#newchannel_window #newchannel_topic").val("")
     $("#newchannel_buttons #newchannel_cancel").click ->
-        $("#newchannel_wrapper").fadeOut "fast"
-        $("#newchannel_form").fadeOut "fast"
-    $("#newchannel_wrapper").click ->
-        $("#newchannel_wrapper").fadeOut "fast"
-        $("#newchannel_form").fadeOut "fast"
-    $("#newchannel_form #newchannel_buttons #newchannel_create").click ->
-        name = $("#newchannel_form #newchannel_name").val()
-        topic = $("#newchannel_form #newchannel_topic").val()
+        $(".popup_wrapper").fadeOut "fast"
+        $("#newchannel_window").fadeOut "fast"
+    $("#newchannel_window #newchannel_buttons #newchannel_create").click ->
+        name = $("#newchannel_window #newchannel_name").val()
+        topic = $("#newchannel_window #newchannel_topic").val()
         manager.create_channel(name, topic)
-        $("#newchannel_wrapper").fadeOut "fast"
-        $("#newchannel_form").fadeOut "fast"        
+        $(".popup_wrapper").fadeOut "fast"
+        $("#newchannel_window").fadeOut "fast"        
 
     # invite window
     $("#info_sidebar #channel_info .utils .invite").click ->
-        $("#add_wrapper").fadeIn "fast"
-        $("#add_form").fadeIn "fast"
-        $("#add_search").focus()
+        $(".popup_wrapper").fadeIn "fast"
+        $("#invite_window").fadeIn "fast"
+        $("#invite_filter").focus()
         manager.reset_invite_selection()
         # reset invite filter
-        $("#add_form #add_search").val("")
-        $("#add_form #selected_preview .select_list ul li").each ->
+        $("#invite_window #invite_filter").val("")
+        $("#invite_window #selected_preview .select_list ul li").each ->
             $(@).show()
-    $("#add_buttons #add_cancel").click ->
-        $("#add_wrapper").fadeOut "fast"
-        $("#add_form").fadeOut "fast"
-    $("#add_buttons #add").click ->
-        $("#add_wrapper").fadeOut "fast"
-        $("#add_form").fadeOut "fast"
+    $("#invite_buttons #invite_cancel").click ->
+        $(".popup_wrapper").fadeOut "fast"
+        $("#invite_window").fadeOut "fast"
+    $("#invite_buttons #invite_ok").click ->
+        $(".popup_wrapper").fadeOut "fast"
+        $("#invite_window").fadeOut "fast"
         manager.invite_selection()
-    $("#add_wrapper").click ->
-        $("#add_wrapper").fadeOut "fast"
-        $("#add_form").fadeOut "fast"
-    $("#add_form #add_search").keyup ->
+    $("#invite_window #invite_filter").keyup ->
         text = $(@).val()
         console.log text
-        $("#add_form #selected_preview .select_list ul li").each ->
+        $("#invite_window #selected_preview .select_list ul li").each ->
             if $(@).html().toLowerCase().indexOf(text) != -1
                 $(@).show()
             else
                 $(@).hide()
         
-    # file upload window
-    $("#info_sidebar #file_info .utils .upload").click ->
-        $("#upload_wrapper").fadeIn "fast"
-        $("#upload_form").fadeIn "fast"
-    $("#upload_buttons #upload_cancel").click ->
-        $("#upload_wrapper").fadeOut "fast"
-        $("#upload_form").fadeOut "fast"
-    $("#upload_wrapper").click ->
-        $("#upload_wrapper").fadeOut "fast"
-        $("#upload_form").fadeOut "fast"

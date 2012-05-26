@@ -11,7 +11,7 @@
         </div>
         <div id="channels">
             <ul></ul>
-            <div class="utils"><a class="newchannel" href="#" >New channel</a></div>
+            <div class="utils"><a class="newchannel link_button" href="#" >New channel</a></div>
         </div>
         <div id="groups">
         </div>
@@ -54,7 +54,7 @@
             <fieldset>
                 <legend>Users</legend>
                 <div id="channel_users"></div>
-                <div class="utils"><a class="invite" href="#" >Invite</a></div>
+                <div class="utils"><a class="invite link_button" href="#" >Invite</a></div>
             </fieldset>
         </div>
         <div id="file_info">
@@ -63,19 +63,18 @@
                 <div id="channel_files">
 
                 </div>
-                <div class="utils"><a class="upload" href="#" >Upload</a></div>
+                <div class="utils"><a class="upload link_button" href="#" >Upload</a></div>
             </fieldset>
         </div>
     </div>
 
    <!-- Add to Channel Form -->
-    <div id="add_wrapper">
-
-    </div>
-    <div id="add_form">
-        <div id="add_meta">Invite to Channel</div>
-        <div id="add_members">
-            <input id="add_search" type="text" placeholder="Filter" />
+    <div class="popup_wrapper"></div>
+    
+    <div id="invite_window" class="popup_window">
+        <div class="popup_window_title">Invite to Channel</div>
+        <div id="invite_toolbar">
+            <input id="invite_filter" type="text" placeholder="Filter" />
         </div>
         <div id="selected_preview">
             <div class="select_list groups">
@@ -89,7 +88,7 @@
                 </ul>
             </div>
         </div>
-        <div id="add_selected">
+        <div id="invite_selected">
             <div class="select_list groups">
                 <h1>Selected groups</h1>
                 <ul>
@@ -100,20 +99,32 @@
                 <ul>
                 </ul>
             </div>
+        </div>    
+        <div id="invite_buttons" class="popup_window_buttons">
+            <input id="invite_cancel" type="button" value="Cancel" />
+            <input id="invite_ok" type="button" value="Invite" />
         </div>
-        <div id="add_buttons">
-            <input id="add_cancel" type="button" value="Cancel" />
-            <input id="add" type="button" value="Invite" />
+    </div>
+
+    <!-- Change topic form -->
+    <div id="change_topic_window" class="popup_window">
+        <div class="popup_window_title">Change topic</div>
+        <div class="popup_window_content">
+            <div class="field">
+                <label for="change_topic">Topic:</label>
+                <input id="change_topic" type="text" size="30" name="change_topic" />
+            </div>
+        </div>
+        <div id="change_topic_buttons" class="popup_window_buttons">
+              <input id="change_topic_cancel" type="button" value="Cancel"/>
+              <input id="change_topic_change" type="button" value="Change"/>
         </div>
     </div>
 
     <!-- Create new channel form -->
-    <div id="newchannel_wrapper">
-
-    </div>
-    <div id="newchannel_form">
-        <div id="newchannel_meta">New channel</div>
-        <div id="newchannel_data">
+    <div id="newchannel_window" class="popup_window">
+        <div class="popup_window_title">New channel</div>
+        <div class="popup_window_content">
             <div class="field">
                 <label for="newchannel_name">Name:</label>
                 <input id="newchannel_name" type="text" size="30" name="newchannel_name" />
@@ -122,35 +133,11 @@
                 <label for="newchannel_topic">Topic:</label>
                 <input id="newchannel_topic" type="text" size="30" name="newchannel_topic" />
             </div>
-            <div class="field">
-                <label>Private</label>
-                <input id="newchannel_private_yes" type="radio" name="private" value="yes" checked/>Yes
-                <input id="newchannel_private_no" type="radio" name="private" value="no" />No
-            </div>
         </div>
-        <div id="newchannel_buttons">
-
+        <div id="newchannel_buttons" class="popup_window_buttons">
               <input id="newchannel_cancel" type="button" value="Cancel"/>
               <input id="newchannel_create" type="button" value="Create"/>
         </div>
     </div>
 
-    <!-- Upload form -->
-    <div id="upload_wrapper">
-
-    </div>
-    <div id="upload_form">
-        <div id="upload_meta">Upload a file</div>
-        <div id="upload_data">
-            <div class="field">
-                <label for="upload_file">File:</label>
-                <input id="upload_file" type="file" size="30" name="upload_file" />
-            </div>
-
-        </div>
-        <div id="upload_buttons">
-            <input id="upload_cancel" type="button" value="Cancel"/>
-            <input id="upload" type="button" value="Upload"/>
-        </div>
-    </div>
 }
