@@ -87,8 +87,6 @@ public class JsonTestController extends Controller {
 		String json = "";
 		InInvite invite = new InInvite();
 		invite.type = "invite";
-		invite.actions.put(2, "create");
-		invite.actions.put(3, "update");
 		InInviteData idata = new InInviteData();
 		idata.groups.add(2);
 		idata.groups.add(4);

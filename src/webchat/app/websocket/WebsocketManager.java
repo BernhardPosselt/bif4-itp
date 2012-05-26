@@ -80,6 +80,15 @@ public class WebsocketManager {
         	out.write(Message.genjoinMessage(channelid));
         	
         }
+        else if (type.equals("invite")){
+        	
+        }
+        else if (type.equals("newchannel")){
+        	
+        }
+        else if (type.equals("channeltopic")){
+        	
+        }
         else{
             //Fehler
         }
