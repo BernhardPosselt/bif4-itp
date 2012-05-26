@@ -66,11 +66,16 @@ $(document).ready ->
         $("#upload_form").fadeOut "fast"
 
     # right sidebar util links
+    # invite window
     $("#info_sidebar #channel_info .utils .invite").click ->
         $("#add_wrapper").fadeIn "fast"
         $("#add_form").fadeIn "fast"
         $("#add_search").focus()
         manager.reset_invite_selection()
+        # reset invite filter
+        $("#add_form #add_search").val("")
+        $("#add_form #selected_preview .select_list ul li").each ->
+            $(@).show()
     $("#add_buttons #add_cancel").click ->
         $("#add_wrapper").fadeOut "fast"
         $("#add_form").fadeOut "fast"
@@ -81,4 +86,13 @@ $(document).ready ->
     $("#add_wrapper").click ->
         $("#add_wrapper").fadeOut "fast"
         $("#add_form").fadeOut "fast"
+    $("#add_form #add_search").keyup ->
+        text = $(@).val()
+        console.log text
+        $("#add_form #selected_preview .select_list ul li").each ->
+            if $(@).html().toLowerCase().indexOf(text) != -1
+                $(@).show()
+            else
+                $(@).hide()
+        
 
