@@ -187,13 +187,12 @@ class MainManager
             @send_websocket(msg)
             
     # creates a new channel
-    create_channel: (name, topic) ->
+    create_channel: (name, topic, is_public) ->
         msg = 
             type: "newchannel"
             data: 
                 name: name
                 topic: topic
-                groups: []
-                users: []
+                is_public: is_public
         if name != ""
             @send_websocket(msg)

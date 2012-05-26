@@ -44,7 +44,7 @@ $(document).ready ->
         if msg.length > 0
             manager.send_msg(msg, type)
 
-
+    # popup wrapper
     $(".popup_wrapper").click ->
         $(".popup_wrapper").fadeOut "fast"
         $(".popup_window").fadeOut "fast"
@@ -72,13 +72,15 @@ $(document).ready ->
         $("#newchannel_window").fadeIn "fast"
         $("#newchannel_window #newchannel_name").val("")
         $("#newchannel_window #newchannel_topic").val("")
+        $("#newchannel_window #newchannel_public").prop("checked", false)
     $("#newchannel_buttons #newchannel_cancel").click ->
         $(".popup_wrapper").fadeOut "fast"
         $("#newchannel_window").fadeOut "fast"
     $("#newchannel_window #newchannel_buttons #newchannel_create").click ->
         name = $("#newchannel_window #newchannel_name").val()
         topic = $("#newchannel_window #newchannel_topic").val()
-        manager.create_channel(name, topic)
+        is_public = $("#newchannel_window #newchannel_public").is(":checked")
+        manager.create_channel(name, topic, is_public)
         $(".popup_wrapper").fadeOut "fast"
         $("#newchannel_window").fadeOut "fast"        
 
