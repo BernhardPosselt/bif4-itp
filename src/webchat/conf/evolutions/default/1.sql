@@ -7,8 +7,7 @@ create table channel (
   id                        integer not null,
   name                      varchar(255),
   topic                     varchar(255),
-  isread                    boolean,
-  priv                      boolean,
+  is_public                 boolean,
   constraint pk_channel primary key (id))
 ;
 

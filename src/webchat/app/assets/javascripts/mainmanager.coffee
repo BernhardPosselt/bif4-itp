@@ -135,7 +135,7 @@ class MainManager
             type: "channeltopic"
             data:
                 topic: topic
-                channel: [channel_id]
+                channel: channel_id
         @send_websocket(message)
         
         
@@ -174,14 +174,13 @@ class MainManager
     # invites all selected groups and users
     invite_selection: ->
         selected_users_and_groups = @channels.get_invite_selection()
-        active_channel = @channels.get_active_channel()
-        data = {}
-        data[active_channel] = 
-            users: selected_users_and_groups.users
-            groups: selected_users_and_groups.groups
+        active_channel = parseInt(@channels.get_active_channel())
         msg = 
             type: "invite"
-            data: data
+            data:
+                channel: active_channel
+                users: selected_users_and_groups.users
+                groups: selected_users_and_groups.groups
         # only send if there min 1 user or 1 group
         if data[active_channel].users.length > 0 or data[active_channel].groups.length > 0
             @send_websocket(msg)
