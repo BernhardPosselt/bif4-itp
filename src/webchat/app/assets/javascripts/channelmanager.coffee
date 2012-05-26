@@ -22,7 +22,6 @@ class ChannelManager
         @dom_reg_stream_sidebar_files = {}
         @dom_reg_invite_groups = {}
         @dom_reg_invite_users = {}
-        @dom_reg_channel_files = {}
         # json data
         @channel_data = {}
         @stream_data = {}
