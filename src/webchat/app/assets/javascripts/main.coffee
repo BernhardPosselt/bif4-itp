@@ -49,12 +49,11 @@ $(document).ready ->
         $(".popup_wrapper").fadeOut "fast"
         $(".popup_window").fadeOut "fast"
 
-    # new channel window
-    $("#streams a.change_topic").click ->
-        alert "hi"
+    # change topic window
+    $("#streams a.change_topic").live "click", ->
         $(".popup_wrapper").fadeIn "fast"
         $("#change_topic_window").fadeIn "fast"
-        topic = $(@).siblings(".topic").val()
+        topic = $(@).siblings(".topic").html()
         $("#change_topic_window #change_topic").val(topic)
     $("#change_topic_buttons #change_topic_cancel").click ->
         $(".popup_wrapper").fadeOut "fast"
@@ -64,6 +63,21 @@ $(document).ready ->
         manager.change_topic(topic)
         $(".popup_wrapper").fadeOut "fast"
         $("#change_topic_window").fadeOut "fast"     
+
+    # change channel name window
+    $("#streams a.change_channel_name").live "click", ->
+        $(".popup_wrapper").fadeIn "fast"
+        $("#change_channel_name_window").fadeIn "fast"
+        topic = $(@).siblings(".channel_name").html()
+        $("#change_channel_name_window #change_channel_name").val(topic)
+    $("#change_channel_name_buttons #change_topic_cancel").click ->
+        $(".popup_wrapper").fadeOut "fast"
+        $("#change_channel_name_window").fadeOut "fast"
+    $("#change_channel_name_window #change_channel_name_buttons #change_channel_name_change").click ->
+        topic = $("#change_channel_name_window #change_channel_name").val()
+        manager.change_channel_name(topic)
+        $(".popup_wrapper").fadeOut "fast"
+        $("#change_channel_name_window").fadeOut "fast"     
 
 
     # new channel window

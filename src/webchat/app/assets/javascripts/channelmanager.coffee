@@ -165,6 +165,10 @@ class ChannelManager
 
     # creates a new element in the data tree and udpates the dom
     delete: (id) ->
+        # check if we got another channel and if a channel exists, join the
+        # first one
+        if id == @get_active_channel()
+            @join_first_channel()
         delete @channel_data[id]
         delete @stream_data[id]
         delete @stream_sidebar_files_data[id]
@@ -172,11 +176,7 @@ class ChannelManager
         delete @loaded_channels[id]
         delete @scrolled_channels[id]
         @delete_dom(id)
-        # check if we got another channel and if a channel exists, join the
-        # first one 
-        @join_first_channel()
 
-    
     # deletes an item from the dom     
     delete_dom: (id) ->
         # remove channel list entry
