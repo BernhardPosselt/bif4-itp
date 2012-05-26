@@ -30,6 +30,12 @@
     border-radius: @rad;
 }
 
+.border_rad_top_right(@rad){
+    -webkit-border-top-right-radius: @rad;
+    -moz-border-radius-topright: @rad;
+    border-top-right-radius: @rad;
+}
+
 .border_rad_top(@rad)
 {
     -webkit-border-top-left-radius: @rad;
@@ -187,11 +193,7 @@ html, body {
                       text-align:center;
                       .grad(#444, #222);
                       color: #fefefe;
-                      /*FIXME: mixin */
-                      -webkit-border-top-right-radius: 5px;
-                      -moz-border-radius-topright: 5px;
-                      border-top-right-radius: 5px;
-
+                      .border_rad_top_right(5px);
                       a
                       {
                           text-decoration:none;

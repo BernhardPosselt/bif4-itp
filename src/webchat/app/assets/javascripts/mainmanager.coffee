@@ -137,7 +137,7 @@ class MainManager
             # check for cmd prefixes
             # topic changes the channel topic
             message = {}
-            if msg.indexOf("/topic ") == 0
+            if msg.indexOf("/topic ") == 0 and type == "text"
                 message =
                     type: "channeltopic"
                     data:
