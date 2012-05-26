@@ -13,6 +13,9 @@ $(document).ready ->
             $("#channel_sidebar #channels").fadeOut "fast", ->
                 $("#channel_sidebar #groups").fadeIn "fast"
         false;                
+        
+    # set focus on input element on page load
+    $("#input_field").focus()
 
     # submit input
     $("#input_field").keyup (e) ->
