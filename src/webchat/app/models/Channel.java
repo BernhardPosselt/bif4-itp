@@ -42,10 +42,7 @@ public class Channel extends Model {
 	public String topic;
 	
 	@Constraints.Required
-	public Boolean isread;
-	
-	@Constraints.Required
-	public Boolean priv;
+	public Boolean is_public;
 	
 	@ManyToMany(cascade=CascadeType.ALL)
 	public List<User> users;
