@@ -158,7 +158,7 @@ class ChannelManager
         channel_list.html( data.name )
         stream = @dom_reg_stream[id]
         stream.children(".stream_field").children(".stream_name").html(data.name)
-        stream.children(".stream_field").children(".stream_meta").html(data.topic)
+        stream.children(".stream_field").children(".stream_meta").children(".topic").html(data.topic)
         @rewrite_files_dom(id)
         console.log("Updated channel " + data.name)
         
