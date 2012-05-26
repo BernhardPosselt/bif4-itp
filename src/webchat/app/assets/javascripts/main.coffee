@@ -69,6 +69,7 @@ $(document).ready ->
     $("#info_sidebar #channel_info .utils .invite").click ->
         $("#add_wrapper").fadeIn "fast"
         $("#add_form").fadeIn "fast"
+        $("#add_search").focus()
     $("#add_buttons #add_cancel").click ->
         $("#add_wrapper").fadeOut "fast"
         $("#add_form").fadeOut "fast"

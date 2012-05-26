@@ -706,8 +706,8 @@ html, body {
     #add_wrapper, #newchannel_wrapper, #upload_wrapper
     {
         display:none;
-        background-color:#aaa;
-        opacity:0.9;
+        background-color:#000;
+        opacity:0.7;
         position:absolute;
         z-index:10;
         left:0;
@@ -721,11 +721,16 @@ html, body {
                 position:relative;
                 display:none;
                 width:500px;
-                height:500px;
+                height:618px;
                 margin:auto;
                 margin-top:2%;
                 background-color:@white1;
                 z-index:20;
+                border: 1px solid #aaa;
+                
+                input[type=text] {
+                    border: 1px solid #aaa;
+                }
 
                 #add_meta
                 {
@@ -736,7 +741,7 @@ html, body {
                     height:30px;
                     line-height:30px;
                     padding:0px 10px;
-                    border-bottom:1px solid @blue4;
+                    border-bottom:1px solid #aaa;
                     .grad(#444, #222);
                     color:@white1;
                 }
@@ -747,10 +752,38 @@ html, body {
                     left:0;
                     right:0;
                     top:30px;
-                    height:200px;
+                    height:24px;
                     padding:10px;
-                    border-bottom:1px solid #ccc;
+                    border-top:1px solid #aaa;
+                    background-color: #eee; 
+                }
 
+                #selected_preview {
+                    position: absolute;
+                    top: 74px;
+                    left: 0;
+                    right: 0;
+                    height: 270px;
+                    border-top:1px solid #aaa;
+                    padding: 10px;
+                }
+
+                .select_list {
+                    .box-sizing(border-box);
+                    width: 50%;
+                    float: left;
+                    height: 230px;
+                    
+                    h1 {
+                        font-size: 13pt;
+                        margin: 0;
+                        padding: 0;
+                        font-weight: normal;
+                    }
+                    
+                    ul {
+                        overflow: auto;
+                    }
                 }
 
                 #add_selected
@@ -758,12 +791,10 @@ html, body {
                     position:absolute;
                     left:0;
                     right:0;
-                    top:250px;
+                    top:324px;
                     padding:10px;
-                    height:210px;
-                    border-bottom:1px solid #ccc;
+                    height:250px;
                     .box-sizing(border-box);
-
                     .add_to
                     {
                         position:absolute;
@@ -771,16 +802,20 @@ html, body {
                         right:10px;
                         bottom:5px;
                     }
+                    border-top:1px solid #aaa;
                 }
 
                 #add_buttons
                 {
+                    border-top:1px solid #aaa;
                     position:absolute;
                     bottom:0;
                     left:0;
                     right:0;
+                    height:24px;
                     padding:10px;
                     text-align:right;
+                    background-color: #eee;
                 }
             }
 

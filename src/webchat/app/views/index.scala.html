@@ -55,23 +55,32 @@
 
     </div>
     <div id="add_form">
-        <div id="add_meta">Add to Channel</div>
+        <div id="add_meta">Invite to Channel</div>
         <div id="add_members">
-            <select>
-                <option>Users</option>
-                <option>Groups</option>
-            </select>
-            <input id="add_search" type="text" value="Search..." />
+            <input id="add_search" type="text" placeholder="Filter" />
+        </div>
+        <div id="selected_preview">
+            <div class="select_list">
+                <h1>Users</h1>
+                <ul>
+                </ul>
+            </div>
+            <div class="select_list">
+                <h1>Groups</h1>
+                <ul>
+                </ul>
+            </div>
         </div>
         <div id="add_selected">
-            Selected users
-
-            <div class="add_to">
-                <label for="add_to_channel">Add to</label>
-                <select id="add_to_channel" name="add_to_channel" >
-                    <option>Channel 1</option>
-                    <option>Channel 2</option>
-                </select>
+            <div class="select_list">
+                <h1>Selected users</h1>
+                <ul>
+                </ul>
+            </div>
+            <div class="select_list">
+                <h1>Selected groups</h1>
+                <ul>
+                </ul>
             </div>
         </div>
         <div id="add_buttons">
