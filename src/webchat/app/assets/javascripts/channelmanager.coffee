@@ -729,6 +729,22 @@ class ChannelManager
             if elems.selected
                 @toggle_select_invite_group(id)
 
+
+    # returns all selected and groups and users in the invite window
+    get_invite_selection: ->
+        users = []
+        groups = []
+        for id, elems of @dom_reg_invite_users
+            if elems.selected
+                users.push(parseInt(id))
+        for id, elems of @dom_reg_invite_groups
+            if elems.selected
+                @toggle_select_invite_group(id)
+                groups.push(parseInt(id))
+        data = 
+            users: users
+            groups: groups
+        return data
 ################################################################################
 # utilities
 ################################################################################

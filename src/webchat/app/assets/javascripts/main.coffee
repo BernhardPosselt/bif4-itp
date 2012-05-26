@@ -74,6 +74,11 @@ $(document).ready ->
     $("#add_buttons #add_cancel").click ->
         $("#add_wrapper").fadeOut "fast"
         $("#add_form").fadeOut "fast"
+    $("#add_buttons #add").click ->
+        $("#add_wrapper").fadeOut "fast"
+        $("#add_form").fadeOut "fast"
+        manager.invite_selection()
     $("#add_wrapper").click ->
         $("#add_wrapper").fadeOut "fast"
         $("#add_form").fadeOut "fast"
+
