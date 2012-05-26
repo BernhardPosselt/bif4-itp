@@ -36,6 +36,7 @@ class ChannelManager
         @last_msg_class = {}
         @last_post_minute = {}
         @loaded_channels = {}
+        @init_channels = {}
         @scrolled_channels = {}
         @max_shown_code_lines = 10
         @notify_audio = $("<audio>")
@@ -233,8 +234,8 @@ class ChannelManager
     init_stream: (data) ->
         for id, stream_data of data
             @create_stream(id, stream_data)    
-    
-    
+            @init_channels[id] = true    
+
     # receives input for a stream
     input_stream: (data, actions) ->
         # messages can only be created, so ignore the actions array
@@ -263,6 +264,10 @@ class ChannelManager
     create_stream_dom: (channel_id, msg_id) ->
         data = @stream_data[channel_id][msg_id]
         stream = @dom_reg_stream[channel_id].children(".stream_field").children(".stream_chat")
+        # check if we have to add an unread flag to a channel the user is not in
+        if @init_channels[channel_id] and channel_id != @get_active_channel()
+            list_entry = @dom_reg_channel_list[channel_id]
+            list_entry.addClass("unread")
         # add dom
         line = $("<div>")
         line.addClass("line")
@@ -278,7 +283,7 @@ class ChannelManager
             highlight_string = "@" + current_user.prename + current_user.lastname
             if data.message.indexOf(highlight_string) != -1
                 line.addClass("highlight")
-                @notify()
+                @notify(channel_id)
             # replace known links, smileys etc
             msg.html(@sugar_text(data.message))
         else
@@ -752,8 +757,9 @@ class ChannelManager
         return data
         
         
-    notify: () ->
-        @notify_audio[0].play()
+    notify: (channel_id) ->
+        if @init_channels[channel_id]
+            @notify_audio[0].play()
         
 ################################################################################
 # utilities
