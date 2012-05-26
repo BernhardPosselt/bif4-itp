@@ -25,18 +25,17 @@ public class InNewChannel {
 			
 			chan.name = innewchan.data.name;
 			chan.topic = innewchan.data.topic;
-			chan.priv = innewchan.data.priv;
+			chan.is_public = innewchan.data.is_public;
 			
-			for (Iterator<Integer> useriter = innewchan.data.users.iterator(); useriter.hasNext();){
-				User user = new User();
-				user = User.find.byId(useriter.next());
-				chan.users.add(user);
+			if (chan.is_public == true){
+				for (Iterator<models.User> useriter = models.User.find.all().iterator(); useriter.hasNext();){
+					chan.users.add(useriter.next());
+				}
+				for (Iterator<Groups> groupiter = models.Groups.find.all().iterator(); groupiter.hasNext();){
+					chan.groups.add(groupiter.next());
+				}
 			}
-			for (Iterator<Integer> groupiter = innewchan.data.groups.iterator(); groupiter.hasNext();){
-				Groups group = new Groups();
-				group = Groups.find.byId(groupiter.next());
-				chan.groups.add(group);
-			}
+		
 			
 			chan.save();
 			chan.saveManyToManyAssociations("users");
