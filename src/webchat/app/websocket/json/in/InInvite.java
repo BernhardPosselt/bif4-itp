@@ -16,7 +16,8 @@ public class InInvite {
 	public Map<Integer,InInviteData> data = new HashMap<Integer,InInviteData>();
 	
 	
-	public static void invite(JsonNode inmessage){
+	public static List<Integer> invite(JsonNode inmessage){
+		List<Integer> channels = new ArrayList<Integer>();
 		try{
 			InInvite ininv = new InInvite();
 			ininv = new JSONDeserializer<InInvite>().deserialize(
@@ -25,6 +26,7 @@ public class InInvite {
 			int cid;
 			for (Map.Entry<Integer, InInviteData> entry:ininv.data.entrySet()){
 				cid = (Integer)entry.getKey();
+				channels.add(cid);
 				InInviteData invdata = new InInviteData();
 				invdata = (InInviteData)entry.getValue();
 				chan = models.Channel.find.byId(cid);
@@ -43,6 +45,7 @@ public class InInvite {
 		}catch (Exception e){
 			e.printStackTrace();
 		}
+		return channels;
 	}
 	
 

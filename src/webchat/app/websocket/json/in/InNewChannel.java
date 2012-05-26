@@ -15,7 +15,8 @@ public class InNewChannel {
 	public String type;
 	public InNewChannelData data;
 	
-	public static void createnewchannel(JsonNode inmessage){
+	public static int createnewchannel(JsonNode inmessage){
+		int channelid = 0;
 		try{
 			InNewChannel innewchan = new InNewChannel();
 			innewchan = new JSONDeserializer<InNewChannel>().deserialize(
@@ -40,8 +41,10 @@ public class InNewChannel {
 			chan.save();
 			chan.saveManyToManyAssociations("users");
 			chan.saveManyToManyAssociations("groups");
+			channelid = chan.id;
 		}catch (Exception e){
 			e.printStackTrace();
 		}
+		return channelid;
 	}
 }

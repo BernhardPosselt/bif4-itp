@@ -11,18 +11,21 @@ public class InChanneltopic {
 	public InChanneltopicData data;
 	
 	
-	public static void savetopicchange (JsonNode inmessage){
+	public static int savetopicchange (JsonNode inmessage){
+		int channelid = 0;
 		try{
 			InChanneltopic inchan = new InChanneltopic();
 			inchan = new JSONDeserializer<InChanneltopic>().deserialize(
 					inmessage.toString(), InChanneltopic.class);
 			models.Channel chan = new models.Channel();
 			chan = Channel.find.byId(inchan.data.channel);
+			channelid = inchan.data.channel;
 			chan.topic = inchan.data.topic;
 			chan.update();
 		}catch (Exception e){
 			e.printStackTrace();
 		}
+		return channelid;
 	}
 
 }
