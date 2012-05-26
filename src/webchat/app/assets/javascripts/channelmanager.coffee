@@ -144,6 +144,7 @@ class ChannelManager
         delete @stream_sidebar_files_data[id]
         delete @stream_sidebar_users_data[id]
         delete @loaded_channels[id]
+        delete @scrolled_channels[id]
         @delete_dom(id)
         # check if we got another channel and if a channel exists, join the
         # first one 
@@ -261,7 +262,7 @@ class ChannelManager
             # check msg contains @PrenameLastname and highlight if true
             current_user = @user_data["" + @active_user]
             highlight_string = "@" + current_user.prename + current_user.lastname
-            if msg.indexOf(highlight_string) != -1
+            if data.message.indexOf(highlight_string) != -1
                 line.addClass("highlight")
             # replace known links, smileys etc
             msg.html(@sugar_text(data.message))
