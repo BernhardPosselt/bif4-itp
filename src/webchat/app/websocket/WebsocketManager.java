@@ -9,7 +9,10 @@ import play.libs.F.Callback;
 import play.libs.F.Callback0;
 import play.mvc.Http.Session;
 import play.mvc.WebSocket;
+import websocket.json.in.InChanneltopic;
+import websocket.json.in.InInvite;
 import websocket.json.in.InJoin;
+import websocket.json.in.InNewChannel;
 import websocket.json.out.ActiveUser;
 import websocket.json.out.Channel;
 import websocket.json.out.File;
@@ -79,6 +82,20 @@ public class WebsocketManager {
         	//notifyAllMembers(File.genjoinFile(userid, "create", true, channelid));
         	out.write(Message.genjoinMessage(channelid));
         	
+        }
+        else if (type.equals("invite")){
+        	List<Integer>channels  = InInvite.invite(inmessage);
+        	for (Iterator<Integer> chaniter = channels.iterator(); chaniter.hasNext();){
+        		notifyAllMembers(Channel.genChannel("update", chaniter.next()));
+        	}
+        }
+        else if (type.equals("newchannel")){
+        	int channelid = InNewChannel.createnewchannel(inmessage);
+        	notifyAllMembers(Channel.genChannel("create", channelid));
+        }
+        else if (type.equals("channeltopic")){
+        	int channelid = InChanneltopic.savetopicchange(inmessage);
+        	notifyAllMembers(Channel.genChannel("update", channelid));
         }
         else{
             //Fehler

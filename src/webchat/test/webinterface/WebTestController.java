@@ -3,22 +3,19 @@ package webinterface;
 
 
 
+import static org.fest.assertions.Assertions.assertThat;
+import static play.test.Helpers.HTMLUNIT;
+import static play.test.Helpers.running;
+import static play.test.Helpers.testServer;
+
 import org.fluentlenium.adapter.FluentTest;
-import org.fluentlenium.core.filter.*;
-import org.junit.*;
-import org.openqa.selenium.lift.find.*;
-import org.openqa.selenium.*;
+import org.junit.Test;
 
-
-import play.mvc.*;
-import play.test.*;
-import play.libs.F.*;
-import scala.collection.parallel.ParIterableLike.Find;
+import play.libs.F.Callback;
+import play.test.TestBrowser;
 import views.html.helper.select;
 
-
-import static play.test.Helpers.*;
-import static org.fest.assertions.Assertions.*;
+import static org.fluentlenium.core.filter.FilterConstructor.*;
 
 public class WebTestController extends FluentTest {
 
@@ -28,25 +25,33 @@ public class WebTestController extends FluentTest {
 	    running(testServer(3333), HTMLUNIT, new Callback<TestBrowser>() {
 	        public void invoke(TestBrowser browser) {
 		         try {
+		        	 	// Start Server with Port 33333
 		        	   goTo("http://localhost:3333/Testdata"); 
 		        	   goTo("http://localhost:3333/login");
-		        	   Thread.sleep(1000);
+		        	   
+		        	   //Login with Username Password
 			           fill("#username").with("Glembo");
-			    	   Thread.sleep(1000);
-			           fill("#password").with("test");
-			    	   Thread.sleep(1000);
+			           fill("#password").with("test");	 
 			           submit("#login");
+			           
+			           //Fill in Text data
+			           fill("#input_field").with("Hallo ich bin ein Test!");
+			           Thread.sleep(2000);
+			           click("#input_send");
+			    	   
+			           //Fill in Java Code
+			           find("#input_options").find("option", withText("Java")).click();
 			    	   Thread.sleep(2000);
-
-			    	   fill("#input_field").with("Hallo ich bin ein Test!");
-			    	 
+			    	   fill("#input_field").with("public static void test(){System.out.println('Hallo Welt); }");
 			    	   Thread.sleep(2000);
 			    	   click("#input_send");
-			    	   Thread.sleep(2000);
+			 
+			    	   //Prove the insertions
 			    	   assertThat(title().contains("Webchat"));
 			    	   assertThat(find(".stream_name").contains("Channel1"));
 			    	   assertThat(find(".stream_meta").contains("Webengineering"));
-			    	   assertThat(find(".message line0").contains("Hallo ich bin ein Test!"));
+			    	   assertThat(find(".message line1").get(0).equals("Hallo ich bin kein Test!"));
+			    	   assertThat(find(".java plain").equals("public static void test(){System.out.println('Hallo Welt); }"));
 				} catch (InterruptedException e) {
 	
 					e.printStackTrace();
@@ -56,11 +61,4 @@ public class WebTestController extends FluentTest {
 	    });
 	}
 	
-	/*@Test
-	    public void title_of_bing_should_contain_search_query_name() {
-	        goTo("http://www.google.at/");
-	        fill("#gbqfq").with("Real Madrid");
-	        submit("#gbqfba");
-	        assertThat(title()).contains("Real Madrid");
-	    }*/
 }

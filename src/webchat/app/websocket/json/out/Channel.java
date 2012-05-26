@@ -55,4 +55,40 @@ public class Channel {
 		}
 		return Json.parse(json);
 	}
+	
+	public static JsonNode genChannel(String action, int channelid){
+		String json = "";
+		try {
+			models.Channel mchan = new models.Channel();
+			mchan = models.Channel.find.byId(channelid);
+			
+			Channel channel = new Channel();
+			ChannelData cdata = new ChannelData();
+			channel.actions.put(channelid, action);
+			channel.init = false;
+			
+			cdata.name = mchan.name;
+			cdata.topic = mchan.topic;
+			cdata.modified = new Date();
+			
+			for (Iterator<models.File> itfile = mchan.files.iterator(); itfile.hasNext();){
+				cdata.files.add(itfile.next().id);
+			}
+			for (Iterator<models.Groups> itgroup = mchan.groups.iterator(); itgroup.hasNext();){
+				cdata.groups.add(itgroup.next().id);
+			}
+			for (Iterator<models.User> ituser = mchan.users.iterator(); ituser.hasNext();){
+				cdata.users.add(ituser.next().id);
+			}
+			channel.data.put(1, cdata);
+			
+			// Generate the Json Message
+			JSONSerializer aser = new JSONSerializer().include("*.data",
+					"*.actions", "*.files", "*.users", "*.groups");
+			json = aser.exclude("*.class").serialize(channel);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return Json.parse(json);
+	}
 }
