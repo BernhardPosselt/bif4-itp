@@ -84,14 +84,17 @@ public class WebsocketManager {
         	
         }
         else if (type.equals("invite")){
-        	List<Integer>channels  = InInvite.invite(inmessage);
-        	for (Iterator<Integer> chaniter = channels.iterator(); chaniter.hasNext();){
-        		notifyAllMembers(Channel.genChannel("update", chaniter.next()));
-        	}
+        	int channelid  = inmessage.findPath("channel").asInt();
+        	List<Integer>users  = InInvite.invite(inmessage);
+        	sendinviteMessagetoUser(users, channelid);
         }
         else if (type.equals("newchannel")){
-        	int channelid = InNewChannel.createnewchannel(inmessage);
-        	out.write(Channel.genChannel("create", channelid));
+        	Boolean is_public = inmessage.findPath("is_public").asBoolean();
+        	int channelid = InNewChannel.createnewchannel(inmessage, userid);
+        	if (is_public == false)
+        			out.write(Channel.genChannel("create", channelid));
+        	else
+        		notifyAllMembers(Channel.genChannel("create", channelid));
         }
         else if (type.equals("channeltopic")){
         	int channelid = InChanneltopic.savetopicchange(inmessage);
@@ -110,6 +113,16 @@ public class WebsocketManager {
         for(Map.Entry<WebSocket.Out<JsonNode>, Integer> entry: members.entrySet()) {
             out = (WebSocket.Out<JsonNode>)entry.getKey();
             out.write(inmessage);
+        }
+    }
+    
+    public static void sendinviteMessagetoUser(List<Integer>users, int channelid){
+    	WebSocket.Out<JsonNode> out = null;
+        for(Map.Entry<WebSocket.Out<JsonNode>, Integer> entry: members.entrySet()) {
+            if (users.contains(entry.getValue())){
+            	out = (WebSocket.Out<JsonNode>)entry.getKey();
+            	out.write(Channel.genChannel("create", channelid));
+            }	
         }
     }
 }

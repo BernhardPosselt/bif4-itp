@@ -15,7 +15,7 @@ public class InNewChannel {
 	public String type;
 	public InNewChannelData data;
 	
-	public static int createnewchannel(JsonNode inmessage){
+	public static int createnewchannel(JsonNode inmessage, int userid){
 		int channelid = 0;
 		try{
 			InNewChannel innewchan = new InNewChannel();
@@ -29,13 +29,14 @@ public class InNewChannel {
 			
 			if (chan.is_public == true){
 				for (Iterator<models.User> useriter = models.User.find.all().iterator(); useriter.hasNext();){
-					chan.users.add(useriter.next());
+					chan.setUsers(useriter.next());
 				}
 				for (Iterator<Groups> groupiter = models.Groups.find.all().iterator(); groupiter.hasNext();){
-					chan.groups.add(groupiter.next());
+					chan.setGroups(groupiter.next());
 				}
 			}
-		
+			else
+				chan.setUsers(models.User.find.byId(userid));
 			
 			chan.save();
 			chan.saveManyToManyAssociations("users");
