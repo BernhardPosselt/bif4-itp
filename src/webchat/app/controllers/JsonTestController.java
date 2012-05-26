@@ -83,24 +83,6 @@ public class JsonTestController extends Controller {
 		return injson;
 	}
 
-	public static JsonNode buildinvite() {
-		String json = "";
-		InInvite invite = new InInvite();
-		invite.type = "invite";
-		InInviteData idata = new InInviteData();
-		idata.groups.add(2);
-		idata.groups.add(4);
-		idata.users.add(2);
-		invite.data.put(2, idata);
-		idata = new InInviteData();
-		idata.groups.add(5);
-		idata.users.add(4);
-		invite.data.put(3, idata);
-		
-		JSONSerializer gser = new JSONSerializer().include("*.actions", "*.data","*.users", "*.groups");
-		json = gser.exclude("*.class").serialize(invite);
-		return Json.parse(json);
-	}
 
 	public static JsonNode buildjoin(){
 		String json= "";
