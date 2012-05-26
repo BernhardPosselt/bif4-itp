@@ -19,8 +19,10 @@ $(document).ready ->
 
     # submit input
     $("#input_field").keyup (e) ->
+        # autocomplete on tab
         if e.keyCode == keycodes.tab
             $(@).val(manager.complete_name($(@).val()))
+        # enter without shift will submit
         if e.keyCode == keycodes.enter and not e.shiftKey
             console.log keycodes.shift_pressed
             submit()
@@ -33,6 +35,14 @@ $(document).ready ->
                 return false
     $("#input_send").click (e) ->
         submit()
+    # hide popup windows on escape
+    $("body").keyup (e) ->
+        if e.keyCode == keycodes.escape
+            $(".popup_window").fadeOut "fast"
+            $(".popup_wrapper").fadeOut "fast"
+            return false
+        if e.keyCode == keycodes.enter
+            $(".popup_window:visible .submit").trigger("click")
             
     # function to submit
     submit = () ->
@@ -54,7 +64,7 @@ $(document).ready ->
         $(".popup_wrapper").fadeIn "fast"
         $("#change_topic_window").fadeIn "fast"
         topic = $(@).parent().parent().siblings(".stream_meta").children(".topic").html()
-        $("#change_topic_window #change_topic").val(topic)
+        $("#change_topic_window #change_topic").html(topic)
     $("#change_topic_buttons #change_topic_cancel").click ->
         $(".popup_wrapper").fadeOut "fast"
         $("#change_topic_window").fadeOut "fast"
