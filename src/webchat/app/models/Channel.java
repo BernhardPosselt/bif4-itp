@@ -95,7 +95,7 @@ public class Channel extends Model {
 	public static List<Channel> getUserChannels(int userid)
     {
 		List<Channel> tmp = new ArrayList<Channel>();
-		String query = "find channel where users.id =:userid or priv=false";
+		String query = "find channel where users.id =:userid or is_public=true";
         tmp =  find.setQuery(query).setParameter("userid", userid).findList();
         return tmp;
     }
