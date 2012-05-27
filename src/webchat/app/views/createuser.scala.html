@@ -1,0 +1,30 @@
+@(userForm: Form[User], username: String)
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@main(username, title = "Webchat") {
+    
+    <h1>Add a user</h1>
+    
+    @form(routes.AdminController.saveuser()) {
+        
+        <fieldset>
+        
+            @inputText(userForm("username"), '_label -> "Username")
+            @inputPassword(userForm("password"), '_label -> "Password")
+	        @inputText(userForm("firstname"), '_label -> "First name")
+            @inputText(userForm("lastname"), '_label -> "Last name")
+            @inputText(userForm("email"), '_label -> "E-Mail")
+            @checkbox(userForm("admin"), '_label -> "Admin")
+
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Create this user" class="btn primary"> or 
+            <a href="@routes.AdminController.list()" class="btn">Cancel</a> 
+        </div>
+        
+    }
+    
+}

@@ -14,6 +14,22 @@ POST /login controllers.LoginController.submit()
 GET /profile controllers.ProfileController.edit()
 POST /profile controllers.ProfileController.submit()
 
+#Admin
+
+#Get List
+GET /admin controllers.AdminController.index()
+GET /adminfilter controllers.AdminController.list(p:Int ?= 0, s ?= "username", o ?= "asc", f ?= "")
+
+#Add User
+GET /admin/newuser controllers.AdminController.createuser()
+POST /admin controllers.AdminController.saveuser()
+
+#Edit User
+GET     /admin/user/:id              controllers.AdminController.edituser(id:Long)
+POST    /admin/user/:id              controllers.AdminController.updateuser(id:Long)
+
+# Delete a computer
+POST    /admin/user/:id/delete       controllers.AdminController.deleteuser(id:Long)
 
 #TestData
 

@@ -3,6 +3,8 @@ package models;
 import javax.persistence.*;
 import javax.validation.Constraint;
 
+import com.avaje.ebean.Page;
+
 import java.util.*;
 
 import play.Logger;
@@ -75,7 +77,7 @@ public class User extends Model {
 			Integer.class, User.class
 	);
 
-    public static String getUsername(int id)
+	public static String getUsername(int id)
     {
         return find.byId(id).username;
     }
@@ -121,6 +123,16 @@ public class User extends Model {
     	List<User> users = new ArrayList<User>();
     	users = find.where().eq("online", true).findList();
     	return users;
+    }
+    
+    public static Page<User> page(int page, int pageSize, String sortBy, String order, String filter) {
+        return 
+            find.where()
+                .ilike("username", "%" + filter + "%")
+                .orderBy(sortBy + " " + order)
+                .fetch("groups")
+                .findPagingList(pageSize)
+                .getPage(page);
     }
 
 }

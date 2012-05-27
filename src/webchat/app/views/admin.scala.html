@@ -1,0 +1,154 @@
+@(currentPage : Page[User], username: String, currentSortBy: String, currentOrder: String, currentFilter: String)
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@link(newPage:Int, newSortBy:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    routes.AdminController.list(newPage, sortBy, order, currentFilter)
+}
+
+@header(key:String, title:String) = {
+    <th class="@key.replace(".","_") header @if(currentSortBy == key) @{if(currentOrder == "asc") "headerSortDown" else "headerSortUp"}">
+        <a href="@link(0, key)">@title</a>
+    </th>
+}
+
+@main(username, title = "Webchat") {
+
+<h1 id="homeTitle">@Messages("users.list.title", currentPage.getTotalRowCount)</h1>
+
+    @if(flash.containsKey("success")) {
+        <div class="alert-message warning">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+    } 
+
+    <div id="actions">
+        
+        <form action="@link(0, "username")" method="GET">
+            <input type="search" id="searchbox" name="f" value="@currentFilter" placeholder="Filter by username...">
+            <input type="submit" id="searchsubmit" value="Filter by username" class="btn primary">
+        </form>
+        
+        <a class="btn success" id="add" href="@routes.AdminController.createuser()">Add a new user</a>
+        
+    </div>
+    
+    @if(currentPage.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>Nothing to display</em>
+        </div>
+        
+    } else {
+        
+        <table class="users zebra-striped">
+            <thead>
+                <tr>
+                    @header("username", "Username")
+                    @header("firstname", "First name")
+                    @header("lastname", "Last name")
+                    @header("email", "E-Mail")
+                    @header("admin", "Admin")
+                    @header("online", "Online")
+                    @header("lastlogin", "Last login")
+                </tr>
+            </thead>
+            <tbody>
+
+                @for(user <- currentPage.getList) {
+                    <tr>
+                        <td><a href="@routes.AdminController.edituser(user.id)">@user.username</a></td>
+                        <td>
+                            @if(user.firstname == null) {
+                                <em>-</em>
+                            } else {
+                                @user.firstname
+                            }
+                        </td>
+                        <td>
+                            @if(user.lastname == null) {
+                                <em>-</em>
+                            } else {
+                                @user.lastname
+                            }
+                        </td>
+                        <td>
+                            @if(user.email == null) {
+                                <em>-</em>
+                            } else {
+                                @user.email
+                            }
+                        </td>
+                        <td>
+                            @if(user.admin == null) {
+                                <em>-</em>
+                            } else {
+                                @user.admin
+                            }
+                        </td>
+                        <td>
+                            @if(user.online == null) {
+                                <em>-</em>
+                            } else {
+                                @user.online
+                            }
+                        </td>
+                        <td>
+                            @if(user.lastlogin == null) {
+                                <em>-</em>
+                            } else {
+                                @user.lastlogin.format("dd-MM-yyyy HH:mm:ss")
+                            }
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+        <div id="pagination" class="pagination">
+            <ul>
+                @if(currentPage.hasPrev) {
+                    <li class="prev">
+                        <a href="@link(currentPage.getPageIndex - 1, null)">&larr; Previous</a>
+                    </li>
+                } else {
+                    <li class="prev disabled">
+                        <a>&larr; Previous</a>
+                    </li>
+                }
+                <li class="current">
+                    <a>Displaying @currentPage.getDisplayXtoYofZ(" to "," of ")</a>
+                </li>
+                @if(currentPage.hasNext) {
+                    <li class="next">
+                        <a href="@link(currentPage.getPageIndex + 1, null)">Next &rarr;</a>
+                    </li>
+                } else {
+                    <li class="next disabled">
+                        <a>Next &rarr;</a>
+                    </li>
+                }
+            </ul>
+        </div>
+        
+    }
+        
+}
