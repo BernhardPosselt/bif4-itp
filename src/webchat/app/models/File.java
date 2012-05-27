@@ -2,6 +2,7 @@ package models;
 
 import javax.persistence.*;
 
+import java.sql.Blob;
 import java.util.*;
 
 import play.db.ebean.Model;

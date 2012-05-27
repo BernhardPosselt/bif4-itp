@@ -3,8 +3,11 @@ package controllers;
 import java.io.File;
 import java.util.Date;
 
+import com.google.common.io.Files;
+import org.h2.util.IOUtils;
 import play.Logger;
 import play.mvc.*;
+import scalax.io.support.FileUtils;
 import views.html.*;
 import websocket.WebsocketManager;
 
@@ -15,6 +18,8 @@ import org.codehaus.jackson.JsonNode;
 
 import models.*;
 import java.io.*;
+
+import static com.google.common.io.Files.copy;
 
 public class Application extends Controller {
   
@@ -47,13 +52,20 @@ public class Application extends Controller {
         Http.MultipartFormData body =  request().body().asMultipartFormData();
 
         Http.MultipartFormData.FilePart uploaded_file= body.getFile("uploaded_file");
+
         if(uploaded_file != null)
         {
             String filename = uploaded_file.getFilename();
             String contentType = uploaded_file.getContentType();
+
             File file = uploaded_file.getFile();
-            Logger.info(filename);
-            Logger.info(contentType);
+            File dest = new File(play.Play.application().path().toString() + "/files/" + filename);
+
+            try {
+                Files.copy(file, dest);
+            } catch (IOException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
 
             return ok(upload.render(form(models.File.class)));
         }
