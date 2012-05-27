@@ -8,6 +8,7 @@ create table channel (
   name                      varchar(255),
   topic                     varchar(255),
   is_public                 boolean,
+  archived                  boolean,
   constraint pk_channel primary key (id))
 ;
 

@@ -60,11 +60,13 @@ public class Application extends Controller {
 	  	    channel.name = "Channel 1";
 	  	    channel.topic = "Webengineering";
 	  	    channel.is_public = false;
+	  	    channel.archived = false;
 	  	    channel.save();
 	  	   
 	  	    Channel channel1 = new Channel();
 	  	    channel1.name = "Channel2";
 	  	    channel1.topic = "Softwareengineering";
+	  	    channel1.archived = false;
 	  	    channel1.is_public= true;
 	  	  
 	  	    channel1.save();

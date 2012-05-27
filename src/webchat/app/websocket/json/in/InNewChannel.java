@@ -26,7 +26,7 @@ public class InNewChannel {
 			chan.name = innewchan.data.name;
 			chan.topic = innewchan.data.topic;
 			chan.is_public = innewchan.data.is_public;
-			
+			chan.archived = false;
 			if (chan.is_public == true){
 				for (Iterator<models.User> useriter = models.User.find.all().iterator(); useriter.hasNext();){
 					chan.setUsers(useriter.next());

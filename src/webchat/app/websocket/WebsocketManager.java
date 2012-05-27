@@ -9,9 +9,13 @@ import play.libs.F.Callback;
 import play.libs.F.Callback0;
 import play.mvc.Http.Session;
 import play.mvc.WebSocket;
+import websocket.json.in.InChannelClose;
+import websocket.json.in.InChannelDelete;
+import websocket.json.in.InChannelName;
 import websocket.json.in.InChanneltopic;
 import websocket.json.in.InInvite;
 import websocket.json.in.InJoin;
+import websocket.json.in.InKick;
 import websocket.json.in.InNewChannel;
 import websocket.json.out.ActiveUser;
 import websocket.json.out.Channel;
@@ -101,6 +105,29 @@ public class WebsocketManager {
         else if (type.equals("channeltopic")){
         	int channelid = InChanneltopic.savetopicchange(inmessage);
         	notifyAllMembers(Channel.genChannel("update", channelid));
+        }
+        else if (type.equals("kick")){
+        	int channelid  = inmessage.findPath("channel").asInt();
+        	List<Integer>users  = InKick.kick(inmessage); 
+          	List<Integer> stayusers = models.Channel.getChannelUsers(channelid);
+        	sendinviteMessagetoUser(stayusers, channelid, "update");
+        	sendinviteMessagetoUser(users, channelid, "delete");
+        }
+        else if (type.equals("channelname")){
+        	int channelid = InChannelName.changechannelname(inmessage);
+        	notifyAllMembers(Channel.genChannel("update", channelid));
+        }
+        else if (type.equals("channeldelete")){
+        	int channelid = inmessage.findPath("channel").asInt();
+        	notifyAllMembers(Channel.genChannel("delete", channelid));
+        	InChannelDelete.deletechannel(inmessage);
+        }
+        else if (type.equals("channelclose")){
+        	int channelid = InChannelClose.closechannel(inmessage);
+        	notifyAllMembers(Channel.genChannel("delete", channelid));
+        }
+        else if (type.equals("filedelete")){
+        	
         }
         else{
             //Fehler

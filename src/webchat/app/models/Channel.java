@@ -44,6 +44,9 @@ public class Channel extends Model {
 	@Constraints.Required
 	public Boolean is_public;
 	
+	@Constraints.Required
+	public Boolean archived;
+	
 	@ManyToMany(cascade=CascadeType.ALL)
 	public List<User> users;
 	
@@ -95,7 +98,7 @@ public class Channel extends Model {
 	public static List<Channel> getUserChannels(int userid)
     {
 		List<Channel> tmp = new ArrayList<Channel>();
-		String query = "find channel where users.id =:userid or is_public=true";
+		String query = "find channel where archived = false and (users.id =:userid or is_public=true)";
         tmp =  find.setQuery(query).setParameter("userid", userid).findList();
         return tmp;
     }
