@@ -26,19 +26,29 @@ public class InInvite {
 		
 			chan = models.Channel.find.byId(ininv.data.channel);
 			
-			for (Iterator<Integer> useriter = ininv.data.users.iterator(); useriter.hasNext();){
-				User user = new User();
-				user = User.find.byId(useriter.next());
-				if (!chan.users.contains(user)){
-					chan.users.add(user);
-					users.add(user.id);
-				}
-			}
 			for (Iterator<Integer> groupiter = ininv.data.groups.iterator(); groupiter.hasNext();){
 				Groups group = new Groups();
 				group = Groups.find.byId(groupiter.next());
-				if (!chan.groups.contains(group))
+				if (!chan.groups.contains(group)){
 					chan.groups.add(group);
+					for (Iterator<models.User> useriter = group.users.iterator(); useriter.hasNext();){
+						models.User user = new User();
+						user = useriter.next();
+						if (Channel.getChannelUsers(chan.id).contains(user.id))
+							chan.users.remove(user.id);
+						else
+							users.add(user.id);
+					}
+				}		
+			}
+			
+			for (Iterator<Integer> useriter = ininv.data.users.iterator(); useriter.hasNext();){
+				User user = new User();
+				user = User.find.byId(useriter.next());	
+				if (!(User.getChannelGroupUser(Groups.getChannelGroups(chan.id)).contains(user)) && (!Channel.getChannelUsers(chan.id).contains(user.id))){
+					chan.users.add(user);
+					users.add(user.id);
+				}
 			}
 			
 			chan.update();

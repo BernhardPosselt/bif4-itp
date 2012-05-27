@@ -125,6 +125,17 @@ public class User extends Model {
     	return users;
     }
     
+    public static List<User> getChannelGroupUser(List<Groups> groups)
+    {
+    	List<User> users = new ArrayList<User>();
+		for (Iterator<Groups> groupiter = groups.iterator(); groupiter.hasNext();){
+			 List<User> tmp = new ArrayList<User>();
+		     tmp =  find.where().eq("groups.id", groupiter.next().id).findList();
+		     users.addAll(tmp);
+		}
+        return users;
+    }
+    
     public static Page<User> page(int page, int pageSize, String sortBy, String order, String filter) {
         return 
             find.where()

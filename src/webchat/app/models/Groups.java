@@ -36,11 +36,10 @@ public class Groups extends Model {
 			Integer.class, Groups.class
 	);
     
-   /* public static List<Groups> getChannelGroups(int channelid)
-    {
+	public static List<Groups> getChannelGroups(int channelid){
 		List<Groups> tmp = new ArrayList<Groups>();
-        tmp =  find.where().eq("userid.id", channelid).findList();
-        return tmp;
-    }*/
+		tmp = find.where().eq("channels.id", channelid).findList();
+		return tmp;
+	}
 
 }
