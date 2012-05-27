@@ -5,6 +5,10 @@
 # Home page
 GET / controllers.Application.index()
 
+#Upload
+GET /upload controllers.Application.upload_form()
+POST /upload controllers.Application.upload()
+
 #Login
 GET /login controllers.LoginController.login()
 GET /logout controllers.LoginController.logout()

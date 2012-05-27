@@ -1,0 +1,10 @@
+@(uploadForm : Form[File])
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@helper.form(action = routes.Application.upload, 'enctype -> "multipart/form-data") {
+
+        <input type="file" name="uploaded_file" />
+        <input type="submit" value="Upload" />
+}

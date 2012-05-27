@@ -1,7 +1,9 @@
 package controllers;
 
+import java.io.File;
 import java.util.Date;
 
+import play.Logger;
 import play.mvc.*;
 import views.html.*;
 import websocket.WebsocketManager;
@@ -12,6 +14,7 @@ import play.mvc.Controller;
 import org.codehaus.jackson.JsonNode;
 
 import models.*;
+import java.io.*;
 
 public class Application extends Controller {
   
@@ -33,6 +36,32 @@ public class Application extends Controller {
              return redirect(routes.LoginController.login());
          }
 	 }
+
+    public static Result upload_form()
+    {
+        return ok(upload.render(form(models.File.class)));
+    }
+
+    public static Result upload()
+    {
+        Http.MultipartFormData body =  request().body().asMultipartFormData();
+
+        Http.MultipartFormData.FilePart uploaded_file= body.getFile("uploaded_file");
+        if(uploaded_file != null)
+        {
+            String filename = uploaded_file.getFilename();
+            String contentType = uploaded_file.getContentType();
+            File file = uploaded_file.getFile();
+            Logger.info(filename);
+            Logger.info(contentType);
+
+            return ok(upload.render(form(models.File.class)));
+        }
+        else
+        {
+            return redirect(routes.Application.upload_form());
+        }
+    }
 	 
 	 public static Result filltestdata()
 	 {
