@@ -35,14 +35,14 @@ $(document).ready ->
                 return false
     $("#input_send").click (e) ->
         submit()
-    # hide popup windows on escape
-    #$("body").keyup (e) ->
-    #    if e.keyCode == keycodes.escape
-    #        $(".popup_window:visible").fadeOut "fast"
-    #        $(".popup_wrapper:visible").fadeOut "fast"
-    #        return false
-    #    if e.keyCode == keycodes.enter
-    #        $(".popup_window:visible .submit").trigger("click")
+    
+    # hide popup windows on escape, commit on enter
+    $("body").keyup (e) ->
+        if e.keyCode == keycodes.escape
+            $(".popup_window:visible").fadeOut "fast"
+            $(".popup_wrapper:visible").fadeOut "fast"
+        if e.keyCode == keycodes.enter
+            $(".popup_window:visible .submit").trigger("click")
             
     # function to submit
     submit = () ->
