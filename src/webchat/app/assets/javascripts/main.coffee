@@ -36,13 +36,13 @@ $(document).ready ->
     $("#input_send").click (e) ->
         submit()
     # hide popup windows on escape
-    $("body").keyup (e) ->
-        if e.keyCode == keycodes.escape
-            $(".popup_window").fadeOut "fast"
-            $(".popup_wrapper").fadeOut "fast"
-            return false
-        if e.keyCode == keycodes.enter
-            $(".popup_window:visible .submit").trigger("click")
+    #$("body").keyup (e) ->
+    #    if e.keyCode == keycodes.escape
+    #        $(".popup_window:visible").fadeOut "fast"
+    #        $(".popup_wrapper:visible").fadeOut "fast"
+    #        return false
+    #    if e.keyCode == keycodes.enter
+    #        $(".popup_window:visible .submit").trigger("click")
             
     # function to submit
     submit = () ->
@@ -56,8 +56,11 @@ $(document).ready ->
 
     # popup wrapper
     $(".popup_wrapper").click ->
-        $(".popup_wrapper").fadeOut "fast"
-        $(".popup_window").fadeOut "fast"
+        $(".popup_wrapper:visible").fadeOut "fast"
+        $(".popup_window:visible").fadeOut "fast"
+    $(".popup_window .cancel").click ->
+        $(".popup_wrapper:visible").fadeOut "fast"
+        $(".popup_window:visible").fadeOut "fast"
 
     # change topic window
     $("#streams a.change_topic").live "click", ->
@@ -65,10 +68,7 @@ $(document).ready ->
         $("#change_topic_window").fadeIn "fast"
         topic = $(@).parent().parent().siblings(".stream_meta").children(".topic").html()
         $("#change_topic_window #change_topic").html(topic)
-    $("#change_topic_buttons #change_topic_cancel").click ->
-        $(".popup_wrapper").fadeOut "fast"
-        $("#change_topic_window").fadeOut "fast"
-    $("#change_topic_window #change_topic_buttons #change_topic_change").click ->
+    $("#change_topic_window .submit").click ->
         topic = $("#change_topic_window #change_topic").val()
         manager.change_topic(topic)
         $(".popup_wrapper").fadeOut "fast"
@@ -80,10 +80,7 @@ $(document).ready ->
         $("#change_channel_name_window").fadeIn "fast"
         name = $(@).parent().siblings("span").html()
         $("#change_channel_name_window #change_channel_name").val(name)
-    $("#change_channel_name_buttons #change_channel_name_cancel").click ->
-        $(".popup_wrapper").fadeOut "fast"
-        $("#change_channel_name_window").fadeOut "fast"
-    $("#change_channel_name_window #change_channel_name_buttons #change_channel_name_change").click ->
+    $("#change_channel_name_window .submit").click ->
         name = $("#change_channel_name_window #change_channel_name").val()
         manager.change_channel_name(name)
         $(".popup_wrapper").fadeOut "fast"
@@ -95,10 +92,7 @@ $(document).ready ->
         $("#delete_channel_window").fadeIn "fast"
         name = $(@).parent().siblings("span").html()
         $("#delete_channel_window #delete_channel").html(name)
-    $("#delete_channel_buttons #delete_channel_cancel").click ->
-        $(".popup_wrapper").fadeOut "fast"
-        $("#delete_channel_window").fadeOut "fast"
-    $("#delete_channel_window #delete_channel_buttons #delete_channel_delete").click ->
+    $("#delete_channel_window .submit").click ->
         manager.delete_channel()
         $(".popup_wrapper").fadeOut "fast"
         $("#delete_channel_window").fadeOut "fast"    
@@ -109,10 +103,7 @@ $(document).ready ->
         $("#close_channel_window").fadeIn "fast"
         name = $(@).parent().siblings("span").html()
         $("#close_channel_window #close_channel").html(name)
-    $("#close_channel_buttons #close_channel_cancel").click ->
-        $(".popup_wrapper").fadeOut "fast"
-        $("#close_channel_window").fadeOut "fast"
-    $("#close_channel_window #close_channel_buttons #close_channel_close").click ->
+    $("#close_channel_window .submit").click ->
         manager.close_channel()
         $(".popup_wrapper").fadeOut "fast"
         $("#close_channel_window").fadeOut "fast"    
@@ -125,10 +116,7 @@ $(document).ready ->
         $("#newchannel_window #newchannel_name").val("")
         $("#newchannel_window #newchannel_topic").val("")
         $("#newchannel_window #newchannel_public").prop("checked", false)
-    $("#newchannel_buttons #newchannel_cancel").click ->
-        $(".popup_wrapper").fadeOut "fast"
-        $("#newchannel_window").fadeOut "fast"
-    $("#newchannel_window #newchannel_buttons #newchannel_create").click ->
+    $("#newchannel_window .submit").click ->
         name = $("#newchannel_window #newchannel_name").val()
         topic = $("#newchannel_window #newchannel_topic").val()
         is_public = $("#newchannel_window #newchannel_public").is(":checked")
@@ -146,10 +134,7 @@ $(document).ready ->
         $("#invite_window #invite_filter").val("")
         $("#invite_window #selected_preview .select_list ul li").each ->
             $(@).show()
-    $("#invite_buttons #invite_cancel").click ->
-        $(".popup_wrapper").fadeOut "fast"
-        $("#invite_window").fadeOut "fast"
-    $("#invite_buttons #invite_ok").click ->
+    $("#invite_window .submit").click ->
         $(".popup_wrapper").fadeOut "fast"
         $("#invite_window").fadeOut "fast"
         manager.invite_selection()
