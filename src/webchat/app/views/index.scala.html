@@ -1,6 +1,6 @@
-@(username: String)
+@(username: String, admin: Boolean)
 
-@main(username, title = "Webchat") {
+@main(username, title = "Webchat", admin) {
 
     <div id="channel_sidebar">
         <div class="tabbed_navi">
@@ -10,7 +10,7 @@
             </ul>
         </div>
         <div id="channels">
-            <ul></ul>
+            <div class="channels"><ul></ul></div>
             <div class="utils"><a class="newchannel link_button" href="#" >New channel</a></div>
         </div>
         <div id="groups">
@@ -54,7 +54,10 @@
             <fieldset>
                 <legend>Users</legend>
                 <div id="channel_users"></div>
-                <div class="utils"><a class="invite link_button" href="#" >Invite</a></div>
+                <div class="utils">
+                    <a class="invite link_button" href="#" >Invite</a>
+                    <a class="kick link_button" href="#" >Kick</a>
+                </div>
             </fieldset>
         </div>
         <div id="file_info">
@@ -63,8 +66,10 @@
                 <div id="channel_files">
 
                 </div>
-                <iframe src="@routes.Application.upload_form"></iframe>
-                <div class="utils"><a class="upload link_button" href="#" >Upload</a></div>
+
+                <div class="utils">
+                    <iframe src="@routes.Application.upload_form"></iframe>
+                </div>
             </fieldset>
         </div>
     </div>
