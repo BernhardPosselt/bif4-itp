@@ -86,6 +86,17 @@ html, body {
   font-family: dejavusans;
 }
 
+#upload
+{
+    height:50px;
+
+    form
+    {
+        margin:0;
+        padding:0;
+    }
+}
+
 /**
  * Common classes
  */
@@ -100,7 +111,7 @@ input, textarea {
     display: inline-block;
     text-decoration: none;
     border:1px solid #ccc;
-    margin: 5px;
+    margin: 5px 0px;
     padding:3px 10px;
     .grad(#444, #222);
     color:@white1;
@@ -440,13 +451,22 @@ input, textarea {
             #channels {
                 position:absolute;
                 border: 1px solid #aaa;
-                overflow-y: auto;
-                padding:8px;
                 margin:0px 15px;
                 top:25px;
                 left:0;
                 bottom:15px;
                 right:0;
+
+                .channels
+                {
+                    overflow-y:auto;
+                    position:absolute;
+                    padding:8px;
+                    top:0;
+                    left:0;
+                    right:0;
+                    bottom:36px;
+                }
 
                 .heading {
                     padding-bottom:5px;
@@ -457,6 +477,7 @@ input, textarea {
                     bottom: 0;
                     left: 0;
                     right: 0;
+                    padding:0px 5px;
                     border-top: 1px solid #aaa;
                     text-align: right;
                 
@@ -466,6 +487,7 @@ input, textarea {
                     list-style-type: none;
                     margin: 0;
                     padding: 0;
+                    overflow-y:auto;
 
                     li {
                         height: 30px;
@@ -834,7 +856,7 @@ input, textarea {
                         top:20px;
                         left:10px;
                         right:1px;
-                        bottom:35px;
+                        bottom:36px;
                         overflow-y:auto;
                         
                         .users {
@@ -863,7 +885,7 @@ input, textarea {
                         bottom:0;
                         left:0;
                         right:0;
-                        height:35px;
+                        padding:0px 5px;
                         border-top:1px solid #ccc;
                     }
                 }
@@ -902,8 +924,17 @@ input, textarea {
                 bottom:0;
                 left:0;
                 right:0;
-                height:35px;
                 border-top:1px solid #ccc;
+
+
+
+                iframe
+                {
+                    border:0;
+                    position:relative;
+                    width:100%;
+                    height:50px;
+                }
             }
         }
     }

@@ -3,8 +3,15 @@
 @import helper._
 @import helper.twitterBootstrap._
 
-@helper.form(action = routes.Application.upload, 'enctype -> "multipart/form-data") {
+<html>
+    <head>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/style.css")" />
+    </head>
+    <body id="upload">
+    @helper.form(action = routes.Application.upload, 'enctype -> "multipart/form-data") {
 
-        <input type="file" name="uploaded_file" />
-        <input type="submit" value="Upload" />
-}
+            <input type="file" size="15" name="uploaded_file" />
+            <input type="submit" value="Upload" />
+    }
+    </body>
+</html>
