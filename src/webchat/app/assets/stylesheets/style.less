@@ -163,6 +163,7 @@ input, textarea {
         padding:10px;
         width: 100%;
         .box-sizing(border-box);
+        overflow: auto;
     }
     
     .popup_window_buttons {
@@ -183,7 +184,8 @@ input, textarea {
             
         label {
             float:left;
-            width:70px;
+            width:130px;
+            padding-left: 20px;
         }
     }
     
@@ -193,19 +195,29 @@ input, textarea {
  * Popup form for a new channel
  */
 #newchannel_window {
-    width: 380px;
+    width: 450px;
     height:200px;
-    margin-left: -190px;
+    margin-left: -225px;
     margin-top: -60px;
+}
+
+/**
+ * Popup form for editing ones profile
+ */
+#edit_profile_window {
+    width: 450px;
+    height:350px;
+    margin-left: -225px;
+    margin-top: -175px;
 }
 
 /**
  * Popup form for a change topic dialogue
  */
 #change_topic_window {
-    width:  380px;
+    width: 450px;
     height: 300px;
-    margin-left: -190px;
+    margin-left: -225px;
     margin-top: -150px;
     
     textarea {
@@ -219,9 +231,9 @@ input, textarea {
  * Popup form for a delete channel dialogue
  */
 #delete_channel_window {
-    width:  380px;
+    width: 450px;
     height: 200px;
-    margin-left: -190px;
+    margin-left: -225px;
     margin-top: -100px;
 }
 
@@ -230,9 +242,9 @@ input, textarea {
  * Popup form for a close channel dialogue
  */
 #close_channel_window {
-    width:  380px;
+    width: 450px;
     height: 200px;
-    margin-left: -190px;
+    margin-left: -225px;
     margin-top: -100px;
 }
 
@@ -240,9 +252,9 @@ input, textarea {
  * Popup form for a rename channel dialogue
  */
 #change_channel_name_window {
-    width:  380px;
+    width: 450px;
     height: 120px;
-    margin-left: -190px;
+    margin-left: -225px;
     margin-top: -60px;
 }
 

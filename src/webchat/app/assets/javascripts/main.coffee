@@ -108,6 +108,17 @@ $(document).ready ->
         $(".popup_wrapper").fadeOut "fast"
         $("#close_channel_window").fadeOut "fast"    
 
+    # edit profile window
+    $("#edit_profile_link").click ->
+        $(".popup_wrapper").fadeIn "fast"
+        $("#edit_profile_window").fadeIn "fast"
+        #name = $(@).parent().siblings("span").html()
+        #$("#edit_channel_window #close_channel").html(name)
+    $("#edit_profile_window .submit").click ->
+        #manager.close_channel()
+        $(".popup_wrapper").fadeOut "fast"
+        $("#edit_profile_window").fadeOut "fast" 
+
 
     # new channel window
     $("#channel_sidebar #channels .utils .newchannel").click ->
