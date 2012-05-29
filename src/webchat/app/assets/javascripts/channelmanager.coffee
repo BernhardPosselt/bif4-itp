@@ -108,6 +108,7 @@ class ChannelManager
         stream_label.addClass("stream_name")
         stream_name = $("<span>")
         stream_name.html(channel_data.name)
+        stream_name.addClass("name")
         stream_label.append(stream_name)
         # create links for deleting and renaming the channel
         stream_utils = $("<div>")
