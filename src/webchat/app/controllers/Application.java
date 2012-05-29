@@ -34,7 +34,7 @@ public class Application extends Controller {
          if(session("userid") != null) //User logged in
          {
              userid = Integer.parseInt(session("userid"));
-             return ok(index.render(User.getUsername(userid)));
+             return ok(index.render(User.getUsername(userid), User.find.byId(userid).admin));
          }
          else //User doesn't logged in
          {
@@ -127,7 +127,7 @@ public class Application extends Controller {
 	  	    group.save();
 	  	    group.saveManyToManyAssociations("channels");
 	  	    group.saveManyToManyAssociations("users");
-	  	    return ok(index.render("testdata"));
+	  	    return ok(index.render("testdata", false));
 	 }
 	 
 	 

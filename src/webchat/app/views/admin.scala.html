@@ -31,7 +31,8 @@
 
 @main(username, title = "Webchat") {
 
-<h1 id="homeTitle">@Messages("users.list.title", currentPage.getTotalRowCount)</h1>
+<div id="admin_site">
+    <h1>Users</h1>
 
     @if(flash.containsKey("success")) {
         <div class="alert-message warning">
@@ -46,19 +47,19 @@
             <input type="submit" id="searchsubmit" value="Filter by username" class="btn primary">
         </form>
         
-        <a class="btn success" id="add" href="@routes.AdminController.createuser()">Add a new user</a>
+        <a class="btn success link_button" id="add" href="@routes.AdminController.createuser()">Add a new user</a>
         
     </div>
     
     @if(currentPage.getTotalRowCount == 0) {
         
-        <div class="well">
+        <div>
             <em>Nothing to display</em>
         </div>
         
     } else {
         
-        <table class="users zebra-striped">
+        <table>
             <thead>
                 <tr>
                     @header("username", "Username")
@@ -123,7 +124,7 @@
             </tbody>
         </table>
 
-        <div id="pagination" class="pagination">
+        <div class="pagination">
             <ul>
                 @if(currentPage.hasPrev) {
                     <li class="prev">
@@ -150,5 +151,6 @@
         </div>
         
     }
+    </div>
         
 }
