@@ -17,6 +17,7 @@ import websocket.json.in.InInvite;
 import websocket.json.in.InJoin;
 import websocket.json.in.InKick;
 import websocket.json.in.InNewChannel;
+import websocket.json.in.InProfileUpdate;
 import websocket.json.out.ActiveUser;
 import websocket.json.out.Channel;
 import websocket.json.out.File;
@@ -125,6 +126,10 @@ public class WebsocketManager {
         else if (type.equals("channelclose")){
         	int channelid = InChannelClose.closechannel(inmessage);
         	notifyAllMembers(Channel.genChannel("delete", channelid));
+        }
+        else if (type.equals("profileupdate")){
+        	InProfileUpdate.updateprofile(inmessage, userid);
+        	notifyAllMembers(User.genUserchanged(userid, "update"));
         }
         else if (type.equals("filedelete")){
         	
