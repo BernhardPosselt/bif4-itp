@@ -15,6 +15,11 @@ class ChannelManager
         @dom_invite_groups = $ "#invite_window #selected_preview .groups ul"
         @dom_invite_selected_users = $ "#invite_window #invite_selected .users ul"
         @dom_invite_selected_groups = $ "#invite_window #invite_selected .groups ul"
+        # edit profile dom
+        @dom_edit_profile_username = $ "#edit_profile_window #edit_profile_username"
+        @dom_edit_profile_email = $ "#edit_profile_window #edit_profile_email"
+        @dom_edit_profile_first_name = $ "#edit_profile_window #edit_profile_first_name"
+        @dom_edit_profile_last_name = $ "#edit_profile_window #edit_profile_last_name"
         # dom elements which we append
         @dom_reg_channel_list = {}
         @dom_reg_stream = {}
@@ -66,6 +71,17 @@ class ChannelManager
         @rewrite_user_group_dom()
         # create dom for first channel
         @join_first_channel()
+        # put default values into the edit profile form
+        @update_profile_form()
+        
+        
+    update_profile_form: ->
+        user = @user_data[@active_user]
+        @dom_edit_profile_email.val(user.email)
+        @dom_edit_profile_first_name.val(user.prename)
+        @dom_edit_profile_last_name.val(user.lastname)
+        @dom_edit_profile_username.val(user.username)
+        
 
 
     # decides what to do with the input
@@ -678,6 +694,8 @@ class ChannelManager
         @user_data[id] = data
         @rewrite_user_group_dom()
         @update_user_dom(id, data)
+        if @active_user != undefined
+            @update_profile_form()
         
     # updates the dom for a user
     update_user_dom: (id, data) ->
