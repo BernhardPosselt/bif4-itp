@@ -82,7 +82,8 @@ public class Application extends Controller {
             new_file.channels.add(models.Channel.find.byId(channelid));
             new_file.save();
             new_file.saveManyToManyAssociations("channels");
-            websocket.WebsocketManager.notifyAllMembers(websocket.json.out.File.gennewFile(new_file, channelid));
+            websocket.WebsocketManager.notifyAllMembers(websocket.json.out.File.gennewFile(new_file));
+            websocket.WebsocketManager.notifyAllMembers(websocket.json.out.Channel.genChannel("update", channelid));
             return ok(upload.render(form(models.File.class)));
         }
         else

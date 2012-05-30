@@ -36,12 +36,11 @@ public class File {
 				fdata.owner_id = dbfile.uid.id;
 				fdata.size = dbfile.size;
 				fdata.type = dbfile.type;
-				fdata.channels.add(channelid);
 				file.actions.put(dbfile.id, action);
 				file.data.put(dbfile.id, fdata);
 				
 			}
-			JSONSerializer fser = new JSONSerializer().include("*.actions", "*.data", "*.channels");
+			JSONSerializer fser = new JSONSerializer().include("*.actions", "*.data");
 			json = fser.exclude("*.class").serialize(file);
 			} 
 		catch (JSONException e) {	 
@@ -50,7 +49,7 @@ public class File {
 		return Json.parse(json);
 	}
 	
-	public static JsonNode gennewFile(models.File dbfile, int channelid){
+	public static JsonNode gennewFile(models.File dbfile){
 		String json = "";
 		File file = new File();
 		file.init = false;
@@ -63,11 +62,10 @@ public class File {
 			fdata.owner_id = dbfile.uid.id;
 			fdata.size = dbfile.size;
 			fdata.type = dbfile.type;
-			fdata.channels.add(channelid);
 			file.actions.put(dbfile.id, "create");
 			file.data.put(dbfile.id, fdata);
 				
-			JSONSerializer fser = new JSONSerializer().include("*.actions", "*.data", "*.channels");
+			JSONSerializer fser = new JSONSerializer().include("*.actions", "*.data");
 			json = fser.exclude("*.class").serialize(file);
 			} 
 		catch (JSONException e) {	 
