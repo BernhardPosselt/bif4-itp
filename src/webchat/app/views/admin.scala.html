@@ -31,6 +31,7 @@
 
 @main(username, title = "Webchat") {
 
+<div id="admin_users">
 <h1 id="homeTitle">@Messages("users.list.title", currentPage.getTotalRowCount)</h1>
 
     @if(flash.containsKey("success")) {
@@ -46,7 +47,7 @@
             <input type="submit" id="searchsubmit" value="Filter by username" class="btn primary">
         </form>
         
-        <a class="btn success" id="add" href="@routes.AdminController.createuser()">Add a new user</a>
+        <a class="btn success link_button" id="add" href="@routes.AdminController.createuser()">Add a new user</a>
         
     </div>
     
@@ -150,5 +151,6 @@
         </div>
         
     }
+    </div>
         
 }
