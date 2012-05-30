@@ -113,6 +113,7 @@ public class Application extends Controller {
 	  	    channel1.save();
 	  	    
 	  	    channel1.setUsers(user);
+	  	    channel1.setUsers(user1);
 	  	    channel1.saveManyToManyAssociations("users");
 	  	   
 	  	    channel.setUsers(user); 
