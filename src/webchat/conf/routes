@@ -39,14 +39,12 @@ POST    /admin/user/:id/delete       controllers.AdminController.deleteuser(id:L
 
 GET /Testdata controllers.Application.filltestdata()
 
-# WebSocket
-GET /WebSocket controllers.WebSocketTestController.index()
-
+#WebSocket
 GET /websocket controllers.Application.websocket()
 
-# Json
+# Json Testmessages
 GET /Json/Channels controllers.JsonTestController.genAuth()
-GET /Json/Message controllers.JsonTestController.genMessage()
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET /assets/*file controllers.Assets.at(path="/public", file)

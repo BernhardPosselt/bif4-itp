@@ -84,7 +84,7 @@ public class WebsocketManager {
         }
         else if (type.equals("join")){
         	int channelid = InJoin.getchannel(inmessage);
-        	//notifyAllMembers(File.genjoinFile(userid, "create", true, channelid));
+        	out.write(File.genjoinFile(channelid));
         	out.write(Message.genjoinMessage(channelid));
         	
         }

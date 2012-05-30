@@ -8,4 +8,5 @@ public class FileData {
 	public double size;
 	public int owner_id;
 	public Date modified;
+	public List<Integer> channels = new ArrayList<Integer>();
 }
