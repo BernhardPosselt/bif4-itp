@@ -68,6 +68,7 @@ public class Application extends Controller {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
 
+            //Save file to database
             models.File new_file = new models.File();
             new_file.name = filename;
             new_file.type = contentType;
@@ -122,6 +123,7 @@ public class Application extends Controller {
 	  	    channel1.save();
 	  	    
 	  	    channel1.setUsers(user);
+	  	    channel1.setUsers(user1);
 	  	    channel1.saveManyToManyAssociations("users");
 	  	   
 	  	    channel.setUsers(user); 
