@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
 import com.google.common.io.Files;
@@ -12,13 +13,11 @@ import play.mvc.*;
 import views.html.*;
 import websocket.WebsocketManager;
 
-//import java.nio.channels.MembershipKey;
 import play.mvc.Controller;
 
 import org.codehaus.jackson.JsonNode;
 
 import models.*;
-import java.io.*;
 import java.util.UUID;
 
 import static com.google.common.io.Files.copy;
@@ -71,7 +70,7 @@ public class Application extends Controller {
             }
 
             //Save file to database
-
+            int channelid = 1; //Just for testing
             models.File new_file = new models.File();
             new_file.name = filename;
             new_file.filename = unqName;
@@ -79,8 +78,10 @@ public class Application extends Controller {
             new_file.date = DateTime.now().toDate();
             new_file.uid = User.find.byId(Integer.valueOf(session("userid")));
             new_file.size = dest.length();
+            new_file.channels.add(models.Channel.find.byId(channelid));
             new_file.save();
-
+            new_file.saveManyToManyAssociations("channels");
+            websocket.WebsocketManager.notifyAllMembers(websocket.json.out.File.gennewFile(new_file, channelid));
             return ok(upload.render(form(models.File.class)));
         }
         else

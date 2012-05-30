@@ -43,7 +43,7 @@ public class File extends Model {
 	
 	public static List<File> getChannelFiles (int channelid){
 		List<File> files = new ArrayList<File>();
-		files = find.where().eq("channels.id", String.valueOf(channelid)).findList();
+		files = find.where().eq("channels.id", channelid).findList();
 		return files;
 	}
 	

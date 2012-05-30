@@ -26,15 +26,6 @@ public class JsonTestController extends Controller {
 		return ok(json);
 	}
 
-	public static Result genMessage() {
-		JsonNode json = null;
-		try {
-			json = File.genjoinFile(2, "create", true, 2);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return ok(json);
-	}
 
 	public static Result genGroup() {
 		int userid = 1;

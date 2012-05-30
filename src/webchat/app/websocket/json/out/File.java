@@ -20,8 +20,9 @@ public class File {
 		this.type = "file";
 	}
 	
-	public static JsonNode genjoinFile(int userid, String action, Boolean init, int channelid){
-		String json = "";
+	public static JsonNode genjoinFile(int channelid){
+		String json = "", action = "create";
+		Boolean init = true;
 		File file = new File();
 		file.init = init;
 		try{
@@ -35,12 +36,38 @@ public class File {
 				fdata.owner_id = dbfile.uid.id;
 				fdata.size = dbfile.size;
 				fdata.type = dbfile.type;
-			
+				fdata.channels.add(channelid);
 				file.actions.put(dbfile.id, action);
 				file.data.put(dbfile.id, fdata);
 				
 			}
-			JSONSerializer fser = new JSONSerializer().include("*.actions", "*.data");
+			JSONSerializer fser = new JSONSerializer().include("*.actions", "*.data", "*.channels");
+			json = fser.exclude("*.class").serialize(file);
+			} 
+		catch (JSONException e) {	 
+			 e.printStackTrace();
+		}
+		return Json.parse(json);
+	}
+	
+	public static JsonNode gennewFile(models.File dbfile, int channelid){
+		String json = "";
+		File file = new File();
+		file.init = false;
+		try{
+			
+			
+			FileData fdata = new FileData();
+			fdata.modified = dbfile.date;
+			fdata.name = dbfile.name;
+			fdata.owner_id = dbfile.uid.id;
+			fdata.size = dbfile.size;
+			fdata.type = dbfile.type;
+			fdata.channels.add(channelid);
+			file.actions.put(dbfile.id, "create");
+			file.data.put(dbfile.id, fdata);
+				
+			JSONSerializer fser = new JSONSerializer().include("*.actions", "*.data", "*.channels");
 			json = fser.exclude("*.class").serialize(file);
 			} 
 		catch (JSONException e) {	 
