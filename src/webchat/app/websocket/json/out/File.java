@@ -13,8 +13,8 @@ import flexjson.JSONSerializer;
 public class File {
 	public final String type;
 	public Boolean init;
-	public Map<Integer,String> actions = new HashMap<Integer,String>();
-	public Map<Integer,FileData> data = new HashMap<Integer,FileData>();
+	public LinkedHashMap<Integer,String> actions = new LinkedHashMap<Integer,String>();
+	public LinkedHashMap<Integer,FileData> data = new LinkedHashMap<Integer,FileData>();
 	
 	public File(){
 		this.type = "file";

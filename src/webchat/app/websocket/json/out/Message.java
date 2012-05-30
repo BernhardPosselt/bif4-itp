@@ -19,9 +19,9 @@ import flexjson.JSONSerializer;
 
 public class Message {
 	public final String type;
-	public Map<Integer, Map<Integer, MessageData>> data = new HashMap<Integer, Map<Integer, MessageData>>();
+	public Map<Integer, Map<Integer, MessageData>> data = new LinkedHashMap<Integer, Map<Integer, MessageData>>();
 	public Boolean init;
-	public Map<Integer, String> actions = new HashMap<Integer, String>();
+	public Map<Integer, String> actions = new LinkedHashMap<Integer, String>();
 
 	public Message() {
 		this.type = "message";
