@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.google.common.io.Files;
 import org.h2.util.IOUtils;
+import org.joda.time.DateTime;
 import play.Logger;
 import play.mvc.*;
 import scalax.io.support.FileUtils;
@@ -66,6 +67,14 @@ public class Application extends Controller {
             } catch (IOException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
+
+            models.File new_file = new models.File();
+            new_file.name = filename;
+            new_file.type = contentType;
+            new_file.date = DateTime.now().toDate();
+            new_file.uid = User.find.byId(Integer.valueOf(session("userid")));
+            new_file.size = dest.length();
+            new_file.save();
 
             return ok(upload.render(form(models.File.class)));
         }
