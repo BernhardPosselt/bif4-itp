@@ -15,6 +15,7 @@ create table channel (
 create table file (
   id                        integer not null,
   name                      varchar(255),
+  filename                  varchar(255),
   type                      varchar(255),
   size                      double,
   date                      timestamp,

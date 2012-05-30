@@ -4,11 +4,11 @@ import java.io.File;
 import java.util.Date;
 
 import com.google.common.io.Files;
-import org.h2.util.IOUtils;
+
 import org.joda.time.DateTime;
 import play.Logger;
+
 import play.mvc.*;
-import scalax.io.support.FileUtils;
 import views.html.*;
 import websocket.WebsocketManager;
 
@@ -19,6 +19,7 @@ import org.codehaus.jackson.JsonNode;
 
 import models.*;
 import java.io.*;
+import java.util.UUID;
 
 import static com.google.common.io.Files.copy;
 
@@ -59,8 +60,9 @@ public class Application extends Controller {
             String filename = uploaded_file.getFilename();
             String contentType = uploaded_file.getContentType();
 
+            String unqName = UUID.randomUUID().toString();
             File file = uploaded_file.getFile();
-            File dest = new File(play.Play.application().path().toString() + "/files/" + filename);
+            File dest = new File(play.Play.application().path().toString() + "/files/" + unqName);
 
             try {
                 Files.copy(file, dest);
@@ -69,8 +71,10 @@ public class Application extends Controller {
             }
 
             //Save file to database
+
             models.File new_file = new models.File();
             new_file.name = filename;
+            new_file.filename = unqName;
             new_file.type = contentType;
             new_file.date = DateTime.now().toDate();
             new_file.uid = User.find.byId(Integer.valueOf(session("userid")));

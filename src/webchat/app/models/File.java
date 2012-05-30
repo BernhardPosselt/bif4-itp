@@ -18,6 +18,9 @@ public class File extends Model {
 	
 	@Constraints.Required
 	public String name;
+
+    @Constraints.Required
+    public String filename;
 	
 	@Constraints.Required
 	public String type;
