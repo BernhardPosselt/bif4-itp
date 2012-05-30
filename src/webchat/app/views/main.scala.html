@@ -1,4 +1,4 @@
-@(username: String, title: String)(content: Html)
+@(username: String, title: String, admin: Boolean = false)(content: Html)
 
 <!DOCTYPE html>
 
@@ -57,8 +57,10 @@
                 }
                 </div>
                 <ul>
-                    <li><a href="">Settings</a></li>
-                    <li><a href="@routes.ProfileController.edit">Profile</a> </li>
+                    @if(admin == true) {
+                        <li><a href="@routes.AdminController.index">Admin</a></li>
+                    }
+                    <li><a href="#" id="edit_profile_link">Profile</a> </li>
                     <li><a href="@routes.LoginController.logout">Logout</a></li>
                 </ul>
             </nav>

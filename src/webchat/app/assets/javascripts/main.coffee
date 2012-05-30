@@ -42,7 +42,9 @@ $(document).ready ->
             $(".popup_window:visible").fadeOut "fast"
             $(".popup_wrapper:visible").fadeOut "fast"
         if e.keyCode == keycodes.enter
-            $(".popup_window:visible .submit").trigger("click")
+            $(".popup_window:visible .submit").each ->
+                if $(@).attr("disabled") != "disabled"
+                    $(@).trigger "click"
             
     # function to submit
     submit = () ->
@@ -108,6 +110,40 @@ $(document).ready ->
         $(".popup_wrapper").fadeOut "fast"
         $("#close_channel_window").fadeOut "fast"    
 
+    # edit profile window
+    $("#edit_profile_link").click ->
+        $(".popup_wrapper").fadeIn "fast"
+        $("#edit_profile_window").fadeIn "fast"
+    $("#edit_profile_window .submit").click ->
+        data = {}
+        data.username = $("#edit_profile_window #edit_profile_username").val()
+        data.prename = $("#edit_profile_window #edit_profile_first_name").val()
+        data.lastname = $("#edit_profile_window #edit_profile_last_name").val()
+        data.password = $("#edit_profile_window #edit_profile_password").val()
+        data.repeat_password = $("#edit_profile_window #edit_profile_password_repeat").val()
+        data.email = $("#edit_profile_window #edit_profile_email").val()
+        manager.update_profile(data)
+        $(".popup_wrapper").fadeOut "fast"
+        $("#edit_profile_window").fadeOut "fast" 
+    # check password match
+    $("#edit_profile_window #edit_profile_password").keyup ->
+        if $(@).val() == $("#edit_profile_window #edit_profile_password_repeat").val()
+            $(@).removeClass("wrong")
+            $("#edit_profile_window #edit_profile_password_repeat").removeClass("wrong")
+            $("#edit_profile_window .submit").removeAttr("disabled")
+        else
+            $(@).addClass("wrong")
+            $("#edit_profile_window #edit_profile_password_repeat").addClass("wrong")
+            $("#edit_profile_window .submit").attr("disabled", "disabled")
+    $("#edit_profile_window #edit_profile_password_repeat").keyup ->
+        if $(@).val() == $("#edit_profile_window #edit_profile_password").val()
+            $(@).removeClass("wrong")
+            $("#edit_profile_window #edit_profile_password").removeClass("wrong")
+            $("#edit_profile_window .submit").removeAttr("disabled")
+        else
+            $(@).addClass("wrong")
+            $("#edit_profile_window #edit_profile_password").addClass("wrong")
+            $("#edit_profile_window .submit").attr("disabled", "disabled")
 
     # new channel window
     $("#channel_sidebar #channels .utils .newchannel").click ->

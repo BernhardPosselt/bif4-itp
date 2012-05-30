@@ -94,9 +94,9 @@ public class Message {
 			Message m = new Message();
 			Map<Integer, MessageData> mdata = new HashMap<Integer, MessageData>();
 			m.init = true;
-			for (Iterator<models.Message> mit = models.Message.getallChannelMessages(channelid).iterator(); mit.hasNext();){
+			for (Iterator<models.Message> miter = models.Message.getallChannelMessages(channelid).iterator(); miter.hasNext();){
 				models.Message dbmessage = new models.Message();
-				dbmessage = mit.next();
+				dbmessage = miter.next();
 				MessageData md = new MessageData();
 				md.date = dbmessage.date;
 				md.message = StringEscapeUtils.escapeHtml(dbmessage.content);

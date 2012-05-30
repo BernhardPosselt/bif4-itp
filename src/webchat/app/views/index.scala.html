@@ -1,6 +1,6 @@
-@(username: String)
+@(username: String, admin: Boolean)
 
-@main(username, title = "Webchat") {
+@main(username, title = "Webchat", admin) {
 
     <div id="channel_sidebar">
         <div class="tabbed_navi">
@@ -10,7 +10,7 @@
             </ul>
         </div>
         <div id="channels">
-            <ul></ul>
+            <div class="channels"><ul></ul></div>
             <div class="utils"><a class="newchannel link_button" href="#" >New channel</a></div>
         </div>
         <div id="groups">
@@ -54,7 +54,10 @@
             <fieldset>
                 <legend>Users</legend>
                 <div id="channel_users"></div>
-                <div class="utils"><a class="invite link_button" href="#" >Invite</a></div>
+                <div class="utils">
+                    <a class="invite link_button" href="#" >Invite</a>
+                    <a class="kick link_button" href="#" >Kick</a>
+                </div>
             </fieldset>
         </div>
         <div id="file_info">
@@ -63,8 +66,10 @@
                 <div id="channel_files">
 
                 </div>
-                <iframe src="@routes.Application.upload_form"></iframe>
-                <div class="utils"><a class="upload link_button" href="#" >Upload</a></div>
+
+                <div class="utils">
+                    <iframe src="@routes.Application.upload_form"></iframe>
+                </div>
             </fieldset>
         </div>
     </div>
@@ -107,13 +112,48 @@
         </div>
     </div>
 
+    <!-- Edit profile form form -->
+    <div id="edit_profile_window" class="popup_window">
+        <div class="popup_window_title">Edit profile</div>
+        <div class="popup_window_content">
+            <div class="field">
+                <label for="edit_profile_username">Username:</label>
+                <input type="text" id="edit_profile_username" name="edit_profile_username" />
+            </div>
+            <div class="field">
+                <label for="edit_profile_password">Password:</label>
+                <input type="password" id="edit_profile_password" name="edit_profile_password" />
+            </div>
+            <div class="field">
+                <label for="edit_profile_password_repeat">Repeat Password:</label>
+                <input type="password" id="edit_profile_password_repeat" name="edit_profile_password_repeat" />
+            </div>
+            <div class="field">
+                <label for="edit_profile_email">E-Mail:</label>
+                <input type="text" id="edit_profile_email" name="edit_profile_email" />
+            </div>         
+            <div class="field">
+                <label for="edit_profile_first_name">First Name:</label>
+                <input type="text" id="edit_profile_first_name" name="edit_profile_first_name" />
+            </div>
+            <div class="field">
+                <label for="edit_profile_last_name">Last Name:</label>
+                <input type="text" id="edit_profile_last_name" name="edit_profile_last_name" />
+            </div>               
+        </div>
+        <div class="popup_window_buttons">
+              <input class="cancel" type="button" value="Cancel"/>
+              <input class="submit" type="button" value="Save"/>
+        </div>
+    </div>
+
     <!-- Change topic form -->
     <div id="change_topic_window" class="popup_window">
         <div class="popup_window_title">Change topic</div>
         <div class="popup_window_content">
             <div class="field">
                 <label for="change_topic">Topic:</label>
-                <textarea id="change_topic" name="change_topic" /></textarea>
+                <textarea id="change_topic" name="change_topic" ></textarea>
             </div>
         </div>
         <div class="popup_window_buttons">

@@ -227,3 +227,16 @@ class MainManager
             data:
                 channel: channel_id
         @send_websocket(message)
+        
+    # updates the profile
+    # args: the json data array with the values set
+    update_profile: (args) ->
+        message =
+            type: "profileupdate"
+            data:
+                username: args.username
+                prename: args.prename
+                lastname: args.lastname
+                password: args.password
+                email: args.email
+        @send_websocket(message)
