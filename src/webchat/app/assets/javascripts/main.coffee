@@ -199,4 +199,4 @@ $(document).ready ->
                 $(@).show()
             else
                 $(@).hide()
-        
+
