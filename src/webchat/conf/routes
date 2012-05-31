@@ -8,6 +8,7 @@ GET / controllers.Application.index()
 #Upload
 GET /upload controllers.Application.upload_form()
 POST /upload controllers.Application.upload()
+GET /download/:id controllers.Application.download_file(id: Integer)
 
 #Login
 GET /login controllers.LoginController.login()

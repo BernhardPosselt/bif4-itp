@@ -49,6 +49,16 @@ public class Application extends Controller {
         return ok(upload.render(form(models.File.class)));
     }
 
+    public static Result download_file(Integer file_id)
+    {
+        models.File tmp = models.File.find.byId(file_id);
+
+        File download = new File(play.Play.application().path().toString() + "/files/" + tmp.filename);
+
+        return ok(download);
+    }
+
+
     public static Result upload()
     {
         Http.MultipartFormData body =  request().body().asMultipartFormData();
