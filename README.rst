@@ -47,10 +47,9 @@ It will ask you to generate the database in your memory. After this you can log 
 
   http://localhost:9000/
 
-The Testusers are
+The Testusers are::
 
-USER:PASSWORD
-
+  USER:PASSWORD
   MasterLindi:test
   Glembo:test
 
