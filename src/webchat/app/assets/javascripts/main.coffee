@@ -125,25 +125,42 @@ $(document).ready ->
         manager.update_profile(data)
         $(".popup_wrapper").fadeOut "fast"
         $("#edit_profile_window").fadeOut "fast" 
+
     # check password match
     $("#edit_profile_window #edit_profile_password").keyup ->
-        if $(@).val() == $("#edit_profile_window #edit_profile_password_repeat").val()
-            $(@).removeClass("wrong")
-            $("#edit_profile_window #edit_profile_password_repeat").removeClass("wrong")
-            $("#edit_profile_window .submit").removeAttr("disabled")
+        if password_check($("#edit_profile_password"), $("#edit_profile_password_repeat"))
+            allow_submit($("#edit_profile_window .submit"), true)
         else
-            $(@).addClass("wrong")
-            $("#edit_profile_window #edit_profile_password_repeat").addClass("wrong")
-            $("#edit_profile_window .submit").attr("disabled", "disabled")
+            allow_submit($("#edit_profile_window .submit"), false)
     $("#edit_profile_window #edit_profile_password_repeat").keyup ->
-        if $(@).val() == $("#edit_profile_window #edit_profile_password").val()
-            $(@).removeClass("wrong")
-            $("#edit_profile_window #edit_profile_password").removeClass("wrong")
-            $("#edit_profile_window .submit").removeAttr("disabled")
+        if password_check($("#edit_profile_password"), $("#edit_profile_password_repeat"))
+            allow_submit($("#edit_profile_window .submit"), true)
         else
-            $(@).addClass("wrong")
-            $("#edit_profile_window #edit_profile_password").addClass("wrong")
-            $("#edit_profile_window .submit").attr("disabled", "disabled")
+            allow_submit($("#edit_profile_window .submit"), false)
+
+    # checks the input field for a password and its repeat field and adds or
+    # removes the class no_match accordingly
+    # input: the input html element with the password
+    # repeat_input: the input html for the repeated password
+    # return: true if matches, false if not
+    password_check = (input, repeat_input) ->
+        if input.val() == repeat_input.val()
+            input.removeClass("no_match")
+            repeat_input.removeClass("no_match")
+            return true
+        else
+            input.removeClass("no_match")
+            repeat_input.removeClass("no_match")
+            return false
+    
+    # enables a submit buttons and submit by hitting enter or disables it
+    # submit_button: the button html element which submits the data
+    # enabled: if true, the button will be enabled, false disables him        
+    allow_submit = (submit_button, enabled) ->
+        if enabled
+            submit_button.removeAttr("disabled")
+        else
+            submit_button.attr("disabled", "disabled")
 
     # new channel window
     $("#channel_sidebar #channels .utils .newchannel").click ->

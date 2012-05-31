@@ -759,11 +759,12 @@ class ChannelManager
         files_ul = @dom_reg_stream_sidebar_files[channel_id].children("ul")
         files_ul.empty()
         last_date = undefined
-        for file_id in @channel_data[channel_id].files
+        files = @channel_data[channel_id].files.reverse()
+        for file_id in files
             file_id += ""
             file = @file_data[file_id]
             # group files under the same day
-            post_date = @_format_timestamp_to_date(file.modified) + @_format_timestamp_to_time(file.modified)
+            post_date = @_format_timestamp_to_date(file.modified) # + @_format_timestamp_to_time(file.modified)
             if last_date == undefined or last_date != post_date
                 last_date = post_date
                 date_entry = $("<li>")
@@ -771,10 +772,10 @@ class ChannelManager
                 date = $("<span>")
                 date.addClass("date")
                 date.html(@_format_timestamp_to_date(file.modified))
-                time = $("<span>")
-                time.addClass("time")
-                time.html(@_format_timestamp_to_time(file.modified))
-                date_entry.append(time)
+                #time = $("<span>")
+                #time.addClass("time")
+                #time.html(@_format_timestamp_to_time(file.modified))
+                #date_entry.append(time)
                 date_entry.append(date)
                 files_ul.append(date_entry)
             list_entry = $("<li>")
@@ -930,19 +931,22 @@ class ChannelManager
         return (string+'').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")
         
     # returns kilobyte to a human readable format
-    _kb_to_human_readable: (kilobytes, precision) ->
-        megabyte = 1024;
+    _kb_to_human_readable: (bytes, precision) ->
+        kilobyte = 1024
+        megabyte = kilobyte * 1024;
         gigabyte = megabyte * 1024;
         terabyte = gigabyte * 1024;
-   
-        if kilobytes >= megabyte and kilobytes < gigabyte
-            return (kilobytes / megabyte).toFixed(precision) + ' MB'
-        else if kilobytes >= gigabyte and kilobytes < terabyte
-            return (kilobytes / gigabyte).toFixed(precision) + ' GB'
-        else if kilobytes >= terabyte
-            return (kilobytes / terabyte).toFixed(precision) + ' TB'
+
+        if bytes >= kilobyte and bytes < gigabyte
+            return (bytes / kilobyte).toFixed(precision) + ' KB'   
+        if bytes >= megabyte and bytes < gigabyte
+            return (bytes / megabyte).toFixed(precision) + ' MB'
+        else if bytes >= gigabyte and bytes < terabyte
+            return (bytes / gigabyte).toFixed(precision) + ' GB'
+        else if bytes >= terabyte
+            return (bytes / terabyte).toFixed(precision) + ' TB'
         else
-            return kilobytes + ' KB'
+            return bytes + ' B'
             
             
 
