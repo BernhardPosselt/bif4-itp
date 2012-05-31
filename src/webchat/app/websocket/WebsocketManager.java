@@ -116,7 +116,10 @@ public class WebsocketManager {
         }
         else if (type.equals("channelname")){
         	int channelid = InChannelName.changechannelname(inmessage);
-        	notifyAllMembers(Channel.genChannel("update", channelid));
+        	if (channelid == -1)
+        		notifyAllMembers(Status.genStatus("fail", "Could not change Channelname; Channelname already exists!"));
+        	else
+        		notifyAllMembers(Channel.genChannel("update", channelid));
         }
         else if (type.equals("channeldelete")){
         	int channelid = inmessage.findPath("channel").asInt();
@@ -128,14 +131,20 @@ public class WebsocketManager {
         	notifyAllMembers(Channel.genChannel("delete", channelid));
         }
         else if (type.equals("profileupdate")){
-        	InProfileUpdate.updateprofile(inmessage, userid);
-        	notifyAllMembers(User.genUserchanged(userid, "update"));
+        	JsonNode error = InProfileUpdate.updateprofile(inmessage, userid);
+        	if (!error.isNull())
+        		out.write(error);
+        	else
+        		notifyAllMembers(User.genUserchanged(userid, "update"));
         }
         else if (type.equals("filedelete")){
         	
         }
+        else if (type.equals("ping")){
+        	
+        }
         else{
-            //Fehler
+            out.write(Status.genStatus("critical", "Unknown type of InMessage!"));
         }
 
     }

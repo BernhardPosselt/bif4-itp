@@ -1,6 +1,7 @@
 package websocket.json.out;
 
 import org.codehaus.jackson.JsonNode;
+import java.util.Map;
 
 import play.libs.Json;
 import flexjson.JSONException;
@@ -12,6 +13,7 @@ public class Status {
 
 	public Status() {
 		this.type = "status";
+		this.data = new StatusData();
 	}
 
 	public static JsonNode genStatus(String level, String msg) {
