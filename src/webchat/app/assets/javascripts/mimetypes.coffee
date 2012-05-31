@@ -9,6 +9,7 @@ class MimeTypes
         @mimetypes = 
             "application/pdf": "application-pdf.png"
             "text/xml": "text-xml.png"
+            "text/x-python": "text-x-python.png"
         
     get_mimetype_icon_path: (key) ->
         full_path = @path + @mimetypes[key]

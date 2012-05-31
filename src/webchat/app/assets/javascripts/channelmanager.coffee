@@ -783,8 +783,7 @@ class ChannelManager
             file_name = $("<a>")
             file_name.addClass("name")
             file_name.html(file.name)
-            # TODO: add link to the file
-            file_name.attr("href", "#")
+            file_name.attr("href", "/download/" + file_id)
             file_size = $("<span>")
             file_size.addClass("size")
             file_size.html(@_kb_to_human_readable(file.size, 2))
