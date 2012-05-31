@@ -45,6 +45,7 @@ public class Application extends Controller {
 
     public static Result upload_form()
     {
+        session("channelid", request().uri().substring(19));
         return ok(upload.render(form(models.File.class)));
     }
 
@@ -70,7 +71,7 @@ public class Application extends Controller {
             }
 
             //Save file to database
-            int channelid = 1; //Just for testing
+            int channelid = Integer.valueOf(session("channelid"));
             models.File new_file = new models.File();
             new_file.name = filename;
             new_file.filename = unqName;
@@ -81,12 +82,13 @@ public class Application extends Controller {
             new_file.channels.add(models.Channel.find.byId(channelid));
             new_file.save();
             new_file.saveManyToManyAssociations("channels");
-            websocket.WebsocketManager.notifyAllMembers(websocket.json.out.File.gennewFile(new_file, channelid));
+            websocket.WebsocketManager.notifyAllMembers(websocket.json.out.File.gennewFile(new_file));
+            websocket.WebsocketManager.notifyAllMembers(websocket.json.out.Channel.genChannel("update", channelid));
             return ok(upload.render(form(models.File.class)));
         }
         else
         {
-            return redirect(routes.Application.upload_form());
+            return badRequest(upload.render(form(models.File.class)));
         }
     }
 	 

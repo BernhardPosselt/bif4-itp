@@ -85,8 +85,8 @@ public class WebsocketManager {
         else if (type.equals("join")){
         	int channelid = InJoin.getchannel(inmessage);
         	out.write(File.genjoinFile(channelid));
+        	out.write(Channel.genChannel("update", channelid));
         	out.write(Message.genjoinMessage(channelid));
-        	
         }
         else if (type.equals("invite")){
         	int channelid  = inmessage.findPath("channel").asInt();

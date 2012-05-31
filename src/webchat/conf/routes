@@ -43,7 +43,7 @@ GET /Testdata controllers.Application.filltestdata()
 GET /websocket controllers.Application.websocket()
 
 # Json Testmessages
-GET /Json/Channels controllers.JsonTestController.genAuth()
+GET /Json/Auth controllers.JsonTestController.genAuth()
 
 
 # Map static resources from the /public folder to the /assets URL path
