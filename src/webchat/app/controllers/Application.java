@@ -45,6 +45,7 @@ public class Application extends Controller {
 
     public static Result upload_form()
     {
+        session("channelid", request().uri().substring(19));
         return ok(upload.render(form(models.File.class)));
     }
 
@@ -70,7 +71,7 @@ public class Application extends Controller {
             }
 
             //Save file to database
-            int channelid = 1; //Just for testing
+            int channelid = Integer.valueOf(session("channelid"));
             models.File new_file = new models.File();
             new_file.name = filename;
             new_file.filename = unqName;
@@ -86,7 +87,7 @@ public class Application extends Controller {
         }
         else
         {
-            return redirect(routes.Application.upload_form());
+            return badRequest(upload.render(form(models.File.class)));
         }
     }
 	 
