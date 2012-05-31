@@ -19,7 +19,7 @@ public class JsonTestController extends Controller {
 	public static Result genAuth() {
 		JsonNode json = null;
 		try {
-			json = Message.genjoinMessage(1);
+			json = File.genjoinFile(1);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
