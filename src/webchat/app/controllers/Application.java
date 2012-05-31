@@ -75,6 +75,9 @@ public class Application extends Controller {
             File file = uploaded_file.getFile();
             File dest = new File(play.Play.application().path().toString() + "/files/" + unqName);
 
+            Logger.info(file.getAbsolutePath());
+            Logger.info(dest.getAbsolutePath());
+
             try {
                 Files.copy(file, dest);
             } catch (IOException e) {
@@ -89,7 +92,7 @@ public class Application extends Controller {
             new_file.type = contentType;
             new_file.date = DateTime.now().toDate();
             new_file.uid = User.find.byId(Integer.valueOf(session("userid")));
-            new_file.size = dest.length();
+            new_file.size = file.length();
             new_file.channels.add(models.Channel.find.byId(channelid));
             new_file.save();
             new_file.saveManyToManyAssociations("channels");
@@ -99,6 +102,7 @@ public class Application extends Controller {
         }
         else
         {
+            flash("error", "Missing file");
             return badRequest(upload.render(form(models.File.class)));
         }
     }
