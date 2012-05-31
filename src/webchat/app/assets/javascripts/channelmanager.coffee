@@ -15,6 +15,7 @@ class ChannelManager
         @dom_invite_groups = $ "#invite_window #selected_preview .groups ul"
         @dom_invite_selected_users = $ "#invite_window #invite_selected .users ul"
         @dom_invite_selected_groups = $ "#invite_window #invite_selected .groups ul"
+        @dom_upload_iframe = $ "#info_sidebar #file_info iframe"
         # edit profile dom
         @dom_edit_profile_username = $ "#edit_profile_window #edit_profile_username"
         @dom_edit_profile_email = $ "#edit_profile_window #edit_profile_email"
@@ -281,6 +282,8 @@ class ChannelManager
             @dom_reg_stream_sidebar_files[active_channel_id].fadeOut "fast", =>
                 @dom_reg_stream_sidebar_files[channel_id].fadeIn "fast"
         @active_channel = channel_id            
+        # set channel get parameter for upload form src
+        @dom_upload_iframe.attr("src", "/upload?channel_id=" + @active_channel)
         console.log("joined channel " + @channel_data[@active_channel].name)
     
     
