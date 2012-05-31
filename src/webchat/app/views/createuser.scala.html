@@ -16,7 +16,8 @@
 	        @inputText(userForm("firstname"), '_label -> "First name")
             @inputText(userForm("lastname"), '_label -> "Last name")
             @inputText(userForm("email"), '_label -> "E-Mail")
-            @checkbox(userForm("admin"), '_label -> "Admin")
+            @checkbox(userForm("admin"))
+            @checkbox(userForm("active"))
 
         </fieldset>
         
@@ -27,4 +28,4 @@
         
     }
     
-}
+} 

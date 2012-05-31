@@ -53,13 +53,15 @@ public class User extends Model {
 	public String lastname;
 
 	public Boolean online;
+	
+	public Boolean active;
 
 	public Boolean admin;
 	
 	@Formats.DateTime(pattern = "dd-MM-yyyy HH:mm:ss")
 	public Date lastlogin;
 
-	@ManyToMany(mappedBy="users")
+	@ManyToMany(mappedBy="users", cascade=CascadeType.ALL)
 	public List<Channel> channels;
 	
 	@ManyToMany(cascade=CascadeType.ALL)
