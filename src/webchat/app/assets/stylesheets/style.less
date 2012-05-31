@@ -88,12 +88,48 @@ html, body {
 
 #upload
 {
-    height:50px;
+    height:40px;
+
 
     form
     {
+        height:40px;
         margin:0;
-        padding:0;
+        position:relative;
+
+        input[type=file]
+        {
+            opacity:0;
+            -moz-opacity:0;
+            position:relative;
+            z-index:2;
+            cursor:pointer;
+        }
+
+        input[type=submit]
+        {
+            margin-left:2px;
+        }
+
+        .fake
+        {
+            left:0;
+            top:0;
+            right:0;
+            position:absolute;
+            z-index:1;
+            margin:0px 2px;
+
+            .path
+            {
+                float:left;
+            }
+
+            .choose
+            {
+                float:right;
+            }
+        }
     }
 }
 
@@ -985,15 +1021,14 @@ input, textarea {
                 left:0;
                 right:0;
                 border-top:1px solid #ccc;
-
-
+                padding:4px 2px 0px 2px;
 
                 iframe
                 {
                     border:0;
                     position:relative;
                     width:100%;
-                    height:50px;
+                    height:40px;
                 }
             }
         }
