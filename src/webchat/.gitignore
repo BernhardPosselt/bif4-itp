@@ -1,5 +1,6 @@
 logs
 project/project
+files
 project/target
 conf/evolutions/default/*.sql
 target
