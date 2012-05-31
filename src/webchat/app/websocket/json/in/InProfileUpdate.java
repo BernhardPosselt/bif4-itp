@@ -21,7 +21,8 @@ public class InProfileUpdate {
 			user.firstname = inprofileupdate.data.prename;
 			user.lastname = inprofileupdate.data.lastname;
 			user.username = inprofileupdate.data.username;
-			user.setPassword(inprofileupdate.data.password);
+			if (!inprofileupdate.data.password.isEmpty())
+				user.setPassword(inprofileupdate.data.password);
 			user.email = inprofileupdate.data.email;
 			user.update();
 		}catch (Exception e){
