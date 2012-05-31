@@ -935,7 +935,46 @@ input, textarea {
             }
 
             .files {
+                position: absolute;
+                top: 15px;
+                left: 0px;
+                right: 5px;
+                bottom: 60px;
                 display: none;
+                overflow: auto;
+                
+                ul {
+                    margin: 5px;
+                    padding: 0;
+
+                    .date_line {
+                        padding: 0;
+                        padding-left: 20px;
+                        margin: 0;
+                        color: #aaa;
+                        border-bottom: 1px solid #aaa;
+
+                        .date {
+                            float: right;
+                        }
+                        
+                    }
+                    
+                    li {
+                        padding: 5px 0 5px 45px;
+                        background-repeat: no-repeat;
+                        list-style-type: none;
+                        line-height: 20px;
+                        background-size: 16px 16px;
+                        background-position: 20px 5px;
+                        
+                        .size {
+                            margin-left: 10px;
+                            display: inline-block;
+                            color: #aaa;
+                        }
+                    }
+                }
             }
 
             .utils {
