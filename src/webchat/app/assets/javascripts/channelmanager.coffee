@@ -947,8 +947,4 @@ class ChannelManager
         else
             return bytes + ' B'
             
-            
-
-
-        
 
