@@ -60,7 +60,7 @@ public class Application extends Controller {
             String filename = uploaded_file.getFilename();
             String contentType = uploaded_file.getContentType();
 
-            String unqName = UUID.randomUUID().toString();
+            String unqName = UUID.randomUUID().toString() + "_" + filename;
             File file = uploaded_file.getFile();
             File dest = new File(play.Play.application().path().toString() + "/files/" + unqName);
 
