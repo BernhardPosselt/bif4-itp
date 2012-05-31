@@ -100,6 +100,7 @@ public class Application extends Controller {
 	        user.firstname = "Ernst";
 	        user.admin = true;
 	        user.online = false;
+	        user.active = true;
 	        user.save();
 	        
 	        User user1 = new User();
@@ -110,6 +111,7 @@ public class Application extends Controller {
 	        user1.firstname = "Christoph";
 	        user1.admin = false;
 	        user1.online = false;
+	        user1.active = true;
 	        user1.save();
 	         
 	        Channel channel = new Channel();

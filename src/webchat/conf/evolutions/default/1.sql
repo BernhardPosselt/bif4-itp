@@ -48,6 +48,7 @@ create table user (
   firstname                 varchar(255),
   lastname                  varchar(255),
   online                    boolean,
+  active                    boolean,
   admin                     boolean,
   lastlogin                 timestamp,
   constraint pk_user primary key (id))
