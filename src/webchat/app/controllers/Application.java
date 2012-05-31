@@ -52,12 +52,12 @@ public class Application extends Controller {
         return ok(upload.render(form(models.File.class)));
     }
 
-    public static Result download_file(Integer file_id)
+    public static Result download_file(Integer file_id, String name)
     {
-        models.File tmp = models.File.find.byId(file_id);
+
+        models.File tmp = models.File.find.byId(Integer.valueOf(file_id));
 
         File download = new File(play.Play.application().path().toString() + "/files/" + tmp.filename);
-
 
         return ok(download);
     }
@@ -76,9 +76,6 @@ public class Application extends Controller {
             String unqName = UUID.randomUUID().toString() + "_" + filename;
             File file = uploaded_file.getFile();
             File dest = new File(play.Play.application().path().toString() + "/files/" + unqName);
-
-            Logger.info(file.getAbsolutePath());
-            Logger.info(dest.getAbsolutePath());
 
             FileInputStream fis = new FileInputStream(file);
             FileOutputStream fos = new FileOutputStream(dest);
