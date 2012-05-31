@@ -9,13 +9,13 @@ Install Linux::
 
  $ sudo mv play-2.0/ /opt
  $ sudo chmod a+x /opt/play-2.0/play
- $ sudo ln -s /opt/play-2.0/play /usr/bin/play
+ $ sudo ln -s /opt/play-2.0/play /usr/local/bin/play
 
 Generate IDE Project files
 --------------------------
 
 To generate the project files for your IDE, just cd into the webchat directory and
-execute the specific commands.
+execute the specific commands. The play commands have to be used in this directory
 
 ``Intellij IDEA``::
 
@@ -30,12 +30,29 @@ Then go: File -> New Module -> Import Existing Module and select the generated t
 
 Run developement server
 -----------------------
-
 You can run the developement server with::
 
  $ play run
  
 You can now access it on http://localhost:9000
+
+Generate development data
+-------------------------
+As the project is currently pre-alpha, you have to generate standard user accounts by yourself by visiting this link
+ONCE every time you start the developement server::
+
+  http://localhost:9000/Testdata
+
+It will ask you to generate the database in your memory. After this you can log in under 
+
+  http://localhost:9000/
+
+The Testusers are
+
+USER:PASSWORD
+
+  MasterLindi:test
+  Glembo:test
 
 LESS
 ----
