@@ -1,11 +1,14 @@
 package controllers;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 
 import com.google.common.io.Files;
 
+import org.h2.util.IOUtils;
 import org.joda.time.DateTime;
 import play.Logger;
 
@@ -60,8 +63,7 @@ public class Application extends Controller {
     }
 
 
-    public static Result upload()
-    {
+    public static Result upload() throws IOException {
         Http.MultipartFormData body =  request().body().asMultipartFormData();
 
         Http.MultipartFormData.FilePart uploaded_file= body.getFile("uploaded_file");
@@ -78,11 +80,10 @@ public class Application extends Controller {
             Logger.info(file.getAbsolutePath());
             Logger.info(dest.getAbsolutePath());
 
-            try {
-                Files.copy(file, dest);
-            } catch (IOException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
+            FileInputStream fis = new FileInputStream(file);
+            FileOutputStream fos = new FileOutputStream(dest);
+
+            IOUtils.copy(fis, fos);
 
             //Save file to database
             int channelid = Integer.valueOf(session("channelid"));
