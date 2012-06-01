@@ -13,15 +13,16 @@ import flexjson.JSONSerializer;
 public class File {
 	public final String type;
 	public Boolean init;
-	public Map<Integer,String> actions = new HashMap<Integer,String>();
-	public Map<Integer,FileData> data = new HashMap<Integer,FileData>();
+	public LinkedHashMap<Integer,String> actions = new LinkedHashMap<Integer,String>();
+	public LinkedHashMap<Integer,FileData> data = new LinkedHashMap<Integer,FileData>();
 	
 	public File(){
 		this.type = "file";
 	}
 	
-	public static JsonNode genjoinFile(int userid, String action, Boolean init, int channelid){
-		String json = "";
+	public static JsonNode genjoinFile(int channelid){
+		String json = "", action = "create";
+		Boolean init = true;
 		File file = new File();
 		file.init = init;
 		try{
@@ -35,11 +36,35 @@ public class File {
 				fdata.owner_id = dbfile.uid.id;
 				fdata.size = dbfile.size;
 				fdata.type = dbfile.type;
-			
 				file.actions.put(dbfile.id, action);
 				file.data.put(dbfile.id, fdata);
 				
 			}
+			JSONSerializer fser = new JSONSerializer().include("*.actions", "*.data");
+			json = fser.exclude("*.class").serialize(file);
+			} 
+		catch (JSONException e) {	 
+			 e.printStackTrace();
+		}
+		return Json.parse(json);
+	}
+	
+	public static JsonNode gennewFile(models.File dbfile){
+		String json = "";
+		File file = new File();
+		file.init = false;
+		try{
+			
+			
+			FileData fdata = new FileData();
+			fdata.modified = dbfile.date;
+			fdata.name = dbfile.name;
+			fdata.owner_id = dbfile.uid.id;
+			fdata.size = dbfile.size;
+			fdata.type = dbfile.type;
+			file.actions.put(dbfile.id, "create");
+			file.data.put(dbfile.id, fdata);
+				
 			JSONSerializer fser = new JSONSerializer().include("*.actions", "*.data");
 			json = fser.exclude("*.class").serialize(file);
 			} 

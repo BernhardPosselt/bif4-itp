@@ -68,7 +68,7 @@
                 </div>
 
                 <div class="utils">
-                    <iframe src="@routes.Application.upload_form"></iframe>
+                    <iframe src=""></iframe>
                 </div>
             </fieldset>
         </div>
@@ -222,6 +222,42 @@
         <div class="popup_window_buttons">
               <input class="cancel" type="button" value="Cancel"/>
               <input class="submit" type="button" value="Create"/>
+        </div>
+    </div>
+
+    <!-- Kick form -->
+    <div id="kick_window" class="popup_window">
+        <div class="popup_window_title">Kick from Channel</div>
+        <div id="kick_toolbar">
+            <input id="kick_filter" type="text" placeholder="Filter" />
+        </div>
+        <div id="kick_channel_users">
+            <div class="select_list groups">
+                <h1>Groups</h1>
+                <ul>
+                </ul>
+            </div>
+            <div class="select_list users">
+                <h1>Users</h1>
+                <ul>
+                </ul>
+            </div>
+        </div>
+        <div id="kick_selected">
+            <div class="select_list groups">
+                <h1>Selected groups</h1>
+                <ul>
+                </ul>
+            </div>
+            <div class="select_list users">
+                <h1>Selected users</h1>
+                <ul>
+                </ul>
+            </div>
+        </div>
+        <div class="popup_window_buttons">
+            <input class="cancel" type="button" value="Cancel" />
+            <input class="submit" type="button" value="Kick" />
         </div>
     </div>
 

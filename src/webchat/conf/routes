@@ -8,6 +8,7 @@ GET / controllers.Application.index()
 #Upload
 GET /upload controllers.Application.upload_form()
 POST /upload controllers.Application.upload()
+GET /download/:id/:name controllers.Application.download_file(id: Integer, name: String)
 
 #Login
 GET /login controllers.LoginController.login()
@@ -39,14 +40,12 @@ POST    /admin/user/:id/delete       controllers.AdminController.deleteuser(id:L
 
 GET /Testdata controllers.Application.filltestdata()
 
-# WebSocket
-GET /WebSocket controllers.WebSocketTestController.index()
-
+#WebSocket
 GET /websocket controllers.Application.websocket()
 
-# Json
-GET /Json/Channels controllers.JsonTestController.genAuth()
-GET /Json/Message controllers.JsonTestController.genMessage()
+# Json Testmessages
+GET /Json/Auth controllers.JsonTestController.genAuth()
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET /assets/*file controllers.Assets.at(path="/public", file)

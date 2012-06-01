@@ -18,6 +18,9 @@ public class File extends Model {
 	
 	@Constraints.Required
 	public String name;
+
+    @Constraints.Required
+    public String filename;
 	
 	@Constraints.Required
 	public String type;
@@ -40,7 +43,7 @@ public class File extends Model {
 	
 	public static List<File> getChannelFiles (int channelid){
 		List<File> files = new ArrayList<File>();
-		files = find.where().eq("channels.id", String.valueOf(channelid)).findList();
+		files = find.where().eq("channels.id", channelid).orderBy().desc("date").findList();
 		return files;
 	}
 	

@@ -70,9 +70,10 @@ public class AdminController extends Controller {
     	{
 	        Form<User> userForm = form(User.class).bindFromRequest();
 	        if(userForm.hasErrors()) {
+	        	Logger.error("Error while editing an existing User");
 	            return badRequest(edituser.render(id, userForm, User.getUsername(Integer.parseInt(session("userid")))));
 	        }
-	        userForm.get().update(id);
+	        userForm.get().update(id.intValue());
 	        flash("success", "User " + userForm.get().username + " has been updated");
         	Logger.info("User " + userForm.get().username + " with ID " + userForm.get().id + " has been updated");
 	        return GO_HOME;
@@ -96,7 +97,7 @@ public class AdminController extends Controller {
     		Form<User> userForm = form(User.class).bindFromRequest();
             if(userForm.hasErrors()) 
             {
-            	//Logger.error("Do was er no net wos do fuer a Fehler einekommt");
+            	Logger.error("Error while creating a new User");
                 return badRequest(createuser.render(userForm, User.getUsername(Integer.parseInt(session("userid")))));
             }
             userForm.get().save();
@@ -112,13 +113,22 @@ public class AdminController extends Controller {
     
     public static Result deleteuser(Long id) {
     	
+    	String user = session("userid");
     	int uid = check();
     	if(uid != -1)
     	{
-	        User.find.ref(id.intValue()).delete();
-	        flash("success", "User " + id + " has been deleted");
-	        Logger.info("User " + id + " has been deleted");
-	        return GO_HOME;
+    		if(Integer.parseInt(user) == id.intValue())
+    		{
+    			Logger.error("User " + id + " tried to delete himself, canceled");
+                return GO_HOME;
+    		}
+    		else
+    		{
+		        User.find.ref(id.intValue()).delete();
+		        flash("success", "User " + id + " has been deleted");
+		        Logger.info("User " + id + " has been deleted");
+		        return GO_HOME;
+    		}
     	}
     	else
     	{

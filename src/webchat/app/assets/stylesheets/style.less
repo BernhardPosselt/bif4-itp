@@ -88,12 +88,48 @@ html, body {
 
 #upload
 {
-    height:50px;
+    height:40px;
+
 
     form
     {
+        height:40px;
         margin:0;
-        padding:0;
+        position:relative;
+
+        input[type=file]
+        {
+            opacity:0;
+            -moz-opacity:0;
+            position:relative;
+            z-index:2;
+            cursor:pointer;
+        }
+
+        input[type=submit]
+        {
+            margin-left:2px;
+        }
+
+        .fake
+        {
+            left:0;
+            top:0;
+            right:0;
+            position:absolute;
+            z-index:1;
+            margin:0px 2px;
+
+            .path
+            {
+                float:left;
+            }
+
+            .choose
+            {
+                float:right;
+            }
+        }
     }
 }
 
@@ -128,7 +164,9 @@ input, textarea {
 }
         
 .offline {
-
+    background-image:url(../images/offline.png);
+    background-repeat:no-repeat;
+    background-position:left center;
 }
 
 /**
@@ -403,8 +441,9 @@ input, textarea {
         /**
          * Login form
          */
-        #loginform, #profile {
-            width:550px;
+        #loginform
+        {
+            width:250px;
             border: 1px solid #ccc;
             .border_rad(5px);
             margin:30px auto;
@@ -417,7 +456,14 @@ input, textarea {
 
             label {
                 float:left;
-                width:150px;
+                width:70px;
+                padding-right:10px;
+                text-align:right;
+            }
+
+            .login
+            {
+                text-align:center;
             }
         }
     
@@ -927,7 +973,46 @@ input, textarea {
             }
 
             .files {
+                position: absolute;
+                top: 15px;
+                left: 0px;
+                right: 5px;
+                bottom: 60px;
                 display: none;
+                overflow: auto;
+                
+                ul {
+                    margin: 5px;
+                    padding: 0;
+
+                    .date_line {
+                        padding: 0;
+                        padding-left: 20px;
+                        margin: 0;
+                        color: #aaa;
+                        border-bottom: 1px solid #aaa;
+
+                        /*.date {
+                            float: right;
+                        }*/
+                        
+                    }
+                    
+                    li {
+                        padding: 5px 0 5px 45px;
+                        background-repeat: no-repeat;
+                        list-style-type: none;
+                        line-height: 20px;
+                        background-size: 16px 16px;
+                        background-position: 20px 5px;
+                        
+                        .size {
+                            margin-left: 10px;
+                            display: inline-block;
+                            color: #aaa;
+                        }
+                    }
+                }
             }
 
             .utils {
@@ -936,15 +1021,14 @@ input, textarea {
                 left:0;
                 right:0;
                 border-top:1px solid #ccc;
-
-
+                padding:4px 2px 0px 2px;
 
                 iframe
                 {
                     border:0;
                     position:relative;
                     width:100%;
-                    height:50px;
+                    height:40px;
                 }
             }
         }

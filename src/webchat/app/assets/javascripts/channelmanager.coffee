@@ -15,6 +15,7 @@ class ChannelManager
         @dom_invite_groups = $ "#invite_window #selected_preview .groups ul"
         @dom_invite_selected_users = $ "#invite_window #invite_selected .users ul"
         @dom_invite_selected_groups = $ "#invite_window #invite_selected .groups ul"
+        @dom_upload_iframe = $ "#info_sidebar #file_info iframe"
         # edit profile dom
         @dom_edit_profile_username = $ "#edit_profile_window #edit_profile_username"
         @dom_edit_profile_email = $ "#edit_profile_window #edit_profile_email"
@@ -281,6 +282,8 @@ class ChannelManager
             @dom_reg_stream_sidebar_files[active_channel_id].fadeOut "fast", =>
                 @dom_reg_stream_sidebar_files[channel_id].fadeIn "fast"
         @active_channel = channel_id            
+        # set channel get parameter for upload form src
+        @dom_upload_iframe.attr("src", "/upload?channel_id=" + @active_channel)
         console.log("joined channel " + @channel_data[@active_channel].name)
     
     
@@ -366,25 +369,11 @@ class ChannelManager
                 code_container.css("display", "none")
             code_container.append(code)
             msg.append(code_container)
-        # convert unixtimestamp to date
-        date_string = new Date(data.date)
-        year = date_string.getFullYear()
-        month = date_string.getMonth()
-        day = date_string.getDay()
-        hours = date_string.getHours()
-        minutes = date_string.getMinutes()
-        seconds = date_string.getSeconds()
-        # add preceding zeros when < 10
-        month = if month < 10 then "0" + month else month
-        day = if day < 10 then "0" + day else day
-        hours = if hours < 10 then "0" + hours else hours
-        minutes = if minutes < 10 then "0" + minutes else minutes
-        seconds = if seconds < 10 then "0" + seconds else seconds
         year_span = $("<span>")
-        year_span.html(year + "-" + month + "-" + day)
+        year_span.html(@_format_timestamp_to_date(data.date))
         year_span.addClass("year")
         time_span = $("<span>")
-        time_span.html(hours + ":" + minutes)
+        time_span.html(@_format_timestamp_to_time(data.date))
         time_span.addClass("time")
         date.append(year_span)
         date.append(time_span) 
@@ -407,6 +396,9 @@ class ChannelManager
             msg.addClass("line" + @last_msg_class[channel_id])
             line.addClass("line" + @last_msg_class[channel_id])
         @last_msg_user[channel_id] = data.user_id
+        # get minute
+        date_string = new Date(data.date)
+        minutes = date_string.getMinutes()
         # only append date if the last minute wasnt the same as this one
         if @last_post_minute[channel_id] == undefined
             @last_post_minute[channel_id] = -1
@@ -462,12 +454,14 @@ class ChannelManager
         smileys = new Smileys()
         for key, smile of smileys.get_smileys()
             img = '<img width="50" height="50" alt="' + key + '" src="' + smileys.get_smiley(key) + '" />'
-            msg = msg.replace(" " + key + " ", " " + img + " ")
-            msg = msg.replace(key + "<br />", img + '<br />')
-            end_line_regex = new RegExp( "(.*)" + @_regex_esc(key) + "$", "g")
-            msg = msg.replace(end_line_regex, "$1" + img)
-            start_line_regex = new RegExp( "^" + @_regex_esc(key) + "(.*)$", "g")
-            msg = msg.replace(start_line_regex, img + "$1")
+            middle_line_regex = new RegExp(" (" + @_regex_esc(key) + ")([\.\?!,;]*) ")
+            msg = msg.replace(middle_line_regex, " " + img + "$1$2 ")
+            break_line_regex = new RegExp(@_regex_esc(key) + "([\.\?!,;]*)<br />")
+            msg = msg.replace(break_line_regex, img + '$1<br />')
+            end_line_regex = new RegExp( "(.*)" + @_regex_esc(key) + "([\.\?!,;]*)$", "g")
+            msg = msg.replace(end_line_regex, "$1" + img + "$2")
+            start_line_regex = new RegExp( "^" + @_regex_esc(key) + "([\.\?!,;]*)(.*)$", "g")
+            msg = msg.replace(start_line_regex, img + "$1$2")
         # now replace all images in <a> tags with <img> tags
         pictures = ["png", "jpg", "jpeg", "gif"]
         for pic in pictures
@@ -766,18 +760,35 @@ class ChannelManager
     rewrite_files_dom: (channel_id) ->
         files_ul = @dom_reg_stream_sidebar_files[channel_id].children("ul")
         files_ul.empty()
-        for file_id in @channel_data[channel_id].files
+        last_date = undefined
+        files = @channel_data[channel_id].files.reverse()
+        for file_id in files
             file_id += ""
             file = @file_data[file_id]
+            # group files under the same day
+            post_date = @_format_timestamp_to_date(file.modified) # + @_format_timestamp_to_time(file.modified)
+            if last_date == undefined or last_date != post_date
+                last_date = post_date
+                date_entry = $("<li>")
+                date_entry.addClass("date_line")
+                date = $("<span>")
+                date.addClass("date")
+                date.html(@_format_timestamp_to_date(file.modified))
+                #time = $("<span>")
+                #time.addClass("time")
+                #time.html(@_format_timestamp_to_time(file.modified))
+                #date_entry.append(time)
+                date_entry.append(date)
+                files_ul.append(date_entry)
             list_entry = $("<li>")
-            list_entry.css("background-image", @mimetypes.get_mimetype_icon_path(file.type))
+            list_entry.css("background-image", "url('" + @mimetypes.get_mimetype_icon_path(file.type) + "')")
             file_name = $("<a>")
             file_name.addClass("name")
             file_name.html(file.name)
-            # TODO: add link to the file
-            file_name.attr("href")
+            file_name.attr("href", "/download/" + file_id + "/" + file.name)
+            file_name.attr("target", "_blank")
             file_size = $("<span>")
-            file_name.addClass("size")
+            file_size.addClass("size")
             file_size.html(@_kb_to_human_readable(file.size, 2))
             list_entry.append(file_name)
             list_entry.append(file_size)
@@ -861,7 +872,36 @@ class ChannelManager
 ################################################################################
 # utilities
 ################################################################################
+    # gets the date formatted like year-month-day
+    _format_timestamp_to_date: (timestamp) ->
+        date_string = new Date(timestamp)
+        year = date_string.getFullYear()
+        month = date_string.getMonth()
+        day = date_string.getDay()
+        # add preceding zeros when < 10
+        if month < 10
+            month = "0" + month
+        if day < 10
+            day = "0" + day
+        formatted_date = year + "-" + month + "-" + day
+        formatted_date        
 
+    # gets the time formatted like hour:minute
+    _format_timestamp_to_time: (timestamp) ->
+        date_string = new Date(timestamp)
+        hours = date_string.getHours()
+        minutes = date_string.getMinutes()
+        seconds = date_string.getSeconds()
+        # add preceding zeros when < 10
+        if hours < 10
+            hours = "0" + hours
+        if minutes < 10
+            minutes = "0" + minutes
+        if seconds < 10
+            seconds = "0" + seconds
+        formatted_time = hours + ":" + minutes
+        formatted_time
+ 
     # checks if a word starts with a word
     _starts_with: (word, needle) ->
         word = word.toLowerCase()
@@ -872,15 +912,11 @@ class ChannelManager
     _sort_by_keys: (dict) ->
         sortedKeys = new Array()
         sortedObj = {}
-        
         for key of dict
             sortedKeys.push(key)
-            
         sortedKeys.sort()
-        
         for key in sortedKeys
             sortedObj[key] = dict[key]
-            
         return sortedObj
 
 
@@ -896,18 +932,22 @@ class ChannelManager
     _regex_esc: (string) ->
         return (string+'').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")
         
-        
     # returns kilobyte to a human readable format
-    _kb_to_human_readable: (kilobytes, precision) ->
-        megabyte = 1024;
+    _kb_to_human_readable: (bytes, precision) ->
+        kilobyte = 1024
+        megabyte = kilobyte * 1024;
         gigabyte = megabyte * 1024;
         terabyte = gigabyte * 1024;
-   
-        if kilobytes >= megabyte and kilobytes < gigabyte
-            return (kilobytes / megabyte).toFixed(precision) + ' MB'
-        else if kilobytes >= gigabyte and kilobytes < terabyte
-            return (kilobytes / gigabyte).toFixed(precision) + ' GB'
-        else if kilobytes >= terabyte
-            return (kilobytes / terabyte).toFixed(precision) + ' TB'
+
+        if bytes >= kilobyte and bytes < gigabyte
+            return (bytes / kilobyte).toFixed(precision) + ' KB'   
+        if bytes >= megabyte and bytes < gigabyte
+            return (bytes / megabyte).toFixed(precision) + ' MB'
+        else if bytes >= gigabyte and bytes < terabyte
+            return (bytes / gigabyte).toFixed(precision) + ' GB'
+        else if bytes >= terabyte
+            return (bytes / terabyte).toFixed(precision) + ' TB'
         else
-            return kilobytes + ' KB'
+            return bytes + ' B'
+            
+

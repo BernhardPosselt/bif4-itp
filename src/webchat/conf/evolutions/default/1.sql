@@ -15,6 +15,7 @@ create table channel (
 create table file (
   id                        integer not null,
   name                      varchar(255),
+  filename                  varchar(255),
   type                      varchar(255),
   size                      double,
   date                      timestamp,
@@ -47,6 +48,7 @@ create table user (
   firstname                 varchar(255),
   lastname                  varchar(255),
   online                    boolean,
+  active                    boolean,
   admin                     boolean,
   lastlogin                 timestamp,
   constraint pk_user primary key (id))

@@ -67,6 +67,7 @@
                     @header("lastname", "Last name")
                     @header("email", "E-Mail")
                     @header("admin", "Admin")
+                    @header("active", "Active")
                     @header("online", "Online")
                     @header("lastlogin", "Last login")
                 </tr>
@@ -102,6 +103,13 @@
                                 <em>-</em>
                             } else {
                                 @user.admin
+                            }
+                        </td>
+                        <td>
+                            @if(user.active == null) {
+                                <em>-</em>
+                            } else {
+                                @user.active
                             }
                         </td>
                         <td>
