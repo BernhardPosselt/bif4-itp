@@ -1,37 +1,21 @@
-@(currentPage : Page[User], username: String, currentSortBy: String, currentOrder: String, currentFilter: String)
+@(users : List[User], username: String)
 
 @import helper._
 @import helper.twitterBootstrap._
 
-@link(newPage:Int, newSortBy:String) = @{
+@admin_main(username, title = "Webchat") {
+<div id="admin_tabs" class="tabbed_navi">
+    <ul>
+        <li><a href="#users" id="admin_tabs_users">Users</a></li>
+        <li><a href="#groups" id="admin_tabs_groups">Groups</a></li>
+        <li><a href="#channels" id="admin_tabs_channels">Channels</a></li>
+    </ul>
     
-    var sortBy = currentSortBy
-    var order = currentOrder
-    
-    if(newSortBy != null) {
-        sortBy = newSortBy
-        if(currentSortBy == newSortBy) {
-            if(currentOrder == "asc") {
-                order = "desc"
-            } else {
-                order = "asc"
-            }
-        } else {
-            order = "asc"
-        }
-    }
-    routes.AdminController.list(newPage, sortBy, order, currentFilter)
-}
-
-@header(key:String, title:String) = {
-    <th class="@key.replace(".","_") header @if(currentSortBy == key) @{if(currentOrder == "asc") "headerSortDown" else "headerSortUp"}">
-        <a href="@link(0, key)">@title</a>
-    </th>
-}
-
-@main(username, title = "Webchat") {
-
+</div>
 <div id="admin_site">
+    <div id="admin_site_groups">groups</div>
+    <div id="admin_site_channels">channels</div>
+    <div id="admin_site_users">
     <h1>Users</h1>
 
     @if(flash.containsKey("success")) {
@@ -41,17 +25,21 @@
     } 
 
     <div id="actions">
-        
-        <form action="@link(0, "username")" method="GET">
-            <input type="search" id="searchbox" name="f" value="@currentFilter" placeholder="Filter by username...">
-            <input type="submit" id="searchsubmit" value="Filter by username" class="btn primary">
-        </form>
+        <select>
+            <option value="0">All Groups</option>
+            <option value="1">Group1</option>
+        </select>
+        <select>
+            <option value="0">All Channels</option>
+            <option value="1">Channel 1</option>
+        </select>
+        <input type="search" class="searchbox" name="f" placeholder="filter...">
         
         <a class="btn success link_button" id="add" href="@routes.AdminController.createuser()">Add a new user</a>
         
     </div>
     
-    @if(currentPage.getTotalRowCount == 0) {
+    @if(users.size() == 0) {
         
         <div>
             <em>Nothing to display</em>
@@ -59,23 +47,23 @@
         
     } else {
         
-        <table>
+        <table class="data_table" cellpadding="0" cellspacing="0">
             <thead>
                 <tr>
-                    @header("username", "Username")
-                    @header("firstname", "First name")
-                    @header("lastname", "Last name")
-                    @header("email", "E-Mail")
-                    @header("admin", "Admin")
-                    @header("active", "Active")
-                    @header("online", "Online")
-                    @header("lastlogin", "Last login")
+                    <th><a href="#">Username</a></th>
+                    <th><a href="#">First Name</a></th>
+                    <th><a href="#">Last Name</a></th>
+                    <th><a href="#">E-Mail</a></th>
+                    <th><a href="#">Admin</a></th>
+                    <th><a href="#">Active</a></th>
+                    <th><a href="#">Online</a></th>
+                    <th><a href="#">Last Login</a></th>
                 </tr>
             </thead>
             <tbody>
 
-                @for(user <- currentPage.getList) {
-                    <tr>
+                @for(user <- users) {
+                    <tr title="edit user">
                         <td><a href="@routes.AdminController.edituser(user.id)">@user.username</a></td>
                         <td>
                             @if(user.firstname == null) {
@@ -132,33 +120,8 @@
             </tbody>
         </table>
 
-        <div class="pagination">
-            <ul>
-                @if(currentPage.hasPrev) {
-                    <li class="prev">
-                        <a href="@link(currentPage.getPageIndex - 1, null)">&larr; Previous</a>
-                    </li>
-                } else {
-                    <li class="prev disabled">
-                        <a>&larr; Previous</a>
-                    </li>
-                }
-                <li class="current">
-                    <a>Displaying @currentPage.getDisplayXtoYofZ(" to "," of ")</a>
-                </li>
-                @if(currentPage.hasNext) {
-                    <li class="next">
-                        <a href="@link(currentPage.getPageIndex + 1, null)">Next &rarr;</a>
-                    </li>
-                } else {
-                    <li class="next disabled">
-                        <a>Next &rarr;</a>
-                    </li>
-                }
-            </ul>
-        </div>
         
     }
     </div>
-        
+</div>    
 }

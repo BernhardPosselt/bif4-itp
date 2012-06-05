@@ -11,10 +11,6 @@
     @helper.form(action = routes.Application.upload, 'enctype -> "multipart/form-data") {
 
             <input type="file" name="uploaded_file" />
-            <div class="fake">
-                <div class="path"><input /></div>
-                <input type="button" class="choose" value="Choose"/>
-            </div>
             <input type="submit" value="Upload" />
     }
     </body>

@@ -11,12 +11,17 @@ import views.html.*;
 public class AdminController extends Controller {
 	
 	public static Result index() {
-        return GO_HOME;
+    	int uid = check();
+    	if(uid != -1)
+    	{
+    		Logger.info("Admin Page for User with ID " + uid + " loaded - Admin Form filled with data");
+        	return ok(admin.render(User.findAll(), User.getUsername(Integer.parseInt(session("userid")))));
+    	}
+    	else
+    	{
+    		return redirect(routes.Application.index());
+    	}
     }
-	
-	public static Result GO_HOME = redirect(
-	        routes.AdminController.list(0, "name", "asc", "")
-	    );
 	
 	public static int check()
 	{
@@ -44,20 +49,6 @@ public class AdminController extends Controller {
         }
 	}
 
-    public static Result list(int page, String sortBy, String order, String filter)
-    {
-    	int uid = check();
-    	if(uid != -1)
-    	{
-    		Logger.info("Admin Page for User with ID " + uid + " loaded - Admin Form filled with data");
-        	return ok(admin.render(User.page(page, 10, sortBy, order, filter), User.getUsername(Integer.parseInt(session("userid"))), sortBy, order, filter));
-    	}
-    	else
-    	{
-    		return redirect(routes.Application.index());
-    	}
-    }
-    
     public static Result edituser(Long id) {
         Form<User> userForm = form(User.class).fill(User.find.byId(id.intValue()));
         return ok(edituser.render(id, userForm, User.getUsername(Integer.parseInt(session("userid")))));
@@ -76,7 +67,7 @@ public class AdminController extends Controller {
 	        userForm.get().update(id.intValue());
 	        flash("success", "User " + userForm.get().username + " has been updated");
         	Logger.info("User " + userForm.get().username + " with ID " + userForm.get().id + " has been updated");
-	        return GO_HOME;
+	        return index();
     	}
     	else
     	{
@@ -103,7 +94,7 @@ public class AdminController extends Controller {
             userForm.get().save();
             flash("success", "User " + userForm.get().username + " has been created");
         	Logger.info("User " + userForm.get().username + " with ID " + userForm.get().id + " has been created");
-            return GO_HOME;
+            return index();
     	}
     	else
     	{
@@ -120,14 +111,14 @@ public class AdminController extends Controller {
     		if(Integer.parseInt(user) == id.intValue())
     		{
     			Logger.error("User " + id + " tried to delete himself, canceled");
-                return GO_HOME;
+                return index();
     		}
     		else
     		{
 		        User.find.ref(id.intValue()).delete();
 		        flash("success", "User " + id + " has been deleted");
 		        Logger.info("User " + id + " has been deleted");
-		        return GO_HOME;
+		        return index();
     		}
     	}
     	else

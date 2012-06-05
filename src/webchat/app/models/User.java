@@ -86,11 +86,14 @@ public class User extends Model {
 
     public static boolean authenticate(String name, String pw)
     {
-         User tmp = find.where().eq("username", name).eq("password", Crypto.sign(pw)).findUnique();
+        User tmp = find.where().eq("username", name).eq("password", Crypto.sign(pw)).findUnique();
 
-            if(tmp == null)
-                return false;
-            return true;
+        if(tmp == null){
+            return false;
+        } else {
+            return true;            
+        }            
+            
     }
 
     public static int getUserID(String name)
@@ -122,6 +125,10 @@ public class User extends Model {
     	users = find.where().eq("online", true).findList();
     	return users;
     }
+
+    public static List<User> findAll(){
+        return find.all();
+    }
     
     public static List<User> getChannelGroupUser(List<Groups> groups)
     {
@@ -134,15 +141,6 @@ public class User extends Model {
         return users;
     }
     
-    public static Page<User> page(int page, int pageSize, String sortBy, String order, String filter) {
-        return 
-            find.where()
-                .ilike("username", "%" + filter + "%")
-                .orderBy(sortBy + " " + order)
-                .fetch("groups")
-                .findPagingList(pageSize)
-                .getPage(page);
-    }
 
 }
 

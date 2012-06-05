@@ -515,12 +515,25 @@ class ChannelManager
         # finally iterate over all groups and create their dom
         for group_id, users of groups
             heading = $("<h1>")
-            heading.html(@group_data[group_id].name)
+            group = @group_data[group_id]
+            heading.html(group.name)
+            invite_group_link = $("<a>")
+            invite_group_link.addClass("invite_group")
+            invite_group_link.attr("alt", "invite group " + group.name + " to current channel")
+            invite_group_link.click =>
+                @main_manager.invite_group(group_id)
+            heading.append(invite_group_link)
             user_list = $("<ul>")
             for user_id in users
                 user = @user_data[user_id]
                 user_entry = $("<li>")
                 user_entry.html(user.prename + " " + user.lastname)
+                invite_user_link = $("<a>")
+                invite_user_link.addClass("invite_user")
+                invite_user_link.attr("alt", "invite user " + user.prename + " " + user.lastname + " to current channel")
+                invite_user_link.click =>
+                    @main_manager.invite_user(user_id)
+                user_entry.append(invite_user_link)
                 if user.online == true
                     user_entry.addClass("online")
                 else
@@ -537,6 +550,12 @@ class ChannelManager
             user = @user_data[user_id]
             user_entry = $("<li>")
             user_entry.html(user.prename + " " + user.lastname)
+            invite_user_link = $("<a>")
+            invite_user_link.addClass("invite_user")
+            invite_user_link.attr("alt", "invite user " + user.prename + " " + user.lastname + " to current channel")
+            invite_user_link.click =>
+                @main_manager.invite_user(user_id)
+            user_entry.append(invite_user_link)
             if user.online == true
                 user_entry.addClass("online")
             else
@@ -552,11 +571,23 @@ class ChannelManager
                 group = @group_data[group_id]
                 heading = $("<h1>")
                 heading.html(group.name)
+                kick_group_link = $("<a>")
+                kick_group_link.addClass("kick_group")
+                kick_group_link.attr("alt", "remove group " + group.name + " from channel")
+                kick_group_link.click =>
+                    @main_manager.kick_group(group_id)
+                heading.append(kick_group_link)
                 user_list = $("<ul>")
                 for user_id in groups[group_id]
                     user = @user_data[user_id]
                     user_entry = $("<li>")
                     user_entry.html(user.prename + " " + user.lastname)
+                    kick_user_link = $("<a>")
+                    kick_user_link.addClass("kick_user")
+                    kick_user_link.attr("alt", "remove user " + user.prename + " " + user.lastname + " from channel")
+                    kick_user_link.click =>
+                        @main_manager.kick_user(user_id)
+                    user_entry.append(kick_user_link)
                     if user.online == true
                         user_entry.addClass("online")
                     else
@@ -573,6 +604,12 @@ class ChannelManager
                 user = @user_data[user_id]
                 user_entry = $("<li>")
                 user_entry.html(user.prename + " " + user.lastname)
+                kick_user_link = $("<a>")
+                kick_user_link.addClass("kick_user")
+                kick_user_link.attr("alt", "remove user " + user.prename + " " + user.lastname + " from channel")
+                kick_user_link.click =>
+                    @main_manager.kick_user(user_id)
+                user_entry.append(kick_user_link)
                 if user.online == true
                     user_entry.addClass("online")
                 else
@@ -792,6 +829,12 @@ class ChannelManager
             file_size.html(@_kb_to_human_readable(file.size, 2))
             list_entry.append(file_name)
             list_entry.append(file_size)
+            delete_file_link = $("<a>")
+            delete_file_link.addClass("delete_file")
+            delete_file_link.attr("alt", "delete file " + file.name)
+            delete_file_link.click =>
+                @main_manager.delete_file(file_id)
+            list_entry.append(delete_file_link)
             files_ul.append(list_entry)
             
 

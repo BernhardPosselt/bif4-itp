@@ -158,22 +158,33 @@ class MainManager
     # moves all users and groups from selected to unselected
     reset_invite_selection: ->
         @channels.reset_invite_selection()
+
+    invite_user: (user_id) ->
+        @invite_msg([user_id], [])
+    
+    invite_group: (group_id) ->
+        @invite_msg([], [group_id])
+        
     
     # invites all selected groups and users
     invite_selection: ->
         selected_users_and_groups = @channels.get_invite_selection()
-        active_channel = parseInt(@channels.get_active_channel())
         users = selected_users_and_groups.users
         groups = selected_users_and_groups.groups
+        @invite_msg(users, groups)
+
+    # sends the invite message
+    invite_msg: (users, groups) ->
+        channel_id = parseInt(@channels.get_active_channel())
         msg = 
             type: "invite"
             data:
-                channel: active_channel
+                channel: channel_id
                 users: users
                 groups: groups
         # only send if there min 1 user or 1 group
         if users.length > 0 or groups.length > 0
-            @send_websocket(msg)
+            @send_websocket(msg)    
             
     # creates a new channel
     create_channel: (name, topic, is_public) ->
@@ -195,7 +206,7 @@ class MainManager
             type: "channeltopic"
             data:
                 topic: topic
-                channel: channel_id
+                channel: parseInt(channel_id)
         @send_websocket(message)
 
 
@@ -207,7 +218,7 @@ class MainManager
             type: "channelname"
             data:
                 name: name
-                channel: channel_id
+                channel: parseInt(channel_id)
         @send_websocket(message)
         
     # deletes a channel
@@ -216,12 +227,13 @@ class MainManager
         message =
             type: "channeldelete"
             data:
-                channel: channel_id
+                channel: parseInt(channel_id)
         @send_websocket(message)
         
     # closes a channel
     # channel_id: the id of the channel that should be closed 
     close_channel: (channel_id=@channels.get_active_channel()) ->
+        channel_id = parseInt(channel_id)
         message =
             type: "channelclose"
             data:
@@ -239,4 +251,27 @@ class MainManager
                 lastname: args.lastname
                 password: args.password
                 email: args.email
+        @send_websocket(message)
+        
+    kick_group: (group_id) ->
+        @kick_msg([group_id], [])
+        
+    kick_user: (user_id) ->
+        @kick_msg([], [user_id])
+    
+    kick_msg: (group_ids=[], user_ids=[]) ->
+        channel_id = parseInt(@channels.get_active_channel())
+        message = 
+            type: "kick"
+            data:
+                channel: channel_id
+                users: user_ids
+                groups: group_ids
+        @send_websocket(message)
+        
+    delete_file: (file_id) ->
+        message = 
+            type: "filedelete"
+            data:
+                file: parseInt(file_id)
         @send_websocket(message)
