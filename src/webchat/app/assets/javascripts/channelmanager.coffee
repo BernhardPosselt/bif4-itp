@@ -45,6 +45,7 @@ class ChannelManager
         @init_channels = {}
         @scrolled_channels = {}
         @max_shown_code_lines = 10
+        @code_clip_height = "155px"
         @notify_audio = $("<audio>")
         @notify_audio.attr("src", "/assets/audio/75639__jobro__attention03.ogg")
         @mimetypes = new MimeTypes()
@@ -359,15 +360,20 @@ class ChannelManager
             if data.message.split("\n").length > @max_shown_code_lines
                 console.log "hid line"
                 show_code = $("<a>")
-                show_code.html("Show/Hide Code")
+                show_code.html("Show More/Hide Code")
                 show_code.attr("href", "#")
                 show_code.addClass("show_code")
-                show_code.click ->
-                    code_container.slideToggle "fast"
-                    return false;
+                show_code.toggle =>
+                    code_container.animate({
+                        height: code_container.prop("scrollHeight") + "px"
+                    }, 500)
+                , =>
+                    code_container.animate({
+                        height: @code_clip_height
+                    }, 500)
                 msg.append(show_code)
                 # dont display code
-                code_container.css("display", "none")
+                code_container.css("height", @code_clip_height)
             code_container.append(code)
             msg.append(code_container)
         year_span = $("<span>")
