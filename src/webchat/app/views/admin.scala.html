@@ -1,33 +1,7 @@
-@(currentPage : Page[User], username: String, currentSortBy: String, currentOrder: String, currentFilter: String)
+@(currentPage : Page[User], username: String)
 
 @import helper._
 @import helper.twitterBootstrap._
-
-@link(newPage:Int, newSortBy:String) = @{
-    
-    var sortBy = currentSortBy
-    var order = currentOrder
-    
-    if(newSortBy != null) {
-        sortBy = newSortBy
-        if(currentSortBy == newSortBy) {
-            if(currentOrder == "asc") {
-                order = "desc"
-            } else {
-                order = "asc"
-            }
-        } else {
-            order = "asc"
-        }
-    }
-    routes.AdminController.list(newPage, sortBy, order, currentFilter)
-}
-
-@header(key:String, title:String) = {
-    <th class="@key.replace(".","_") header @if(currentSortBy == key) @{if(currentOrder == "asc") "headerSortDown" else "headerSortUp"}">
-        <a href="@link(0, key)">@title</a>
-    </th>
-}
 
 @admin_main(username, title = "Webchat") {
 <div id="admin_tabs">
@@ -59,7 +33,7 @@
             <option value="0">All Channels</option>
             <option value="1">Channel 1</option>
         </select>
-        <input type="search" class="searchbox" name="f" value="@currentFilter" placeholder="filter...">
+        <input type="search" class="searchbox" name="f" placeholder="filter...">
         
         <a class="btn success link_button" id="add" href="@routes.AdminController.createuser()">Add a new user</a>
         
@@ -150,7 +124,7 @@
             <ul>
                 @if(currentPage.hasPrev) {
                     <li class="prev">
-                        <a href="@link(currentPage.getPageIndex - 1, null)">&larr; Previous</a>
+                        <a href="routes.AdminController.list(currentPage.getPageIndex - 1)">&larr; Previous</a>
                     </li>
                 } else {
                     <li class="prev disabled">
@@ -162,7 +136,7 @@
                 </li>
                 @if(currentPage.hasNext) {
                     <li class="next">
-                        <a href="@link(currentPage.getPageIndex + 1, null)">Next &rarr;</a>
+                        <a href="routes.AdminController.list(currentPage.getPageIndex + 1)">Next &rarr;</a>
                     </li>
                 } else {
                     <li class="next disabled">

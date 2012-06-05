@@ -134,12 +134,9 @@ public class User extends Model {
         return users;
     }
     
-    public static Page<User> page(int page, int pageSize, String sortBy, String order, String filter) {
+    public static Page<User> page(int page, int pageSize) {
         return 
             find.where()
-                .ilike("username", "%" + filter + "%")
-                .orderBy(sortBy + " " + order)
-                .fetch("groups")
                 .findPagingList(pageSize)
                 .getPage(page);
     }

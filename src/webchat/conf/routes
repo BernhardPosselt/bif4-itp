@@ -23,7 +23,7 @@ POST /profile controllers.ProfileController.submit()
 
 #Get List
 GET /admin controllers.AdminController.index()
-GET /adminfilter controllers.AdminController.list(p:Int ?= 0, s ?= "username", o ?= "asc", f ?= "")
+GET /adminfilter controllers.AdminController.list(p:Int ?= 0)
 
 #Add User
 GET /admin/newuser controllers.AdminController.createuser()
