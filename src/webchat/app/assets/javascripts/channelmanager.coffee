@@ -519,7 +519,7 @@ class ChannelManager
             heading.html(group.name)
             invite_group_link = $("<a>")
             invite_group_link.addClass("invite_group")
-            invite_group_link.attr("alt", "invite group " + group.name + " to current channel")
+            invite_group_link.attr("title", "invite group " + group.name + " to current channel")
             invite_group_link.click =>
                 @main_manager.invite_group(group_id)
             heading.append(invite_group_link)
@@ -530,7 +530,7 @@ class ChannelManager
                 user_entry.html(user.prename + " " + user.lastname)
                 invite_user_link = $("<a>")
                 invite_user_link.addClass("invite_user")
-                invite_user_link.attr("alt", "invite user " + user.prename + " " + user.lastname + " to current channel")
+                invite_user_link.attr("title", "invite user " + user.prename + " " + user.lastname + " to current channel")
                 invite_user_link.click =>
                     @main_manager.invite_user(user_id)
                 user_entry.append(invite_user_link)
@@ -552,7 +552,7 @@ class ChannelManager
             user_entry.html(user.prename + " " + user.lastname)
             invite_user_link = $("<a>")
             invite_user_link.addClass("invite_user")
-            invite_user_link.attr("alt", "invite user " + user.prename + " " + user.lastname + " to current channel")
+            invite_user_link.attr("title", "invite user " + user.prename + " " + user.lastname + " to current channel")
             invite_user_link.click =>
                 @main_manager.invite_user(user_id)
             user_entry.append(invite_user_link)
@@ -573,7 +573,7 @@ class ChannelManager
                 heading.html(group.name)
                 kick_group_link = $("<a>")
                 kick_group_link.addClass("kick_group")
-                kick_group_link.attr("alt", "remove group " + group.name + " from channel")
+                kick_group_link.attr("title", "remove group " + group.name + " from channel")
                 kick_group_link.click =>
                     @main_manager.kick_group(group_id)
                 heading.append(kick_group_link)
@@ -584,7 +584,7 @@ class ChannelManager
                     user_entry.html(user.prename + " " + user.lastname)
                     kick_user_link = $("<a>")
                     kick_user_link.addClass("kick_user")
-                    kick_user_link.attr("alt", "remove user " + user.prename + " " + user.lastname + " from channel")
+                    kick_user_link.attr("title", "remove user " + user.prename + " " + user.lastname + " from channel")
                     kick_user_link.click =>
                         @main_manager.kick_user(user_id)
                     user_entry.append(kick_user_link)
@@ -606,7 +606,7 @@ class ChannelManager
                 user_entry.html(user.prename + " " + user.lastname)
                 kick_user_link = $("<a>")
                 kick_user_link.addClass("kick_user")
-                kick_user_link.attr("alt", "remove user " + user.prename + " " + user.lastname + " from channel")
+                kick_user_link.attr("title", "remove user " + user.prename + " " + user.lastname + " from channel")
                 kick_user_link.click =>
                     @main_manager.kick_user(user_id)
                 user_entry.append(kick_user_link)
