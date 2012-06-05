@@ -76,6 +76,8 @@ class ChannelManager
         @join_first_channel()
         # put default values into the edit profile form
         @update_profile_form()
+        # remove unread class from channel list because this is the init
+        @dom_channel_list.children("li").removeClass("unread")
         
         
     update_profile_form: ->
@@ -111,6 +113,7 @@ class ChannelManager
         channel_data = data
         list_entry = $("<li>")
         list_entry.html( channel_data.name )
+        list_entry.addClass("unread")
         list_entry.bind 'click', =>
             @join_channel(id)
         @dom_reg_channel_list[id] = list_entry
