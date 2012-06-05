@@ -127,7 +127,7 @@ public class User extends Model {
     }
 
     public static List<User> findAll(){
-        return find.findList();
+        return find.all();
     }
     
     public static List<User> getChannelGroupUser(List<Groups> groups)
