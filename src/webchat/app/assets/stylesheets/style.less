@@ -578,7 +578,14 @@ input, textarea {
                 bottom:15px;
                 right:0;
                 display: none;
-
+                
+                a.invite_user, a.invite_group {
+                    width: 20px;
+                    height: 20px;
+                    display: inline-block;
+                    background-color: green;
+                }
+                
                 h1 {
                     border: 1px solid #ccc;
                     border-bottom:none;
@@ -916,6 +923,13 @@ input, textarea {
                         right:1px;
                         bottom:36px;
                         overflow-y:auto;
+
+                        a.kick_user, a.kick_group {
+                            width: 20px;
+                            height: 20px;
+                            display: inline-block;
+                            background-color: red;
+                        }
                         
                         .users {
                             display: none;
@@ -960,6 +974,13 @@ input, textarea {
             right:0;
             bottom:0;
             margin:5px 15px 15px 15px;
+
+            a.delete_file {
+                width: 20px;
+                height: 20px;
+                display: inline-block;
+                background-color: red;
+            }
 
             fieldset {
                  height:100%;
