@@ -501,18 +501,6 @@ input, textarea, select {
             height:100%;
             float:left;
 
-            .invite_group, .invite_user
-            {
-                background-image:url(../images/create.png);
-                background-repeat:no-repeat;
-                background-size:12px;
-                width:12px;
-                height:12px;
-                display:none;
-                margin-left:7px;
-                cursor:pointer;
-            }
-
             .tabbed_navi ul {
                   margin-top:0;
                   margin-bottom:0;
@@ -614,10 +602,14 @@ input, textarea, select {
                 display: none;
                 
                 a.invite_user, a.invite_group {
-                    width: 20px;
-                    height: 20px;
-                    display: inline-block;
-                    background-color: green;
+                    background-image:url(../images/create.png);
+                    background-repeat:no-repeat;
+                    background-size:12px;
+                    width:12px;
+                    height:12px;
+                    display:none;
+                    margin-left:7px;
+                    cursor:pointer;
                 }
                 
                 h1 {
@@ -975,30 +967,31 @@ input, textarea, select {
                         overflow-y:auto;
 
                         a.kick_user, a.kick_group {
-                            width: 20px;
-                            height: 20px;
-                            display: inline-block;
-                            background-color: red;
+                            display:none;
+                            width:12px;
+                            height:12px;
+                            margin-left:6px;
+                            background-image:url(../images/kick.png);
+                            background-repeat:no-repeat;
+                            background-position:center center;
+                            background-size:12px;
+                            cursor:pointer;
                         }
                         
                         .users {
                             display: none;
 
-                            .kick_user {
-                                display:none;
-                                width:12px;
-                                height:12px;
-                                margin-left:6px;
-                                background-image:url(../images/kick.png);
-                                background-repeat:no-repeat;
-                                background-position:center center;
-                                background-size:12px;
-                                cursor:pointer;
-                            }
-
                             h1 {
                                 font-size:14px;
                                 margin:0;
+
+                                &:hover
+                                {
+                                    a.kick_group
+                                    {
+                                        display:inline-block;
+                                    }
+                                }
                             }
 
                             ul {
@@ -1014,7 +1007,7 @@ input, textarea, select {
 
                                     &:hover
                                     {
-                                        .kick_user
+                                        a.kick_user
                                         {
                                             display:inline-block;
                                         }
