@@ -30,8 +30,18 @@
 }
 
 @admin_main(username, title = "Webchat") {
-
+<div id="admin_tabs">
+    <ul>
+        <li><a href="#users" class="link_button" id="admin_tabs_users">Users</a></li>
+        <li><a href="#groups" class="link_button" id="admin_tabs_groups">Groups</a></li>
+        <li><a href="#channels" class="link_button" id="admin_tabs_channels">Channels</a></li>
+    </ul>
+    
+</div>
 <div id="admin_site">
+    <div id="admin_site_groups">groups</div>
+    <div id="admin_site_channels">channels</div>
+    <div id="admin_site_users">
     <h1>Users</h1>
 
     @if(flash.containsKey("success")) {
@@ -42,10 +52,7 @@
 
     <div id="actions">
         
-        <form action="@link(0, "username")" method="GET">
-            <input type="search" id="searchbox" name="f" value="@currentFilter" placeholder="Filter by username...">
-            <input type="submit" id="searchsubmit" value="Filter by username" class="btn primary">
-        </form>
+        <input type="search" id="searchbox" name="f" value="@currentFilter" placeholder="Filter by username...">
         
         <a class="btn success link_button" id="add" href="@routes.AdminController.createuser()">Add a new user</a>
         
@@ -59,7 +66,7 @@
         
     } else {
         
-        <table>
+        <table id="data_table">
             <thead>
                 <tr>
                     @header("username", "Username")
@@ -160,5 +167,5 @@
         
     }
     </div>
-        
+</div>    
 }
