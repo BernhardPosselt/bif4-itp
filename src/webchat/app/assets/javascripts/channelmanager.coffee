@@ -48,6 +48,7 @@ class ChannelManager
         @notify_audio = $("<audio>")
         @notify_audio.attr("src", "/assets/audio/75639__jobro__attention03.ogg")
         @mimetypes = new MimeTypes()
+        @utilities = new Utilities()
 
     # sets the initial data array
     init: (@channel_data) ->
@@ -157,7 +158,7 @@ class ChannelManager
         stream_meta.html("Topic: ")
         stream_topic = $("<span>")
         stream_topic.addClass("topic")
-        stream_topic.html(@linkify_text(channel_data.topic))
+        stream_topic.html(@utilities.linkify_text(channel_data.topic))
         stream_meta.append(stream_topic)
         stream_chat = $("<div>")
         stream_chat.addClass("stream_chat")
@@ -200,7 +201,7 @@ class ChannelManager
         channel_list.html( data.name )
         stream = @dom_reg_stream[id]
         stream.children(".stream_field").children(".stream_name").children(".name").html(data.name)
-        stream.children(".stream_field").children(".stream_meta").children(".topic").html(@linkify_text(data.topic))
+        stream.children(".stream_field").children(".stream_meta").children(".topic").html(@utilities.linkify_text(data.topic))
         @rewrite_files_dom(id)
         @rewrite_user_group_dom()
         console.log("Updated channel " + data.name)
@@ -248,7 +249,7 @@ class ChannelManager
     # joins the first channel in the list or displays nothing
     join_first_channel: () ->
         console.log("joined first channel")
-        if @_get_dict_size(@channel_data) > 0
+        if @utilities.get_dict_size(@channel_data) > 0
             for id, value of @channel_data
                 @join_channel(id)
                 break
@@ -347,7 +348,7 @@ class ChannelManager
                 line.addClass("highlight")
                 @notify(channel_id)
             # replace known links, smileys etc
-            msg.html(@sugar_text(data.message))
+            msg.html(@utilities.sugar_text(data.message))
         else
             code_container = $("<div>")
             code_container.addClass("code_container")
@@ -370,10 +371,10 @@ class ChannelManager
             code_container.append(code)
             msg.append(code_container)
         year_span = $("<span>")
-        year_span.html(@_format_timestamp_to_date(data.date))
+        year_span.html(@utilities.format_timestamp_to_date(data.date))
         year_span.addClass("year")
         time_span = $("<span>")
-        time_span.html(@_format_timestamp_to_time(data.date))
+        time_span.html(@utilities.format_timestamp_to_time(data.date))
         time_span.addClass("time")
         date.append(year_span)
         date.append(time_span) 
@@ -444,44 +445,7 @@ class ChannelManager
         stream.scrollTop(stream.prop("scrollHeight")); 
         
 
-    # wraps links in <a> tags, pictures in <img> tags 
-    # msg: the message we search
-    # return: the final message
-    sugar_text: (msg) ->
-        # first place all urls in <a> tags
-        msg = @linkify_text(msg)
-        # add smileys
-        smileys = new Smileys()
-        for key, smile of smileys.get_smileys()
-            img = '<img width="50" height="50" alt="' + key + '" src="' + smileys.get_smiley(key) + '" />'
-            middle_line_regex = new RegExp(" (" + @_regex_esc(key) + ")([\.\?!,;]*) ")
-            msg = msg.replace(middle_line_regex, " " + img + "$1$2 ")
-            break_line_regex = new RegExp(@_regex_esc(key) + "([\.\?!,;]*)<br />")
-            msg = msg.replace(break_line_regex, img + '$1<br />')
-            end_line_regex = new RegExp( "(.*)" + @_regex_esc(key) + "([\.\?!,;]*)$", "g")
-            msg = msg.replace(end_line_regex, "$1" + img + "$2")
-            start_line_regex = new RegExp( "^" + @_regex_esc(key) + "([\.\?!,;]*)(.*)$", "g")
-            msg = msg.replace(start_line_regex, img + "$1$2")
-        # now replace all images in <a> tags with <img> tags
-        pictures = ["png", "jpg", "jpeg", "gif"]
-        for pic in pictures
-            # put a br before and after the image
-            pic_regex = new RegExp('<a href="(.*\.' + @_regex_esc(pic) + ')">(.*)<\/a>', "gim")
-            msg = msg.replace(pic_regex, '<br/><a href="$1"><img alt="$1" src="$1" /></a><br/>')
-        # replace youtube links with embedded video
-        yt_regex = /<a href=".*youtube.com\/watch\?v=([0-9a-zA-Z_-]{11}).*">.*<\/a>/gi
-        msg = msg.replace(yt_regex, '<br/><iframe width="560" height="315" src="http://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe><br/>')
-        return msg
-        
-    # replaces links and emails with html links
-    linkify_text:(msg) ->
-        url_regex = /\b((?:https?|ftp):\/\/[a-z0-9+&@#\/%?=~_|!:,.;-]*[a-z0-9+&@#\/%=~_|-])/gi
-        pseudo_url_regex = /(^|[^\/])(www\.[\S]+(\b|$))/gi
-        email_regex = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/gi
-        msg = msg.replace(url_regex, '<a href="$1">$1</a>')
-        msg = msg.replace(pseudo_url_regex, '$1<a href="http://$2">$2</a>')
-        msg = msg.replace(email_regex, '<a href="mailto:$&">$&</a>')    
-        return msg
+
 
 ################################################################################
 # Groups and Users
@@ -498,7 +462,7 @@ class ChannelManager
         for id, data of @user_data
             user_name = data.prename + " " + data.lastname
             sorted_users[user_name] = id
-        sorted_users = @_sort_by_keys(sorted_users)
+        sorted_users = @utilities.sort_by_keys(sorted_users)
         
         # now loop through all users and push them into their groups
         groups = {}
@@ -803,17 +767,17 @@ class ChannelManager
             file_id += ""
             file = @file_data[file_id]
             # group files under the same day
-            post_date = @_format_timestamp_to_date(file.modified) # + @_format_timestamp_to_time(file.modified)
+            post_date = @utilities.format_timestamp_to_date(file.modified) # + @utilities.format_timestamp_to_time(file.modified)
             if last_date == undefined or last_date != post_date
                 last_date = post_date
                 date_entry = $("<li>")
                 date_entry.addClass("date_line")
                 date = $("<span>")
                 date.addClass("date")
-                date.html(@_format_timestamp_to_date(file.modified))
+                date.html(@utilities.format_timestamp_to_date(file.modified))
                 #time = $("<span>")
                 #time.addClass("time")
-                #time.html(@_format_timestamp_to_time(file.modified))
+                #time.html(@utilities.format_timestamp_to_time(file.modified))
                 #date_entry.append(time)
                 date_entry.append(date)
                 files_ul.append(date_entry)
@@ -826,7 +790,7 @@ class ChannelManager
             file_name.attr("target", "_blank")
             file_size = $("<span>")
             file_size.addClass("size")
-            file_size.html(@_kb_to_human_readable(file.size, 2))
+            file_size.html(@utilities.kb_to_human_readable(file.size, 2))
             list_entry.append(file_name)
             list_entry.append(file_size)
             delete_file_link = $("<a>")
@@ -869,7 +833,7 @@ class ChannelManager
             # only autocomplete if unique
             matches = 0
             ret = ""
-            if @_starts_with(name, word)
+            if @utilities.starts_with(name, word)
                 matches += 1
                 # rebuild the original message
                 for item in words
@@ -911,86 +875,3 @@ class ChannelManager
         if @init_channels[channel_id]
             @notify_audio[0].play()
         
-
-################################################################################
-# utilities
-################################################################################
-    # gets the date formatted like year-month-day
-    _format_timestamp_to_date: (timestamp) ->
-        date_string = new Date(timestamp)
-        year = date_string.getFullYear()
-        month = date_string.getMonth()
-        day = date_string.getDay()
-        # add preceding zeros when < 10
-        if month < 10
-            month = "0" + month
-        if day < 10
-            day = "0" + day
-        formatted_date = year + "-" + month + "-" + day
-        formatted_date        
-
-    # gets the time formatted like hour:minute
-    _format_timestamp_to_time: (timestamp) ->
-        date_string = new Date(timestamp)
-        hours = date_string.getHours()
-        minutes = date_string.getMinutes()
-        seconds = date_string.getSeconds()
-        # add preceding zeros when < 10
-        if hours < 10
-            hours = "0" + hours
-        if minutes < 10
-            minutes = "0" + minutes
-        if seconds < 10
-            seconds = "0" + seconds
-        formatted_time = hours + ":" + minutes
-        formatted_time
- 
-    # checks if a word starts with a word
-    _starts_with: (word, needle) ->
-        word = word.toLowerCase()
-        needle = needle.toLowerCase()
-        return word.indexOf(needle) == 0
-
-    # sorts a hashmap by keys
-    _sort_by_keys: (dict) ->
-        sortedKeys = new Array()
-        sortedObj = {}
-        for key of dict
-            sortedKeys.push(key)
-        sortedKeys.sort()
-        for key in sortedKeys
-            sortedObj[key] = dict[key]
-        return sortedObj
-
-
-    # returns the size of a dictionairy 
-    _get_dict_size: (dict) ->
-        size = 0
-        for key of dict
-            if dict.hasOwnProperty(key)
-                size++
-        return size
-        
-    # escapes chars when put into regex
-    _regex_esc: (string) ->
-        return (string+'').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")
-        
-    # returns kilobyte to a human readable format
-    _kb_to_human_readable: (bytes, precision) ->
-        kilobyte = 1024
-        megabyte = kilobyte * 1024;
-        gigabyte = megabyte * 1024;
-        terabyte = gigabyte * 1024;
-
-        if bytes >= kilobyte and bytes < gigabyte
-            return (bytes / kilobyte).toFixed(precision) + ' KB'   
-        if bytes >= megabyte and bytes < gigabyte
-            return (bytes / megabyte).toFixed(precision) + ' MB'
-        else if bytes >= gigabyte and bytes < terabyte
-            return (bytes / gigabyte).toFixed(precision) + ' GB'
-        else if bytes >= terabyte
-            return (bytes / terabyte).toFixed(precision) + ' TB'
-        else
-            return bytes + ' B'
-            
-
