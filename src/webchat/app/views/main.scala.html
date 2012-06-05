@@ -42,27 +42,25 @@
         <script src="@routes.Assets.at("javascripts/mainmanager.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/channelmanager.js")" type="text/javascript"></script>
         
-        
-
-
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
 
     </head>
     <body>
         <div id="site">
             <nav>
-
-                <div id="currentuser">
-                @if(username != "") {
-                    Hi, @username
-                }
-                </div>
-                <ul>
+                <ul class="left_navi_links">
+                    @if(username != "") {
+                        <li>Hi, @username</li>
+                    }
+                    <li><a href="#" id="edit_profile_link">Profile</a> </li>
+                </ul>
+                <ul class="right_navi_links">
+                    <li><a href="@routes.Application.index">Stream</a></li>
+                    <li><a href="@routes.AdminController.index">Archives</a></li>
                     @if(admin == true) {
-                        <li><a href="@routes.AdminController.index">Admin</a></li>
+                        <li><a href="@routes.AdminController.index">Admin & Settings</a></li>
                     }
                     @if(username != "") {
-                        <li><a href="#" id="edit_profile_link">Profile</a> </li>
                         <li><a class="logout" href="@routes.LoginController.logout">Logout</a></li>
                     }
                 </ul>

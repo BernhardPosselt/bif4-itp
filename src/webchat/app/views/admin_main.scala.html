@@ -17,19 +17,17 @@
     <body>
         <div id="site">
             <nav>
-
-                <div id="currentuser">
-                @if(username != "") {
-                    Hi, @username
-                }
-                </div>
-                <ul>
-                    @if(admin == true) {
-                        <li><a href="@routes.AdminController.index">Admin</a></li>
-                    }
+                <ul class="left_navi_links">
                     @if(username != "") {
-                        <li><a href="#" id="edit_profile_link">Profile</a> </li>
-                        <li><a href="@routes.LoginController.logout">Logout</a></li>
+                        <li>Hi, @username</li>
+                    }
+                </ul>
+                <ul class="right_navi_links">
+                    <li><a href="@routes.Application.index">Stream</a></li>
+                    <li><a href="@routes.AdminController.index">Archives</a></li>
+                    <li><a href="@routes.AdminController.index">Admin & Settings</a></li>
+                    @if(username != "") {
+                        <li><a class="logout" href="@routes.LoginController.logout">Logout</a></li>
                     }
                 </ul>
             </nav>
