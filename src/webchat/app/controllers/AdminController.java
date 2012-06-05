@@ -11,7 +11,16 @@ import views.html.*;
 public class AdminController extends Controller {
 	
 	public static Result index() {
-        return list(0);
+    	int uid = check();
+    	if(uid != -1)
+    	{
+    		Logger.info("Admin Page for User with ID " + uid + " loaded - Admin Form filled with data");
+        	return ok(admin.render(User.findAll(), User.getUsername(Integer.parseInt(session("userid")))));
+    	}
+    	else
+    	{
+    		return redirect(routes.Application.index());
+    	}
     }
 	
 	public static int check()
@@ -40,20 +49,6 @@ public class AdminController extends Controller {
         }
 	}
 
-    public static Result list(int page)
-    {
-    	int uid = check();
-    	if(uid != -1)
-    	{
-    		Logger.info("Admin Page for User with ID " + uid + " loaded - Admin Form filled with data");
-        	return ok(admin.render(User.page(page, 10), User.getUsername(Integer.parseInt(session("userid")))));
-    	}
-    	else
-    	{
-    		return redirect(routes.Application.index());
-    	}
-    }
-    
     public static Result edituser(Long id) {
         Form<User> userForm = form(User.class).fill(User.find.byId(id.intValue()));
         return ok(edituser.render(id, userForm, User.getUsername(Integer.parseInt(session("userid")))));

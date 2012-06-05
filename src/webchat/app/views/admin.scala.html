@@ -1,4 +1,4 @@
-@(currentPage : Page[User], username: String)
+@(users : User,username: String)
 
 @import helper._
 @import helper.twitterBootstrap._
@@ -39,7 +39,7 @@
         
     </div>
     
-    @if(currentPage.getTotalRowCount == 0) {
+    @if(users.size() == 0) {
         
         <div>
             <em>Nothing to display</em>
@@ -62,7 +62,7 @@
             </thead>
             <tbody>
 
-                @for(user <- currentPage.getList) {
+                @for(user <- users) {
                     <tr title="edit user">
                         <td><a href="@routes.AdminController.edituser(user.id)">@user.username</a></td>
                         <td>
@@ -120,31 +120,6 @@
             </tbody>
         </table>
 
-        <div class="pagination">
-            <ul>
-                @if(currentPage.hasPrev) {
-                    <li class="prev">
-                        <a href="routes.AdminController.list(currentPage.getPageIndex - 1)">&larr; Previous</a>
-                    </li>
-                } else {
-                    <li class="prev disabled">
-                        <a>&larr; Previous</a>
-                    </li>
-                }
-                <li class="current">
-                    <a>Displaying @currentPage.getDisplayXtoYofZ(" to "," of ")</a>
-                </li>
-                @if(currentPage.hasNext) {
-                    <li class="next">
-                        <a href="routes.AdminController.list(currentPage.getPageIndex + 1)">Next &rarr;</a>
-                    </li>
-                } else {
-                    <li class="next disabled">
-                        <a>Next &rarr;</a>
-                    </li>
-                }
-            </ul>
-        </div>
         
     }
     </div>
