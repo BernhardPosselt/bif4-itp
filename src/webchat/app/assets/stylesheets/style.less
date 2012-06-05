@@ -383,6 +383,34 @@ input, textarea, select {
      
 }
 
+
+/**
+ * Tabbed navgigation styling
+ */
+.tabbed_navi ul {
+    margin-top:0;
+    margin-bottom:0;
+
+    li {
+        display: inline-block;
+        list-display-style: none;
+        border-top: 1px solid #aaa;
+        border-left: 1px solid #aaa;
+        border-right: 1px solid #aaa;
+        padding: 4px 6px;
+        text-align:center;
+        .grad(#444, #222);
+        color: #fefefe;
+        .border_rad_top_right(5px);
+          
+        a {
+            text-decoration:none;
+            color: #fefefe;
+            font-weight: bold;
+        }
+    }
+}
+
 /**
  * Site styling
  */
@@ -500,30 +528,6 @@ input, textarea, select {
             width:20%;
             height:100%;
             float:left;
-
-            .tabbed_navi ul {
-                  margin-top:0;
-                  margin-bottom:0;
-
-                  li {
-                      display: inline-block;
-                      list-display-style: none;
-                      border-top: 1px solid #aaa;
-                      border-left: 1px solid #aaa;
-                      border-right: 1px solid #aaa;
-                      padding: 4px 6px;
-                      text-align:center;
-                      .grad(#444, #222);
-                      color: #fefefe;
-                      .border_rad_top_right(5px);
-                      
-                      a {
-                          text-decoration:none;
-                          color: #fefefe;
-                          font-weight: bold;
-                      }
-                 }
-            }
         
             /**
              * Channel list
@@ -1128,7 +1132,7 @@ input, textarea, select {
 
     #admin_site
     {
-        margin:50px 100px;
+        margin: 0 20px;
         border:1px solid #ccc;
         padding:20px;
 
