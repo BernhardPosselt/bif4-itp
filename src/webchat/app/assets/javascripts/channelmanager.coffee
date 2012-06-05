@@ -273,6 +273,8 @@ class ChannelManager
         # remove unread flag    
         list_entry = @dom_reg_channel_list[channel_id]
         list_entry.removeClass("unread")
+        @dom_channel_list.children(".active").removeClass("active")
+        list_entry.addClass("active")
         # fade out inactive ones and fade in active one
         active_channel_id = @get_active_channel()
         if active_channel_id == undefined
