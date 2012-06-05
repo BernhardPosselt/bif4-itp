@@ -99,10 +99,10 @@ html, body {
 
         input[type=file]
         {
-            opacity:0;
-            -moz-opacity:0;
+            opacity:1;
+            -moz-opacity:1;
             position:relative;
-            z-index:2;
+            z-index:3;
             cursor:pointer;
         }
 
@@ -113,6 +113,7 @@ html, body {
 
         .fake
         {
+            display:none;
             left:0;
             top:0;
             right:0;
@@ -577,14 +578,7 @@ input, textarea {
                 bottom:15px;
                 right:0;
                 display: none;
-                a.invite_group, a.invite_user {
-                    display: inline-block;
-                    background-color: green;
-                    height: 20px;
-                    width: 20px;
-                    cursor: pointer;
-                }
-                
+
                 h1 {
                     border: 1px solid #ccc;
                     border-bottom:none;
@@ -923,14 +917,6 @@ input, textarea {
                         bottom:36px;
                         overflow-y:auto;
                         
-                        a.kick_group, a.kick_user {
-                            display: inline-block;
-                            background-color: red;
-                            height: 20px;
-                            width: 20px;
-                            cursor: pointer;
-                        }
-                        
                         .users {
                             display: none;
                             h1 {
@@ -974,14 +960,7 @@ input, textarea {
             right:0;
             bottom:0;
             margin:5px 15px 15px 15px;
-            
-            a.delete_file {
-                display: inline-block;
-                background-color: red;
-                height: 20px;
-                width: 20px;
-                cursor: pointer;
-            }
+
             fieldset {
                  height:100%;
                  .box-sizing(border-box);
