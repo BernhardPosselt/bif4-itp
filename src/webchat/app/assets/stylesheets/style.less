@@ -137,7 +137,7 @@ html, body {
 /**
  * Common classes
  */
-input, textarea {
+input, textarea, select {
     border: 1px solid #aaa;
 }
 
@@ -1147,38 +1147,47 @@ input, textarea {
             display:none;
         }
         
-        table
-        {
+        table {
             border:1px solid #ddd;
 
-            a
-            {
+            a {
                 color:#000;
                 text-decoration:none;
             }
 
-            td
-                     {
-                         padding:2px 10px;
-                     }
+            tr {
+                &:hover {
+                    background-color: #FFC48C;
+                }
+            }
 
-                     th
-                     {
-                         padding:2px 10px;
-                     }
+            td {
+                padding:2px 10px;
+                
+            }
+
+            th {
+                padding:2px 10px;
+                border-bottom: 1px solid #ddd;
+                .grad(#444, #222);
+                color: #fefefe;
+                
+                a {
+                    color:#fefefe;
+                    text-decoration:none;
+                }
+            }
         }
 
-        .pagination
-        {
+        .pagination {
             margin:10px 0px;
-            ul
-            {
+            
+            ul {
                 list-style-type:none;
                 margin:0;
                 padding:0;
 
-                li
-                {
+                li{
                     display:inline-block;
                     padding:0px 10px;
                 }

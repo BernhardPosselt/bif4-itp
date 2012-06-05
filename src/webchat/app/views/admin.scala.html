@@ -51,8 +51,15 @@
     } 
 
     <div id="actions">
-        
-        <input type="search" id="searchbox" name="f" value="@currentFilter" placeholder="Filter by username...">
+        <select>
+            <option value="0">All Groups</option>
+            <option value="1">Group1</option>
+        </select>
+        <select>
+            <option value="0">All Channels</option>
+            <option value="1">Channel 1</option>
+        </select>
+        <input type="search" class="searchbox" name="f" value="@currentFilter" placeholder="filter...">
         
         <a class="btn success link_button" id="add" href="@routes.AdminController.createuser()">Add a new user</a>
         
@@ -66,23 +73,23 @@
         
     } else {
         
-        <table id="data_table">
+        <table class="data_table" cellpadding="0" cellspacing="0">
             <thead>
                 <tr>
-                    @header("username", "Username")
-                    @header("firstname", "First name")
-                    @header("lastname", "Last name")
-                    @header("email", "E-Mail")
-                    @header("admin", "Admin")
-                    @header("active", "Active")
-                    @header("online", "Online")
-                    @header("lastlogin", "Last login")
+                    <th><a href="#">Username</a></th>
+                    <th><a href="#">First Name</a></th>
+                    <th><a href="#">Last Name</a></th>
+                    <th><a href="#">E-Mail</a></th>
+                    <th><a href="#">Admin</a></th>
+                    <th><a href="#">Active</a></th>
+                    <th><a href="#">Online</a></th>
+                    <th><a href="#">Last Login</a></th>
                 </tr>
             </thead>
             <tbody>
 
                 @for(user <- currentPage.getList) {
-                    <tr>
+                    <tr title="edit user">
                         <td><a href="@routes.AdminController.edituser(user.id)">@user.username</a></td>
                         <td>
                             @if(user.firstname == null) {

@@ -11,7 +11,7 @@ $(document).ready ->
             fadeInElement.fadeIn()
     
     filter_table_rows = (search_string) ->   
-        $("#admin_site > div:visible #data_table tr").each ->
+        $("#admin_site > div:visible .data_table tr").each ->
             visible = false
             $(@).children("td").each ->
                 if $(@).html().indexOf(search_string) != -1
@@ -33,6 +33,8 @@ $(document).ready ->
     $("#admin_tabs #admin_tabs_channels").click ->
         load_admin_divs("#channels")
     # bind search form
-    $("#searchbox").keyup ->
+    $(".searchbox").keyup ->
         filter_table_rows $(@).val()
+        
+    $("#admin_site .data_table").tablesorter(); 
         
