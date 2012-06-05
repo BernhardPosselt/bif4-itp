@@ -14,7 +14,7 @@ $(document).ready ->
         $("#admin_site > div:visible .data_table tr").each ->
             visible = false
             $(@).children("td").each ->
-                if $(@).html().indexOf(search_string) != -1
+                if $(@).html().toLowerCase().indexOf(search_string.toLowerCase()) != -1
                     visible = true
             if visible
                 $(@).show()
