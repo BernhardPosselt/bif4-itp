@@ -358,24 +358,13 @@ class ChannelManager
             code.addClass("brush: " + data.type)
             # check if code has more than X lines, hide it
             if data.message.split("\n").length > @max_shown_code_lines
-                console.log "hid line"
-                show_code = $("<a>")
-                show_code.html("Show More/Hide Code")
-                show_code.attr("href", "#")
-                show_code.addClass("show_code")
-                show_code.toggle =>
-                    code_container.animate({
-                        height: code_container.prop("scrollHeight") + "px"
-                    }, 500)
-                , =>
-                    code_container.animate({
-                        height: @code_clip_height
-                    }, 500)
-                msg.append(show_code)
-                # dont display code
+                msg.append(@_generate_expand_code_link(code_container))
                 code_container.css("height", @code_clip_height)
+                code_container.css("overflow": "hidden")
             code_container.append(code)
             msg.append(code_container)
+            if data.message.split("\n").length > @max_shown_code_lines
+                msg.append(@_generate_expand_code_link(code_container))
         year_span = $("<span>")
         year_span.html(@utilities.format_timestamp_to_date(data.date))
         year_span.addClass("year")
@@ -429,6 +418,22 @@ class ChannelManager
         #scroll to the bottom of the div at start or when users moves scroll down
         if @scrolled_channels[channel_id] == true or @scrolled_channels[channel_id] == undefined
             @scroll_to_bottom(channel_id)
+
+    # generates a link which expands the code container
+    _generate_expand_code_link: (code_container) ->
+        show_code = $("<a>")
+        show_code.html("Expand/Contract")
+        show_code.attr("href", "#")
+        show_code.addClass("show_code")
+        show_code.toggle =>
+            code_container.animate({
+                height: code_container.prop("scrollHeight") + "px"
+            }, 500)
+        , =>
+            code_container.animate({
+                height: @code_clip_height
+            }, 500)
+        return show_code
 
 
     # decides if a new message scrolls to the stream to the bottom
