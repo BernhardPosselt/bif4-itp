@@ -426,14 +426,15 @@ class ChannelManager
         show_code.html("Expand/Contract")
         show_code.attr("href", "#")
         show_code.addClass("show_code")
-        show_code.toggle =>
-            code_container.animate({
-                height: code_container.prop("scrollHeight") + "px"
-            }, 500)
-        , =>
-            code_container.animate({
-                height: @code_clip_height
-            }, 500)
+        show_code.click =>
+            if code_container.attr("height") == @code_clip_height
+                code_container.animate({
+                    height: code_container.prop("scrollHeight") + "px"
+                }, 500)
+            else
+                code_container.animate({
+                    height: @code_clip_height
+                }, 500)
         return show_code
 
 
