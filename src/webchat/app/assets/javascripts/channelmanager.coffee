@@ -264,11 +264,7 @@ class ChannelManager
     join_channel: (channel_id) -> 
         # check if we need to get data to init the stream
         if @loaded_channels[channel_id] == undefined
-            msg = 
-                type: "join"
-                data: 
-                    channel: channel_id
-            @main_manager.send_websocket(msg)      
+            @main_manager.join(channel_id)      
             @loaded_channels[channel_id] = true
         # remove unread flag    
         list_entry = @dom_reg_channel_list[channel_id]
@@ -500,8 +496,9 @@ class ChannelManager
             invite_group_link = $("<a>")
             invite_group_link.addClass("invite_group")
             invite_group_link.attr("title", "invite group " + group.name + " to current channel")
-            invite_group_link.click =>
-                @main_manager.invite_group(group_id)
+            do (group_id) =>
+                invite_group_link.click =>
+                    @main_manager.invite_group(group_id)
             heading.append(invite_group_link)
             user_list = $("<ul>")
             for user_id in users
@@ -511,8 +508,9 @@ class ChannelManager
                 invite_user_link = $("<a>")
                 invite_user_link.addClass("invite_user")
                 invite_user_link.attr("title", "invite user " + user.prename + " " + user.lastname + " to current channel")
-                invite_user_link.click =>
-                    @main_manager.invite_user(user_id)
+                do (user_id) =>
+                    invite_user_link.click =>
+                        @main_manager.invite_user(user_id)
                 user_entry.append(invite_user_link)
                 if user.online == true
                     user_entry.addClass("online")
@@ -533,8 +531,9 @@ class ChannelManager
             invite_user_link = $("<a>")
             invite_user_link.addClass("invite_user")
             invite_user_link.attr("title", "invite user " + user.prename + " " + user.lastname + " to current channel")
-            invite_user_link.click =>
-                @main_manager.invite_user(user_id)
+            do (user_id) =>
+                invite_user_link.click =>
+                    @main_manager.invite_user(user_id)
             user_entry.append(invite_user_link)
             if user.online == true
                 user_entry.addClass("online")
@@ -554,8 +553,9 @@ class ChannelManager
                 kick_group_link = $("<a>")
                 kick_group_link.addClass("kick_group")
                 kick_group_link.attr("title", "remove group " + group.name + " from channel")
-                kick_group_link.click =>
-                    @main_manager.kick_group(group_id)
+                do (group_id) =>
+                    kick_group_link.click =>
+                        @main_manager.kick_group(group_id)
                 heading.append(kick_group_link)
                 user_list = $("<ul>")
                 for user_id in groups[group_id]
@@ -565,8 +565,9 @@ class ChannelManager
                     kick_user_link = $("<a>")
                     kick_user_link.addClass("kick_user")
                     kick_user_link.attr("title", "remove user " + user.prename + " " + user.lastname + " from channel")
-                    kick_user_link.click =>
-                        @main_manager.kick_user(user_id)
+                    do (user_id) =>
+                        kick_user_link.click =>
+                            @main_manager.kick_user(user_id)
                     user_entry.append(kick_user_link)
                     if user.online == true
                         user_entry.addClass("online")
@@ -587,8 +588,9 @@ class ChannelManager
                 kick_user_link = $("<a>")
                 kick_user_link.addClass("kick_user")
                 kick_user_link.attr("title", "remove user " + user.prename + " " + user.lastname + " from channel")
-                kick_user_link.click =>
-                    @main_manager.kick_user(user_id)
+                do (user_id) =>
+                    kick_user_link.click =>
+                        @main_manager.kick_user(user_id)
                 user_entry.append(kick_user_link)
                 if user.online == true
                     user_entry.addClass("online")

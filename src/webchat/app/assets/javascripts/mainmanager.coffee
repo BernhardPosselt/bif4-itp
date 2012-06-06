@@ -275,3 +275,10 @@ class MainManager
             data:
                 file: parseInt(file_id)
         @send_websocket(message)
+        
+    join: (channel_id) ->
+        msg = 
+            type: "join"
+            data: 
+                channel: parseInt(channel_id)
+        @send_websocket(msg)
