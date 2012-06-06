@@ -50,7 +50,7 @@ $(document).ready ->
     submit = () ->
         type = $("#input_options option:selected").val()
         msg = $("#input_field").val()
-        msg = msg.slice(0, -1) # remove \n
+        #msg = msg.slice(0, -1) # remove \n
         $("#input_field").val("")
         # only send when there is min 1 char
         if msg.length > 0

@@ -442,8 +442,8 @@ class ChannelManager
         stream = @dom_reg_stream[channel_id].children(".stream_field").children(".stream_chat")
         if @scrolled_channels[channel_id] == undefined
             @scrolled_channels[channel_id] = true
-        scrollBottom = stream.height() + stream.scrollTop()
-        if scrollBottom == stream.prop("scrollHeight")
+        scrollBottom = stream.innerHeight() + stream.scrollTop()
+        if scrollBottom > stream.prop("scrollHeight")
             @scrolled_channels[channel_id] = true
             console.log("autoscroll activated")
         else
