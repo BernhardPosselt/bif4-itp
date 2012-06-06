@@ -97,49 +97,34 @@ html, body {
         margin:0;
         position:relative;
 
+        input {
+            line-height: 28px;
+            height: 28px;
+        }
+        
         input[type=file]
         {
-            opacity:1;
-            -moz-opacity:1;
-            position: absolute;
-            z-index:3;
-            cursor:pointer;
-            left: 0;
-            right: 4px;
-            top: 0;
+            display: none;
+        }
+        
+        .fake_file_input {
             border: 1px solid #ccc;
-            height: 30px;
+            height: 26px;
+            line-height: 28px;
+            width: auto;
+            margin: 0 63px 0 3px;
+            overflow: hidden;
         }
 
         input[type=submit]{
-            float: right;
-            height: 30px;
+            margin-right: 2px;
+            width: 60px;
             position: absolute;
-            z-index: 4;
             right: 2px;
             top: 0;
+            bottom: 0;
         }
 
-        .fake
-        {
-            display:none;
-            left:0;
-            top:0;
-            right:0;
-            position:absolute;
-            z-index:1;
-            margin:0px 2px;
-
-            .path
-            {
-                float:left;
-            }
-
-            .choose
-            {
-                float:right;
-            }
-        }
     }
 }
 
@@ -1131,6 +1116,7 @@ input, textarea, select {
                     position:relative;
                     width:100%;
                     height:30px;
+                    overflow: hidden;
                 }
             }
         }
