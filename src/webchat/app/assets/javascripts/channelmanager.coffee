@@ -444,12 +444,13 @@ class ChannelManager
         if @scrolled_channels[channel_id] == undefined
             @scrolled_channels[channel_id] = true
         scrollBottom = stream.innerHeight() + stream.scrollTop()
-        if scrollBottom > stream.prop("scrollHeight")
+        if scrollBottom >= stream.prop("scrollHeight")
             @scrolled_channels[channel_id] = true
             console.log("autoscroll activated")
         else
             @scrolled_channels[channel_id] = false
             console.log("autoscroll deactivated")
+        console.log("Scrolled " + scrollBottom + " of " + stream.prop("scrollHeight"))
             
             
     # scrolls a stream to the bottom
