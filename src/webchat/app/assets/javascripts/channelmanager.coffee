@@ -345,7 +345,7 @@ class ChannelManager
         if data.type == "text"
             # check msg contains @PrenameLastname and highlight if true
             current_user = @user_data["" + @active_user]
-            highlight_string = "@" + current_user.prename + current_user.lastname
+            highlight_string = current_user.prename + current_user.lastname
             if data.message.indexOf(highlight_string) != -1
                 line.addClass("highlight")
                 @notify(channel_id)
@@ -829,7 +829,7 @@ class ChannelManager
     # checks all users in the active channel for autocompletion of the name
     complete_name: (val) ->
         # get the last part behind the at
-        words = val.split("@")
+        words = val.split(" ")
         if words.length == 0
             return val
         word = words[words.length-1]
@@ -857,7 +857,7 @@ class ChannelManager
                 matches += 1
                 # rebuild the original message
                 for item in words
-                    ret += item + "@"
+                    ret += item + " "
                 ret += name
             if matches == 1
                 return ret
