@@ -45,7 +45,7 @@ class ChannelManager
         @init_channels = {}
         @scrolled_channels = {}
         @max_shown_code_lines = 10
-        @code_clip_height = "155px"
+        @code_clip_height = 155
         @notify_audio = $("<audio>")
         @notify_audio.attr("src", "/assets/audio/75639__jobro__attention03.ogg")
         @mimetypes = new MimeTypes()
@@ -360,7 +360,7 @@ class ChannelManager
             # check if code has more than X lines, hide it
             if data.message.split("\n").length > @max_shown_code_lines
                 msg.append(@_generate_expand_code_link(code_container))
-                code_container.css("height", @code_clip_height)
+                code_container.css("height", @code_clip_height + "px")
                 code_container.css("overflow": "hidden")
             code_container.append(code)
             msg.append(code_container)
@@ -427,14 +427,15 @@ class ChannelManager
         show_code.attr("href", "#")
         show_code.addClass("show_code")
         show_code.click =>
-            if code_container.attr("height") == @code_clip_height
+            if code_container.attr("height") == code_container.prop("scrollHeight")
                 code_container.animate({
-                    height: code_container.prop("scrollHeight") + "px"
+                    height: @code_clip_height + "px"
                 }, 500)
             else
                 code_container.animate({
-                    height: @code_clip_height
+                    height: code_container.prop("scrollHeight") + "px"
                 }, 500)
+
         return show_code
 
 

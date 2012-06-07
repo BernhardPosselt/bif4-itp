@@ -13,6 +13,7 @@ class Smileys
             ":(": "030.gif"
             ":D": "074.gif"
             "xD": "049.gif"
+            "XD": "049.gif"
             ";D": "073.gif"
             "&gt;.&lt;": "009.gif"
             "-.-": "064.gif"
