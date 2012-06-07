@@ -427,7 +427,7 @@ class ChannelManager
         show_code.attr("href", "#")
         show_code.addClass("show_code")
         show_code.click =>
-            if code_container.attr("height") == code_container.prop("scrollHeight")
+            if code_container.css("height") == code_container.prop("scrollHeight") + "px"
                 code_container.animate({
                     height: @code_clip_height + "px"
                 }, 500)
