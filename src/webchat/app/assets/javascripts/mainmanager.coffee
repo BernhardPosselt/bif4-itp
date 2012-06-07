@@ -131,6 +131,10 @@ class MainManager
     # msg: the message which we want to send
     # type: the type, text or java for instance
     send_msg: (msg, type) ->
+        # if the last sign is a newline and the type is text, remove the 
+        # new line
+        if type == "text" and msg.charAt(msg.length-1) == "\n"
+            msg = msg.slice(0, -1)
         channel_id = @channels.get_active_channel()
         if channel_id != undefined
             channel_id = parseInt(channel_id)
