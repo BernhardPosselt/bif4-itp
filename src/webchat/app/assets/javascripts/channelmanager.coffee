@@ -361,7 +361,7 @@ class ChannelManager
             if data.message.split("\n").length > @max_shown_code_lines
                 msg.append(@_generate_expand_code_link(code_container))
                 code_container.css("height", @code_clip_height + "px")
-                code_container.css("overflow": "hidden")
+                code_container.css("overflow-y": "hidden")
             code_container.append(code)
             msg.append(code_container)
             if data.message.split("\n").length > @max_shown_code_lines
