@@ -103,6 +103,13 @@ public class Channel extends Model {
         return tmp;
     }
 
+	public static List<Channel> getFileChannels(int fileid)
+    {
+		List<Channel> tmp = new ArrayList<Channel>();
+        tmp =  find.where().eq("files.id", fileid).findList();
+        return tmp;
+    }
+	
 	public static List<Integer> getChannelUsers(int channelid) {
 		List<Integer> users = new ArrayList<Integer>();
 		for (Iterator<User> iterator= find.byId(channelid).users.iterator(); iterator.hasNext();){

@@ -25,7 +25,7 @@ public class InKick {
 			Channel chan = new Channel();
 		
 			chan = models.Channel.find.byId(inkick.data.channel);
-			
+	
 			for (Iterator<Integer> useriter = inkick.data.users.iterator(); useriter.hasNext();){
 				User user = new User();
 				user = User.find.byId(useriter.next());
@@ -37,8 +37,13 @@ public class InKick {
 			for (Iterator<Integer> groupiter = inkick.data.groups.iterator(); groupiter.hasNext();){
 				Groups group = new Groups();
 				group = Groups.find.byId(groupiter.next());
-				if (chan.groups.contains(group))
+				if (chan.groups.contains(group)){
+					for (Iterator<models.User> useriter = models.Groups.find.byId(group.id).users.iterator(); useriter.hasNext();){
+						users.add(useriter.next().id);
+						
+					}
 					chan.groups.remove(group);
+				}		
 			}
 			
 			chan.update();

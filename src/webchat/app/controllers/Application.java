@@ -4,14 +4,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Date;
 
 import com.google.common.io.Files;
+
+import flexjson.JSONSerializer;
 
 import org.h2.util.IOUtils;
 import org.joda.time.DateTime;
 import play.Logger;
 
+import play.libs.Json;
 import play.mvc.*;
 import views.html.*;
 import websocket.WebsocketManager;
@@ -81,7 +85,7 @@ public class Application extends Controller {
             FileOutputStream fos = new FileOutputStream(dest);
 
             IOUtils.copy(fis, fos);
-
+            
             //Save file to database
             int channelid = Integer.valueOf(session("channelid"));
             models.File new_file = new models.File();
@@ -95,7 +99,34 @@ public class Application extends Controller {
             new_file.save();
             new_file.saveManyToManyAssociations("channels");
             websocket.WebsocketManager.notifyAllMembers(websocket.json.out.File.gennewFile(new_file));
+            websocket.json.in.InMessage inmessage = new websocket.json.in.InMessage();
+            websocket.json.in.InMessageData indata = new websocket.json.in.InMessageData();
+            
+            System.out.println(contentType);
+            if (contentType.equals("application/octet-stream")){
+            
+             	indata.channel.add(channelid);
+             	StringWriter writer = new StringWriter();
+             	org.apache.commons.io.IOUtils.copy(fis, writer, "UTF-8");
+
+	        	indata.message =  writer.toString();
+	            indata.type = "sql";
+	            inmessage.data = indata;
+            	
+            }
+            else{
+	        	indata.channel.add(channelid);
+	        	indata.message = filename;
+	            indata.type = "text";
+	            inmessage.data = indata;
+            }
+           
+    		JSONSerializer aser = new JSONSerializer().include("*");
+			String json = aser.exclude("*.class").serialize(inmessage);
+            websocket.WebsocketManager.notifyAllMembers(websocket.json.out.Message.genMessage(Json.parse(json), channelid));
             websocket.WebsocketManager.notifyAllMembers(websocket.json.out.Channel.genChannel("update", channelid));
+            fis.close();
+            fos.close();
             return ok(upload.render(form(models.File.class)));
         }
         else
@@ -172,4 +203,5 @@ public class Application extends Controller {
 	    }
 	    return null;
      }
+	 
 }

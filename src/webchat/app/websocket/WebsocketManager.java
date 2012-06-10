@@ -1,6 +1,6 @@
 package websocket;
 
-//import java.nio.channels.MembershipKey;
+
 import java.util.*;
 
 import org.codehaus.jackson.JsonNode;
@@ -13,6 +13,7 @@ import websocket.json.in.InChannelClose;
 import websocket.json.in.InChannelDelete;
 import websocket.json.in.InChannelName;
 import websocket.json.in.InChanneltopic;
+import websocket.json.in.InFileDelete;
 import websocket.json.in.InInvite;
 import websocket.json.in.InJoin;
 import websocket.json.in.InKick;
@@ -67,6 +68,7 @@ public class WebsocketManager {
         };
     }
 
+    
     public static void onReceive(JsonNode inmessage, WebSocket.Out<JsonNode> out, int userid) throws Exception {
     	if(!members.containsKey(userid))
     		members.put(out, userid);
@@ -92,8 +94,8 @@ public class WebsocketManager {
         	int channelid  = inmessage.findPath("channel").asInt();
         	List<Integer> olduser = models.Channel.getChannelUsers(channelid);
         	List<Integer>users  = InInvite.invite(inmessage);   	
-        	sendinviteMessagetoUser(olduser, channelid, "update");
-        	sendinviteMessagetoUser(users, channelid, "create");
+        	sendMessagetoUser(olduser, channelid, "update");
+        	sendMessagetoUser(users, channelid, "create");
         }
         else if (type.equals("newchannel")){
         	Boolean is_public = inmessage.findPath("is_public").asBoolean();
@@ -111,8 +113,8 @@ public class WebsocketManager {
         	int channelid  = inmessage.findPath("channel").asInt();
         	List<Integer>users  = InKick.kick(inmessage); 
           	List<Integer> stayusers = models.Channel.getChannelUsers(channelid);
-        	sendinviteMessagetoUser(stayusers, channelid, "update");
-        	sendinviteMessagetoUser(users, channelid, "delete");
+        	sendMessagetoUser(stayusers, channelid, "update");
+        	sendMessagetoUser(users, channelid, "delete");
         }
         else if (type.equals("channelname")){
         	int channelid = InChannelName.changechannelname(inmessage);
@@ -138,7 +140,9 @@ public class WebsocketManager {
         		notifyAllMembers(User.genUserchanged(userid, "update"));
         }
         else if (type.equals("filedelete")){
-        	
+        	List<Integer> channels = InFileDelete.filedelete(inmessage);
+        	for (Iterator<Integer> iterator = channels.iterator(); iterator.hasNext();)
+        		notifyAllMembers(Channel.genChannel("update", iterator.next()));
         }
         else if (type.equals("ping")){
         	
@@ -159,7 +163,7 @@ public class WebsocketManager {
         }
     }
     
-    public static void sendinviteMessagetoUser(List<Integer>users, int channelid, String action){
+    public static void sendMessagetoUser(List<Integer>users, int channelid, String action){
     	WebSocket.Out<JsonNode> out = null;
         for(Map.Entry<WebSocket.Out<JsonNode>, Integer> entry: members.entrySet()) {
             if (users.contains(entry.getValue())){
