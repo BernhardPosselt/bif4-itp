@@ -156,7 +156,7 @@ public class Application extends Controller {
             else{
  
 	        	indata.channel.add(channelid);
-	        	indata.message =  play.Play.application().path().toString() + "/files/" + filename;
+	        	indata.message =  "download/" + new_file.id + "/" + filename;
 	            indata.type = "text";
 	            inmessage.data = indata;
             }
