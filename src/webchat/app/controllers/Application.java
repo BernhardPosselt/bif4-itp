@@ -229,6 +229,15 @@ public class Application extends Controller {
 	  	    group.save();
 	  	    group.saveManyToManyAssociations("channels");
 	  	    group.saveManyToManyAssociations("users");
+	  	    
+	  	    Groups group1 = new Groups();
+	  	    group1.modified = new Date();
+	  	    group1.name = "Group2";
+	  	    group1.users.add(user);
+	  	    group1.users.add(user1);
+	  	    group1.save();
+	  	    group1.saveManyToManyAssociations("channels");
+	  	    group1.saveManyToManyAssociations("users");
 	  	    return ok(index.render("testdata", false));
 	 }
 	 

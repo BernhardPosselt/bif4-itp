@@ -21,6 +21,10 @@ public class InNewChannel {
 			InNewChannel innewchan = new InNewChannel();
 			innewchan = new JSONDeserializer<InNewChannel>().deserialize(
 					inmessage.toString(), InNewChannel.class);
+			for (Iterator<Channel> channeliter = Channel.find.all().iterator(); channeliter.hasNext();){
+				if (channeliter.next().name.equals(innewchan.data.name.trim()))
+					return -1;
+			}
 			Channel chan = new Channel();
 			
 			chan.name = innewchan.data.name;
