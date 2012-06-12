@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.google.common.io.Files;
 
@@ -76,15 +78,20 @@ public class Application extends Controller {
         {
             String filename = uploaded_file.getFilename();
             String contentType = uploaded_file.getContentType();
+            
 
             String unqName = UUID.randomUUID().toString() + "_" + filename;
             File file = uploaded_file.getFile();
             File dest = new File(play.Play.application().path().toString() + "/files/" + unqName);
+            
 
             FileInputStream fis = new FileInputStream(file);
             FileOutputStream fos = new FileOutputStream(dest);
 
             IOUtils.copy(fis, fos);
+            
+            fis.close();
+            fos.close();
             
             //Save file to database
             int channelid = Integer.valueOf(session("channelid"));
@@ -103,30 +110,61 @@ public class Application extends Controller {
             websocket.json.in.InMessageData indata = new websocket.json.in.InMessageData();
             
             System.out.println(contentType);
-            if (contentType.equals("application/octet-stream")){
+            List<String> validoctettypes = new ArrayList<String>();
+            validoctettypes.add("java");
+            validoctettypes.add("php");
+            validoctettypes.add("coffee");
+            validoctettypes.add("js");
+            validoctettypes.add("php");
+            
+            List<String> validplaintypes = new ArrayList<String>();
+            validplaintypes.add("vb");
+            validplaintypes.add("cs");
+            validplaintypes.add("cpp");
+            String filetype = filename.substring(filename.indexOf(".")+1);
+            System.out.println("endung: "+ filetype);
+            if (contentType.equals("application/octet-stream") && validoctettypes.contains(filetype)){
             
              	indata.channel.add(channelid);
-             	StringWriter writer = new StringWriter();
-             	org.apache.commons.io.IOUtils.copy(fis, writer, "UTF-8");
-
-	        	indata.message =  writer.toString();
-	            indata.type = "sql";
+                FileInputStream filestream = new FileInputStream(file);
+	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	filestream.close();
+	        	if (filetype.equals("coffee"))
+	        		filetype = "js";
+	            indata.type = filetype;
 	            inmessage.data = indata;
             	
             }
+            else if (contentType.equals("text/plain") && validplaintypes.contains(filetype)){
+            	indata.channel.add(channelid);
+                FileInputStream filestream = new FileInputStream(file);
+	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	filestream.close();
+	        	if (filetype.equals("cs"))
+	        		filetype = "csharp";
+	            indata.type = filetype;
+	            inmessage.data = indata;
+            }
+            else if (contentType.equals("text/css")){
+            	indata.channel.add(channelid);
+                FileInputStream filestream = new FileInputStream(file);
+	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	filestream.close();
+	            indata.type = filetype;
+	            inmessage.data = indata;
+            }
             else{
+ 
 	        	indata.channel.add(channelid);
-	        	indata.message = filename;
+	        	indata.message =  "download/" + new_file.id + "/" + filename;
 	            indata.type = "text";
 	            inmessage.data = indata;
             }
            
     		JSONSerializer aser = new JSONSerializer().include("*");
 			String json = aser.exclude("*.class").serialize(inmessage);
-            websocket.WebsocketManager.notifyAllMembers(websocket.json.out.Message.genMessage(Json.parse(json), channelid));
+            websocket.WebsocketManager.notifyAllMembers(websocket.json.out.Message.genMessage(Json.parse(json), Integer.valueOf(session("userid"))));
             websocket.WebsocketManager.notifyAllMembers(websocket.json.out.Channel.genChannel("update", channelid));
-            fis.close();
-            fos.close();
             return ok(upload.render(form(models.File.class)));
         }
         else

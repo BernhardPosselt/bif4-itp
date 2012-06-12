@@ -39,8 +39,10 @@ public class InKick {
 				group = Groups.find.byId(groupiter.next());
 				if (chan.groups.contains(group)){
 					for (Iterator<models.User> useriter = models.Groups.find.byId(group.id).users.iterator(); useriter.hasNext();){
-						users.add(useriter.next().id);
-						
+						models.User user = new models.User();
+						user = useriter.next();
+						if (!models.User.getChannelGroupUser(chan.groups).contains(user))
+							users.add(useriter.next().id);			
 					}
 					chan.groups.remove(group);
 				}		
