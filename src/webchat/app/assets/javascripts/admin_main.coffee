@@ -11,7 +11,7 @@ $(document).ready ->
             fadeInElement.fadeIn()
     
     filter_table_rows = (search_string) ->   
-        $("#admin_site > div:visible .data_table tr").each ->
+        $("#admin_site > div:visible .data_table tbody tr").each ->
             visible = false
             $(@).children("td").each ->
                 if $(@).html().toLowerCase().indexOf(search_string.toLowerCase()) != -1
