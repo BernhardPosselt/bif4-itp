@@ -16,9 +16,11 @@ import flexjson.JSONSerializer;
 import org.h2.util.IOUtils;
 import org.joda.time.DateTime;
 import play.Logger;
+import play.Play;
 
 import play.libs.Json;
 import play.mvc.*;
+import play.mvc.Http.Request;
 import views.html.*;
 import websocket.WebsocketManager;
 
@@ -109,20 +111,34 @@ public class Application extends Controller {
             websocket.json.in.InMessage inmessage = new websocket.json.in.InMessage();
             websocket.json.in.InMessageData indata = new websocket.json.in.InMessageData();
             
-            System.out.println(contentType);
             List<String> validoctettypes = new ArrayList<String>();
             validoctettypes.add("java");
             validoctettypes.add("php");
             validoctettypes.add("coffee");
             validoctettypes.add("js");
             validoctettypes.add("php");
+            validoctettypes.add("scala");
+            validoctettypes.add("pl");
+            validoctettypes.add("pm");
+            validoctettypes.add("groovy");
+            validoctettypes.add("ps1");
+            validoctettypes.add("sh");
+            validoctettypes.add("bsh");
+            validoctettypes.add("as");
+            validoctettypes.add("py");
+            validoctettypes.add("rb");
+            validoctettypes.add("erl");
+            validoctettypes.add("diff");
+            validoctettypes.add("sass");
+            validoctettypes.add("scss");
+            validoctettypes.add("less");
+            
             
             List<String> validplaintypes = new ArrayList<String>();
             validplaintypes.add("vb");
             validplaintypes.add("cs");
             validplaintypes.add("cpp");
             String filetype = filename.substring(filename.indexOf(".")+1);
-            System.out.println("endung: "+ filetype);
             if (contentType.equals("application/octet-stream") && validoctettypes.contains(filetype)){
             
              	indata.channel.add(channelid);
@@ -131,6 +147,22 @@ public class Application extends Controller {
 	        	filestream.close();
 	        	if (filetype.equals("coffee"))
 	        		filetype = "js";
+	        	else if(filetype.equals("pm") || filetype.equals("pl"))
+	        		filetype = "perl";
+	        	else if(filetype.equals("ps1"))
+	        			filetype = "powershell";
+	        	else if (filetype.equals("sh") || filetype.equals("bsh"))
+	        		filetype = "bash";
+	        	else if (filetype.equals("as") || filetype.equals("as3"))
+	        		filetype = "as3";
+	        	else if (filetype.equals("py"))
+	        		filetype = "python";
+	        	else if (filetype.equals("rb"))
+	        		filetype = "ruby";
+	        	else if (filetype.equals("erl"))
+	        		filetype = "erlang";
+	        	else if (filetype.equals("scss") || filetype.equals("less"))
+	        		filetype = "sass";
 	            indata.type = filetype;
 	            inmessage.data = indata;
             	
@@ -153,10 +185,26 @@ public class Application extends Controller {
 	            indata.type = filetype;
 	            inmessage.data = indata;
             }
+            else if (contentType.equals("text/xml")){
+            	indata.channel.add(channelid);
+                FileInputStream filestream = new FileInputStream(file);
+	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	filestream.close();
+	            indata.type = filetype;
+	            inmessage.data = indata;
+            }
+            else if (contentType.equals("application/x-javascript")){
+            	indata.channel.add(channelid);
+                FileInputStream filestream = new FileInputStream(file);
+	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	filestream.close();
+	            indata.type = filetype;
+	            inmessage.data = indata;
+            }
             else{
  
 	        	indata.channel.add(channelid);
-	        	indata.message =  "download/" + new_file.id + "/" + filename;
+	        	indata.message = "http://" + request().host() + "/download/" + new_file.id + "/" + filename;
 	            indata.type = "text";
 	            inmessage.data = indata;
             }
@@ -229,6 +277,15 @@ public class Application extends Controller {
 	  	    group.save();
 	  	    group.saveManyToManyAssociations("channels");
 	  	    group.saveManyToManyAssociations("users");
+	  	    
+	  	    Groups group1 = new Groups();
+	  	    group1.modified = new Date();
+	  	    group1.name = "Group2";
+	  	    group1.users.add(user);
+	  	    group1.users.add(user1);
+	  	    group1.save();
+	  	    group1.saveManyToManyAssociations("channels");
+	  	    group1.saveManyToManyAssociations("users");
 	  	    return ok(index.render("testdata", false));
 	 }
 	 

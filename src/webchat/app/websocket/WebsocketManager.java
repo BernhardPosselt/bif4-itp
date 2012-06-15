@@ -3,6 +3,8 @@ package websocket;
 
 import java.util.*;
 
+import models.Groups;
+
 import org.codehaus.jackson.JsonNode;
 
 import play.libs.F.Callback;
@@ -92,18 +94,28 @@ public class WebsocketManager {
         }
         else if (type.equals("invite")){
         	int channelid  = inmessage.findPath("channel").asInt();
-        	List<Integer> olduser = models.Channel.getChannelUsers(channelid);
+        	List<Integer> oldusers = models.Channel.getChannelUsers(channelid);
+        	for (Iterator<models.User> useriter = models.User.getChannelGroupUser(Groups.getChannelGroups(channelid)).iterator(); useriter.hasNext();){
+          		int olduser = useriter.next().id;
+          		if (!oldusers.contains(olduser))
+          			oldusers.add(olduser);
+          	}
         	List<Integer>users  = InInvite.invite(inmessage);   	
-        	sendMessagetoUser(olduser, channelid, "update");
+        	sendMessagetoUser(oldusers, channelid, "update");
         	sendMessagetoUser(users, channelid, "create");
         }
         else if (type.equals("newchannel")){
         	Boolean is_public = inmessage.findPath("is_public").asBoolean();
         	int channelid = InNewChannel.createnewchannel(inmessage, userid);
-        	if (is_public == false)
+        	if (channelid == -1)
+        		out.write(Status.genStatus("fail", "Could not create Channel; Channelname already exists!"));
+        	else{
+        		if (is_public == false)
         			out.write(Channel.genChannel("create", channelid));
-        	else
-        		notifyAllMembers(Channel.genChannel("create", channelid));
+        		else
+        			notifyAllMembers(Channel.genChannel("create", channelid));
+        	}
+        
         }
         else if (type.equals("channeltopic")){
         	int channelid = InChanneltopic.savetopicchange(inmessage);
@@ -113,13 +125,18 @@ public class WebsocketManager {
         	int channelid  = inmessage.findPath("channel").asInt();
         	List<Integer>users  = InKick.kick(inmessage); 
           	List<Integer> stayusers = models.Channel.getChannelUsers(channelid);
+          	for (Iterator<models.User> useriter = models.User.getChannelGroupUser(Groups.getChannelGroups(channelid)).iterator(); useriter.hasNext();){
+          		int stayuser = useriter.next().id;
+          		if (!stayusers.contains(stayuser))
+          			stayusers.add(stayuser);
+          	}
         	sendMessagetoUser(stayusers, channelid, "update");
         	sendMessagetoUser(users, channelid, "delete");
         }
         else if (type.equals("channelname")){
         	int channelid = InChannelName.changechannelname(inmessage);
         	if (channelid == -1)
-        		notifyAllMembers(Status.genStatus("fail", "Could not change Channelname; Channelname already exists!"));
+        		out.write(Status.genStatus("fail", "Could not change Channelname; Channelname already exists!"));
         	else
         		notifyAllMembers(Channel.genChannel("update", channelid));
         }

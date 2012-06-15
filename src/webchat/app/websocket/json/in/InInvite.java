@@ -34,9 +34,7 @@ public class InInvite {
 					for (Iterator<models.User> useriter = group.users.iterator(); useriter.hasNext();){
 						models.User user = new User();
 						user = useriter.next();
-						if (Channel.getChannelUsers(chan.id).contains(user.id))
-							chan.users.remove(user.id);
-						else
+						if (!Channel.getChannelUsers(chan.id).contains(user.id))
 							users.add(user.id);
 					}
 				}		
@@ -45,9 +43,11 @@ public class InInvite {
 			for (Iterator<Integer> useriter = ininv.data.users.iterator(); useriter.hasNext();){
 				User user = new User();
 				user = User.find.byId(useriter.next());	
-				if (!(User.getChannelGroupUser(Groups.getChannelGroups(chan.id)).contains(user)) && (!Channel.getChannelUsers(chan.id).contains(user.id))){
+				if (!Channel.getChannelUsers(chan.id).contains(user.id)){
+					if (!(User.getChannelGroupUser(Groups.getChannelGroups(chan.id)).contains(user))){
+						users.add(user.id);
+					}
 					chan.users.add(user);
-					users.add(user.id);
 				}
 			}
 			

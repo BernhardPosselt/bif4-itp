@@ -255,8 +255,9 @@ class ChannelManager
         console.log("joined first channel")
         if @utilities.get_dict_size(@channel_data) > 0
             for id, value of @channel_data
-                @join_channel(id)
-                break
+                if value != undefined
+                    @join_channel(id)
+                    break
         else
             console.log("no channel found, can not join initial channel")
     
@@ -277,13 +278,17 @@ class ChannelManager
             @dom_reg_stream[channel_id].fadeIn "fast"
             @dom_reg_stream_sidebar_users[channel_id].fadeIn "fast"
             @dom_reg_stream_sidebar_files[channel_id].fadeIn "fast"
-        else if channel_id != active_channel_id
+        else if channel_id != active_channel_id and @channel_data[active_channel_id] != undefined
             @dom_reg_stream[active_channel_id].fadeOut "fast", =>
                 @dom_reg_stream[channel_id].fadeIn "fast"
             @dom_reg_stream_sidebar_users[active_channel_id].fadeOut "fast", =>
                 @dom_reg_stream_sidebar_users[channel_id].fadeIn "fast"
             @dom_reg_stream_sidebar_files[active_channel_id].fadeOut "fast", =>
                 @dom_reg_stream_sidebar_files[channel_id].fadeIn "fast"
+        else if channel_id != active_channel_id and @channel_data[active_channel_id] == undefined
+            @dom_reg_stream[channel_id].fadeIn "fast"
+            @dom_reg_stream_sidebar_users[channel_id].fadeIn "fast"
+            @dom_reg_stream_sidebar_files[channel_id].fadeIn "fast"        
         @active_channel = channel_id            
         # set channel get parameter for upload form src
         @dom_upload_iframe.attr("src", "/upload?channel_id=" + @active_channel)
