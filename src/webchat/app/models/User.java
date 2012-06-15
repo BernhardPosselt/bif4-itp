@@ -141,7 +141,52 @@ public class User extends Model {
         return users;
     }
     
-
+    public static List<Channel> getChannelsForUser(int userid)
+    {
+    	List<Channel> channels = new ArrayList<Channel>();
+    	User tmp = new User();
+    	tmp = find.byId(userid);
+    	for (Iterator<Channel> iterator= find.byId(userid).channels.iterator(); iterator.hasNext();){
+			channels.add(iterator.next());
+		}
+    	return channels;
+    }
+    
+    public static List<Channel> getChannelsNotForUser(int userid)
+    {
+    	List<Channel> channels = new ArrayList<Channel>();
+    	channels = Channel.find.all();
+    	User tmp = new User();
+    	tmp = find.byId(userid);
+    	for (Iterator<Channel> iterator= find.byId(userid).channels.iterator(); iterator.hasNext();){
+			channels.remove(iterator.next());
+		}
+    	return channels;
+    }
+    
+    public static List<Groups> getGroupsForUser(int userid)
+    {
+    	List<Groups> groups = new ArrayList<Groups>();
+    	User tmp = new User();
+    	tmp = find.byId(userid);
+    	for (Iterator<Groups> iterator= find.byId(userid).groups.iterator(); iterator.hasNext();){
+			groups.add(iterator.next());
+		}
+    	return groups;
+    }
+    
+    public static List<Groups> getGroupsNotForUser(int userid)
+    {
+    	List<Groups> groups = new ArrayList<Groups>();
+    	groups = Groups.find.all();
+    	User tmp = new User();
+    	tmp = find.byId(userid);
+    	for (Iterator<Groups> iterator= find.byId(userid).groups.iterator(); iterator.hasNext();){
+			groups.remove(iterator.next());
+		}
+    	return groups;
+    }
+ 
 }
 
 	

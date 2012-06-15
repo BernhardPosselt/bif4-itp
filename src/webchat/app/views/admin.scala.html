@@ -1,4 +1,4 @@
-@(users : List[User], username: String)
+@(users : List[User], channels : List[Channel], groups : List[Groups], files : List[File], username: String)
 
 @import helper._
 @import helper.twitterBootstrap._
@@ -9,12 +9,238 @@
         <li><a href="#users" id="admin_tabs_users">Users</a></li>
         <li><a href="#groups" id="admin_tabs_groups">Groups</a></li>
         <li><a href="#channels" id="admin_tabs_channels">Channels</a></li>
+        <li><a href="#files" id="admin_tabs_files">Files</a></li>
     </ul>
     
 </div>
 <div id="admin_site">
-    <div id="admin_site_groups">groups</div>
-    <div id="admin_site_channels">channels</div>
+	<div id="admin_site_files">
+	<h1>Files</h1>
+
+    @if(flash.containsKey("success")) {
+        <div class="alert-message warning">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+    } 
+
+    <div id="actions">
+     <select>
+            <option value="0">All Channels</option>
+            @for(channel <- channels) {
+            	<option value="@channel.id">@channel.name</option>
+        	}
+        </select>
+        <input type="search" class="searchbox" name="f" placeholder="filter...">
+    </div>
+    
+    @if(files.size() == 0) {
+        
+        <div>
+            <em>Nothing to display</em>
+        </div>
+        
+    } else {
+        
+        <table class="data_table" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr>
+                    <th><a href="#">Name</a></th>
+                    <th><a href="#">Filename</a></th>
+                    <th><a href="#">Type</a></th>
+                    <th><a href="#">Size</a></th>
+                    <th><a href="#">Date</a></th>
+                    <th><a href="#">User</a></th>
+                    <th><a href="#">Delete</a></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @for(file <- files) {
+                    <tr>
+                        <td>@file.name</td>
+                        <td>@file.filename</td>
+                        <td>@file.name</td>
+                        <td>@file.size</td>
+                        <td>@file.date.format("dd-MM-yyyy HH:mm:ss")</td>
+                        <td>@file.uid</td>
+                        <td>                   
+    						@form(routes.AdminController.deletefile(file.id), 'class -> "topRight") {
+        						<input type="submit" value="Delete this file" class="btn danger">
+    						}
+                        </td>
+                   </tr>
+                }
+
+            </tbody>
+        </table>
+
+        
+    }
+    </div>
+    <div id="admin_site_groups">
+	<h1>Groups</h1>
+
+    @if(flash.containsKey("success")) {
+        <div class="alert-message warning">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+    } 
+
+    <div id="actions">
+        <select>
+            <option value="0">All Channels</option>
+            @for(channel <- channels) {
+            	<option value="@channel.id">@channel.name</option>
+        	}
+        </select>
+        <select>
+            <option value="0">All Users</option>
+            @for(user <- users) {
+            	<option value="@user.id">@user.firstname @user.lastname</option>
+        	}
+        </select>
+        <input type="search" class="searchbox" name="f" placeholder="filter...">
+        
+        <a class="btn success link_button" id="add" href="@routes.AdminController.creategroup()">Add a new group</a>
+        
+    </div>
+    
+    @if(groups.size() == 0) {
+        
+        <div>
+            <em>Nothing to display</em>
+        </div>
+        
+    } else {
+        
+        <table class="data_table" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr>
+                    <th><a href="#">Name</a></th>
+                    <th><a href="#">Modified</a></th>
+                    <th><a href="#">Delete</a></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @for(group <- groups) {
+                    <tr title="edit group">
+                        <td><a href="@routes.AdminController.editgroup(group.id)">@group.name</a></td>
+                        <td>
+                            @if(group.modified == null) {
+                                <em>-</em>
+                            } else {
+                                <a href="@routes.AdminController.editgroup(group.id)">@group.modified.format("dd-MM-yyyy HH:mm:ss")</a>
+                            }
+                        </td>
+                        <td>
+    						@form(routes.AdminController.deletegroup(group.id), 'class -> "topRight") {
+        						<input type="submit" value="Delete this group" class="btn danger">
+    						}
+                        </td>
+                   </tr>
+                }
+
+            </tbody>
+        </table>
+
+        
+    }
+    </div>
+    
+    
+    
+    
+    
+    <div id="admin_site_channels">
+	<h1>Channels</h1>
+
+    @if(flash.containsKey("success")) {
+        <div class="alert-message warning">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+    } 
+
+    <div id="actions">
+        <select>
+            <option value="0">All Groups</option>
+            @for(group <- groups) {
+            	<option value="@group.id">@group.name</option>
+        	}
+        </select>
+        <input type="search" class="searchbox" name="f" placeholder="filter...">
+        
+        <a class="btn success link_button" id="add" href="@routes.AdminController.createchannel()">Add a new channel</a>
+        
+    </div>
+    
+    @if(channels.size() == 0) {
+        
+        <div>
+            <em>Nothing to display</em>
+        </div>
+        
+    } else {
+        
+        <table class="data_table" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr>
+                    <th><a href="#">Name</a></th>
+                    <th><a href="#">Topic</a></th>
+                    <th><a href="#">Public</a></th>
+                    <th><a href="#">Archived</a></th>
+                	<th><a href="#">Delete</a></th>
+                    </tr>
+            </thead>
+            <tbody>
+
+                @for(channel <- channels) {
+                    <tr title="edit channel">
+                        <td><a href="@routes.AdminController.editchannel(channel.id)">@channel.name</a></td>
+                        <td>
+                            @if(channel.topic == null) {
+                                <em>-</em>
+                            } else {
+                                <a href="@routes.AdminController.editchannel(channel.id)">@channel.topic</a>
+                            }
+                        </td>
+                        <td class="@channel.is_public">
+                            @if(channel.is_public == null) {
+                                <em>-</em>
+                            } 
+                            @if(channel.is_public == true) {
+                                <a href="@routes.AdminController.editchannel(channel.id)">Yes</a>
+                            } else {
+                                <a href="@routes.AdminController.editchannel(channel.id)">No</a>
+                            }
+                        </td>
+                        <td class="@channel.archived">
+                            @if(channel.archived == null) {
+                                <em>-</em>
+                            } 
+                            @if(channel.archived == true) {
+                                <a href="@routes.AdminController.editchannel(channel.id)">Yes</a>
+                            } else {
+                                <a href="@routes.AdminController.editchannel(channel.id)">No</a>
+                            }
+                        </td>
+                        <td>
+                        	    @form(routes.AdminController.deletechannel(channel.id), 'class -> "topRight") {
+        							<input type="submit" value="Delete this channel" class="btn danger">
+        						}
+                        </td>
+                   </tr>
+                }
+
+            </tbody>
+        </table>
+
+        
+    }
+    </div>
+    
+    
+
     <div id="admin_site_users">
     <h1>Users</h1>
 
@@ -27,11 +253,15 @@
     <div id="actions">
         <select>
             <option value="0">All Groups</option>
-            <option value="1">Group1</option>
+            @for(group <- groups) {
+            	<option value="@group.id">@group.name</option>
+        	}
         </select>
         <select>
             <option value="0">All Channels</option>
-            <option value="1">Channel 1</option>
+            @for(channel <- channels) {
+            	<option value="@channel.id">@channel.name</option>
+        	}
         </select>
         <input type="search" class="searchbox" name="f" placeholder="filter...">
         
@@ -58,6 +288,7 @@
                     <th><a href="#">Active</a></th>
                     <th><a href="#">Online</a></th>
                     <th><a href="#">Last Login</a></th>
+                    <th><a href="#">Delete</a></th>
                 </tr>
             </thead>
             <tbody>
@@ -69,50 +300,64 @@
                             @if(user.firstname == null) {
                                 <em>-</em>
                             } else {
-                                @user.firstname
+                                <a href="@routes.AdminController.edituser(user.id)">@user.firstname</a>
                             }
                         </td>
                         <td>
                             @if(user.lastname == null) {
                                 <em>-</em>
                             } else {
-                                @user.lastname
+                                <a href="@routes.AdminController.edituser(user.id)">@user.lastname</a>
                             }
                         </td>
                         <td>
                             @if(user.email == null) {
                                 <em>-</em>
                             } else {
-                                @user.email
+                                <a href="@routes.AdminController.edituser(user.id)">@user.email</a>
                             }
                         </td>
-                        <td>
+                        <td class="@user.admin">
                             @if(user.admin == null) {
                                 <em>-</em>
+                            } 
+                            @if(user.admin == true) {
+                                <a href="@routes.AdminController.edituser(user.id)">Yes</a>
                             } else {
-                                @user.admin
+                                <a href="@routes.AdminController.edituser(user.id)">No</a>
                             }
                         </td>
-                        <td>
+                        <td class="@user.active">
                             @if(user.active == null) {
                                 <em>-</em>
+                            } 
+                            @if(user.active == true) {
+                                <a href="@routes.AdminController.edituser(user.id)">Yes</a>
                             } else {
-                                @user.active
+                                <a href="@routes.AdminController.edituser(user.id)">No</a>
                             }
                         </td>
-                        <td>
+                        <td class="@user.online">
                             @if(user.online == null) {
                                 <em>-</em>
+                            } 
+                            @if(user.online == true) {
+                                <a href="@routes.AdminController.edituser(user.id)">Yes</a>
                             } else {
-                                @user.online
+                                <a href="@routes.AdminController.edituser(user.id)">No</a>
                             }
                         </td>
                         <td>
                             @if(user.lastlogin == null) {
                                 <em>-</em>
                             } else {
-                                @user.lastlogin.format("dd-MM-yyyy HH:mm:ss")
+                                <a href="@routes.AdminController.edituser(user.id)">@user.lastlogin.format("dd-MM-yyyy HH:mm:ss")</a>
                             }
+                        </td>
+                        <td>
+                            @form(routes.AdminController.deleteuser(user.id), 'class -> "topRight") {
+        						<input type="submit" value="Delete this user" class="btn danger">
+    						}
                         </td>
                     </tr>
                 }

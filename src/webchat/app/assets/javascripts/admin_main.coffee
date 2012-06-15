@@ -5,6 +5,7 @@ $(document).ready ->
             when "#users" then fade_out_visible_divs $("#admin_site_users")
             when "#groups" then fade_out_visible_divs $("#admin_site_groups")
             when "#channels" then fade_out_visible_divs $("#admin_site_channels")
+            when "#files" then fade_out_visible_divs $("#admin_site_files")
             
     fade_out_visible_divs = (fadeInElement) ->
         $("#admin_site > div:visible").fadeOut "fast", ->
@@ -32,6 +33,8 @@ $(document).ready ->
         load_admin_divs("#groups")
     $("#admin_tabs #admin_tabs_channels").click ->
         load_admin_divs("#channels")
+    $("#admin_tabs #admin_tabs_files").click ->
+        load_admin_divs("#files")
     # bind search form
     $(".searchbox").keyup ->
         filter_table_rows $(@).val()
