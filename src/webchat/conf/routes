@@ -1,0 +1,88 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET / controllers.Application.index()
+
+#Upload
+GET /upload controllers.Application.upload_form()
+POST /upload controllers.Application.upload()
+GET /download/:id/:name controllers.Application.download_file(id: java.lang.Integer, name: String)
+
+#Login
+GET /login controllers.LoginController.login()
+GET /logout controllers.LoginController.logout()
+POST /login controllers.LoginController.submit()
+
+#Profile
+GET /profile controllers.ProfileController.edit()
+POST /profile controllers.ProfileController.submit()
+
+#Admin
+
+#Get List
+GET /admin controllers.AdminController.index()
+
+#Add User
+GET /admin/newuser controllers.AdminController.createuser()
+POST /admin controllers.AdminController.saveuser()
+#Edit User
+GET     /admin/user/:id              controllers.AdminController.edituser(id:Long)
+POST    /admin/user/:id              controllers.AdminController.updateuser(id:Long)
+# Delete User
+POST    /admin/user/:id/delete       controllers.AdminController.deleteuser(id:Long)
+
+#Add Channel
+GET /admin/newchannel controllers.AdminController.createchannel()
+POST /admin controllers.AdminController.savechannel()
+#Edit Channel
+GET     /admin/channel/:id              controllers.AdminController.editchannel(id:Long)
+POST    /admin/channel/:id              controllers.AdminController.updatechannel(id:Long)
+# Delete Channel
+POST    /admin/channel/:id/delete       controllers.AdminController.deletechannel(id:Long)
+
+#Add Group
+GET /admin/newgroup controllers.AdminController.creategroup()
+POST /admin controllers.AdminController.savegroup()
+#Edit Group
+GET     /admin/group/:id              controllers.AdminController.editgroup(id:Long)
+POST    /admin/group/:id              controllers.AdminController.updategroup(id:Long)
+# Delete Group
+POST    /admin/group/:id/delete       controllers.AdminController.deletegroup(id:Long)
+
+# Delete File
+POST    /admin/file/:id/delete       controllers.AdminController.deletefile(id:Long)
+
+# Channel - User
+GET    /admin/channel/:cid/deleteuser/:uid       controllers.AdminController.deletechanneluser(cid:Long, uid:Long)
+GET	   /admin/channel/:cid/adduser/:uid       controllers.AdminController.addchanneluser(cid:Long, uid:Long)
+# Channel - Group
+GET    /admin/channel/:cid/deletegroup/:gid       controllers.AdminController.deletechannelgroup(cid:Long, gid:Long)
+GET	   /admin/channel/:cid/addgroup/:gid       controllers.AdminController.addchannelgroup(cid:Long, gid:Long)
+# Group - User
+GET    /admin/group/:gid/deleteuser/:uid       controllers.AdminController.deletegroupuser(gid:Long, uid:Long)
+GET	   /admin/group/:gid/adduser/:uid       controllers.AdminController.addgroupuser(gid:Long, uid:Long)
+# Group - Channel
+GET    /admin/group/:gid/deletechannel/:cid       controllers.AdminController.deletegroupchannel(gid:Long, cid:Long)
+GET	   /admin/group/:gid/addchannel/:cid       controllers.AdminController.addgroupchannel(gid:Long, cid:Long)
+# User - Group
+GET    /admin/user/:uid/deletegroup/:gid       controllers.AdminController.deleteusergroup(uid:Long, gid:Long)
+GET	   /admin/user/:uid/addgroup/:gid       controllers.AdminController.addusergroup(uid:Long, gid:Long)
+# User - Channel
+GET    /admin/user/:uid/deletechannel/:cid       controllers.AdminController.deleteuserchannel(uid:Long, cid:Long)
+GET	   /admin/user/:uid/addchannel/:cid       controllers.AdminController.adduserchannel(uid:Long, cid:Long)
+
+#TestData
+
+GET /Testdata controllers.Application.filltestdata()
+
+#WebSocket
+GET /websocket controllers.Application.websocket()
+
+# Json Testmessages
+GET /Json/Auth controllers.JsonTestController.genAuth()
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET /assets/*file controllers.Assets.at(path="/public", file)
