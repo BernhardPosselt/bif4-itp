@@ -29,6 +29,8 @@ public class InFileDelete {
 				channellist.add(chan.id);
 				chan.update();
 			}
+			java.io.File dest = new java.io.File(play.Play.application().path().toString() + "/files/" + dbfile.filename);
+			dest.delete();
 			dbfile.delete();
 		}catch (Exception e){
 			e.printStackTrace();
