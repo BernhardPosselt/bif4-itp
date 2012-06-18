@@ -57,6 +57,7 @@ public class Application extends Controller {
     public static Result upload_form()
     {
         session("channelid", request().uri().substring(19));
+        Logger.info("Upload Form initialized");
         return ok(upload.render(form(models.File.class)));
     }
 
@@ -70,13 +71,16 @@ public class Application extends Controller {
         try
         {
             download = new File(play.Play.application().path().toString() + "/files/" + tmp.filename);
+            Logger.info("File " + tmp.name + " downloaded!");
         }
         catch(NullPointerException ex)
         {
+            Logger.error("File doesn't exist in database!");
             return badRequest("File not found!");
         }
         catch(Exception ex)
         {
+            Logger.error("File Error while downloading!");
             return badRequest("Error while downloading the file");
         }
 
@@ -226,6 +230,8 @@ public class Application extends Controller {
 			String json = aser.exclude("*.class").serialize(inmessage);
             websocket.WebsocketManager.notifyAllMembers(websocket.json.out.Message.genMessage(Json.parse(json), Integer.valueOf(session("userid"))));
             websocket.WebsocketManager.notifyAllMembers(websocket.json.out.Channel.genChannel("update", channelid));
+
+            Logger.info("File " + filename + " uploaded!");
             return ok(upload.render(form(models.File.class)));
         }
         else
@@ -299,6 +305,8 @@ public class Application extends Controller {
 	  	    group1.save();
 	  	    group1.saveManyToManyAssociations("channels");
 	  	    group1.saveManyToManyAssociations("users");
+
+            Logger.info("Database filled with test data!");
 	  	    return ok(index.render("testdata", false));
 	 }
 	 
