@@ -65,7 +65,20 @@ public class Application extends Controller {
 
         models.File tmp = models.File.find.byId(Integer.valueOf(file_id));
 
-        File download = new File(play.Play.application().path().toString() + "/files/" + tmp.filename);
+        File download = null;
+
+        try
+        {
+            download = new File(play.Play.application().path().toString() + "/files/" + tmp.filename);
+        }
+        catch(NullPointerException ex)
+        {
+            return badRequest("File not found!");
+        }
+        catch(Exception ex)
+        {
+            return badRequest("Error while downloading the file");
+        }
 
         return ok(download);
     }
