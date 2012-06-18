@@ -1042,11 +1042,17 @@ input, textarea, select {
             bottom:0;
             margin:5px 15px 15px 15px;
 
-            a.delete_file {
-                width: 20px;
-                height: 20px;
-                display: inline-block;
-                background-color: red;
+            a.delete_file
+            {
+                display:none;
+                width:12px;
+                height:12px;
+                margin-left:6px;
+                background-image:url(../images/kick.png);
+                background-repeat:no-repeat;
+                background-position:center center;
+                background-size:12px;
+                cursor:pointer;
             }
 
             fieldset {
@@ -1069,6 +1075,8 @@ input, textarea, select {
                 bottom: 60px;
                 display: none;
                 overflow: auto;
+
+
                 
                 ul {
                     margin: 5px;
@@ -1099,6 +1107,14 @@ input, textarea, select {
                             margin-left: 10px;
                             display: inline-block;
                             color: #aaa;
+                        }
+
+                        &:hover
+                        {
+                            a.delete_file
+                            {
+                                display:inline-block;
+                            }
                         }
                     }
                 }
