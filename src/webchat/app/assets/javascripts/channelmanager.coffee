@@ -821,9 +821,10 @@ class ChannelManager
             list_entry.append(file_size)
             delete_file_link = $("<a>")
             delete_file_link.addClass("delete_file")
-            delete_file_link.attr("alt", "delete file " + file.name)
-            delete_file_link.click =>
-                @main_manager.delete_file(file_id)
+            delete_file_link.attr("title", "delete file " + file.name)
+            do(file_id) =>     
+                delete_file_link.click =>
+                    @main_manager.delete_file(file_id)
             list_entry.append(delete_file_link)
             files_ul.append(list_entry)
             
