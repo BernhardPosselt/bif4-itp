@@ -35,9 +35,21 @@ $(document).ready ->
         load_admin_divs("#channels")
     $("#admin_tabs #admin_tabs_files").click ->
         load_admin_divs("#files")
+
     # bind search form
     $(".searchbox").keyup ->
         filter_table_rows $(@).val()
         
     $("#admin_site .data_table").tablesorter(); 
-        
+    
+    # bind dropdown input filters
+    $("#admin_site_users .actions .filter_groups").change ->
+        data = 
+            groups: $("#admin_site_users .actions .filter_groups").val()
+            channels: $("#admin_site_users .actions .filter_channels").val()
+        $("#admin_site_users .data_table tbody"). load "/admin/ajax/users/", data
+    $("#admin_site_users .actions .filter_channels").change ->
+        data = 
+            groups: $("#admin_site_users .actions .filter_groups").val()
+            channels: $("#admin_site_users .actions .filter_channels").val()
+        $("#admin_site_users .data_table tbody"). load "/admin/ajax/users/", data

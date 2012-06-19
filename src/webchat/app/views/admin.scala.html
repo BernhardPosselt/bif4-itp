@@ -23,8 +23,8 @@
         </div>
     } 
 
-    <div id="actions">
-     <select>
+    <div class="actions">
+     <select class="filter_channels">
             <option value="0">All Channels</option>
             @for(channel <- channels) {
             	<option value="@channel.id">@channel.name</option>
@@ -86,14 +86,14 @@
         </div>
     } 
 
-    <div id="actions">
-        <select>
+    <div class="actions">
+        <select class="filter_channels">
             <option value="0">All Channels</option>
             @for(channel <- channels) {
             	<option value="@channel.id">@channel.name</option>
         	}
         </select>
-        <select>
+        <select class="filter_groups">
             <option value="0">All Users</option>
             @for(user <- users) {
             	<option value="@user.id">@user.firstname @user.lastname</option>
@@ -161,8 +161,8 @@
         </div>
     } 
 
-    <div id="actions">
-        <select>
+    <div class="actions">
+        <select class="filter_groups">
             <option value="0">All Groups</option>
             @for(group <- groups) {
             	<option value="@group.id">@group.name</option>
@@ -250,14 +250,14 @@
         </div>
     } 
 
-    <div id="actions">
-        <select>
+    <div class="actions">
+        <select class="filter_groups">
             <option value="0">All Groups</option>
             @for(group <- groups) {
             	<option value="@group.id">@group.name</option>
         	}
         </select>
-        <select>
+        <select class="filter_channels">
             <option value="0">All Channels</option>
             @for(channel <- channels) {
             	<option value="@channel.id">@channel.name</option>
