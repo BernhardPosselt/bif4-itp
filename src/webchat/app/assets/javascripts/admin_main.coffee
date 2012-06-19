@@ -43,6 +43,7 @@ $(document).ready ->
     $("#admin_site .data_table").tablesorter(); 
     
     # bind dropdown input filters
+    # users
     $("#admin_site_users .actions .filter_groups").change ->
         data = 
             groups: $("#admin_site_users .actions .filter_groups").val()
@@ -53,3 +54,27 @@ $(document).ready ->
             groups: $("#admin_site_users .actions .filter_groups").val()
             channels: $("#admin_site_users .actions .filter_channels").val()
         $("#admin_site_users .data_table tbody"). load "/admin/ajax/users/", data
+    
+    # groups
+    $("#admin_site_groups .actions .filter_channels").change ->
+        data = 
+            users: $("#admin_site_groups .actions .filter_users").val()
+            channels: $("#admin_site_groups .actions .filter_channels").val()
+        $("#admin_site_groups .data_table tbody"). load "/admin/ajax/groups/", data
+    $("#admin_site_groups .actions .filter_users").change ->
+        data = 
+            users: $("#admin_site_groups .actions .filter_users").val()
+            channels: $("#admin_site_users .actions .filter_channels").val()
+        $("#admin_site_groups .data_table tbody"). load "/admin/ajax/groups/", data
+    
+    # channels
+    $("#admin_site_channels .actions .filter_groups").change ->
+        data = 
+            groups: $("#admin_site_channels .actions .filter_groups").val()
+        $("#admin_site_channels .data_table tbody"). load "/admin/ajax/channels/", data
+     
+    # files    
+    $("#admin_site_files .actions .filter_channels").change ->
+        data = 
+            channels: $("#admin_site_files .actions .filter_channels").val()
+        $("#admin_site_files .data_table tbody"). load "/admin/ajax/files/", data
