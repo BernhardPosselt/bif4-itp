@@ -86,17 +86,19 @@ Database
 
 In our project we use 2 diffenrent DB-Systems.
 
-For develepment we use the In-Memory-Database H2 with following configuration:
+For develepment we use the In-Memory-Database H2 with following configuration::
+
     db.default.driver=org.h2.Driver
     db.default.url="jdbc:h2:mem:play"
     # db.default.user=sa
     # db.default.password=
 
 As you can see for this DB you do not need a User or a Password. 
-If you like a GUI for the H2 Database you need the command:
+If you like a GUI for the H2 Database you need the command::
+
     $ play h2-browser
 
-In production we use the Mysql-Database with following configuration:
+In production we use the Mysql-Database with following configuration::
 
     db.default.driver=com.mysql.jdbc.Driver
     db.default.url="jdbc:mysql://localhost/itp_4?characterEncoding=UTF-8"
