@@ -73,7 +73,7 @@ $(document).ready ->
     
     # channels
     $("#admin_site_channels .actions .filter_groups").change ->
-        data = 
+        data = 	
             groups: $("#admin_site_channels .actions .filter_groups").val()
         $("#admin_site_channels .data_table tbody"). load "/admin/ajax/channels/", data, ->
             $("#admin_site .data_table:visible").trigger "update"
