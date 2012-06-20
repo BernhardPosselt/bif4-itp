@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.Iterator;
+
 import play.Logger;
 import play.mvc.*;
 import play.data.*;
@@ -92,6 +94,12 @@ public class AdminController extends Controller {
                 return badRequest(createuser.render(userForm, User.getUsername(Integer.parseInt(session("userid")))));
             }
             userForm.get().save();
+            for(Iterator<models.Channel> chaniter = models.Channel.getAllPublicChannel().iterator(); chaniter.hasNext();){
+            	models.Channel channel= new models.Channel();
+            	channel = chaniter.next();
+            	channel.users.add(userForm.get());
+            	channel.saveManyToManyAssociations("users");
+            }
             flash("success", "User " + userForm.get().username + " has been created");
         	Logger.info("User " + userForm.get().username + " with ID " + userForm.get().id + " has been created");
             return index();
