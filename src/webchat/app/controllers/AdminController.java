@@ -66,17 +66,20 @@ public class AdminController extends Controller {
 	        Form<User> userForm = form(User.class).bindFromRequest();
 	        List<User> ulist = User.findAll();
 	        if(userForm.hasErrors()) {
-	        	Logger.error("Error while editing the existing User " + userForm.get().id);
+	        	Logger.error("Error while editing the existing User " + id);
 	            return badRequest(edituser.render(id, userForm, User.getUsername(Integer.parseInt(session("userid")))));
 	        }
 	        for(User us : ulist)
 	        {
 	        	if(us.username.equals(userForm.field("username").value()))
 	        	{
-	    	        flash("failure", "User " + us.username + " already exists");
-	        		Logger.error("Username " + us.username + " already exists");
-		            return badRequest(edituser.render(id, userForm, User.getUsername(Integer.parseInt(session("userid")))));
-	        	}
+	        		if(us.id != id)
+	    	        {
+		    	        flash("failure", "User " + us.username + " already exists");
+		        		Logger.error("Username " + us.username + " already exists");
+			            return badRequest(edituser.render(id, userForm, User.getUsername(Integer.parseInt(session("userid")))));
+	    	        }
+    	        }
 	        }
 	        tmp.id = id.intValue();
 	        tmp.username = userForm.field("username").value();
