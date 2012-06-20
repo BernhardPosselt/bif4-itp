@@ -73,8 +73,7 @@ compiled into public/javascript
 Deployment
 ----------
 
-You can start the Production Server with the commands:
-
+You can start the Production Server with the commands::
 
     $ play clean compile stage
     $ ./target/start -DapplyEvolutions.default=true -Dhttp.port=80
