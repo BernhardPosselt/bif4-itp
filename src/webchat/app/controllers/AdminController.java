@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.Iterator;
+import java.util.List;
 
 import play.Logger;
 import play.mvc.*;
@@ -552,6 +553,19 @@ public static Result addgroupchannel(Long groupid, Long channelid) {
     	int uid = check();
     	if(uid != -1)
     	{
+    		List<Channel> chanlist = Groups.getChannelsForGroup(id.intValue()); 
+    		for (Channel chan: chanlist)
+    		{
+    			chan.groups.remove(Groups.find.byId(id.intValue()));
+    			chan.save();
+    		}
+    		List<User> userlist = Groups.getUsersForGroup(id.intValue()); 
+    		for (User use: userlist)
+    		{
+    			use.groups.remove(Groups.find.byId(id.intValue()));
+    			use.save();
+    		}
+    		
 	        Groups.find.ref(id.intValue()).delete();
 	        flash("success", "Group " + id + " has been deleted");
 	        Logger.info("Group " + id + " has been deleted");
