@@ -57,6 +57,7 @@ POST    /admin/file/:id/delete       controllers.AdminController.deletefile(id:L
 # Channel - User
 GET    /admin/channel/:cid/deleteuser/:uid       controllers.AdminController.deletechanneluser(cid:Long, uid:Long)
 GET	   /admin/channel/:cid/adduser/:uid       controllers.AdminController.addchanneluser(cid:Long, uid:Long)
+POST    /admin/ajax/users/                     controllers.AdminController.ajaxUsers()
 # Channel - Group
 GET    /admin/channel/:cid/deletegroup/:gid       controllers.AdminController.deletechannelgroup(cid:Long, gid:Long)
 GET	   /admin/channel/:cid/addgroup/:gid       controllers.AdminController.addchannelgroup(cid:Long, gid:Long)
