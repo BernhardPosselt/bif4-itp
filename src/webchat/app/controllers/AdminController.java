@@ -62,12 +62,34 @@ public class AdminController extends Controller {
     	int uid = check();
     	if(uid != -1)
     	{
+    		User tmp = new User();
 	        Form<User> userForm = form(User.class).bindFromRequest();
+	        List<User> ulist = User.findAll();
 	        if(userForm.hasErrors()) {
 	        	Logger.error("Error while editing the existing User " + userForm.get().id);
 	            return badRequest(edituser.render(id, userForm, User.getUsername(Integer.parseInt(session("userid")))));
 	        }
-	        userForm.get().update(id.intValue());
+	        for(User us : ulist)
+	        {
+	        	if(us.username.equals(userForm.field("username").value()))
+	        	{
+	    	        flash("failure", "User " + us.username + " already exists");
+	        		Logger.error("Username " + us.username + " already exists");
+		            return badRequest(edituser.render(id, userForm, User.getUsername(Integer.parseInt(session("userid")))));
+	        	}
+	        }
+	        tmp.id = id.intValue();
+	        tmp.username = userForm.field("username").value();
+	        tmp.firstname = userForm.field("firstname").value();
+	        tmp.lastname = userForm.field("lastname").value();
+	        tmp.email = userForm.field("email").value();
+	        tmp.setActive(userForm.field("active").value().toString());
+	        tmp.setAdmin(userForm.field("admin").value().toString());
+	        if(userForm.field("password").value() != "")
+	        {
+	        	tmp.setPassword(userForm.field("password").value());
+	        }
+	        tmp.update();
 	        flash("success", "User " + userForm.get().username + " has been updated");
         	Logger.info("User " + userForm.get().username + " with ID " + userForm.get().id + " has been updated");
 	        return index();
@@ -89,11 +111,21 @@ public class AdminController extends Controller {
     	if(uid != -1)
     	{
     		Form<User> userForm = form(User.class).bindFromRequest();
+    		List<User> ulist = User.findAll();
             if(userForm.hasErrors()) 
             {
             	Logger.error("Error while creating a new User");
                 return badRequest(createuser.render(userForm, User.getUsername(Integer.parseInt(session("userid")))));
             }
+            for(User us : ulist)
+	        {
+	        	if(us.username.equals(userForm.field("username").value()))
+	        	{
+	    	        flash("failure", "User " + us.username + " already exists");
+	        		Logger.error("Username " + us.username + " already exists");
+		            return badRequest(createuser.render(userForm, User.getUsername(Integer.parseInt(session("userid")))));
+	        	}
+	        }
             userForm.get().save();
             for(Iterator<models.Channel> chaniter = models.Channel.getAllPublicChannel().iterator(); chaniter.hasNext();){
             	models.Channel channel= new models.Channel();

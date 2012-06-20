@@ -75,6 +75,11 @@ public class User extends Model {
 		this.groups.add(group);
 	}
 	
+	public static String getPassword(int id)
+	{
+		return find.byId(id).password;
+	}
+	
 	public static Finder<Integer,User> find = new Finder<Integer,User>(
 			Integer.class, User.class
 	);
@@ -89,6 +94,35 @@ public class User extends Model {
         return find.byId(id).active;
     }
 
+	public  void setActive(String act)
+	{
+    	if(act.equals("true"))
+    	{
+    		active = true;
+    	}
+    	else
+    	{
+    		active = false;
+    	}
+	}
+	
+	public  void setAdmin(String adm)
+	{
+    	if(adm.equals("true"))
+    	{
+    		admin = true;
+    	}
+    	else
+    	{
+    		admin = false;
+    	}
+	}
+	
+	public static void setActive(int id)
+	{
+	
+	}
+	
     public static boolean authenticate(String name, String pw)
     {
         User tmp = find.where().eq("username", name).eq("password", Crypto.sign(pw)).findUnique();
@@ -151,9 +185,12 @@ public class User extends Model {
     	List<Channel> channels = new ArrayList<Channel>();
     	User tmp = new User();
     	tmp = find.byId(userid);
-    	for (Iterator<Channel> iterator= find.byId(userid).channels.iterator(); iterator.hasNext();){
-			channels.add(iterator.next());
-		}
+    	if(tmp != null)
+    	{
+    		for (Iterator<Channel> iterator= find.byId(userid).channels.iterator(); iterator.hasNext();){
+    			channels.add(iterator.next());
+    		}
+    	}
     	return channels;
     }
     
@@ -163,9 +200,12 @@ public class User extends Model {
     	channels = Channel.find.all();
     	User tmp = new User();
     	tmp = find.byId(userid);
-    	for (Iterator<Channel> iterator= find.byId(userid).channels.iterator(); iterator.hasNext();){
-			channels.remove(iterator.next());
-		}
+    	if(tmp != null)
+    	{
+    		for (Iterator<Channel> iterator= find.byId(userid).channels.iterator(); iterator.hasNext();){
+    			channels.remove(iterator.next());
+    		}
+    	}
     	return channels;
     }
     
@@ -174,9 +214,12 @@ public class User extends Model {
     	List<Groups> groups = new ArrayList<Groups>();
     	User tmp = new User();
     	tmp = find.byId(userid);
-    	for (Iterator<Groups> iterator= find.byId(userid).groups.iterator(); iterator.hasNext();){
-			groups.add(iterator.next());
-		}
+    	if(tmp != null)
+    	{
+    		for (Iterator<Groups> iterator= find.byId(userid).groups.iterator(); iterator.hasNext();){
+    			groups.add(iterator.next());
+    		}
+    	}
     	return groups;
     }
     
@@ -186,9 +229,12 @@ public class User extends Model {
     	groups = Groups.find.all();
     	User tmp = new User();
     	tmp = find.byId(userid);
-    	for (Iterator<Groups> iterator= find.byId(userid).groups.iterator(); iterator.hasNext();){
-			groups.remove(iterator.next());
-		}
+    	if(tmp != null)
+    	{
+    		for (Iterator<Groups> iterator= find.byId(userid).groups.iterator(); iterator.hasNext();){
+    			groups.remove(iterator.next());
+    		}
+    	}
     	return groups;
     }
  

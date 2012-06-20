@@ -387,7 +387,7 @@
                         </td>
                         <td class="@user.online">
                             @if(user.online == null) {
-                                <em>-</em>
+                                <em></em>
                             } 
                             @if(user.online == true) {
                                 <a href="@routes.AdminController.edituser(user.id)">Yes</a>
