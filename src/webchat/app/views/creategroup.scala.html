@@ -1,0 +1,25 @@
+@(groupForm: Form[Groups], username: String)
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@main(username, title = "Webchat") {
+    
+    <h1>Add a group</h1>
+    
+    @form(routes.AdminController.savegroup()) {
+        
+        <fieldset>
+        
+            @inputText(groupForm("name"), '_label -> "Name")
+
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Create this group" class="btn primary"> or 
+            <a href="@routes.AdminController.index()" class="btn">Cancel</a>
+        </div>
+        
+    }
+    
+} 

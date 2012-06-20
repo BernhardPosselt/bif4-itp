@@ -18,13 +18,14 @@ $(document).ready ->
     $("#input_field").focus()
 
     # submit input
-    $("#input_field").keyup (e) ->
+    $("#input_field").keydown (e) ->
         # autocomplete on tab
         if e.keyCode == keycodes.tab
             $(@).val(manager.complete_name($(@).val()))
         # enter without shift will submit
         if e.keyCode == keycodes.enter and not e.shiftKey
             console.log keycodes.shift_pressed
+            e.preventDefault()
             submit()
     # dont jump on hitting enter on an empty input field
     $("#input_field").keydown (e) ->
@@ -50,7 +51,7 @@ $(document).ready ->
     submit = () ->
         type = $("#input_options option:selected").val()
         msg = $("#input_field").val()
-        msg = msg.slice(0, -1) # remove \n
+        #msg = msg.slice(0, -1) # remove \n
         $("#input_field").val("")
         # only send when there is min 1 char
         if msg.length > 0

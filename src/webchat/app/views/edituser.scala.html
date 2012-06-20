@@ -16,10 +16,96 @@
 	        @inputText(userForm("firstname"), '_label -> "First name")
             @inputText(userForm("lastname"), '_label -> "Last name")
             @inputText(userForm("email"), '_label -> "E-Mail")
-            @checkbox(userForm("admin"))
-            @checkbox(userForm("active"))             
+			@select(userForm("active"), options("true"->"Yes", "false"->"No"), '_label -> "Active")
+			@select(userForm("admin"), options("true"->"Yes", "false"->"No"), '_label -> "Admin") 
         
-        </fieldset>
+        
+        	Channels:
+        	<table class="data_table" cellpadding="0" cellspacing="0">
+	            <thead>
+	                <tr>
+	                    <th><a href="#">ID</a></th>
+	                    <th><a href="#">Name</a></th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	            	@for(channel <- User.getChannelsForUser(userForm.get().id)) {
+	            	<tr>
+	            		<td>
+	            			<a href="@routes.AdminController.deletechanneluser(channel.id, userForm.get().id)">@channel.id</a>
+	            		</td>
+	            		<td>
+	            			<a href="@routes.AdminController.deletechanneluser(channel.id, userForm.get().id)">@channel.name</a>
+	            		</td>
+	            	</tr>
+	            	}
+				</tbody>
+			</table>
+			<table class="data_table" cellpadding="0" cellspacing="0">
+	            <thead>
+	                <tr>
+	                    <th><a href="#">ID</a></th>
+	                    <th><a href="#">Name</a></th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	            	@for(channel <- User.getChannelsNotForUser(userForm.get().id)) {
+	            	<tr>
+	            		<td>
+	            			<a href="@routes.AdminController.addchanneluser(channel.id, userForm.get().id)">@channel.id</a>
+	            		</td>
+	            		<td>
+	            			<a href="@routes.AdminController.addchanneluser(channel.id, userForm.get().id)">@channel.name</a>
+	            		</td>
+	            	</tr>
+	            	}
+				</tbody>
+			</table>
+
+			Groups:
+        	<table class="data_table" cellpadding="0" cellspacing="0">
+	            <thead>
+	                <tr>
+	                    <th><a href="#">ID</a></th>
+	                    <th><a href="#">Name</a></th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	            	@for(group <- User.getGroupsForUser(userForm.get().id)) {
+	            	<tr>
+	            		<td>
+	            			<a href="@routes.AdminController.deletegroupuser(group.id, userForm.get().id)">@group.id</a>
+	            		</td>
+	            		<td>
+	            			<a href="@routes.AdminController.deletegroupuser(group.id, userForm.get().id)">@group.name</a>
+	            		</td>
+	            	</tr>
+	            	}
+				</tbody>
+			</table>
+			<table class="data_table" cellpadding="0" cellspacing="0">
+	            <thead>
+	                <tr>
+	                    <th><a href="#">ID</a></th>
+	                    <th><a href="#">Name</a></th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	            	@for(group <- User.getGroupsNotForUser(userForm.get().id)) {
+	            	<tr>
+	            		<td>
+	            			<a href="@routes.AdminController.addgroupuser(group.id, userForm.get().id)">@group.id</a>
+	            		</td>
+	            		<td>
+	            			<a href="@routes.AdminController.addgroupuser(group.id, userForm.get().id)">@group.name</a>
+	            		</td>
+	            	</tr>
+	            	}
+				</tbody>
+			</table>
+			
+        
+        </fieldset>     
         
         <div class="actions">
             <input type="submit" value="Save this user" class="btn primary"> or 
@@ -27,9 +113,4 @@
         </div>
         
     }
-    
-    @form(routes.AdminController.deleteuser(id), 'class -> "topRight") {
-        <input type="submit" value="Delete this user" class="btn danger">
-    }
-    
 }

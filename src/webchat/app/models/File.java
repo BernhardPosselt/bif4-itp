@@ -41,6 +41,10 @@ public class File extends Model {
 			Integer.class, File.class
 	);
 	
+    public static List<File> findAll(){
+        return find.all();
+    }
+	
 	public static List<File> getChannelFiles (int channelid){
 		List<File> files = new ArrayList<File>();
 		files = find.where().eq("channels.id", channelid).orderBy().desc("date").findList();

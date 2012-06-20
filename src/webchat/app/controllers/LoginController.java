@@ -36,9 +36,9 @@ public class LoginController extends Controller {
 
     public static Result logout()
     {
-        if(session("user") != null)
+        if(session("userid") != null)
         {
-            User.setUseroffline(Integer.parseInt(session("user")));
+            User.setUseroffline(Integer.parseInt(session("userid")));
         }
         Logger.info("User with ID " + session("userid") + " logged out - Redirect to Login Form");
         session().clear();

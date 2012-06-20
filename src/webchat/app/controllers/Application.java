@@ -4,15 +4,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.google.common.io.Files;
+
+import flexjson.JSONSerializer;
 
 import org.h2.util.IOUtils;
 import org.joda.time.DateTime;
 import play.Logger;
+import play.Play;
 
+import play.libs.Json;
 import play.mvc.*;
+import play.mvc.Http.Request;
 import views.html.*;
 import websocket.WebsocketManager;
 
@@ -49,6 +57,7 @@ public class Application extends Controller {
     public static Result upload_form()
     {
         session("channelid", request().uri().substring(19));
+        Logger.info("Upload Form initialized");
         return ok(upload.render(form(models.File.class)));
     }
 
@@ -57,7 +66,23 @@ public class Application extends Controller {
 
         models.File tmp = models.File.find.byId(Integer.valueOf(file_id));
 
-        File download = new File(play.Play.application().path().toString() + "/files/" + tmp.filename);
+        File download = null;
+
+        try
+        {
+            download = new File(play.Play.application().path().toString() + "/files/" + tmp.filename);
+            Logger.info("File " + tmp.name + " downloaded!");
+        }
+        catch(NullPointerException ex)
+        {
+            Logger.error("File doesn't exist in database!");
+            return badRequest("File not found!");
+        }
+        catch(Exception ex)
+        {
+            Logger.error("File Error while downloading!");
+            return badRequest("Error while downloading the file");
+        }
 
         return ok(download);
     }
@@ -72,16 +97,21 @@ public class Application extends Controller {
         {
             String filename = uploaded_file.getFilename();
             String contentType = uploaded_file.getContentType();
+            
 
             String unqName = UUID.randomUUID().toString() + "_" + filename;
             File file = uploaded_file.getFile();
             File dest = new File(play.Play.application().path().toString() + "/files/" + unqName);
+            
 
             FileInputStream fis = new FileInputStream(file);
             FileOutputStream fos = new FileOutputStream(dest);
 
             IOUtils.copy(fis, fos);
-
+            
+            fis.close();
+            fos.close();
+            
             //Save file to database
             int channelid = Integer.valueOf(session("channelid"));
             models.File new_file = new models.File();
@@ -95,7 +125,113 @@ public class Application extends Controller {
             new_file.save();
             new_file.saveManyToManyAssociations("channels");
             websocket.WebsocketManager.notifyAllMembers(websocket.json.out.File.gennewFile(new_file));
+            websocket.json.in.InMessage inmessage = new websocket.json.in.InMessage();
+            websocket.json.in.InMessageData indata = new websocket.json.in.InMessageData();
+            
+            List<String> validoctettypes = new ArrayList<String>();
+            validoctettypes.add("java");
+            validoctettypes.add("php");
+            validoctettypes.add("coffee");
+            validoctettypes.add("js");
+            validoctettypes.add("php");
+            validoctettypes.add("scala");
+            validoctettypes.add("pl");
+            validoctettypes.add("pm");
+            validoctettypes.add("groovy");
+            validoctettypes.add("ps1");
+            validoctettypes.add("sh");
+            validoctettypes.add("bsh");
+            validoctettypes.add("as");
+            validoctettypes.add("py");
+            validoctettypes.add("rb");
+            validoctettypes.add("erl");
+            validoctettypes.add("diff");
+            validoctettypes.add("sass");
+            validoctettypes.add("scss");
+            validoctettypes.add("less");
+            
+            
+            List<String> validplaintypes = new ArrayList<String>();
+            validplaintypes.add("vb");
+            validplaintypes.add("cs");
+            validplaintypes.add("cpp");
+            String filetype = filename.substring(filename.indexOf(".")+1);
+            if (contentType.equals("application/octet-stream") && validoctettypes.contains(filetype)){
+            
+             	indata.channel.add(channelid);
+                FileInputStream filestream = new FileInputStream(file);
+	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	filestream.close();
+	        	if (filetype.equals("coffee"))
+	        		filetype = "js";
+	        	else if(filetype.equals("pm") || filetype.equals("pl"))
+	        		filetype = "perl";
+	        	else if(filetype.equals("ps1"))
+	        			filetype = "powershell";
+	        	else if (filetype.equals("sh") || filetype.equals("bsh"))
+	        		filetype = "bash";
+	        	else if (filetype.equals("as") || filetype.equals("as3"))
+	        		filetype = "as3";
+	        	else if (filetype.equals("py"))
+	        		filetype = "python";
+	        	else if (filetype.equals("rb"))
+	        		filetype = "ruby";
+	        	else if (filetype.equals("erl"))
+	        		filetype = "erlang";
+	        	else if (filetype.equals("scss") || filetype.equals("less"))
+	        		filetype = "sass";
+	            indata.type = filetype;
+	            inmessage.data = indata;
+            	
+            }
+            else if (contentType.equals("text/plain") && validplaintypes.contains(filetype)){
+            	indata.channel.add(channelid);
+                FileInputStream filestream = new FileInputStream(file);
+	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	filestream.close();
+	        	if (filetype.equals("cs"))
+	        		filetype = "csharp";
+	            indata.type = filetype;
+	            inmessage.data = indata;
+            }
+            else if (contentType.equals("text/css")){
+            	indata.channel.add(channelid);
+                FileInputStream filestream = new FileInputStream(file);
+	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	filestream.close();
+	            indata.type = filetype;
+	            inmessage.data = indata;
+            }
+            else if (contentType.equals("text/xml")){
+            	indata.channel.add(channelid);
+                FileInputStream filestream = new FileInputStream(file);
+	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	filestream.close();
+	            indata.type = filetype;
+	            inmessage.data = indata;
+            }
+            else if (contentType.equals("application/x-javascript")){
+            	indata.channel.add(channelid);
+                FileInputStream filestream = new FileInputStream(file);
+	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	filestream.close();
+	            indata.type = filetype;
+	            inmessage.data = indata;
+            }
+            else{
+ 
+	        	indata.channel.add(channelid);
+	        	indata.message = "http://" + request().host() + "/download/" + new_file.id + "/" + filename;
+	            indata.type = "text";
+	            inmessage.data = indata;
+            }
+           
+    		JSONSerializer aser = new JSONSerializer().include("*");
+			String json = aser.exclude("*.class").serialize(inmessage);
+            websocket.WebsocketManager.notifyAllMembers(websocket.json.out.Message.genMessage(Json.parse(json), Integer.valueOf(session("userid"))));
             websocket.WebsocketManager.notifyAllMembers(websocket.json.out.Channel.genChannel("update", channelid));
+
+            Logger.info("File " + filename + " uploaded!");
             return ok(upload.render(form(models.File.class)));
         }
         else
@@ -160,6 +296,17 @@ public class Application extends Controller {
 	  	    group.save();
 	  	    group.saveManyToManyAssociations("channels");
 	  	    group.saveManyToManyAssociations("users");
+	  	    
+	  	    Groups group1 = new Groups();
+	  	    group1.modified = new Date();
+	  	    group1.name = "Group2";
+	  	    group1.users.add(user);
+	  	    group1.users.add(user1);
+	  	    group1.save();
+	  	    group1.saveManyToManyAssociations("channels");
+	  	    group1.saveManyToManyAssociations("users");
+
+            Logger.info("Database filled with test data!");
 	  	    return ok(index.render("testdata", false));
 	 }
 	 
@@ -172,4 +319,5 @@ public class Application extends Controller {
 	    }
 	    return null;
      }
+	 
 }

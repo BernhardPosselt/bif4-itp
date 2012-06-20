@@ -25,20 +25,39 @@ public class InKick {
 			Channel chan = new Channel();
 		
 			chan = models.Channel.find.byId(inkick.data.channel);
-			
+	
 			for (Iterator<Integer> useriter = inkick.data.users.iterator(); useriter.hasNext();){
 				User user = new User();
 				user = User.find.byId(useriter.next());
 				if (chan.users.contains(user)){
 					chan.users.remove(user);
-					users.add(user.id);
+					if (!models.User.getChannelGroupUser(chan.groups).contains(user))
+						users.add(user.id);
 				}
 			}
 			for (Iterator<Integer> groupiter = inkick.data.groups.iterator(); groupiter.hasNext();){
 				Groups group = new Groups();
 				group = Groups.find.byId(groupiter.next());
-				if (chan.groups.contains(group))
+				if (chan.groups.contains(group)){
+					for (Iterator<models.User> useriter = models.Groups.find.byId(group.id).users.iterator(); useriter.hasNext();){
+						models.User user = new models.User();
+						user = useriter.next();
+						users.add(user.id);
+						if (!models.Channel.getChannelUsers(chan.id).contains(user.id))
+						{	for (Iterator<models.Groups> griter = models.Groups.getChannelGroups(chan.id).iterator(); griter.hasNext();){
+								Groups helpgroup = new Groups();
+								helpgroup = griter.next();
+								if (!helpgroup.equals(group)){
+									if(helpgroup.users.contains(user))
+										users.remove(Integer.valueOf(user.id));	
+								}
+							}	
+						}
+						else
+							users.remove(Integer.valueOf(user.id));
+					}
 					chan.groups.remove(group);
+				}		
 			}
 			
 			chan.update();

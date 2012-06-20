@@ -45,9 +45,11 @@ class ChannelManager
         @init_channels = {}
         @scrolled_channels = {}
         @max_shown_code_lines = 10
+        @code_clip_height = 155
         @notify_audio = $("<audio>")
         @notify_audio.attr("src", "/assets/audio/75639__jobro__attention03.ogg")
         @mimetypes = new MimeTypes()
+        @utilities = new Utilities()
 
     # sets the initial data array
     init: (@channel_data) ->
@@ -74,6 +76,8 @@ class ChannelManager
         @join_first_channel()
         # put default values into the edit profile form
         @update_profile_form()
+        # remove unread class from channel list because this is the init
+        @dom_channel_list.children("li").removeClass("unread")
         
         
     update_profile_form: ->
@@ -109,6 +113,7 @@ class ChannelManager
         channel_data = data
         list_entry = $("<li>")
         list_entry.html( channel_data.name )
+        list_entry.addClass("unread")
         list_entry.bind 'click', =>
             @join_channel(id)
         @dom_reg_channel_list[id] = list_entry
@@ -157,7 +162,7 @@ class ChannelManager
         stream_meta.html("Topic: ")
         stream_topic = $("<span>")
         stream_topic.addClass("topic")
-        stream_topic.html(@linkify_text(channel_data.topic))
+        stream_topic.html(@utilities.linkify_text(channel_data.topic))
         stream_meta.append(stream_topic)
         stream_chat = $("<div>")
         stream_chat.addClass("stream_chat")
@@ -200,7 +205,7 @@ class ChannelManager
         channel_list.html( data.name )
         stream = @dom_reg_stream[id]
         stream.children(".stream_field").children(".stream_name").children(".name").html(data.name)
-        stream.children(".stream_field").children(".stream_meta").children(".topic").html(@linkify_text(data.topic))
+        stream.children(".stream_field").children(".stream_meta").children(".topic").html(@utilities.linkify_text(data.topic))
         @rewrite_files_dom(id)
         @rewrite_user_group_dom()
         console.log("Updated channel " + data.name)
@@ -248,10 +253,11 @@ class ChannelManager
     # joins the first channel in the list or displays nothing
     join_first_channel: () ->
         console.log("joined first channel")
-        if @_get_dict_size(@channel_data) > 0
+        if @utilities.get_dict_size(@channel_data) > 0
             for id, value of @channel_data
-                @join_channel(id)
-                break
+                if value != undefined
+                    @join_channel(id)
+                    break
         else
             console.log("no channel found, can not join initial channel")
     
@@ -259,28 +265,30 @@ class ChannelManager
     join_channel: (channel_id) -> 
         # check if we need to get data to init the stream
         if @loaded_channels[channel_id] == undefined
-            msg = 
-                type: "join"
-                data: 
-                    channel: channel_id
-            @main_manager.send_websocket(msg)      
+            @main_manager.join(channel_id)      
             @loaded_channels[channel_id] = true
         # remove unread flag    
         list_entry = @dom_reg_channel_list[channel_id]
         list_entry.removeClass("unread")
+        @dom_channel_list.children(".active").removeClass("active")
+        list_entry.addClass("active")
         # fade out inactive ones and fade in active one
         active_channel_id = @get_active_channel()
         if active_channel_id == undefined
             @dom_reg_stream[channel_id].fadeIn "fast"
             @dom_reg_stream_sidebar_users[channel_id].fadeIn "fast"
             @dom_reg_stream_sidebar_files[channel_id].fadeIn "fast"
-        else if channel_id != active_channel_id
+        else if channel_id != active_channel_id and @channel_data[active_channel_id] != undefined
             @dom_reg_stream[active_channel_id].fadeOut "fast", =>
                 @dom_reg_stream[channel_id].fadeIn "fast"
             @dom_reg_stream_sidebar_users[active_channel_id].fadeOut "fast", =>
                 @dom_reg_stream_sidebar_users[channel_id].fadeIn "fast"
             @dom_reg_stream_sidebar_files[active_channel_id].fadeOut "fast", =>
                 @dom_reg_stream_sidebar_files[channel_id].fadeIn "fast"
+        else if channel_id != active_channel_id and @channel_data[active_channel_id] == undefined
+            @dom_reg_stream[channel_id].fadeIn "fast"
+            @dom_reg_stream_sidebar_users[channel_id].fadeIn "fast"
+            @dom_reg_stream_sidebar_files[channel_id].fadeIn "fast"        
         @active_channel = channel_id            
         # set channel get parameter for upload form src
         @dom_upload_iframe.attr("src", "/upload?channel_id=" + @active_channel)
@@ -342,12 +350,12 @@ class ChannelManager
         if data.type == "text"
             # check msg contains @PrenameLastname and highlight if true
             current_user = @user_data["" + @active_user]
-            highlight_string = "@" + current_user.prename + current_user.lastname
+            highlight_string = current_user.prename + current_user.lastname
             if data.message.indexOf(highlight_string) != -1
                 line.addClass("highlight")
                 @notify(channel_id)
             # replace known links, smileys etc
-            msg.html(@sugar_text(data.message))
+            msg.html(@utilities.sugar_text(data.message))
         else
             code_container = $("<div>")
             code_container.addClass("code_container")
@@ -356,24 +364,18 @@ class ChannelManager
             code.addClass("brush: " + data.type)
             # check if code has more than X lines, hide it
             if data.message.split("\n").length > @max_shown_code_lines
-                console.log "hid line"
-                show_code = $("<a>")
-                show_code.html("Show/Hide Code")
-                show_code.attr("href", "#")
-                show_code.addClass("show_code")
-                show_code.click ->
-                    code_container.slideToggle "fast"
-                    return false;
-                msg.append(show_code)
-                # dont display code
-                code_container.css("display", "none")
+                msg.append(@_generate_expand_code_link(code_container))
+                code_container.css("height", @code_clip_height + "px")
+                code_container.css("overflow-y": "hidden")
             code_container.append(code)
             msg.append(code_container)
+            if data.message.split("\n").length > @max_shown_code_lines
+                msg.append(@_generate_expand_code_link(code_container))
         year_span = $("<span>")
-        year_span.html(@_format_timestamp_to_date(data.date))
+        year_span.html(@utilities.format_timestamp_to_date(data.date))
         year_span.addClass("year")
         time_span = $("<span>")
-        time_span.html(@_format_timestamp_to_time(data.date))
+        time_span.html(@utilities.format_timestamp_to_time(data.date))
         time_span.addClass("time")
         date.append(year_span)
         date.append(time_span) 
@@ -423,19 +425,38 @@ class ChannelManager
         if @scrolled_channels[channel_id] == true or @scrolled_channels[channel_id] == undefined
             @scroll_to_bottom(channel_id)
 
+    # generates a link which expands the code container
+    _generate_expand_code_link: (code_container) ->
+        show_code = $("<a>")
+        show_code.html("Expand/Contract")
+        show_code.attr("href", "#")
+        show_code.addClass("show_code")
+        show_code.click =>
+            if code_container.css("height") == code_container.prop("scrollHeight") + "px"
+                code_container.animate({
+                    height: @code_clip_height + "px"
+                }, 500)
+            else
+                code_container.animate({
+                    height: code_container.prop("scrollHeight") + "px"
+                }, 500)
+
+        return show_code
+
 
     # decides if a new message scrolls to the stream to the bottom
     scrolled: (channel_id) ->
         stream = @dom_reg_stream[channel_id].children(".stream_field").children(".stream_chat")
         if @scrolled_channels[channel_id] == undefined
             @scrolled_channels[channel_id] = true
-        scrollBottom = stream.height() + stream.scrollTop()
-        if scrollBottom == stream.prop("scrollHeight")
+        scrollBottom = stream.innerHeight() + stream.scrollTop()
+        if scrollBottom >= stream.prop("scrollHeight")
             @scrolled_channels[channel_id] = true
             console.log("autoscroll activated")
         else
             @scrolled_channels[channel_id] = false
             console.log("autoscroll deactivated")
+        console.log("Scrolled " + scrollBottom + " of " + stream.prop("scrollHeight"))
             
             
     # scrolls a stream to the bottom
@@ -444,44 +465,7 @@ class ChannelManager
         stream.scrollTop(stream.prop("scrollHeight")); 
         
 
-    # wraps links in <a> tags, pictures in <img> tags 
-    # msg: the message we search
-    # return: the final message
-    sugar_text: (msg) ->
-        # first place all urls in <a> tags
-        msg = @linkify_text(msg)
-        # add smileys
-        smileys = new Smileys()
-        for key, smile of smileys.get_smileys()
-            img = '<img width="50" height="50" alt="' + key + '" src="' + smileys.get_smiley(key) + '" />'
-            middle_line_regex = new RegExp(" (" + @_regex_esc(key) + ")([\.\?!,;]*) ")
-            msg = msg.replace(middle_line_regex, " " + img + "$1$2 ")
-            break_line_regex = new RegExp(@_regex_esc(key) + "([\.\?!,;]*)<br />")
-            msg = msg.replace(break_line_regex, img + '$1<br />')
-            end_line_regex = new RegExp( "(.*)" + @_regex_esc(key) + "([\.\?!,;]*)$", "g")
-            msg = msg.replace(end_line_regex, "$1" + img + "$2")
-            start_line_regex = new RegExp( "^" + @_regex_esc(key) + "([\.\?!,;]*)(.*)$", "g")
-            msg = msg.replace(start_line_regex, img + "$1$2")
-        # now replace all images in <a> tags with <img> tags
-        pictures = ["png", "jpg", "jpeg", "gif"]
-        for pic in pictures
-            # put a br before and after the image
-            pic_regex = new RegExp('<a href="(.*\.' + @_regex_esc(pic) + ')">(.*)<\/a>', "gim")
-            msg = msg.replace(pic_regex, '<br/><a href="$1"><img alt="$1" src="$1" /></a><br/>')
-        # replace youtube links with embedded video
-        yt_regex = /<a href=".*youtube.com\/watch\?v=([0-9a-zA-Z_-]{11}).*">.*<\/a>/gi
-        msg = msg.replace(yt_regex, '<br/><iframe width="560" height="315" src="http://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe><br/>')
-        return msg
-        
-    # replaces links and emails with html links
-    linkify_text:(msg) ->
-        url_regex = /\b((?:https?|ftp):\/\/[a-z0-9+&@#\/%?=~_|!:,.;-]*[a-z0-9+&@#\/%=~_|-])/gi
-        pseudo_url_regex = /(^|[^\/])(www\.[\S]+(\b|$))/gi
-        email_regex = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/gi
-        msg = msg.replace(url_regex, '<a href="$1">$1</a>')
-        msg = msg.replace(pseudo_url_regex, '$1<a href="http://$2">$2</a>')
-        msg = msg.replace(email_regex, '<a href="mailto:$&">$&</a>')    
-        return msg
+
 
 ################################################################################
 # Groups and Users
@@ -498,7 +482,7 @@ class ChannelManager
         for id, data of @user_data
             user_name = data.prename + " " + data.lastname
             sorted_users[user_name] = id
-        sorted_users = @_sort_by_keys(sorted_users)
+        sorted_users = @utilities.sort_by_keys(sorted_users)
         
         # now loop through all users and push them into their groups
         groups = {}
@@ -519,9 +503,10 @@ class ChannelManager
             heading.html(group.name)
             invite_group_link = $("<a>")
             invite_group_link.addClass("invite_group")
-            invite_group_link.attr("alt", "invite group " + group.name + " to current channel")
-            invite_group_link.click =>
-                @main_manager.invite_group(group_id)
+            invite_group_link.attr("title", "invite group " + group.name + " to current channel")
+            do (group_id) =>
+                invite_group_link.click =>
+                    @main_manager.invite_group(group_id)
             heading.append(invite_group_link)
             user_list = $("<ul>")
             for user_id in users
@@ -530,9 +515,10 @@ class ChannelManager
                 user_entry.html(user.prename + " " + user.lastname)
                 invite_user_link = $("<a>")
                 invite_user_link.addClass("invite_user")
-                invite_user_link.attr("alt", "invite user " + user.prename + " " + user.lastname + " to current channel")
-                invite_user_link.click =>
-                    @main_manager.invite_user(user_id)
+                invite_user_link.attr("title", "invite user " + user.prename + " " + user.lastname + " to current channel")
+                do (user_id) =>
+                    invite_user_link.click =>
+                        @main_manager.invite_user(user_id)
                 user_entry.append(invite_user_link)
                 if user.online == true
                     user_entry.addClass("online")
@@ -552,9 +538,10 @@ class ChannelManager
             user_entry.html(user.prename + " " + user.lastname)
             invite_user_link = $("<a>")
             invite_user_link.addClass("invite_user")
-            invite_user_link.attr("alt", "invite user " + user.prename + " " + user.lastname + " to current channel")
-            invite_user_link.click =>
-                @main_manager.invite_user(user_id)
+            invite_user_link.attr("title", "invite user " + user.prename + " " + user.lastname + " to current channel")
+            do (user_id) =>
+                invite_user_link.click =>
+                    @main_manager.invite_user(user_id)
             user_entry.append(invite_user_link)
             if user.online == true
                 user_entry.addClass("online")
@@ -573,9 +560,10 @@ class ChannelManager
                 heading.html(group.name)
                 kick_group_link = $("<a>")
                 kick_group_link.addClass("kick_group")
-                kick_group_link.attr("alt", "remove group " + group.name + " from channel")
-                kick_group_link.click =>
-                    @main_manager.kick_group(group_id)
+                kick_group_link.attr("title", "remove group " + group.name + " from channel")
+                do (group_id) =>
+                    kick_group_link.click =>
+                        @main_manager.kick_group(group_id)
                 heading.append(kick_group_link)
                 user_list = $("<ul>")
                 for user_id in groups[group_id]
@@ -584,9 +572,10 @@ class ChannelManager
                     user_entry.html(user.prename + " " + user.lastname)
                     kick_user_link = $("<a>")
                     kick_user_link.addClass("kick_user")
-                    kick_user_link.attr("alt", "remove user " + user.prename + " " + user.lastname + " from channel")
-                    kick_user_link.click =>
-                        @main_manager.kick_user(user_id)
+                    kick_user_link.attr("title", "remove user " + user.prename + " " + user.lastname + " from channel")
+                    do (user_id) =>
+                        kick_user_link.click =>
+                            @main_manager.kick_user(user_id)
                     user_entry.append(kick_user_link)
                     if user.online == true
                         user_entry.addClass("online")
@@ -606,9 +595,10 @@ class ChannelManager
                 user_entry.html(user.prename + " " + user.lastname)
                 kick_user_link = $("<a>")
                 kick_user_link.addClass("kick_user")
-                kick_user_link.attr("alt", "remove user " + user.prename + " " + user.lastname + " from channel")
-                kick_user_link.click =>
-                    @main_manager.kick_user(user_id)
+                kick_user_link.attr("title", "remove user " + user.prename + " " + user.lastname + " from channel")
+                do (user_id) =>
+                    kick_user_link.click =>
+                        @main_manager.kick_user(user_id)
                 user_entry.append(kick_user_link)
                 if user.online == true
                     user_entry.addClass("online")
@@ -803,17 +793,17 @@ class ChannelManager
             file_id += ""
             file = @file_data[file_id]
             # group files under the same day
-            post_date = @_format_timestamp_to_date(file.modified) # + @_format_timestamp_to_time(file.modified)
+            post_date = @utilities.format_timestamp_to_date(file.modified) # + @utilities.format_timestamp_to_time(file.modified)
             if last_date == undefined or last_date != post_date
                 last_date = post_date
                 date_entry = $("<li>")
                 date_entry.addClass("date_line")
                 date = $("<span>")
                 date.addClass("date")
-                date.html(@_format_timestamp_to_date(file.modified))
+                date.html(@utilities.format_timestamp_to_date(file.modified))
                 #time = $("<span>")
                 #time.addClass("time")
-                #time.html(@_format_timestamp_to_time(file.modified))
+                #time.html(@utilities.format_timestamp_to_time(file.modified))
                 #date_entry.append(time)
                 date_entry.append(date)
                 files_ul.append(date_entry)
@@ -826,14 +816,15 @@ class ChannelManager
             file_name.attr("target", "_blank")
             file_size = $("<span>")
             file_size.addClass("size")
-            file_size.html(@_kb_to_human_readable(file.size, 2))
+            file_size.html(@utilities.kb_to_human_readable(file.size, 2))
             list_entry.append(file_name)
             list_entry.append(file_size)
             delete_file_link = $("<a>")
             delete_file_link.addClass("delete_file")
-            delete_file_link.attr("alt", "delete file " + file.name)
-            delete_file_link.click =>
-                @main_manager.delete_file(file_id)
+            delete_file_link.attr("title", "delete file " + file.name)
+            do(file_id) =>     
+                delete_file_link.click =>
+                    @main_manager.delete_file(file_id)
             list_entry.append(delete_file_link)
             files_ul.append(list_entry)
             
@@ -845,7 +836,7 @@ class ChannelManager
     # checks all users in the active channel for autocompletion of the name
     complete_name: (val) ->
         # get the last part behind the at
-        words = val.split("@")
+        words = val.split(" ")
         if words.length == 0
             return val
         word = words[words.length-1]
@@ -869,11 +860,11 @@ class ChannelManager
             # only autocomplete if unique
             matches = 0
             ret = ""
-            if @_starts_with(name, word)
+            if @utilities.starts_with(name, word)
                 matches += 1
                 # rebuild the original message
                 for item in words
-                    ret += item + "@"
+                    ret += item + " "
                 ret += name
             if matches == 1
                 return ret
@@ -911,86 +902,3 @@ class ChannelManager
         if @init_channels[channel_id]
             @notify_audio[0].play()
         
-
-################################################################################
-# utilities
-################################################################################
-    # gets the date formatted like year-month-day
-    _format_timestamp_to_date: (timestamp) ->
-        date_string = new Date(timestamp)
-        year = date_string.getFullYear()
-        month = date_string.getMonth()
-        day = date_string.getDay()
-        # add preceding zeros when < 10
-        if month < 10
-            month = "0" + month
-        if day < 10
-            day = "0" + day
-        formatted_date = year + "-" + month + "-" + day
-        formatted_date        
-
-    # gets the time formatted like hour:minute
-    _format_timestamp_to_time: (timestamp) ->
-        date_string = new Date(timestamp)
-        hours = date_string.getHours()
-        minutes = date_string.getMinutes()
-        seconds = date_string.getSeconds()
-        # add preceding zeros when < 10
-        if hours < 10
-            hours = "0" + hours
-        if minutes < 10
-            minutes = "0" + minutes
-        if seconds < 10
-            seconds = "0" + seconds
-        formatted_time = hours + ":" + minutes
-        formatted_time
- 
-    # checks if a word starts with a word
-    _starts_with: (word, needle) ->
-        word = word.toLowerCase()
-        needle = needle.toLowerCase()
-        return word.indexOf(needle) == 0
-
-    # sorts a hashmap by keys
-    _sort_by_keys: (dict) ->
-        sortedKeys = new Array()
-        sortedObj = {}
-        for key of dict
-            sortedKeys.push(key)
-        sortedKeys.sort()
-        for key in sortedKeys
-            sortedObj[key] = dict[key]
-        return sortedObj
-
-
-    # returns the size of a dictionairy 
-    _get_dict_size: (dict) ->
-        size = 0
-        for key of dict
-            if dict.hasOwnProperty(key)
-                size++
-        return size
-        
-    # escapes chars when put into regex
-    _regex_esc: (string) ->
-        return (string+'').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")
-        
-    # returns kilobyte to a human readable format
-    _kb_to_human_readable: (bytes, precision) ->
-        kilobyte = 1024
-        megabyte = kilobyte * 1024;
-        gigabyte = megabyte * 1024;
-        terabyte = gigabyte * 1024;
-
-        if bytes >= kilobyte and bytes < gigabyte
-            return (bytes / kilobyte).toFixed(precision) + ' KB'   
-        if bytes >= megabyte and bytes < gigabyte
-            return (bytes / megabyte).toFixed(precision) + ' MB'
-        else if bytes >= gigabyte and bytes < terabyte
-            return (bytes / gigabyte).toFixed(precision) + ' GB'
-        else if bytes >= terabyte
-            return (bytes / terabyte).toFixed(precision) + ' TB'
-        else
-            return bytes + ' B'
-            
-

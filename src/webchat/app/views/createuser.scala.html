@@ -16,8 +16,8 @@
 	        @inputText(userForm("firstname"), '_label -> "First name")
             @inputText(userForm("lastname"), '_label -> "Last name")
             @inputText(userForm("email"), '_label -> "E-Mail")
-            @checkbox(userForm("admin"))
-            @checkbox(userForm("active"))
+			@select(userForm("active"), options("true"->"Yes", "false"->"No"), '_label -> "Active")
+			@select(userForm("admin"), options("false"->"No", "true"->"Yes"), '_label -> "Admin")
 
         </fieldset>
         

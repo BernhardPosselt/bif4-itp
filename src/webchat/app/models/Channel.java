@@ -16,11 +16,10 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 
 import flexjson.JSON;
-
+import models.*;
 import java.util.*;
 
 import play.db.ebean.Model;
-import play.data.format.*;
 import play.data.validation.*;
 import play.libs.Akka;
 import play.libs.F.Callback;
@@ -95,6 +94,10 @@ public class Channel extends Model {
 			Integer.class, Channel.class
 	);
 	
+    public static List<Channel> findAll(){
+        return find.all();
+    }
+	
 	public static List<Channel> getUserChannels(int userid)
     {
 		List<Channel> tmp = new ArrayList<Channel>();
@@ -103,6 +106,13 @@ public class Channel extends Model {
         return tmp;
     }
 
+	public static List<Channel> getFileChannels(int fileid)
+    {
+		List<Channel> tmp = new ArrayList<Channel>();
+        tmp =  find.where().eq("files.id", fileid).findList();
+        return tmp;
+    }
+	
 	public static List<Integer> getChannelUsers(int channelid) {
 		List<Integer> users = new ArrayList<Integer>();
 		for (Iterator<User> iterator= find.byId(channelid).users.iterator(); iterator.hasNext();){
@@ -110,5 +120,51 @@ public class Channel extends Model {
 		}
 		return users;
 	}
+	
+	public static List<User> getUsersForChannel(int channelid)
+    {
+    	List<User> users = new ArrayList<User>();
+    	Channel tmp = new Channel();
+    	tmp = find.byId(channelid);
+    	for (Iterator<User> iterator= find.byId(channelid).users.iterator(); iterator.hasNext();){
+			users.add(iterator.next());
+		}
+    	return users;
+    }
+    
+    public static List<User> getUsersNotForChannel(int channelid)
+    {
+    	List<User> users = new ArrayList<User>();
+    	users = User.find.all();
+    	Channel tmp = new Channel();
+    	tmp = find.byId(channelid);
+    	for (Iterator<User> iterator= find.byId(channelid).users.iterator(); iterator.hasNext();){
+			users.remove(iterator.next());
+		}
+    	return users;
+    }
+    
+    public static List<Groups> getGroupsForChannel(int channelid)
+    {
+    	List<Groups> groups = new ArrayList<Groups>();
+    	Channel tmp = new Channel();
+    	tmp = find.byId(channelid);
+    	for (Iterator<Groups> iterator= find.byId(channelid).groups.iterator(); iterator.hasNext();){
+			groups.add(iterator.next());
+		}
+    	return groups;
+    }
+    
+    public static List<Groups> getGroupsNotForChannel(int channelid)
+    {
+    	List<Groups> groups = new ArrayList<Groups>();
+    	groups = Groups.find.all();
+    	Channel tmp = new Channel();
+    	tmp = find.byId(channelid);
+    	for (Iterator<Groups> iterator= find.byId(channelid).groups.iterator(); iterator.hasNext();){
+			groups.remove(iterator.next());
+		}
+    	return groups;
+    }
 	
 }

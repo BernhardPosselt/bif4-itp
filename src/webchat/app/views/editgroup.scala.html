@@ -1,0 +1,116 @@
+@(id: Long, groupForm: Form[Groups], username: String)
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@main(username, title = "Webchat") {
+    
+    <h1>Edit group</h1>
+    
+    @form(routes.AdminController.updategroup(id)) {
+        
+        <fieldset>
+        
+            @inputText(groupForm("name"), '_label -> "Name")
+            
+            Channels:
+        	<table class="data_table" cellpadding="0" cellspacing="0">
+	            <thead>
+	                <tr>
+	                    <th><a href="#">ID</a></th>
+	                    <th><a href="#">Name</a></th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	            	@for(channel <- Groups.getChannelsForGroup(groupForm.get().id)) {
+	            	<tr>
+	            		<td>
+	            			<a href="@routes.AdminController.deletechannelgroup(channel.id, groupForm.get().id)">@channel.id</a>
+	            		</td>
+	            		<td>
+	            			<a href="@routes.AdminController.deletechannelgroup(channel.id, groupForm.get().id)">@channel.name</a>
+	            		</td>
+	            	</tr>
+	            	}
+				</tbody>
+			</table>
+			<table class="data_table" cellpadding="0" cellspacing="0">
+	            <thead>
+	                <tr>
+	                    <th><a href="#">ID</a></th>
+	                    <th><a href="#">Name</a></th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	            	@for(channel <- Groups.getChannelsNotForGroup(groupForm.get().id)) {
+	            	<tr>
+	            		<td>
+	            			<a href="@routes.AdminController.addchannelgroup(channel.id, groupForm.get().id)">@channel.id</a>
+	            		</td>
+	            		<td>
+	            			<a href="@routes.AdminController.addchannelgroup(channel.id, groupForm.get().id)">@channel.name</a>
+	            		</td>
+	            	</tr>
+	            	}
+				</tbody>
+			</table>
+			
+			Users:
+        	<table class="data_table" cellpadding="0" cellspacing="0">
+	            <thead>
+	                <tr>
+	                    <th><a href="#">ID</a></th>
+	                    <th><a href="#">First name</a></th>
+	                    <th><a href="#">Last name</a></th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	            	@for(user <- Groups.getUsersForGroup(groupForm.get().id)) {
+	            	<tr>
+	            		<td>
+	            			<a href="@routes.AdminController.deleteusergroup(user.id, groupForm.get().id)">@user.id</a>
+	            		</td>
+	            		<td>
+	            			<a href="@routes.AdminController.deleteusergroup(user.id, groupForm.get().id)">@user.firstname</a>
+	            		</td>
+	            		<td>
+	            			<a href="@routes.AdminController.deleteusergroup(user.id, groupForm.get().id)">@user.lastname</a>
+	            		</td>
+	            	</tr>
+	            	}
+				</tbody>
+			</table>
+			<table class="data_table" cellpadding="0" cellspacing="0">
+	            <thead>
+	                <tr>
+	                    <th><a href="#">ID</a></th>
+	                    <th><a href="#">First name</a></th>
+	                    <th><a href="#">Last name</a></th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	            	@for(user <- Groups.getUsersNotForGroup(groupForm.get().id)) {
+	            	<tr>
+	            		<td>
+	            			<a href="@routes.AdminController.addusergroup(user.id, groupForm.get().id)">@user.id</a>
+	            		</td>
+	            		<td>
+	            			<a href="@routes.AdminController.addusergroup(user.id, groupForm.get().id)">@user.firstname</a>
+	            		</td>
+	            		<td>
+	            			<a href="@routes.AdminController.addusergroup(user.id, groupForm.get().id)">@user.lastname</a>
+	            		</td>
+	            	</tr>
+	            	}
+				</tbody>
+			</table>
+			
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Save this group" class="btn primary"> or 
+            <a href="@routes.AdminController.index()" class="btn">Cancel</a>
+        </div>
+        
+    }
+}
