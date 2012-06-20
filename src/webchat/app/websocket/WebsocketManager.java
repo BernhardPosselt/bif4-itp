@@ -59,11 +59,16 @@ public class WebsocketManager {
                 in.onClose(new Callback0() {
                     public void invoke() {
                         // Send a Quit message to the room.
-                    	models.User.setUseroffline(userId);
-                    	notifyAllMembers(User.genUserchanged(userId, "update"));
-                    	members.remove(userId);
-                        out.write(Status.genStatus("ok", "WebSocket Closed"));
-                     
+                    	Boolean hilf = true;
+                    	members.remove(out);
+                    	out.write(Status.genStatus("ok", "WebSocket Closed"));
+                        if (members.values().contains(userId)){
+                        	hilf = false;
+                        }
+                    	if (hilf.equals(true)){
+                    		models.User.setUseroffline(userId);
+                    		notifyAllMembers(User.genUserchanged(userId, "update"));		
+                    	}
                     }
                 });
 	        };
