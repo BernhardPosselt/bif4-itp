@@ -117,7 +117,7 @@ public class Application extends Controller {
             models.File new_file = new models.File();
             new_file.name = filename;
             new_file.filename = unqName;
-            new_file.type = contentType;
+            new_file.mimetype = contentType;
             new_file.date = DateTime.now().toDate();
             new_file.uid = User.find.byId(Integer.valueOf(session("userid")));
             new_file.size = file.length();

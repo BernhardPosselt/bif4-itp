@@ -1,5 +1,8 @@
 package controllers;
 
+import java.util.Iterator;
+import java.util.List;
+
 import play.Logger;
 import play.mvc.*;
 import play.data.*;
@@ -32,13 +35,13 @@ public class AdminController extends Controller {
             int userid = Integer.parseInt(user);
 
             User tmp = User.find.ref(userid);
-            if(tmp.admin == true)
+            if(tmp.admin == true && tmp.active == true)
             {
             	return userid;
             }
             else
             {
-            	Logger.warn("Admin Page for User with ID " + userid + " not loaded, because User is not an Admin - Redirect to Index Form");
+            	Logger.warn("Admin Page for User with ID " + userid + " not loaded, because User is not an Admin or active - Redirect to Index Form");
             	return -1;
             }
         }
@@ -92,6 +95,12 @@ public class AdminController extends Controller {
                 return badRequest(createuser.render(userForm, User.getUsername(Integer.parseInt(session("userid")))));
             }
             userForm.get().save();
+            for(Iterator<models.Channel> chaniter = models.Channel.getAllPublicChannel().iterator(); chaniter.hasNext();){
+            	models.Channel channel= new models.Channel();
+            	channel = chaniter.next();
+            	channel.users.add(userForm.get());
+            	channel.saveManyToManyAssociations("users");
+            }
             flash("success", "User " + userForm.get().username + " has been created");
         	Logger.info("User " + userForm.get().username + " with ID " + userForm.get().id + " has been created");
             return index();
@@ -211,9 +220,9 @@ public static Result deletechanneluser(Long channelid, Long userid) {
 			tmp.save();
 	        flash("success", "User " + userid + " with Channel " + channelid +  " has been deleted");
 	        Logger.info("User " + userid + " with Channel " + channelid +  " has been deleted");
-	        return edituser((long) uid);
+	        return edituser((long) userid);
 		}
-		return edituser((long) uid);
+		return edituser((long) userid);
 	}
 	else
 	{
@@ -235,9 +244,9 @@ public static Result addchanneluser(Long channelid, Long userid) {
 			tmp.save();
 	        flash("success", "User " + userid + " with Channel " + channelid +  " has been created");
 	        Logger.info("User " + userid + " with Channel " + channelid +  " has been created");
-	        return edituser((long) uid);
+	        return edituser((long) userid);
 		}
-		return edituser((long) uid);
+		return edituser((long) userid);
 	}
 	else
 	{
@@ -259,9 +268,9 @@ public static Result deletegroupuser(Long groupid, Long userid) {
 			tmp.save();
 	        flash("success", "User " + userid + " with Group " + groupid +  " has been deleted");
 	        Logger.info("User " + userid + " with Group " + groupid +  " has been deleted");
-	        return edituser((long) uid);
+	        return edituser((long) userid);
 		}
-		return edituser((long) uid);
+		return edituser((long) userid);
 	}
 	else
 	{
@@ -283,9 +292,9 @@ public static Result addgroupuser(Long groupid, Long userid) {
 			tmp.save();
 	        flash("success", "User " + userid + " with Group " + groupid +  " has been created");
 	        Logger.info("User " + userid + " with Group " + groupid +  " has been created");
-	        return edituser((long) uid);
+	        return edituser((long) userid);
 		}
-		return edituser((long) uid);
+		return edituser((long) userid);
 	}
 	else
 	{
@@ -307,9 +316,9 @@ public static Result deletechannelgroup(Long channelid, Long groupid) {
 			tmp2.save();
 	        flash("success", "Group " + groupid + " with Channel " + channelid +  " has been deleted");
 	        Logger.info("Group " + groupid + " with Channel " + channelid +  " has been deleted");
-	        return editgroup((long) uid);
+	        return editgroup((long) groupid);
 		}
-		return editgroup((long) uid);
+		return editgroup((long) groupid);
 	}
 	else
 	{
@@ -331,9 +340,9 @@ public static Result addchannelgroup(Long channelid, Long groupid) {
 			tmp2.save();
 	        flash("success", "Group " + groupid + " with Channel " + channelid +  " has been created");
 	        Logger.info("Group " + groupid + " with Channel " + channelid +  " has been created");
-	        return editgroup((long) uid);
+	        return editgroup((long) groupid);
 		}
-		return editgroup((long) uid);
+		return editgroup((long) groupid);
 	}
 	else
 	{
@@ -355,9 +364,9 @@ public static Result deleteusergroup(Long userid, Long groupid) {
 			tmp2.save();
 	        flash("success", "Group " + groupid + " with User " + userid +  " has been deleted");
 	        Logger.info("Group " + groupid + " with User " + userid +  " has been deleted");
-	        return editgroup((long) uid);
+	        return editgroup((long) groupid);
 		}
-		return editgroup((long) uid);
+		return editgroup((long) groupid);
 	}
 	else
 	{
@@ -379,9 +388,9 @@ public static Result addusergroup(Long userid, Long groupid) {
 			tmp2.save();
 	        flash("success", "Group " + groupid + " with User " + userid +  " has been created");
 	        Logger.info("Group " + groupid + " with User " + userid +  " has been created");
-	        return editgroup((long) uid);
+	        return editgroup((long) groupid);
 		}
-		return editgroup((long) uid);
+		return editgroup((long) groupid);
 	}
 	else
 	{
@@ -403,9 +412,9 @@ public static Result deleteuserchannel(Long userid, Long channelid) {
 			tmp2.save();
 	        flash("success", "Channel " + channelid + " with User " + userid +  " has been deleted");
 	        Logger.info("Channel " + channelid + " with User " + userid +  " has been deleted");
-	        return editchannel((long) uid);
+	        return editchannel((long) channelid);
 		}
-		return editchannel((long) uid);
+		return editchannel((long) channelid);
 	}
 	else
 	{
@@ -427,9 +436,9 @@ public static Result adduserchannel(Long userid, Long channelid) {
 			tmp2.save();
 	        flash("success", "Channel " + channelid + " with User " + userid +  " has been created");
 	        Logger.info("Channel " + channelid + " with User " + userid +  " has been created");
-	        return editchannel((long) uid);
+	        return editchannel((long) channelid);
 		}
-		return editchannel((long) uid);
+		return editchannel((long) channelid);
 	}
 	else
 	{
@@ -451,9 +460,9 @@ public static Result deletegroupchannel(Long groupid, Long channelid) {
 			tmp.save();
 	        flash("success", "Channel " + channelid + " with Group " + groupid +  " has been deleted");
 	        Logger.info("Channel " + channelid + " with Group " + groupid +  " has been deleted");
-	        return editchannel((long) uid);
+	        return editchannel((long) channelid);
 		}
-		return editchannel((long) uid);
+		return editchannel((long) channelid);
 	}
 	else
 	{
@@ -475,9 +484,9 @@ public static Result addgroupchannel(Long groupid, Long channelid) {
 			tmp.save();
 	        flash("success", "Channel " + channelid + " with Group " + groupid +  " has been created");
 	        Logger.info("Channel " + channelid + " with Group " + groupid +  " has been created");
-	        return editchannel((long) uid);
+	        return editchannel((long) channelid);
 		}
-		return editchannel((long) uid);
+		return editchannel((long) channelid);
 	}
 	else
 	{
@@ -544,6 +553,19 @@ public static Result addgroupchannel(Long groupid, Long channelid) {
     	int uid = check();
     	if(uid != -1)
     	{
+    		List<Channel> chanlist = Groups.getChannelsForGroup(id.intValue()); 
+    		for (Channel chan: chanlist)
+    		{
+    			chan.groups.remove(Groups.find.byId(id.intValue()));
+    			chan.save();
+    		}
+    		List<User> userlist = Groups.getUsersForGroup(id.intValue()); 
+    		for (User use: userlist)
+    		{
+    			use.groups.remove(Groups.find.byId(id.intValue()));
+    			use.save();
+    		}
+    		
 	        Groups.find.ref(id.intValue()).delete();
 	        flash("success", "Group " + id + " has been deleted");
 	        Logger.info("Group " + id + " has been deleted");

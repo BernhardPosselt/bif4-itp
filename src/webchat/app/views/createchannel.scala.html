@@ -3,7 +3,7 @@
 @import helper._
 @import helper.twitterBootstrap._
 
-@main(username, title = "Webchat") {
+@admin_main(username, title = "Webchat") {
     
     <h1>Add a channel</h1>
     
@@ -13,6 +13,8 @@
         
             @inputText(channelForm("name"), '_label -> "Username")
             @inputText(channelForm("topic"), '_label -> "Password")
+            @inputText(channelForm("name"), '_label -> "Name")
+            @inputText(channelForm("topic"), '_label -> "Topic")
 			@select(channelForm("is_public"), options("true"->"Yes", "false"->"No"), '_label -> "Public")
 			@select(channelForm("archived"), options("false"->"No", "true"->"Yes"), '_label -> "Archived")
 

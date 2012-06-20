@@ -59,7 +59,7 @@
                     <tr>
                         <td>@file.name</td>
                         <td>@file.filename</td>
-                        <td>@file.name</td>
+                        <td>@file.mimetype</td>
                         <td>@file.size</td>
                         <td>@file.date.format("dd-MM-yyyy HH:mm:ss")</td>
                         <td>@file.uid</td>
@@ -119,6 +119,8 @@
                     <th><a href="#">Name</a></th>
                     <th><a href="#">Modified</a></th>
                     <th><a href="#">Delete</a></th>
+                    <th><a href="#">Channels</a></th>
+                    <th><a href="#">Users</a></th>
                 </tr>
             </thead>
             <tbody>
@@ -137,6 +139,24 @@
     						@form(routes.AdminController.deletegroup(group.id), 'class -> "topRight") {
         						<input type="submit" value="Delete this group" class="btn danger">
     						}
+                        </td>
+                        <td>
+                        	@if(group.channels == null) {
+                        		<em>-</em>
+                    		} else {
+                    			@for(channel <- group.channels) {
+                    				<a href="@routes.AdminController.editgroup(group.id)">@channel.name </a>
+                            	}
+                    		}
+                        </td>
+                        <td>
+                        	@if(group.users == null) {
+                        		<em>-</em>
+                    		} else {
+                    			@for(user <- group.users) {
+                    				<a href="@routes.AdminController.editgroup(group.id)">@user.firstname @user.lastname </a>
+                            	}
+                    		}
                         </td>
                    </tr>
                 }
@@ -168,6 +188,12 @@
             	<option value="@group.id">@group.name</option>
         	}
         </select>
+        <select class="filter_users">
+            <option value="0">All Users</option>
+            @for(user <- users) {
+            	<option value="@user.id">@user.username</option>
+        	}
+        </select>
         <input type="search" class="searchbox" name="f" placeholder="filter...">
         
         <a class="btn success link_button" id="add" href="@routes.AdminController.createchannel()">Add a new channel</a>
@@ -190,6 +216,8 @@
                     <th><a href="#">Public</a></th>
                     <th><a href="#">Archived</a></th>
                 	<th><a href="#">Delete</a></th>
+                	<th><a href="#">Groups</a></th>
+                	<th><a href="#">Users</a></th>                	
                     </tr>
             </thead>
             <tbody>
@@ -228,6 +256,24 @@
                         	    @form(routes.AdminController.deletechannel(channel.id), 'class -> "topRight") {
         							<input type="submit" value="Delete this channel" class="btn danger">
         						}
+                        </td>
+                        <td>
+                        	@if(channel.groups == null) {
+                        		<em>-</em>
+                    		} else {
+                    			@for(group <- channel.groups) {
+                    				<a href="@routes.AdminController.editchannel(channel.id)">@group.name </a>
+                            	}
+                    		}
+                        </td>
+                        <td>
+                        	@if(channel.users == null) {
+                        		<em>-</em>
+                    		} else {
+                    			@for(user <- channel.users) {
+                    				<a href="@routes.AdminController.editchannel(channel.id)">@user.firstname @user.lastname </a>
+                            	}
+                    		}
                         </td>
                    </tr>
                 }
@@ -289,6 +335,8 @@
                     <th><a href="#">Online</a></th>
                     <th><a href="#">Last Login</a></th>
                     <th><a href="#">Delete</a></th>
+                    <th><a href="#">Groups</a></th>
+                    <th><a href="#">Channels</a></th>
                 </tr>
             </thead>
             <tbody>
@@ -358,6 +406,24 @@
                             @form(routes.AdminController.deleteuser(user.id), 'class -> "topRight") {
         						<input type="submit" value="Delete this user" class="btn danger">
     						}
+                        </td>
+                        <td>
+                        	@if(user.groups == null) {
+                        		<em>-</em>
+                    		} else {
+                    			@for(group <- user.groups) {
+                    				<a href="@routes.AdminController.edituser(user.id)">@group.name </a>
+                            	}
+                    		}
+                        </td>
+                        <td>
+                        	@if(user.channels == null) {
+                        		<em>-</em>
+                    		} else {
+                    			@for(channel <- user.channels) {
+                    				<a href="@routes.AdminController.edituser(user.id)">@channel.name </a>
+                            	}
+                    		}
                         </td>
                     </tr>
                 }

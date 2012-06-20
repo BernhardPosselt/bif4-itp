@@ -61,6 +61,11 @@ public class LoginController extends Controller {
               Logger.error("Login not successful - Wrong username or password");
               return badRequest(login.render(form, ""));
         }
+        if(!User.getActive(User.getUserID(form.field("username").value())))
+        {
+        	Logger.error("Login not successful - User not active");
+            return badRequest(login.render(form, ""));
+        }
         else //Authentication successful
         {
               //Get UserID by Username

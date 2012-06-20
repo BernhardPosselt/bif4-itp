@@ -83,6 +83,11 @@ public class User extends Model {
     {
         return find.byId(id).username;
     }
+	
+	public static boolean getActive(int id)
+    {
+        return find.byId(id).active;
+    }
 
     public static boolean authenticate(String name, String pw)
     {

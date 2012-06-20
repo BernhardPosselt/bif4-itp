@@ -26,7 +26,7 @@ GET /admin controllers.AdminController.index()
 
 #Add User
 GET /admin/newuser controllers.AdminController.createuser()
-POST /admin controllers.AdminController.saveuser()
+POST /adminuser controllers.AdminController.saveuser()
 #Edit User
 GET     /admin/user/:id              controllers.AdminController.edituser(id:Long)
 POST    /admin/user/:id              controllers.AdminController.updateuser(id:Long)
@@ -35,7 +35,7 @@ POST    /admin/user/:id/delete       controllers.AdminController.deleteuser(id:L
 
 #Add Channel
 GET /admin/newchannel controllers.AdminController.createchannel()
-POST /admin controllers.AdminController.savechannel()
+POST /adminchannel controllers.AdminController.savechannel()
 #Edit Channel
 GET     /admin/channel/:id              controllers.AdminController.editchannel(id:Long)
 POST    /admin/channel/:id              controllers.AdminController.updatechannel(id:Long)
@@ -44,7 +44,7 @@ POST    /admin/channel/:id/delete       controllers.AdminController.deletechanne
 
 #Add Group
 GET /admin/newgroup controllers.AdminController.creategroup()
-POST /admin controllers.AdminController.savegroup()
+POST /admingroup controllers.AdminController.savegroup()
 #Edit Group
 GET     /admin/group/:id              controllers.AdminController.editgroup(id:Long)
 POST    /admin/group/:id              controllers.AdminController.updategroup(id:Long)
