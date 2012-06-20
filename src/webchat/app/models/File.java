@@ -23,7 +23,7 @@ public class File extends Model {
     public String filename;
 	
 	@Constraints.Required
-	public String type;
+	public String mimetype;
 	
 	@Constraints.Required
 	public double size;

@@ -35,7 +35,7 @@ public class File {
 				fdata.name = dbfile.name;
 				fdata.owner_id = dbfile.uid.id;
 				fdata.size = dbfile.size;
-				fdata.type = dbfile.type;
+				fdata.type = dbfile.mimetype;
 				file.actions.put(dbfile.id, action);
 				file.data.put(dbfile.id, fdata);
 				
@@ -61,7 +61,7 @@ public class File {
 			fdata.name = dbfile.name;
 			fdata.owner_id = dbfile.uid.id;
 			fdata.size = dbfile.size;
-			fdata.type = dbfile.type;
+			fdata.type = dbfile.mimetype;
 			file.actions.put(dbfile.id, "create");
 			file.data.put(dbfile.id, fdata);
 				
