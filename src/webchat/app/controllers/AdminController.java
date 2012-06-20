@@ -612,7 +612,7 @@ public static Result addgroupchannel(Long groupid, Long channelid) {
     	}
     }
     
-public static Result deletefile(Long id) {
+    public static Result deletefile(Long id) {
     	
     	String user = session("userid");
     	int uid = check();
@@ -629,4 +629,9 @@ public static Result deletefile(Long id) {
     	}
     }
 
+    public static Result ajaxUsers(){
+        // TODO:
+        List<User> users = User.findAll();
+        return ok(admin_users.render(users, User.getUsername(Integer.parseInt(session("userid")))));
+    }
 }
