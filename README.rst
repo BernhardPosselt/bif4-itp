@@ -69,3 +69,36 @@ compiled into public/javascript
 
 
 ``A reference for CoffeeScript`` is available at http://coffeescript.org/
+
+Deployment
+----------
+
+You can start the Production Server with the commands:
+
+
+    $ play clean compile stage
+    $ ./target/start -DapplyEvolutions.default=true -Dhttp.port=80
+
+With this commands you start a Server with Port 80 and the Model Scripts are executed automatically.
+
+Database
+----------
+
+In our project we use 2 diffenrent DB-Systems.
+
+For develepment we use the In-Memory-Database H2 with following configuration:
+    db.default.driver=org.h2.Driver
+    db.default.url="jdbc:h2:mem:play"
+    # db.default.user=sa
+    # db.default.password=
+
+As you can see for this DB you do not need a User or a Password. 
+If you like a GUI for the H2 Database you need the command:
+    $ play h2-browser
+
+In production we use the Mysql-Database with following configuration:
+
+    db.default.driver=com.mysql.jdbc.Driver
+    db.default.url="jdbc:mysql://localhost/itp_4?characterEncoding=UTF-8"
+    db.default.user=<user>
+    db.default.password=<"password">
