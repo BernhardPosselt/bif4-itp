@@ -5,6 +5,8 @@
 
 @admin_main(username, title = "Webchat") {
     
+    <div id="admin_site">
+    
     <h1>Add a channel</h1>
     
     @form(routes.AdminController.savechannel()) {
@@ -26,5 +28,7 @@
         </div>
         
     }
+    
+    </div>
     
 } 
