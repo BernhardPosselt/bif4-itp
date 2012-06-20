@@ -65,7 +65,7 @@ public class Message {
 			md.user_id = userid;
 
 			// Put the Messages in the map
-			Map<Integer, MessageData> mdata = new HashMap<Integer, MessageData>();
+			Map<Integer, MessageData> mdata = new LinkedHashMap<Integer, MessageData>();
 			mdata.put(dbmessage.id, md);
 
 			// Fill the Action Dict; always create by messages
@@ -92,7 +92,7 @@ public class Message {
 		String json = "";
 		try {
 			Message m = new Message();
-			Map<Integer, MessageData> mdata = new HashMap<Integer, MessageData>();
+			Map<Integer, MessageData> mdata = new LinkedHashMap<Integer, MessageData>();
 			m.init = true;
 			for (Iterator<models.Message> miter = models.Message.getallChannelMessages(channelid).iterator(); miter.hasNext();){
 				models.Message dbmessage = new models.Message();
@@ -108,7 +108,7 @@ public class Message {
 				
 			}
 			m.data.put(channelid, mdata);
-	
+			
 			// Generate the Json Message
 			JSONSerializer aser = new JSONSerializer().include("*.data",
 					"*.actions");

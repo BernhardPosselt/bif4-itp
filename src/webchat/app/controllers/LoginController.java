@@ -36,10 +36,6 @@ public class LoginController extends Controller {
 
     public static Result logout()
     {
-        if(session("userid") != null)
-        {
-            User.setUseroffline(Integer.parseInt(session("userid")));
-        }
         Logger.info("User with ID " + session("userid") + " logged out - Redirect to Login Form");
         session().clear();
         return redirect(routes.LoginController.login());

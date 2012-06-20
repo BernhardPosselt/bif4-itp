@@ -1150,6 +1150,54 @@ input, textarea, select {
         border:1px solid #ccc;
         padding:20px;
 
+        fieldset
+        {
+            border:none;
+
+            .clearfix
+            {
+                margin:4px 0px;
+            }
+
+            label
+            {
+                display:block;
+                float:left;
+                width:100px;
+                padding-top:3px;
+                padding-right:20px;
+                text-align:right;
+            }
+        }
+
+        .channels, .groups, .users
+        {
+            border:1px solid #ddd;
+            width:800px;
+            margin:20px 0px;
+            padding:10px;
+
+            .heading
+            {
+                width:100%;
+                font-weight:bold;
+                margin-bottom:5px;
+            }
+
+            .in
+            {
+                width:50%;
+                float:left;
+            }
+
+            .not_in
+            {
+                width:50%;
+                float:right;
+            }
+        }
+
+
 		.true {
     		background-color:#D1F2A5;
 		}

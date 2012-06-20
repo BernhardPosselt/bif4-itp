@@ -3,7 +3,9 @@
 @import helper._
 @import helper.twitterBootstrap._
 
-@admin_main(username, title = "Webchat") {
+@main(username, title = "Webchat") {
+
+    <div id="admin_site">
     
     <h1>Edit user</h1>
     
@@ -17,93 +19,109 @@
             @inputText(userForm("lastname"), '_label -> "Last name")
             @inputText(userForm("email"), '_label -> "E-Mail")
 			@select(userForm("active"), options("true"->"Yes", "false"->"No"), '_label -> "Active")
-			@select(userForm("admin"), options("true"->"Yes", "false"->"No"), '_label -> "Admin") 
-        
-        
-        	Channels:
-        	<table class="data_table" cellpadding="0" cellspacing="0">
-	            <thead>
-	                <tr>
-	                    <th><a href="#">ID</a></th>
-	                    <th><a href="#">Name</a></th>
-	                </tr>
-	            </thead>
-	            <tbody>
-	            	@for(channel <- User.getChannelsForUser(userForm.get().id)) {
-	            	<tr>
-	            		<td>
-	            			<a href="@routes.AdminController.deletechanneluser(channel.id, userForm.get().id)">@channel.id</a>
-	            		</td>
-	            		<td>
-	            			<a href="@routes.AdminController.deletechanneluser(channel.id, userForm.get().id)">@channel.name</a>
-	            		</td>
-	            	</tr>
-	            	}
-				</tbody>
-			</table>
-			<table class="data_table" cellpadding="0" cellspacing="0">
-	            <thead>
-	                <tr>
-	                    <th><a href="#">ID</a></th>
-	                    <th><a href="#">Name</a></th>
-	                </tr>
-	            </thead>
-	            <tbody>
-	            	@for(channel <- User.getChannelsNotForUser(userForm.get().id)) {
-	            	<tr>
-	            		<td>
-	            			<a href="@routes.AdminController.addchanneluser(channel.id, userForm.get().id)">@channel.id</a>
-	            		</td>
-	            		<td>
-	            			<a href="@routes.AdminController.addchanneluser(channel.id, userForm.get().id)">@channel.name</a>
-	            		</td>
-	            	</tr>
-	            	}
-				</tbody>
-			</table>
+			@select(userForm("admin"), options("true"->"Yes", "false"->"No"), '_label -> "Admin")
 
-			Groups:
-        	<table class="data_table" cellpadding="0" cellspacing="0">
-	            <thead>
-	                <tr>
-	                    <th><a href="#">ID</a></th>
-	                    <th><a href="#">Name</a></th>
-	                </tr>
-	            </thead>
-	            <tbody>
-	            	@for(group <- User.getGroupsForUser(userForm.get().id)) {
-	            	<tr>
-	            		<td>
-	            			<a href="@routes.AdminController.deletegroupuser(group.id, userForm.get().id)">@group.id</a>
-	            		</td>
-	            		<td>
-	            			<a href="@routes.AdminController.deletegroupuser(group.id, userForm.get().id)">@group.name</a>
-	            		</td>
-	            	</tr>
-	            	}
-				</tbody>
-			</table>
-			<table class="data_table" cellpadding="0" cellspacing="0">
-	            <thead>
-	                <tr>
-	                    <th><a href="#">ID</a></th>
-	                    <th><a href="#">Name</a></th>
-	                </tr>
-	            </thead>
-	            <tbody>
-	            	@for(group <- User.getGroupsNotForUser(userForm.get().id)) {
-	            	<tr>
-	            		<td>
-	            			<a href="@routes.AdminController.addgroupuser(group.id, userForm.get().id)">@group.id</a>
-	            		</td>
-	            		<td>
-	            			<a href="@routes.AdminController.addgroupuser(group.id, userForm.get().id)">@group.name</a>
-	            		</td>
-	            	</tr>
-	            	}
-				</tbody>
-			</table>
-			
+            <div class="channels">
+        	    <div class="heading">Channels:</div>
+                <div class="in">
+                    In
+                    <table class="data_table" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th><a href="#">ID</a></th>
+                                <th><a href="#">Name</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for(channel <- User.getChannelsForUser(userForm.get().id)) {
+                            <tr>
+                                <td>
+                                    <a href="@routes.AdminController.deletechanneluser(channel.id, userForm.get().id)">@channel.id</a>
+                                </td>
+                                <td>
+                                    <a href="@routes.AdminController.deletechanneluser(channel.id, userForm.get().id)">@channel.name</a>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="not_in">
+                    Not in
+                    <table class="data_table" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th><a href="#">ID</a></th>
+                                <th><a href="#">Name</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for(channel <- User.getChannelsNotForUser(userForm.get().id)) {
+                            <tr>
+                                <td>
+                                    <a href="@routes.AdminController.addchanneluser(channel.id, userForm.get().id)">@channel.id</a>
+                                </td>
+                                <td>
+                                    <a href="@routes.AdminController.addchanneluser(channel.id, userForm.get().id)">@channel.name</a>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <br style="clear:both" />
+            </div>
+
+            <div class="groups">
+                <div class="heading">Groups:</div>
+                <div class="in">
+                    In
+                    <table class="data_table" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th><a href="#">ID</a></th>
+                                <th><a href="#">Name</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for(group <- User.getGroupsForUser(userForm.get().id)) {
+                            <tr>
+                                <td>
+                                    <a href="@routes.AdminController.deletegroupuser(group.id, userForm.get().id)">@group.id</a>
+                                </td>
+                                <td>
+                                    <a href="@routes.AdminController.deletegroupuser(group.id, userForm.get().id)">@group.name</a>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="not_in">
+                    Not in
+                    <table class="data_table" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th><a href="#">ID</a></th>
+                                <th><a href="#">Name</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for(group <- User.getGroupsNotForUser(userForm.get().id)) {
+                            <tr>
+                                <td>
+                                    <a href="@routes.AdminController.addgroupuser(group.id, userForm.get().id)">@group.id</a>
+                                </td>
+                                <td>
+                                    <a href="@routes.AdminController.addgroupuser(group.id, userForm.get().id)">@group.name</a>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <br style="clear:both" />
+            </div>
         
         </fieldset>     
         
