@@ -14,7 +14,7 @@ import views.html.*;
 public class AdminController extends Controller {
 	
 	public static Result index() {
-    	int uid = check();
+    	int uid = verifyAdmin();
     	if(uid != -1)
     	{
     		Logger.info("Admin Page for User with ID " + uid + " loaded - Admin Form filled with data");
@@ -26,7 +26,7 @@ public class AdminController extends Controller {
     	}
     }
 	
-	public static int check()
+	public static int verifyAdmin()
 	{
 		String user = session("userid");
     	
@@ -59,7 +59,7 @@ public class AdminController extends Controller {
     
     public static Result updateuser(Long id) {
     	
-    	int uid = check();
+    	int uid = verifyAdmin();
     	if(uid != -1)
     	{
     		User tmp = new User();
@@ -110,7 +110,7 @@ public class AdminController extends Controller {
     
     public static Result saveuser() {
     	
-    	int uid = check();
+    	int uid = verifyAdmin();
     	if(uid != -1)
     	{
     		Form<User> userForm = form(User.class).bindFromRequest();
@@ -149,7 +149,7 @@ public class AdminController extends Controller {
     public static Result deleteuser(Long id) {
     	
     	String user = session("userid");
-    	int uid = check();
+    	int uid = verifyAdmin();
     	if(uid != -1)
     	{
     		if(Integer.parseInt(user) == id.intValue())
@@ -178,7 +178,7 @@ public class AdminController extends Controller {
     
     public static Result updatechannel(Long id) {
     	
-    	int uid = check();
+    	int uid = verifyAdmin();
     	if(uid != -1)
     	{
 	        Form<Channel> channelForm = form(Channel.class).bindFromRequest();
@@ -204,7 +204,7 @@ public class AdminController extends Controller {
     
     public static Result savechannel() {
     	
-    	int uid = check();
+    	int uid = verifyAdmin();
     	if(uid != -1)
     	{
     		Form<Channel> channelForm = form(Channel.class).bindFromRequest();
@@ -227,7 +227,7 @@ public class AdminController extends Controller {
 public static Result deletechannel(Long id) {
     	
     	String user = session("userid");
-    	int uid = check();
+    	int uid = verifyAdmin();
     	if(uid != -1)
     	{
 	        Channel.find.ref(id.intValue()).delete();
@@ -244,7 +244,7 @@ public static Result deletechannel(Long id) {
 public static Result deletechanneluser(Long channelid, Long userid) {
 	
 	String user = session("userid");
-	int uid = check();
+	int uid = verifyAdmin();
 	if(uid != -1)
 	{
 		User tmp = User.find.byId(userid.intValue());
@@ -268,7 +268,7 @@ public static Result deletechanneluser(Long channelid, Long userid) {
 public static Result addchanneluser(Long channelid, Long userid) {
 	
 	String user = session("userid");
-	int uid = check();
+	int uid = verifyAdmin();
 	if(uid != -1)
 	{
 		User tmp = User.find.byId(userid.intValue());
@@ -292,7 +292,7 @@ public static Result addchanneluser(Long channelid, Long userid) {
 public static Result deletegroupuser(Long groupid, Long userid) {
 	
 	String user = session("userid");
-	int uid = check();
+	int uid = verifyAdmin();
 	if(uid != -1)
 	{
 		User tmp = User.find.byId(userid.intValue());
@@ -316,7 +316,7 @@ public static Result deletegroupuser(Long groupid, Long userid) {
 public static Result addgroupuser(Long groupid, Long userid) {
 	
 	String user = session("userid");
-	int uid = check();
+	int uid = verifyAdmin();
 	if(uid != -1)
 	{
 		User tmp = User.find.byId(userid.intValue());
@@ -340,7 +340,7 @@ public static Result addgroupuser(Long groupid, Long userid) {
 public static Result deletechannelgroup(Long channelid, Long groupid) {
 	
 	String user = session("userid");
-	int uid = check();
+	int uid = verifyAdmin();
 	if(uid != -1)
 	{
 		Groups tmp = Groups.find.byId(groupid.intValue());
@@ -364,7 +364,7 @@ public static Result deletechannelgroup(Long channelid, Long groupid) {
 public static Result addchannelgroup(Long channelid, Long groupid) {
 	
 	String user = session("userid");
-	int uid = check();
+	int uid = verifyAdmin();
 	if(uid != -1)
 	{
 		Groups tmp = Groups.find.byId(groupid.intValue());
@@ -388,7 +388,7 @@ public static Result addchannelgroup(Long channelid, Long groupid) {
 public static Result deleteusergroup(Long userid, Long groupid) {
 	
 	String user = session("userid");
-	int uid = check();
+	int uid = verifyAdmin();
 	if(uid != -1)
 	{
 		Groups tmp = Groups.find.byId(groupid.intValue());
@@ -412,7 +412,7 @@ public static Result deleteusergroup(Long userid, Long groupid) {
 public static Result addusergroup(Long userid, Long groupid) {
 	
 	String user = session("userid");
-	int uid = check();
+	int uid = verifyAdmin();
 	if(uid != -1)
 	{
 		Groups tmp = Groups.find.byId(groupid.intValue());
@@ -436,7 +436,7 @@ public static Result addusergroup(Long userid, Long groupid) {
 public static Result deleteuserchannel(Long userid, Long channelid) {
 	
 	String user = session("userid");
-	int uid = check();
+	int uid = verifyAdmin();
 	if(uid != -1)
 	{
 		Channel tmp = Channel.find.byId(channelid.intValue());
@@ -460,7 +460,7 @@ public static Result deleteuserchannel(Long userid, Long channelid) {
 public static Result adduserchannel(Long userid, Long channelid) {
 	
 	String user = session("userid");
-	int uid = check();
+	int uid = verifyAdmin();
 	if(uid != -1)
 	{
 		Channel tmp = Channel.find.byId(channelid.intValue());
@@ -484,7 +484,7 @@ public static Result adduserchannel(Long userid, Long channelid) {
 public static Result deletegroupchannel(Long groupid, Long channelid) {
 	
 	String user = session("userid");
-	int uid = check();
+	int uid = verifyAdmin();
 	if(uid != -1)
 	{
 		Channel tmp = Channel.find.byId(channelid.intValue());
@@ -508,7 +508,7 @@ public static Result deletegroupchannel(Long groupid, Long channelid) {
 public static Result addgroupchannel(Long groupid, Long channelid) {
 	
 	String user = session("userid");
-	int uid = check();
+	int uid = verifyAdmin();
 	if(uid != -1)
 	{
 		Channel tmp = Channel.find.byId(channelid.intValue());
@@ -536,7 +536,7 @@ public static Result addgroupchannel(Long groupid, Long channelid) {
     
     public static Result updategroup(Long id) {
     	
-    	int uid = check();
+    	int uid = verifyAdmin();
     	if(uid != -1)
     	{
 	        Form<Groups> groupForm = form(Groups.class).bindFromRequest();
@@ -562,7 +562,7 @@ public static Result addgroupchannel(Long groupid, Long channelid) {
     
     public static Result savegroup() {
     	
-    	int uid = check();
+    	int uid = verifyAdmin();
     	if(uid != -1)
     	{
     		Form<Groups> groupForm = form(Groups.class).bindFromRequest();
@@ -585,7 +585,7 @@ public static Result addgroupchannel(Long groupid, Long channelid) {
     public static Result deletegroup(Long id) {
     	
     	String user = session("userid");
-    	int uid = check();
+    	int uid = verifyAdmin();
     	if(uid != -1)
     	{
     		List<Channel> chanlist = Groups.getChannelsForGroup(id.intValue()); 
@@ -615,7 +615,7 @@ public static Result addgroupchannel(Long groupid, Long channelid) {
     public static Result deletefile(Long id) {
     	
     	String user = session("userid");
-    	int uid = check();
+    	int uid = verifyAdmin();
     	if(uid != -1)
     	{
 	        File.find.ref(id.intValue()).delete();
@@ -630,8 +630,11 @@ public static Result addgroupchannel(Long groupid, Long channelid) {
     }
 
     public static Result ajaxUsers(){
-        // TODO:
+        // TODO: verifyAdmin if user is admin
+        int groupId = Integer.parseInt(request().body().asFormUrlEncoded().get("groups")[0]);
+        int channelId = Integer.parseInt(request().body().asFormUrlEncoded().get("channels")[0]);
+        Logger.info("Got group id " + groupId + " and channel id " + channelId);
         List<User> users = User.findAll();
-        return ok(admin_users.render(users, User.getUsername(Integer.parseInt(session("userid")))));
+        return ok(admin_users.render(users));
     }
 }
