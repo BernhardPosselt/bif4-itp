@@ -14,7 +14,7 @@ object ApplicationBuild extends Build {
     )
 
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
-      coffeescriptOptions := Seq("bare")
+      // coffeescriptOptions := Seq("bare", "native", "coffee -p")
     )
 
 
