@@ -78,6 +78,7 @@ Then launch the script with
 
     ./coffeecompile.sh
 
+Now make your changes to the coffee files and simply save to start a recompile
 
 ``A reference for CoffeeScript`` is available at http://coffeescript.org/
 
