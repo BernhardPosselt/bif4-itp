@@ -64,11 +64,23 @@ compiled into public/stylesheet
 
 CoffeeScript
 ------------
-CoffeeScript Files reside in the app/assets/javascript directory and are automatically
-compiled into public/javascript
+CoffeeScript Files reside in the public/coffee directory and are compiled with the
+script coffeecompile.sh . The script has to be launched from the same directory it is in
+and automatically compiles all changes that occur in coffee files automatically.
+
+For this to work you have to install nodejs and coffeescript
+
+    sudo apt-get install nodejs
+    sudo npm install -g coffee-script
+
+Then launch the script with
+
+    ./coffeecompile.sh
 
 
 ``A reference for CoffeeScript`` is available at http://coffeescript.org/
+
+
 
 Deployment
 ----------
