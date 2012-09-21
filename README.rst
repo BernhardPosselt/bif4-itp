@@ -82,6 +82,16 @@ Now make your changes to the coffee files and simply save to start a recompile
 
 ``A reference for CoffeeScript`` is available at http://coffeescript.org/
 
+Automatic install (with Microsoft Installer)
+
+The http://nodejs.org/dist/latest/ directory contains the latest .msi package
+(such as node-v0.6.15.msi when Node v0.6.15 was the latest) that you may use to install 
+both Node.js engine and npm.
+
+Then open a Command Prompt as Administrator and run::
+
+    npm -g install coffee-script
+
 
 
 Deployment
