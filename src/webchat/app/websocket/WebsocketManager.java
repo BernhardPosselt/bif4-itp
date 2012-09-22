@@ -47,7 +47,7 @@ public class WebsocketManager {
                     public void invoke(JsonNode event) {
                         // Send a Talk message to the room.
                         try {
-                            onReceive(event, out, userId);
+                            WebsocketReceiver.getType(event, out, userId);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -67,7 +67,7 @@ public class WebsocketManager {
                         }
                     	if (hilf.equals(true)){
                     		models.User.setUseroffline(userId);
-                    		notifyAllMembers(User.genUserchanged(userId, "update"));		
+                    		WebsocketNotifier.notifyAllMembers(User.genUserchanged(userId, "update"));		
                     	}
                     }
                 });
@@ -76,7 +76,7 @@ public class WebsocketManager {
     }
 
     
-    public static void onReceive(JsonNode inmessage, WebSocket.Out<JsonNode> out, int userid) throws Exception {
+  /*  public static void onReceive(JsonNode inmessage, WebSocket.Out<JsonNode> out, int userid) throws Exception {
     	if(!members.containsKey(userid))
     		members.put(out, userid);
         String type = inmessage.findPath("type").asText();
@@ -193,5 +193,5 @@ public class WebsocketManager {
             	out.write(Channel.genChannel(action, channelid));
             }	
         }
-    }
+    }*/
 }

@@ -124,7 +124,7 @@ public class Application extends Controller {
             new_file.channels.add(models.Channel.find.byId(channelid));
             new_file.save();
             new_file.saveManyToManyAssociations("channels");
-            websocket.WebsocketManager.notifyAllMembers(websocket.json.out.File.gennewFile(new_file));
+            websocket.WebsocketNotifier.notifyAllMembers(websocket.json.out.File.gennewFile(new_file));
             websocket.json.in.InMessage inmessage = new websocket.json.in.InMessage();
             websocket.json.in.InMessageData indata = new websocket.json.in.InMessageData();
             
@@ -228,8 +228,8 @@ public class Application extends Controller {
            
     		JSONSerializer aser = new JSONSerializer().include("*");
 			String json = aser.exclude("*.class").serialize(inmessage);
-            websocket.WebsocketManager.notifyAllMembers(websocket.json.out.Message.genMessage(Json.parse(json), Integer.valueOf(session("userid"))));
-            websocket.WebsocketManager.notifyAllMembers(websocket.json.out.Channel.genChannel("update", channelid));
+            websocket.WebsocketNotifier.notifyAllMembers(websocket.json.out.Message.genMessage(Json.parse(json), Integer.valueOf(session("userid"))));
+            websocket.WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("update", channelid));
 
             Logger.info("File " + filename + " uploaded!");
             return ok(upload.render(form(models.File.class)));
