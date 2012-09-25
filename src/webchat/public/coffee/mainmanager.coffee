@@ -8,7 +8,7 @@ class MainManager
     # domain: the domain with port, for instance www.example.com:9000
     # path: the relative url to the websocket
     # ssl: if true it will alter the websocket url to start with wss instead of ws
-    constructor: (domain=document.location.host, path="/websocket", @ssl=false) ->
+    constructor: (websocket, channels) ->
         if @ssl
             ws_url = "wss://" + domain + path
             console.log("using ssl")
