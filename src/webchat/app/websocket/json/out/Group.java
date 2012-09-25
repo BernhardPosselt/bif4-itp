@@ -24,7 +24,7 @@ public class Group {
 		this.type = "group";
 	}
 	
-	public static JsonNode geninitGroup(int userid){
+	public static JsonNode geninitGroup(){
 		String json = "",action = "create";
 		Group group = new Group();
 		group.init = true;

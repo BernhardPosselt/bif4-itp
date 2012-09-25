@@ -13,8 +13,6 @@
         
         <fieldset>
         
-            @inputText(channelForm("name"), '_label -> "Username")
-            @inputText(channelForm("topic"), '_label -> "Password")
             @inputText(channelForm("name"), '_label -> "Name")
             @inputText(channelForm("topic"), '_label -> "Topic")
 			@select(channelForm("is_public"), options("true"->"Yes", "false"->"No"), '_label -> "Public")

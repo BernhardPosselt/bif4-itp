@@ -61,4 +61,10 @@ public class Message extends Model {
 		mlist = find.where().eq("channels.id", channelid).where().orderBy().asc("modified").findList();
 		return mlist;
 	}
+	
+	public static List<Message> getallUserMessages (int userid){
+		List<Message> mlist = new ArrayList<Message>();
+		mlist = find.where().eq("user.id", userid).findList();
+		return mlist;
+	}
 }
