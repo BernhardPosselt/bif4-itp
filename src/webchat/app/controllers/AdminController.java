@@ -3,6 +3,9 @@ package controllers;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import org.codehaus.jackson.JsonNode;
 
 import com.typesafe.config.ConfigException.Parse;
 
@@ -13,7 +16,9 @@ import play.data.*;
 import models.*;
 
 import views.html.*;
+import websocket.WebsocketManager;
 import websocket.WebsocketNotifier;
+
 
 
 public class AdminController extends Controller {
@@ -183,6 +188,18 @@ public class AdminController extends Controller {
     				WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("update", channel.id));
     			}
     			WebsocketNotifier.notifyAllMembers(websocket.json.out.User.genUserchanged(id.intValue(), "delete"));
+    			
+    			
+    			List<Integer> luser=new ArrayList<Integer>();
+    			luser.add(User.find.byId(id.intValue()).id);
+    			WebSocket.Out<JsonNode> out = null;
+				for(Map.Entry<WebSocket.Out<JsonNode>, Integer> entry: WebsocketManager.members.entrySet()) {
+					if (luser.contains(entry.getValue())){
+						out = (WebSocket.Out<JsonNode>)entry.getKey();
+						out.write(websocket.json.out.Status.genStatus("error", "Your User has been deleted by an admin! You will be redirected to Login-Page!"));
+			        }	
+			    }		
+    			WebsocketManager.members.entrySet().contains(id.intValue());
 		        User.find.ref(id.intValue()).delete();
 		        flash("success", "User " + id + " has been deleted");
 		        Logger.info("User " + id + " has been deleted");

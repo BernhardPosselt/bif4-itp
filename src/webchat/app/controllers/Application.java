@@ -36,25 +36,32 @@ import static com.google.common.io.Files.copy;
 public class Application extends Controller {
   
 	 static int userid;
-	 static boolean testdata = false;
 
     /**
      * Displays the index page
      * @return
      */
 	 public static Result index() {
-		 	
+    	 if (models.User.findAll().isEmpty()){
+    		 filltestdata();
+    	 }	
          if(session("userid") != null) //User logged in
          {
-             userid = Integer.parseInt(session("userid"));
-             return ok(index.render(User.getUsername(userid), User.find.byId(userid).admin));
+        	 /*if (!User.getUsername(userid).equals("nouserfound")){
+        		  userid = Integer.parseInt(session("userid"));
+        		  return ok(index.render(User.getUsername(userid), User.find.byId(userid).admin));
+        	 }
+        	 else{
+        		 session().clear();
+        		 return redirect(routes.LoginController.login());
+        	 }*/
+      
+        	  
+        	  userid = Integer.parseInt(session("userid"));
+	   		  return ok(index.render(User.getUsername(userid), User.find.byId(userid).admin));
          }
          else //User doesn't logged in
          {	 
-        	 if (testdata==false){
-        		 testdata=true;
-        		 filltestdata();
-        	 }
              return redirect(routes.LoginController.login());
          }
 	 }

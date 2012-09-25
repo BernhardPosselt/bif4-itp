@@ -3,7 +3,8 @@ package models;
 import javax.persistence.*;
 import javax.validation.Constraint;
 
-import com.avaje.ebean.Page;
+
+
 
 import java.util.*;
 
@@ -85,8 +86,8 @@ public class User extends Model {
 	);
 
 	public static String getUsername(int id)
-    {
-        return find.byId(id).username; //TODO
+    {	
+			return find.byId(id).username; 		
     }
 	
 	public static boolean getActive(int id)
