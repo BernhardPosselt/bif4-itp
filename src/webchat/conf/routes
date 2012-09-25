@@ -74,10 +74,6 @@ GET	   /admin/user/:uid/addgroup/:gid       controllers.AdminController.adduserg
 GET    /admin/user/:uid/deletechannel/:cid       controllers.AdminController.deleteuserchannel(uid:Long, cid:Long)
 GET	   /admin/user/:uid/addchannel/:cid       controllers.AdminController.adduserchannel(uid:Long, cid:Long)
 
-#TestData
-
-GET /Testdata controllers.Application.filltestdata()
-
 #WebSocket
 GET /websocket controllers.Application.websocket()
 

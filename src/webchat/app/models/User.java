@@ -86,7 +86,7 @@ public class User extends Model {
 
 	public static String getUsername(int id)
     {
-        return find.byId(id).username;
+        return find.byId(id).username; //TODO
     }
 	
 	public static boolean getActive(int id)
