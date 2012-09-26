@@ -1,7 +1,3 @@
-###
-This class is responsible for sending and receiving from the websocket
-###
-
 class WebchatWebsocket
 
     constructor: ->
@@ -18,13 +14,14 @@ class WebchatWebsocket
     # path: the relative url to the websocket
     # ssl: if true it will alter the websocket url to start with wss instead of ws
     connect: (domain=document.location.host, path="/websocket", @ssl=false) ->
-        part_url = domain + path
-        if @ssl
-            url = "wss://" + part_url
-        else
-            url = "ws://" + part_url
-
         Socket = window['MozWebSocket'] || window['WebSocket']
+
+        if @ssl
+            protocol = "wss://"
+        else
+            protocol = "ws://"
+
+        url = "#{protocol}#{domain}#{path}"
 
         try
             @_connection = new Socket(url)            
@@ -37,7 +34,7 @@ class WebchatWebsocket
                 msg = event.data
                 json = JSON.parse(msg)
                 @_callbacks.onReceive(json)
-                console.info("Received: " + msg)
+                console.info("Received: #{msg}")
             
             @_connection.onclose = =>
                 @_callbacks.onClose()
@@ -46,7 +43,7 @@ class WebchatWebsocket
                 @_callbacks.onError()
 
         catch error
-            console.error("Cant connect to " + url)
+            console.error("Cant connect to #{url}")
 
 
     # register callbacks
@@ -64,6 +61,11 @@ class WebchatWebsocket
 
     onError: (callback) ->
         @_callbacks.onError = callback
+
+
+    send: (msg) ->
+        @_connection.send(msg)
+        console.info("Sending #{msg}")
 
 
     # sends a json object to the webserver
