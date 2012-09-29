@@ -2,46 +2,48 @@
 
 <!DOCTYPE html>
 
-<html>
+<html ng-app="WebChat">
     <head>
         <title>@title</title>
 
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/style.css")" />
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("javascripts/syntaxhighlighter/styles/shCore.css")" />
 
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("javascripts/syntaxhighlighter/styles/shThemeDefault.css")" />
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("javascripts/lib/syntaxhighlighter/styles/shCore.css")" />
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("javascripts/lib/syntaxhighlighter/styles/shThemeDefault.css")" />
 
-        <script src="@routes.Assets.at("javascripts/jquery-1.7.2.min.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shCore.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushAS3.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushBash.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushCpp.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushCSharp.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushCss.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushDiff.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushErlang.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushGroovy.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushJava.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushJScript.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushPerl.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushPhp.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushPowerShell.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushPython.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushRuby.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushSass.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushScala.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushSql.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushVb.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/syntaxhighlighter/scripts/shBrushXml.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/jquery-1.8.2.min.js")" type="text/javascript"></script>
+
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shCore.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushAS3.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushBash.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushCpp.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushCSharp.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushCss.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushDiff.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushErlang.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushGroovy.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushJava.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushJScript.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushPerl.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushPhp.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushPowerShell.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushPython.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushRuby.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushSass.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushScala.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushSql.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushVb.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lib/syntaxhighlighter/scripts/shBrushXml.js")" type="text/javascript"></script>
+
+        <script src="@routes.Assets.at("javascripts/lib/angular-1.0.2/angular.min.js")" type="text/javascript"></script>
+
+        <script src="@routes.Assets.at("javascripts/controllers/base_controller.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/controllers/channel_controller.js")" type="text/javascript"></script>
 
         <script src="@routes.Assets.at("javascripts/websocket.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/utilities.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/mimetypes.js")" type="text/javascript"></script>                
-        <script src="@routes.Assets.at("javascripts/smileys.js")" type="text/javascript"></script>        
-        <script src="@routes.Assets.at("javascripts/keycodes.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/distributor.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/cache.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/main.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/mainmanager.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/channelmanager.js")" type="text/javascript"></script>
         
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
 
@@ -59,7 +61,7 @@
                     <li><a href="@routes.Application.index">Stream</a></li>
                     <li><a href="@routes.AdminController.index">Archives</a></li>
                     @if(admin == true) {
-                        <li><a href="@routes.AdminController.index">Admin & Settings</a></li>
+                        <li><a href="@routes.AdminController.index">Admin &amp; Settings</a></li>
                     }
                     @if(username != "") {
                         <li><a class="logout" href="@routes.LoginController.logout">Logout</a></li>

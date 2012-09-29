@@ -1,4 +1,6 @@
-class WebchatWebsocket
+window.WebChat or= {}
+
+window.WebChat.WebSocket = class
 
     constructor: ->
         @_callbacks = 
