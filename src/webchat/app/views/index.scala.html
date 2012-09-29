@@ -17,7 +17,10 @@
             </div>
             <div class="utils"><a class="newchannel link_button" href="#" >New channel</a></div>
         </div>
-        <div id="groups">
+        <div id="groups" ng-controller="GroupController">
+            <ul>
+                <li ng-repeat="group in items">{{ group.name }}</li>
+            </ul>
         </div>
     </div>
 
