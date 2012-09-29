@@ -5,7 +5,7 @@ $(document).ready ->
     main.initWebsocket()
     main.registerController('[ng-controller=ChannelController]')
 
-    main.distributor.notifyController({ type: "channel", action: "update", data: {id: 0, name: "test"}})
+    #main.distributor.notifyController({ type: "channel", action: "delete", data: {id: 0, name: "test"}})
 
 
 class Main
