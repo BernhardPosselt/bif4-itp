@@ -1,3 +1,3 @@
 #!/bin/bash
 
-coffee --bare --watch --compile --output public/javascripts/ public/coffee/ 
+coffee --watch --compile --output public/javascripts/ public/coffee/ 
