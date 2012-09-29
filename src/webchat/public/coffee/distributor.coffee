@@ -25,6 +25,6 @@ window.WebChat.Distributor = class
             if controller.canHandle(message.type)    
                 scope.$apply ->
                     switch message.action
-                        when 'update' then scope.update(message.data)
-                        when 'create' then scope.create(message.data)
-                        when 'delete' then scope.delete(message.data)
+                        when 'update' then controller.update(message.data)
+                        when 'create' then controller.create(message.data)
+                        when 'delete' then controller.delete(message.data)

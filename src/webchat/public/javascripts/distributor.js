@@ -37,11 +37,11 @@ controllers
           _results.push(scope.$apply(function() {
             switch (message.action) {
               case 'update':
-                return scope.update(message.data);
+                return controller.update(message.data);
               case 'create':
-                return scope.create(message.data);
+                return controller.create(message.data);
               case 'delete':
-                return scope["delete"](message.data);
+                return controller["delete"](message.data);
             }
           }));
         } else {

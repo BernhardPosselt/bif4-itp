@@ -8,15 +8,7 @@
     var main;
     main = new Main();
     main.initWebsocket();
-    main.registerController('[ng-controller=ChannelController]');
-    return main.distributor.notifyController({
-      type: "channel",
-      action: "update",
-      data: {
-        id: 0,
-        name: "test"
-      }
-    });
+    return main.registerController('[ng-controller=ChannelController]');
   });
 
   Main = (function() {
