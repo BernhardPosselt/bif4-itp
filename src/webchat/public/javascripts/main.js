@@ -2,14 +2,11 @@
 (function() {
   var Main, WebChat;
 
+  window.WebChat || (window.WebChat = {});
+
   WebChat = window.WebChat;
 
-  $(document).ready(function() {
-    var main;
-    main = new Main();
-    main.initWebsocket();
-    return main.registerController('[ng-controller=ChannelController]');
-  });
+  $(document).ready(function() {});
 
   Main = (function() {
 

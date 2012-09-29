@@ -24,5 +24,9 @@ window.WebChat.BaseController = class
             @$scope.items.splice(removeItemId, 1)
 
 
-    canHandle: (messageType) ->
-        return messageType == @type
+    canHandle: (messageTypes) ->
+        messageTypes = messageTypes.split('|')
+        for type in messageTypes
+            if type == @type
+                return true
+        return false

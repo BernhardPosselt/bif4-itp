@@ -44,8 +44,16 @@
       }
     };
 
-    _Class.prototype.canHandle = function(messageType) {
-      return messageType === this.type;
+    _Class.prototype.canHandle = function(messageTypes) {
+      var type, _i, _len;
+      messageTypes = messageTypes.split('|');
+      for (_i = 0, _len = messageTypes.length; _i < _len; _i++) {
+        type = messageTypes[_i];
+        if (type === this.type) {
+          return true;
+        }
+      }
+      return false;
     };
 
     return _Class;

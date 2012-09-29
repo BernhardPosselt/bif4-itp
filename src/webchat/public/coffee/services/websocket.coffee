@@ -1,10 +1,11 @@
 window.WebChat or= {}
 
-window.WebChat.WebSocket = class
+window.WebChat.WebSocket = class 
 
     constructor: ->
         @_callbacks = 
             onOpen: -> 
+                console.info('websocket is open')
             onReceive: ->
             onError: ->
                 console.error("websocket error occured")

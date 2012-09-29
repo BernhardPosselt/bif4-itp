@@ -1,6 +1,3 @@
-WebChat = window.WebChat
-
-
 class ChannelController extends WebChat.BaseController
 
     constructor: ($scope) ->
@@ -10,13 +7,8 @@ class ChannelController extends WebChat.BaseController
             { id: 1, name: "mino" }
         ]
 
-
-app = angular.module('WebChat', []);
-
-app.controller 'ChannelController', ($scope) -> 
+angular.module('WebChat').controller 'ChannelController', ($scope) -> 
     new ChannelController($scope)
-
-
 
 
 
