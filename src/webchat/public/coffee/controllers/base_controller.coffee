@@ -2,7 +2,16 @@ window.WebChat or= {}
 
 window.WebChat.BaseController = class 
 
+
     constructor: (@$scope, @type) ->
+        @$scope.items = []
+        @$scope.$on 'message', (scope, message) =>
+            if @canHandle(message.type)
+                @$scope.$apply =>
+                    switch message.action
+                        when 'update' then @update(message.data)
+                        when 'create' then @create(message.data)
+                        when 'delete' then @delete(message.data)
 
 
     create: (item) ->
@@ -10,6 +19,8 @@ window.WebChat.BaseController = class
 
 
     update: (updatedItem) ->
+        console.log @$scope.items
+        console.log updatedItem
         for item, counter in @$scope.items
             if item.id == updatedItem.id
                 @$scope.items[counter] = updatedItem;

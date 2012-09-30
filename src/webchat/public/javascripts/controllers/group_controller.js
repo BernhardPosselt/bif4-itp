@@ -25,10 +25,8 @@
 
   })(WebChat.BaseController);
 
-  angular.module('WebChat').controller('GroupController', [
-    'websocket', function($scope, websocket) {
-      return new GroupController($scope);
-    }
-  ]);
+  angular.module('WebChat').controller('GroupController', function($scope) {
+    return new GroupController($scope);
+  });
 
 }).call(this);

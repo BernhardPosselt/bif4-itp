@@ -7,5 +7,6 @@ class GroupController extends WebChat.BaseController
             { id: 1, name: "mino" }
         ]
 
-angular.module('WebChat').controller 'GroupController', ['websocket', ($scope, websocket) -> 
-    new GroupController($scope)]
+
+angular.module('WebChat').controller 'GroupController', ($scope) -> 
+    new GroupController($scope)

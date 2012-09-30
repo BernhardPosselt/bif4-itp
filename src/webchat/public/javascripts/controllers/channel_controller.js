@@ -10,15 +10,6 @@
 
     function ChannelController($scope) {
       ChannelController.__super__.constructor.call(this, $scope, 'channel');
-      $scope.items = [
-        {
-          id: 0,
-          name: "john"
-        }, {
-          id: 1,
-          name: "mino"
-        }
-      ];
     }
 
     return ChannelController;
