@@ -9,25 +9,25 @@
                 <li><a href="#" class="groups_link">Groups</a></li>
             </ul>
         </div>
-        <div id="channels">
+        <div id="channels" style="display: none">
             <div class="channels" ng-controller="ChannelController">
                 <ul>
-                    <li ng-repeat="channel in items">{{ channel.name }}</li>
+                    <li ng-click="join(channel.id)" ng-repeat="channel in items">{{ channel.name }}</li>
                 </ul>
             </div>
             <div class="utils"><a class="newchannel link_button" href="#" >New channel</a></div>
         </div>
-        <div id="groups" ng-controller="GroupController">
+        <div id="groups" ng-controller="GroupController" style="display: block">
             <ul>
-                <li ng-repeat="group in items">{{ group.name }}</li>
+                <h1 ng-repeat="group in items">{{ group.name }}</h1>
             </ul>
         </div>
     </div>
 
-    <div id="stream_window">
+    <div id="stream_window" ng-controller="ChannelController">
         <div id="streams"></div>
 
-        <div id="input">
+        <div id="input" ng-model="messageType">
             <select id="input_options">
                 <option value="as3">ActionScript 3</option>
                 <option value="bash">Bash</option>
@@ -51,8 +51,10 @@
                 <option value="vb">Visual Basic</option>
                 <option value="xml">XML</option>
             </select>
-            <div id="input_field_wrap"><textarea id="input_field"></textarea></div>
-            <input id="input_send" type="button" value="Send" />
+            <div id="input_field_wrap">
+                <textarea id="input_field" ng-model="textInput"></textarea>
+            </div>
+            <input ng-click="sendMessage(textInput, messageType)" id="input_send" type="button" value="Send" />
         </div>
     </div>
 
