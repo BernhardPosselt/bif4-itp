@@ -3,8 +3,8 @@ class UserController extends WebChat.BaseController
     constructor: ($scope) ->
         super($scope, 'user')
         $scope.items = [
-            { id: 0, name: "john" }
-            { id: 1, name: "mino" }
+            { id: 0, name: "ben", groups: [0, 1] }
+            { id: 1, name: "tom", groups: [0] }
         ]
 
 

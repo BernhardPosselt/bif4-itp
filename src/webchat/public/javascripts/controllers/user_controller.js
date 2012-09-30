@@ -13,10 +13,12 @@
       $scope.items = [
         {
           id: 0,
-          name: "john"
+          name: "ben",
+          groups: [0, 1]
         }, {
           id: 1,
-          name: "mino"
+          name: "tom",
+          groups: [0]
         }
       ];
     }
