@@ -10,26 +10,27 @@
 
     __extends(ChannelController, _super);
 
-    function ChannelController($scope, websocket) {
+    function ChannelController($scope, websocket, activeChannel) {
       var _this = this;
       this.websocket = websocket;
+      this.activeChannel = activeChannel;
       ChannelController.__super__.constructor.call(this, $scope, 'channel');
-      this.activeChannelId = 0;
       $scope.join = function(id) {
         var message;
         message = new WebChat.JoinMessage(id);
         _this.websocket.sendJSON(message.serialize());
-        return _this.activeChannelId = id;
+        return _this.activeChannel.setActiveChannel(_this.getItemById(id));
       };
       $scope.sendMessage = function(textInput, messageType) {
         var activeChannelId, message;
-        activeChannelId = _this.activeChannelId;
-        message = new WebChat.SendMessage(textInput, messageType, activeChannelId);
-        console.log(message.serialize());
-        return _this.websocket.sendJSON(message.serialize());
+        activeChannelId = _this.activeChannel.getActiveChannel().id;
+        if (activeChannelId !== void 0) {
+          message = new WebChat.SendMessage(textInput, messageType, activeChannelId);
+          return _this.websocket.sendJSON(message.serialize());
+        }
       };
       this.create({
-        id: 0,
+        id: 1,
         name: 'channel'
       });
     }
@@ -38,8 +39,8 @@
 
   })(WebChat.BaseController);
 
-  angular.module('WebChat').controller('ChannelController', function($scope, websocket) {
-    return new ChannelController($scope, websocket);
+  angular.module('WebChat').controller('ChannelController', function($scope, websocket, activeChannel) {
+    return new ChannelController($scope, websocket, activeChannel);
   });
 
 }).call(this);

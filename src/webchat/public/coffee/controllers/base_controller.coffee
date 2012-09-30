@@ -35,6 +35,12 @@ window.WebChat.BaseController = class
             @$scope.items.splice(removeItemId, 1)
 
 
+    getItemById: (id) ->
+        for item in @$scope.items
+            if item.id == id
+                return item
+
+
     canHandle: (messageTypes) ->
         messageTypes = messageTypes.split('|')
         for type in messageTypes

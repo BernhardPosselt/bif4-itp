@@ -62,6 +62,17 @@
       }
     };
 
+    _Class.prototype.getItemById = function(id) {
+      var item, _i, _len, _ref;
+      _ref = this.$scope.items;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        item = _ref[_i];
+        if (item.id === id) {
+          return item;
+        }
+      }
+    };
+
     _Class.prototype.canHandle = function(messageTypes) {
       var type, _i, _len;
       messageTypes = messageTypes.split('|');

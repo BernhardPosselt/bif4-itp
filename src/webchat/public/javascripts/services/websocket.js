@@ -50,7 +50,12 @@
           msg = event.data;
           json = JSON.parse(msg);
           _this._callbacks.onReceive(json);
-          return console.info("Received: " + msg);
+          console.info("Received: " + msg);
+          if (json.type === 'status') {
+            if (json.data.level !== 'ok') {
+              return console.warn(json.data.msg);
+            }
+          }
         };
         this._connection.onclose = function() {
           return _this._callbacks.onClose();

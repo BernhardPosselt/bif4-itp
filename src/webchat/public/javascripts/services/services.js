@@ -12,4 +12,18 @@
     return socket;
   });
 
+  angular.module('WebChat').factory('activeChannel', function($rootScope) {
+    var activeChannel;
+    activeChannel = {};
+    activeChannel.activeChannel = {};
+    activeChannel.setActiveChannel = function(channel) {
+      this.activeChannel = channel;
+      return $rootScope.$broadcast('changed_channel');
+    };
+    activeChannel.getActiveChannel = function() {
+      return this.activeChannel;
+    };
+    return activeChannel;
+  });
+
 }).call(this);

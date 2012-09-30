@@ -38,6 +38,10 @@ window.WebChat.WebSocket = class
                 json = JSON.parse(msg)
                 @_callbacks.onReceive(json)
                 console.info("Received: #{msg}")
+                # check if we got an error from the server
+                if json.type == 'status'
+                    if json.data.level != 'ok'
+                        console.warn(json.data.msg)
             
             @_connection.onclose = =>
                 @_callbacks.onClose()
