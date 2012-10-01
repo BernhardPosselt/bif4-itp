@@ -8,13 +8,13 @@ angular.module('WebChat').factory 'websocket', ($rootScope, websocket_domain, we
 
 angular.module('WebChat').factory 'activeChannel', ($rootScope) ->
     activeChannel = {}
-    activeChannel.activeChannel = {}
+    activeChannel.activeChannelId = undefined
 
-    activeChannel.setActiveChannel = (channel) ->
-        @activeChannel = channel
+    activeChannel.setActiveChannelId = (id) ->
+        @activeChannelId = id
         $rootScope.$broadcast 'changed_channel'
 
-    activeChannel.getActiveChannel = ->
-        return @activeChannel
+    activeChannel.getActiveChannelId = ->
+        return @activeChannelId
 
     return activeChannel

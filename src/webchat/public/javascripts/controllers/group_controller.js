@@ -10,10 +10,8 @@
 
     __extends(GroupController, _super);
 
-    function GroupController($scope, websocket, activeChannel) {
-      var _this = this;
+    function GroupController($scope, websocket) {
       this.websocket = websocket;
-      this.activeChannel = activeChannel;
       GroupController.__super__.constructor.call(this, $scope, 'group');
       $scope.items = [
         {
@@ -24,22 +22,14 @@
           name: "mino"
         }
       ];
-      $scope.invite = function(groupId) {
-        var activeChannelId, message;
-        activeChannelId = _this.activeChannel.getActiveChannel().id;
-        if (activeChannelId !== void 0) {
-          message = new WebChat.InviteGroupMessage(groupId, activeChannelId);
-          return _this.websocket.sendJSON(message.serialize());
-        }
-      };
     }
 
     return GroupController;
 
   })(WebChat.BaseController);
 
-  angular.module('WebChat').controller('GroupController', function($scope, websocket, activeChannel) {
-    return new GroupController($scope, websocket, activeChannel);
+  angular.module('WebChat').controller('GroupController', function($scope, websocket) {
+    return new GroupController($scope, websocket);
   });
 
 }).call(this);

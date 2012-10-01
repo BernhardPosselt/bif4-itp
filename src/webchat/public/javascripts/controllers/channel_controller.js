@@ -15,17 +15,39 @@
       this.websocket = websocket;
       this.activeChannel = activeChannel;
       ChannelController.__super__.constructor.call(this, $scope, 'channel');
+      this.getActiveChannelId = function() {
+        return _this.activeChannel.getActiveChannelId();
+      };
+      this.setActiveChannelId = function(id) {
+        return _this.activeChannel.setActiveChannelId(id);
+      };
       $scope.join = function(id) {
         var message;
         message = new WebChat.JoinMessage(id);
         _this.websocket.sendJSON(message.serialize());
-        return _this.activeChannel.setActiveChannel(_this.getItemById(id));
+        return _this.setActiveChannelId(id);
       };
       $scope.sendMessage = function(textInput, messageType) {
         var activeChannelId, message;
-        activeChannelId = _this.activeChannel.getActiveChannel().id;
+        activeChannelId = _this.getActiveChannelId();
         if (activeChannelId !== void 0) {
           message = new WebChat.SendMessage(textInput, messageType, activeChannelId);
+          return _this.websocket.sendJSON(message.serialize());
+        }
+      };
+      $scope.inviteUser = function(userId) {
+        var activeChannelId, message;
+        activeChannelId = _this.getActiveChannelId();
+        if (activeChannelId !== void 0) {
+          message = new WebChat.InviteUserMessage(userId, activeChannelId);
+          return _this.websocket.sendJSON(message.serialize());
+        }
+      };
+      $scope.inviteGroup = function(groupId) {
+        var activeChannelId, message;
+        activeChannelId = _this.getActiveChannelId();
+        if (activeChannelId !== void 0) {
+          message = new WebChat.InviteGroupMessage(groupId, activeChannelId);
           return _this.websocket.sendJSON(message.serialize());
         }
       };

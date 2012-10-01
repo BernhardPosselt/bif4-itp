@@ -15,13 +15,13 @@
   angular.module('WebChat').factory('activeChannel', function($rootScope) {
     var activeChannel;
     activeChannel = {};
-    activeChannel.activeChannel = {};
-    activeChannel.setActiveChannel = function(channel) {
-      this.activeChannel = channel;
+    activeChannel.activeChannelId = void 0;
+    activeChannel.setActiveChannelId = function(id) {
+      this.activeChannelId = id;
       return $rootScope.$broadcast('changed_channel');
     };
-    activeChannel.getActiveChannel = function() {
-      return this.activeChannel;
+    activeChannel.getActiveChannelId = function() {
+      return this.activeChannelId;
     };
     return activeChannel;
   });

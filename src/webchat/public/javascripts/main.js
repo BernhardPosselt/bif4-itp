@@ -7,17 +7,15 @@
   $(document).ready(function() {
     $(".channels_link").click(function() {
       if (!$("#channel_sidebar #channels").is(":visible")) {
-        $("#channel_sidebar #groups").fadeOut("fast", function() {
-          return $("#channel_sidebar #channels").fadeIn("fast");
-        });
+        $("#channel_sidebar #groups").hide();
+        $("#channel_sidebar #channels").show();
       }
       return false;
     });
     $(".groups_link").click(function() {
       if (!$("#channel_sidebar #groups").is(":visible")) {
-        $("#channel_sidebar #channels").fadeOut("fast", function() {
-          return $("#channel_sidebar #groups").fadeIn("fast");
-        });
+        $("#channel_sidebar #channels").hide();
+        $("#channel_sidebar #groups").show();
       }
       return false;
     });
