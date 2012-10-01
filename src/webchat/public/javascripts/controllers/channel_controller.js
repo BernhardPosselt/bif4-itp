@@ -21,6 +21,9 @@
       this.setActiveChannelId = function(id) {
         return _this.activeChannel.setActiveChannelId(id);
       };
+      $scope.getActiveChannelId = function() {
+        return _this.getActiveChannelId();
+      };
       $scope.join = function(id) {
         var message;
         message = new WebChat.JoinMessage(id);
@@ -54,7 +57,9 @@
       };
       this.create({
         id: 1,
-        name: 'channel'
+        name: 'channel',
+        groups: [0],
+        users: [0, 1]
       });
     }
 

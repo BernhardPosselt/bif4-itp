@@ -10,6 +10,9 @@ class ChannelController extends WebChat.BaseController
         @setActiveChannelId = (id) =>
             @activeChannel.setActiveChannelId(id)
 
+        $scope.getActiveChannelId = =>
+            return @getActiveChannelId()
+
         $scope.join = (id) =>
             message = new WebChat.JoinMessage(id)
             @websocket.sendJSON(message.serialize())
@@ -34,7 +37,7 @@ class ChannelController extends WebChat.BaseController
                 message = new WebChat.InviteGroupMessage(groupId, activeChannelId)
                 @websocket.sendJSON(message.serialize())
 
-        @create { id: 1, name: 'channel'}
+        @create { id: 1, name: 'channel', groups: [0], users: [0, 1]}
 
 
 angular.module('WebChat').controller 'ChannelController', ($scope, websocket, activeChannel) -> 
