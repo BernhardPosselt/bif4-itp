@@ -12,7 +12,7 @@
         <div id="channels">
             <div class="channels" ng-controller="ChannelController">
                 <ul>
-                    <li ng-click="join(channel.id)" ng-repeat="channel in items">{{ channel.name }}</li>
+                    <li ng-class="{active: channel.id == selected, unread: channel.id == unread}" ng-click="join(channel.id)" ng-repeat="channel in items">{{ channel.name }}</li>
                 </ul>
             </div>
             <div class="utils"><a class="newchannel link_button" href="#" >New channel</a></div>

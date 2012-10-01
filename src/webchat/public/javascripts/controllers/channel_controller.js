@@ -25,7 +25,8 @@
         var message;
         message = new WebChat.JoinMessage(id);
         _this.websocket.sendJSON(message.serialize());
-        return _this.setActiveChannelId(id);
+        _this.setActiveChannelId(id);
+        return $scope.selected = id;
       };
       $scope.sendMessage = function(textInput, messageType) {
         var activeChannelId, message;

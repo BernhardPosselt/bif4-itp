@@ -14,6 +14,7 @@ class ChannelController extends WebChat.BaseController
             message = new WebChat.JoinMessage(id)
             @websocket.sendJSON(message.serialize())
             @setActiveChannelId(id)
+            $scope.selected = id
 
         $scope.sendMessage = (textInput, messageType) =>
             activeChannelId = @getActiveChannelId()
