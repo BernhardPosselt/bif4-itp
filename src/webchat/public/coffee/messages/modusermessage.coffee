@@ -1,9 +1,9 @@
 window.WebChat or= {}
 
-class InviteUserMessage extends window.WebChat.Message
+class ModUserMessage extends window.WebChat.Message
 
     constructor: (@userId, @channelId, @value) ->
-        super('inviteuser')
+        super('moduser')
 
 
     serialize: ->
@@ -14,4 +14,4 @@ class InviteUserMessage extends window.WebChat.Message
         return super(data)
 
 
-window.WebChat.InviteUserMessage = InviteUserMessage
+window.WebChat.ModUserMessage = ModUserMessage

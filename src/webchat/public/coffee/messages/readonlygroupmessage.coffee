@@ -1,17 +1,17 @@
 window.WebChat or= {}
 
-class InviteGroupMessage extends window.WebChat.Message
+class ReadonlyGroupMessage extends window.WebChat.Message
 
     constructor: (@groupId, @channelId, @value) ->
-        super('invitegroup')
+        super('readonlygroup')
 
 
     serialize: ->
         data = 
             channel_id: @channelId
-            group_id: @groupId
+            user_id: @groupId
             value: @value
         return super(data)
 
 
-window.WebChat.InviteGroupMessage = InviteGroupMessage
+window.WebChat.ReadonlyGroupMessage = ReadonlyGroupMessage

@@ -9,5 +9,7 @@ class UserController extends WebChat.BaseController
             { id: 1, name: "tom", groups: [0], online: false }
         ]
 
-angular.module('WebChat').controller 'UserController', ($scope, websocket) -> 
-    new UserController($scope, websocket)
+angular.module('WebChat').controller 'UserController', 
+    ['$scope', 'websocket', ($scope, websocket) -> 
+        new UserController($scope, websocket)
+    ]

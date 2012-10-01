@@ -10,9 +10,10 @@
 
     __extends(InviteGroupMessage, _super);
 
-    function InviteGroupMessage(groupId, channelId) {
+    function InviteGroupMessage(groupId, channelId, value) {
       this.groupId = groupId;
       this.channelId = channelId;
+      this.value = value;
       InviteGroupMessage.__super__.constructor.call(this, 'invitegroup');
     }
 
@@ -20,7 +21,8 @@
       var data;
       data = {
         channel_id: this.channelId,
-        group_id: this.groupId
+        group_id: this.groupId,
+        value: this.value
       };
       return InviteGroupMessage.__super__.serialize.call(this, data);
     };

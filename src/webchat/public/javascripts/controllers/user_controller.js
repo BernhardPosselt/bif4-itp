@@ -32,8 +32,10 @@
 
   })(WebChat.BaseController);
 
-  angular.module('WebChat').controller('UserController', function($scope, websocket) {
-    return new UserController($scope, websocket);
-  });
+  angular.module('WebChat').controller('UserController', [
+    '$scope', 'websocket', function($scope, websocket) {
+      return new UserController($scope, websocket);
+    }
+  ]);
 
 }).call(this);

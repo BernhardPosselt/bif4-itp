@@ -39,21 +39,31 @@
           return _this.websocket.sendJSON(message.serialize());
         }
       };
-      $scope.inviteUser = function(userId) {
+      this.simpleChannelMessage = function(id, Message, value) {
         var activeChannelId, message;
         activeChannelId = _this.getActiveChannelId();
         if (activeChannelId !== void 0) {
-          message = new WebChat.InviteUserMessage(userId, activeChannelId);
+          message = new Message(id, activeChannelId, value);
           return _this.websocket.sendJSON(message.serialize());
         }
       };
-      $scope.inviteGroup = function(groupId) {
-        var activeChannelId, message;
-        activeChannelId = _this.getActiveChannelId();
-        if (activeChannelId !== void 0) {
-          message = new WebChat.InviteGroupMessage(groupId, activeChannelId);
-          return _this.websocket.sendJSON(message.serialize());
-        }
+      $scope.inviteUser = function(userId, value) {
+        return _this.simpleChannelMessage(userId, WebChat.InviteUserMessage, value);
+      };
+      $scope.inviteGroup = function(groupId, value) {
+        return _this.simpleChannelMessage(groupId, WebChat.InviteGroupMessage, value);
+      };
+      $scope.modUser = function(userId, value) {
+        return _this.simpleChannelMessage(userId, WebChat.ModUserMessage, value);
+      };
+      $scope.modGroup = function(groupId, value) {
+        return _this.simpleChannelMessage(groupId, WebChat.ModGroupMessage, value);
+      };
+      $scope.readonlyUser = function(userId, value) {
+        return _this.simpleChannelMessage(userId, WebChat.ReadonlyUserMessage, value);
+      };
+      $scope.readonlyGroup = function(groupId, value) {
+        return _this.simpleChannelMessage(groupId, WebChat.ReadonlyGroupMessage, value);
       };
       this.create({
         id: 1,
@@ -67,8 +77,10 @@
 
   })(WebChat.BaseController);
 
-  angular.module('WebChat').controller('ChannelController', function($scope, websocket, activeChannel) {
-    return new ChannelController($scope, websocket, activeChannel);
-  });
+  angular.module('WebChat').controller('ChannelController', [
+    '$scope', 'websocket', 'activeChannel', function($scope, websocket, activeChannel) {
+      return new ChannelController($scope, websocket, activeChannel);
+    }
+  ]);
 
 }).call(this);

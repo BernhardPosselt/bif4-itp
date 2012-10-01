@@ -25,23 +25,36 @@ class ChannelController extends WebChat.BaseController
                 message = new WebChat.SendMessage(textInput, messageType, activeChannelId)
                 @websocket.sendJSON(message.serialize())
 
-        $scope.inviteUser = (userId) =>
+        @simpleChannelMessage = (id, Message, value) =>
             activeChannelId = @getActiveChannelId()
             if activeChannelId != undefined
-                message = new WebChat.InviteUserMessage(userId, activeChannelId)
+                message = new Message(id, activeChannelId, value)
                 @websocket.sendJSON(message.serialize())
 
-        $scope.inviteGroup = (groupId) =>
-            activeChannelId = @getActiveChannelId()
-            if activeChannelId != undefined
-                message = new WebChat.InviteGroupMessage(groupId, activeChannelId)
-                @websocket.sendJSON(message.serialize())
+        $scope.inviteUser = (userId, value) =>
+            @simpleChannelMessage(userId, WebChat.InviteUserMessage, value)
+
+        $scope.inviteGroup = (groupId, value) =>
+            @simpleChannelMessage(groupId, WebChat.InviteGroupMessage, value)
+
+        $scope.modUser = (userId, value) =>
+            @simpleChannelMessage(userId, WebChat.ModUserMessage, value)
+
+        $scope.modGroup = (groupId, value) =>
+            @simpleChannelMessage(groupId, WebChat.ModGroupMessage, value)
+
+        $scope.readonlyUser = (userId, value) =>
+            @simpleChannelMessage(userId, WebChat.ReadonlyUserMessage, value)
+
+        $scope.readonlyGroup = (groupId, value) =>
+            @simpleChannelMessage(groupId, WebChat.ReadonlyGroupMessage, value)
 
         @create { id: 1, name: 'channel', groups: [0], users: [0, 1]}
 
 
-angular.module('WebChat').controller 'ChannelController', ($scope, websocket, activeChannel) -> 
-    new ChannelController($scope, websocket, activeChannel)
-
+angular.module('WebChat').controller 'ChannelController', 
+    ['$scope', 'websocket', 'activeChannel', ($scope, websocket, activeChannel) -> 
+        new ChannelController($scope, websocket, activeChannel)
+    ]
 
 

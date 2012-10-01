@@ -2,28 +2,32 @@
 (function() {
   var _this = this;
 
-  angular.module('WebChat').factory('websocket', function($rootScope, websocket_domain, websocket_path, websocket_ssl, $window) {
-    var socket;
-    socket = new $window.WebChat.WebSocket();
-    socket.connect(websocket_domain, websocket_path, websocket_ssl);
-    socket.onReceive(function(message) {
-      return $rootScope.$broadcast('message', message);
-    });
-    return socket;
-  });
+  angular.module('WebChat').factory('websocket', [
+    '$rootScope', 'websocket_domain', 'websocket_path', 'websocket_ssl', '$window', function($rootScope, websocket_domain, websocket_path, websocket_ssl, $window) {
+      var socket;
+      socket = new $window.WebChat.WebSocket();
+      socket.connect(websocket_domain, websocket_path, websocket_ssl);
+      socket.onReceive(function(message) {
+        return $rootScope.$broadcast('message', message);
+      });
+      return socket;
+    }
+  ]);
 
-  angular.module('WebChat').factory('activeChannel', function($rootScope) {
-    var activeChannel;
-    activeChannel = {};
-    activeChannel.activeChannelId = void 0;
-    activeChannel.setActiveChannelId = function(id) {
-      this.activeChannelId = id;
-      return $rootScope.$broadcast('changed_channel');
-    };
-    activeChannel.getActiveChannelId = function() {
-      return this.activeChannelId;
-    };
-    return activeChannel;
-  });
+  angular.module('WebChat').factory('activeChannel', [
+    '$rootScope', function($rootScope) {
+      var activeChannel;
+      activeChannel = {};
+      activeChannel.activeChannelId = void 0;
+      activeChannel.setActiveChannelId = function(id) {
+        this.activeChannelId = id;
+        return $rootScope.$broadcast('changed_channel');
+      };
+      activeChannel.getActiveChannelId = function() {
+        return this.activeChannelId;
+      };
+      return activeChannel;
+    }
+  ]);
 
 }).call(this);
