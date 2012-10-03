@@ -10,6 +10,12 @@ class ChannelController extends WebChat.BaseController
         @setActiveChannelId = (id) =>
             @activeChannel.setActiveChannelId(id)
 
+        @simpleChannelMessage = (id, Message, value) =>
+            activeChannelId = @getActiveChannelId()
+            if activeChannelId != undefined
+                message = new Message(id, activeChannelId, value)
+                @websocket.sendJSON(message.serialize())
+
         $scope.getActiveChannelId = =>
             return @getActiveChannelId()
 
@@ -23,12 +29,6 @@ class ChannelController extends WebChat.BaseController
             activeChannelId = @getActiveChannelId()
             if activeChannelId != undefined
                 message = new WebChat.SendMessage(textInput, messageType, activeChannelId)
-                @websocket.sendJSON(message.serialize())
-
-        @simpleChannelMessage = (id, Message, value) =>
-            activeChannelId = @getActiveChannelId()
-            if activeChannelId != undefined
-                message = new Message(id, activeChannelId, value)
                 @websocket.sendJSON(message.serialize())
 
         $scope.inviteUser = (userId, value) =>
