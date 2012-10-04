@@ -1,24 +1,22 @@
-angular.module('WebChat').factory 'websocket', 
-    ['$rootScope', 'websocket_domain', 'websocket_path', 'websocket_ssl', '$window', 
-    ($rootScope, websocket_domain, websocket_path, websocket_ssl, $window) =>
-        socket = new $window.WebChat.WebSocket()
-        socket.connect(websocket_domain, websocket_path, websocket_ssl)
+angular.module('WebChat').factory 'ChannelModel', ['_ChannelModel', (_ChannelModel) ->
+    channel = new _ChannelModel()
+    return channel
+]
+
+angular.module('WebChat').factory 'WebChatWebSocket', 
+    ['_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL',
+     'ChannelModel',
+    (_WebChatWebSocket, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL, ChannelModel) =>
+
+        models = [
+            ChannelModel
+        ]
+
+        socket = new _WebChatWebSocket()
+        socket.connect(WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL)
         socket.onReceive (message) ->
-            $rootScope.$broadcast('message', message)
+            for model in models
+                if model.canHandle(message.type)
+                    model.handle(message.data)
         return socket
     ]
-
-
-angular.module('WebChat').factory 'activeChannel', ['$rootScope', ($rootScope) ->
-    activeChannel = {}
-    activeChannel.activeChannelId = undefined
-
-    activeChannel.setActiveChannelId = (id) ->
-        @activeChannelId = id
-        $rootScope.$broadcast 'changed_channel'
-
-    activeChannel.getActiveChannelId = ->
-        return @activeChannelId
-
-    return activeChannel
-]

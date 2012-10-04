@@ -1,15 +1,19 @@
-#<<messages/message
+angular.module('WebChat').factory '_ModUserMessage', ['_Message', (_Message)->
 
-class ModUserMessage extends Message
+    class ModUserMessage extends _Message
 
-    constructor: (@userId, @channelId, @value) ->
-        super('moduser')
+        constructor: (@userId, @channelId, @value) ->
+            super('moduser')
 
 
-    serialize: ->
-        data = 
-            channel_id: @channelId
-            user_id: @userId
-            value: @value
-        return super(data)
+        serialize: ->
+            data = 
+                channel_id: @channelId
+                user_id: @userId
+                value: @value
+            return super(data)
 
+
+    return ModUserMessage
+
+]

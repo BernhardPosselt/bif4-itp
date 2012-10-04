@@ -1,3 +1,5 @@
+#<< app
+
 angular.module('WebChat').filter 'userInChannel', ->
     return (users, args) ->
         result = []

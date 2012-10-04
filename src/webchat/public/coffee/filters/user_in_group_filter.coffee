@@ -1,3 +1,5 @@
+#<< app
+
 angular.module('WebChat').filter 'userInGroup', ->
     return (users, args) ->
         result = []

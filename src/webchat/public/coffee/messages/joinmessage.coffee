@@ -1,12 +1,17 @@
-#<<messages/message
+angular.module('WebChat').factory '_JoinMessage', ['_Message', (_Message)->
 
-class JoinMessage extends Message
+    class JoinMessage extends _Message
 
-    constructor: (@id) ->
-        super('join')
+        constructor: (@id) ->
+            super('join')
 
 
-    serialize: ->
-        data = 
-            id: @id
-        return super(data)
+        serialize: ->
+            data = 
+                id: @id
+            return super(data)
+
+
+    return JoinMessage
+
+]

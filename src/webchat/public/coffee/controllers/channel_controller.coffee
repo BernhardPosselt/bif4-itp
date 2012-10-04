@@ -1,57 +1,60 @@
-class ChannelController
+angular.module('WebChat').factory '_ChannelController', 
+    ['_JoinMessage', '_SendMessage', '_InviteUserMessage', '_InviteGroupMessage',
+     '_ModUserMessage', '_ModGroupMessage', '_ReadonlyUserMessage', '_ReadonlyGroupMessage',
+     (_JoinMessage, _SendMessage, _InviteUserMessage, _InviteGroupMessage,
+      _ModUserMessage, _ModGroupMessage, _ReadonlyUserMessage, _ReadonlyGroupMessage) ->
 
-    constructor: ($scope, @websocket, @activechannel, @channelmodel) ->
+        class ChannelController
 
-        @activeChannelId = null
+            constructor: ($scope, @websocket, @activechannel, @channels) ->
 
-        @getActiveChannelId = =>
-            return @activechannel.getActiveChannelId()
-        @setActiveChannelId = (id) =>
-            @activechannel.setActiveChannelId(id)
+                @activeChannelId = null
 
-        @simpleChannelMessage = (id, Message, value) =>
-            activeChannelId = @getActiveChannelId()
-            if activeChannelId != null
-                message = new Message(id, activeChannelId, value)
-                @websocket.sendJSON(message.serialize())
+                @getActiveChannelId = =>
+                    return @activechannel.getActiveChannelId()
+                @setActiveChannelId = (id) =>
+                    @activechannel.setActiveChannelId(id)
 
-        $scope.getActiveChannelId = =>
-            return @getActiveChannelId()
+                @simpleChannelMessage = (id, Msg, value) =>
+                    activeChannelId = @getActiveChannelId()
+                    if activeChannelId != null
+                        message = new Msg(id, activeChannelId, value)
+                        @websocket.sendJSON(message.serialize())
 
-        $scope.join = (id) =>
-            message = new WebChat.JoinMessage(id)
-            @websocket.sendJSON(message.serialize())
-            @setActiveChannelId(id)
-            $scope.selected = id
+                $scope.getActiveChannelId = =>
+                    return @getActiveChannelId()
 
-        $scope.sendMessage = (textInput, messageType) =>
-            activeChannelId = @getActiveChannelId()
-            if activeChannelId != null
-                message = new WebChat.SendMessage(textInput, messageType, activeChannelId)
-                @websocket.sendJSON(message.serialize())
+                $scope.join = (id) =>
+                    message = new _JoinMessage(id)
+                    @websocket.sendJSON(message.serialize())
+                    @setActiveChannelId(id)
+                    $scope.selected = id
 
-        $scope.inviteUser = (userId, value) =>
-            @simpleChannelMessage(userId, WebChat.InviteUserMessage, value)
+                $scope.sendMessage = (textInput, messageType) =>
+                    activeChannelId = @getActiveChannelId()
+                    if activeChannelId != null
+                        message = new _SendMessage(textInput, messageType, activeChannelId)
+                        @websocket.sendJSON(message.serialize())
 
-        $scope.inviteGroup = (groupId, value) =>
-            @simpleChannelMessage(groupId, WebChat.InviteGroupMessage, value)
+                $scope.inviteUser = (userId, value) =>
+                    @simpleChannelMessage(userId, _InviteUserMessage, value)
 
-        $scope.modUser = (userId, value) =>
-            @simpleChannelMessage(userId, WebChat.ModUserMessage, value)
+                $scope.inviteGroup = (groupId, value) =>
+                    @simpleChannelMessage(groupId, _InviteGroupMessage, value)
 
-        $scope.modGroup = (groupId, value) =>
-            @simpleChannelMessage(groupId, WebChat.ModGroupMessage, value)
+                $scope.modUser = (userId, value) =>
+                    @simpleChannelMessage(userId, _ModUserMessage, value)
 
-        $scope.readonlyUser = (userId, value) =>
-            @simpleChannelMessage(userId, WebChat.ReadonlyUserMessage, value)
+                $scope.modGroup = (groupId, value) =>
+                    @simpleChannelMessage(groupId, _ModGroupMessage, value)
 
-        $scope.readonlyGroup = (groupId, value) =>
-            @simpleChannelMessage(groupId, WebChat.ReadonlyGroupMessage, value)
+                $scope.readonlyUser = (userId, value) =>
+                    @simpleChannelMessage(userId, _ReadonlyUserMessage, value)
+
+                $scope.readonlyGroup = (groupId, value) =>
+                    @simpleChannelMessage(groupId, _ReadonlyGroupMessage, value)
 
 
-angular.module('WebChat').controller 'ChannelController', 
-    ['$scope', 'websocket', 'activechannel', 'channelmodel', ($scope, websocket, activechannel, channelmodel) -> 
-        new ChannelController($scope, websocket, activechannel, channelmodel)
+        return ChannelController
+
     ]
-
-

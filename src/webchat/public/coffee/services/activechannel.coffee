@@ -1,4 +1,4 @@
-angular.module('WebChat').factory 'activechannel', ['$rootScope', ($rootScope) ->
+angular.module('WebChat').factory 'ActiveChannel', ['$rootScope', ($rootScope) ->
     ActiveChannel = {}
     ActiveChannel.activeChannelId = null
 

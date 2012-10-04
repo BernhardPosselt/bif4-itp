@@ -1,13 +1,12 @@
-Model = require('webchat.Model')
+angular.module('WebChat').factory '_ChannelModel', ['_Model', (_Model) ->
 
-class ChannelModel extends Model
+    class ChannelModel extends _Model
 
-    constructor: () ->
-        super('channel')
+        constructor: () ->
+            super('channel')
 
-        @create { id: 1, name: 'channel', groups: [0], users: [0, 1]}
+            @create { id: 1, name: 'channel', groups: [0], users: [0, 1]}
 
 
-angular.module('WebChat').factory 'channelmodel', () ->
-    channel = new ChannelModel()
-    return channel
+    return ChannelModel
+]

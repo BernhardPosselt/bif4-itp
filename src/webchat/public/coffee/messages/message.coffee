@@ -1,13 +1,14 @@
-webchat = require('webchat')
+angular.module('WebChat').factory '_Message', () ->
 
-webchat.Message = class
+    Message = class
 
-    constructor: (@type) ->
+        constructor: (@type) ->
 
 
-    serialize: (data) ->
-        message =
-            type: @type
-            data: data
-        return message
+        serialize: (data) ->
+            message =
+                type: @type
+                data: data
+            return message
 
+    return Message
