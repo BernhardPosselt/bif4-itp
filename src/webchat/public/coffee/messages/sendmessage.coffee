@@ -14,5 +14,3 @@ class SendMessage extends Message
             'channel_id': @channelId
         return super(data)            
 
-
-webchat.SendMessage = SendMessage

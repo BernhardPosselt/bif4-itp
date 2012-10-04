@@ -1,4 +1,4 @@
-Message = require('webchat.Message')
+#<<messages/message
 
 class ReadonlyGroupMessage extends Message
 
@@ -13,5 +13,3 @@ class ReadonlyGroupMessage extends Message
             value: @value
         return super(data)
 
-
-webchat.ReadonlyGroupMessage = ReadonlyGroupMessage

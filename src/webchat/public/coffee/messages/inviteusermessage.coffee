@@ -1,4 +1,4 @@
-Message = require('webchat.Message')
+#<<messages/message
 
 class InviteUserMessage extends Message
 
@@ -12,6 +12,3 @@ class InviteUserMessage extends Message
             user_id: @userId
             value: @value
         return super(data)
-
-
-webchat.InviteUserMessage = InviteUserMessage

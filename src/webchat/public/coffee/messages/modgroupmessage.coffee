@@ -1,4 +1,4 @@
-Message = require('webchat.Message')
+#<<messages/message
 
 class ModGroupMessage extends Message
 
@@ -13,5 +13,3 @@ class ModGroupMessage extends Message
             value: @value
         return super(data)
 
-
-webchat.ModGroupMessage = ModGroupMessage

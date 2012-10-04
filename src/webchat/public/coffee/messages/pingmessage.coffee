@@ -1,4 +1,4 @@
-Message = require('webchat.Message')
+#<<messages/message
 
 class PingMessage extends Message
 
@@ -10,5 +10,3 @@ class PingMessage extends Message
         data = {}
         return super(data)            
 
-
-webchat.PingMessage = PingMessage

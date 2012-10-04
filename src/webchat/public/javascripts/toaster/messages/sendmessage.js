@@ -27,6 +27,4 @@
 
   })(Message);
 
-  webchat.SendMessage = SendMessage;
-
 }).call(this);

@@ -1,4 +1,4 @@
-Message = require('webchat.Message')
+#<<messages/message
 
 class JoinMessage extends Message
 
@@ -10,6 +10,3 @@ class JoinMessage extends Message
         data = 
             id: @id
         return super(data)
-
-
-webchat.JoinMessage = JoinMessage
