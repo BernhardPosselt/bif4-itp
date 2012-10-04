@@ -1,4 +1,4 @@
-Message = require('webchat.Message')
+#<<messages/message
 
 class SendMessage extends Message
 
