@@ -1,18 +1,17 @@
-WebChat = window.WebChat
+class ChannelController
 
-class ChannelController extends WebChat.BaseController
+    constructor: ($scope, @websocket, @activechannel, @channelmodel) ->
 
-    constructor: ($scope, @websocket, @activeChannel) ->
-        super($scope, 'channel')
+        @activeChannelId = null
 
         @getActiveChannelId = =>
-            return @activeChannel.getActiveChannelId()
+            return @activechannel.getActiveChannelId()
         @setActiveChannelId = (id) =>
-            @activeChannel.setActiveChannelId(id)
+            @activechannel.setActiveChannelId(id)
 
         @simpleChannelMessage = (id, Message, value) =>
             activeChannelId = @getActiveChannelId()
-            if activeChannelId != undefined
+            if activeChannelId != null
                 message = new Message(id, activeChannelId, value)
                 @websocket.sendJSON(message.serialize())
 
@@ -27,7 +26,7 @@ class ChannelController extends WebChat.BaseController
 
         $scope.sendMessage = (textInput, messageType) =>
             activeChannelId = @getActiveChannelId()
-            if activeChannelId != undefined
+            if activeChannelId != null
                 message = new WebChat.SendMessage(textInput, messageType, activeChannelId)
                 @websocket.sendJSON(message.serialize())
 
@@ -49,12 +48,10 @@ class ChannelController extends WebChat.BaseController
         $scope.readonlyGroup = (groupId, value) =>
             @simpleChannelMessage(groupId, WebChat.ReadonlyGroupMessage, value)
 
-        @create { id: 1, name: 'channel', groups: [0], users: [0, 1]}
-
 
 angular.module('WebChat').controller 'ChannelController', 
-    ['$scope', 'websocket', 'activeChannel', ($scope, websocket, activeChannel) -> 
-        new ChannelController($scope, websocket, activeChannel)
+    ['$scope', 'websocket', 'activechannel', 'channelmodel', ($scope, websocket, activechannel, channelmodel) -> 
+        new ChannelController($scope, websocket, activechannel, channelmodel)
     ]
 
 

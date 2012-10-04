@@ -1,6 +1,6 @@
-window.WebChat or= {}
+webchat = require('webchat')
 
-window.WebChat.Message = class
+webchat.Message = class
 
     constructor: (@type) ->
 
@@ -10,3 +10,4 @@ window.WebChat.Message = class
             type: @type
             data: data
         return message
+

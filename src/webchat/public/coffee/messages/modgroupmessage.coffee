@@ -1,6 +1,6 @@
-window.WebChat or= {}
+Message = require('webchat.Message')
 
-class ModGroupMessage extends window.WebChat.Message
+class ModGroupMessage extends Message
 
     constructor: (@groupId, @channelId, @value) ->
         super('modgroup')
@@ -14,4 +14,4 @@ class ModGroupMessage extends window.WebChat.Message
         return super(data)
 
 
-window.WebChat.ModGroupMessage = ModGroupMessage
+webchat.ModGroupMessage = ModGroupMessage

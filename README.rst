@@ -72,8 +72,8 @@ For this to work you have to install nodejs and coffeescript
 
     sudo apt-get install nodejs
 
-    sudo npm install -g coffee-script
-
+    sudo npm install -g coffee-toaster
+    
 Then launch the script with
 
     ./coffeecompile.sh

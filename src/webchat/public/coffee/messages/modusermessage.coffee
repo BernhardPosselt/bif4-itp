@@ -1,6 +1,6 @@
-window.WebChat or= {}
+Message = require('webchat.Message')
 
-class ModUserMessage extends window.WebChat.Message
+class ModUserMessage extends Message
 
     constructor: (@userId, @channelId, @value) ->
         super('moduser')
@@ -14,4 +14,4 @@ class ModUserMessage extends window.WebChat.Message
         return super(data)
 
 
-window.WebChat.ModUserMessage = ModUserMessage
+webchat.ModUserMessage = ModUserMessage

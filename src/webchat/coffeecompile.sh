@@ -1,3 +1,3 @@
 #!/bin/bash
 
-coffee --watch --compile --output public/javascripts/ public/coffee/ 
+toaster -wdf public/toaster.coffee

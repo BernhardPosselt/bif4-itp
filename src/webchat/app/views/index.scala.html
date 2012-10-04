@@ -5,39 +5,44 @@
     <div id="channel_sidebar">
         <div class="tabbed_navi">
             <ul>
-                <li><a href="#" class="channels_link">Channels</a></li>
-                <li><a href="#" class="groups_link">Groups</a></li>
+                <li><a ng-click="tab=0" href="#" class="channels_link">Channels</a></li>
+                <li><a ng-click="tab=1" href="#" class="groups_link">Groups</a></li>
             </ul>
         </div>
-        <div id="channels">
-            <div class="channels" ng-controller="ChannelController">
+        <div id="channels" ng-show="tab == 0 || !tab" ng-controller="ChannelController">
+            <!--
+            <div class="channels">
                 <ul>
                     <li ng-class="{active: channel.id == selected, unread: channel.id == unread}" ng-click="join(channel.id)" ng-repeat="channel in items">{{ channel.name }}</li>
                 </ul>
             </div>
             <div class="utils"><a class="newchannel link_button" href="#" >New channel</a></div>
+        -->
         </div>
-        <div id="groups" ng-controller="GroupController">
+        <div id="groups" ng-show="tab == 1">
+            <!--
             <div ng-repeat="group in items">
                 <h1>{{group.name}}
                     <a ng-controller="ChannelController" ng-click="inviteGroup(group.id, true)" class="invite_group" title="invite group {{group.name}} to current channel"></a>
                 </h1>
-                <ul ng-controller="UserController">
+                <ul>
                     <li ng-class="{true:'online', false:'offline'}[user.online]" ng-repeat="user in items | userInGroup:{groupid: group.id}">{{ user.name }}
                         <a ng-controller="ChannelController" ng-click="inviteUser(user.id, true)" class="invite_user" title="invite user {{ user.name }} to current channel"></a>
                     </li>
                 </ul>
             </div>
-                <h1>All</h1>
-                <ul ng-controller="UserController">
-                    <li ng-class="{true:'online', false:'offline'}[user.online]" ng-repeat="user in items">{{ user.name }}
-                        <a ng-controller="ChannelController" ng-click="inviteUser(user.id, true)" class="invite_user" title="invite user {{ user.name }} to current channel"></a>
-                    </li>
-                </ul>            
+            <h1>All</h1>
+            <ul>
+                <li ng-class="{true:'online', false:'offline'}[user.online]" ng-repeat="user in items">{{ user.name }}
+                    <a ng-controller="ChannelController" ng-click="inviteUser(user.id, true)" class="invite_user" title="invite user {{ user.name }} to current channel"></a>
+                </li>
+            </ul>
+            -->            
         </div>
+        
     </div>
 
-    <div id="stream_window" ng-controller="ChannelController">
+    <div id="stream_window" >
         <div id="streams"></div>
 
         <div id="input" ng-model="messageType">
@@ -71,8 +76,9 @@
         </div>
     </div>
 
-    <div id="info_sidebar" ng-controller="ChannelController">
+    <div id="info_sidebar">
         <div id="channel_info" ng-repeat="channel in items | filter:{ id: getActiveChannelId() }">
+            <!--
             <fieldset>
                 <legend>Users</legend>
                 <div id="channel_users" ng-controller="GroupController">
@@ -91,9 +97,9 @@
                         </ul>
                     </div>
                 </div>
-            </fieldset>
+            </fieldset>-->
         </div>
-        <div id="file_info" ng-repeat="channel in items | filter:{ id: getActiveChannelId() }">
+        <div id="file_info">
             <fieldset>
                 <legend>Files</legend>
                 <div id="channel_files">

@@ -1,6 +1,6 @@
-window.WebChat or= {}
+Message = require('webchat.Message')
 
-class PingMessage extends window.WebChat.Message
+class PingMessage extends Message
 
     constructor: () ->
         super('ping')
@@ -11,4 +11,4 @@ class PingMessage extends window.WebChat.Message
         return super(data)            
 
 
-window.WebChat.PingMessage = PingMessage
+webchat.PingMessage = PingMessage

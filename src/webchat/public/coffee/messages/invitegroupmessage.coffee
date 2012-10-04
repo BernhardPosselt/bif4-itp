@@ -1,6 +1,6 @@
-window.WebChat or= {}
+Message = require('webchat.Message')
 
-class InviteGroupMessage extends window.WebChat.Message
+class InviteGroupMessage extends Message
 
     constructor: (@groupId, @channelId, @value) ->
         super('invitegroup')
@@ -14,4 +14,4 @@ class InviteGroupMessage extends window.WebChat.Message
         return super(data)
 
 
-window.WebChat.InviteGroupMessage = InviteGroupMessage
+webchat.InviteGroupMessage = InviteGroupMessage

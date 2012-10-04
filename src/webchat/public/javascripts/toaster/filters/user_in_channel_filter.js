@@ -1,0 +1,18 @@
+(function() {
+  var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+  angular.module('WebChat').filter('userInChannel', function() {
+    return function(users, args) {
+      var result, user, _i, _len, _ref;
+      result = [];
+      for (_i = 0, _len = users.length; _i < _len; _i++) {
+        user = users[_i];
+        if (_ref = user.id, __indexOf.call(args.users, _ref) >= 0) {
+          result.push(user);
+        }
+      }
+      return result;
+    };
+  });
+
+}).call(this);

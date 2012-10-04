@@ -1,6 +1,4 @@
-window.WebChat or= {}
-
-window.WebChat.WebSocket = class 
+class WebChatWebSocket
 
     constructor: ->
         @_callbacks = 
@@ -79,4 +77,15 @@ window.WebChat.WebSocket = class
     sendJSON: (json_object) ->
         msg = JSON.stringify(json_object)
         @send(msg)
+
+
+angular.module('WebChat').factory 'websocket', 
+    ['$rootScope', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL',
+    ($rootScope, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL) =>
+        socket = new WebChatWebSocket()
+        socket.connect(WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL)
+        socket.onReceive (message) ->
+            $rootScope.$broadcast('message', message)
+        return socket
+    ]
 

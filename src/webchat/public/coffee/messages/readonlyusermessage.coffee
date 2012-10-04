@@ -1,6 +1,6 @@
-window.WebChat or= {}
+Message = require('webchat.Message')
 
-class ReadonlyUserMessage extends window.WebChat.Message
+class ReadonlyUserMessage extends Message
 
     constructor: (@userId, @channelId, @value) ->
         super('readonlyuser')
@@ -14,4 +14,4 @@ class ReadonlyUserMessage extends window.WebChat.Message
         return super(data)
 
 
-window.WebChat.ReadonlyUserMessage = ReadonlyUserMessage
+webchat.ReadonlyUserMessage = ReadonlyUserMessage

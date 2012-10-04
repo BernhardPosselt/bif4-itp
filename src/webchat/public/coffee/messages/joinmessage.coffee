@@ -1,6 +1,6 @@
-window.WebChat or= {}
+Message = require('webchat.Message')
 
-class JoinMessage extends window.WebChat.Message
+class JoinMessage extends Message
 
     constructor: (@id) ->
         super('join')
@@ -12,4 +12,4 @@ class JoinMessage extends window.WebChat.Message
         return super(data)
 
 
-window.WebChat.JoinMessage = JoinMessage
+webchat.JoinMessage = JoinMessage
