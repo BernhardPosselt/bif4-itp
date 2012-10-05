@@ -5,19 +5,21 @@
     <div id="channel_sidebar">
         <div class="tabbed_navi">
             <ul>
-                <li><a ng-click="tab=0" href="#" class="channels_link">Channels</a></li>
+                <li><a ng-click="tab=false" href="#" class="channels_link">Channels</a></li>
                 <li><a ng-click="tab=1" href="#" class="groups_link">Groups</a></li>
             </ul>
         </div>
-        <div id="channels" ng-show="tab == 0 || !tab" ng-controller="ChannelController">
-            <!--
+        <div id="channels" ng-show="!tab" ng-controller="ChannelListController">
             <div class="channels">
                 <ul>
-                    <li ng-class="{active: channel.id == selected, unread: channel.id == unread}" ng-click="join(channel.id)" ng-repeat="channel in items">{{ channel.name }}</li>
+                    <li ng-class="{active: channel.id == selected, unread: channel.id == unread}" 
+                        ng-click="join(channel.id)" 
+                        ng-repeat="channel in channels">{{ channel.name }}</li>
                 </ul>
             </div>
-            <div class="utils"><a class="newchannel link_button" href="#" >New channel</a></div>
-        -->
+            <div class="utils">
+                <a ng-click="showNewChannelDialogue(true)" class="newchannel link_button" href="#" >New channel</a>
+            </div>
         </div>
         <div id="groups" ng-show="tab == 1">
             <!--
@@ -114,7 +116,7 @@
     </div>
 
     <!-- Edit profile form form -->
-    <div id="edit_profile_window" class="popup_window">
+    <div ng-show="editProfileDialogue==true" id="edit_profile_window" class="popup_window">
         <div class="popup_window_title">Edit profile</div>
         <div class="popup_window_content">
             <div class="field">
@@ -149,7 +151,7 @@
     </div>
 
     <!-- Change topic form -->
-    <div id="change_topic_window" class="popup_window">
+    <div ng-show="changeTopicDialogue==true" id="change_topic_window" class="popup_window">
         <div class="popup_window_title">Change topic</div>
         <div class="popup_window_content">
             <div class="field">
@@ -164,7 +166,7 @@
     </div>
 
     <!-- Change channelname form -->
-    <div id="change_channel_name_window" class="popup_window">
+    <div ng-show="changeChannelNameDialogue==true" id="change_channel_name_window" class="popup_window">
         <div class="popup_window_title">Change channel name</div>
         <div class="popup_window_content">
             <div class="field">
@@ -179,7 +181,7 @@
     </div>
 
     <!-- Delete channel form -->
-    <div id="delete_channel_window" class="popup_window">
+    <div ng-show="deleteChannelDialogue==true" id="delete_channel_window" class="popup_window">
         <div class="popup_window_title">Delete channel</div>
         <div class="popup_window_content">
             <p>Do you really want to delete the channel: <span id="delete_channel"></span>?</p>
@@ -191,7 +193,7 @@
     </div>
 
     <!-- Close channel form -->
-    <div id="close_channel_window" class="popup_window">
+    <div ng-show="closeChannelDialogue==true" id="close_channel_window" class="popup_window">
         <div class="popup_window_title">Delete channel</div>
         <div class="popup_window_content">
             <p>Do you really want to close the channel: <span id="close_channel"></span>?
@@ -204,7 +206,7 @@
     </div>
 
     <!-- Create new channel form -->
-    <div id="newchannel_window" class="popup_window">
+    <div ng-show="newChannelDialogue==true" id="newchannel_window" class="popup_window">
         <div class="popup_window_title">New channel</div>
         <div class="popup_window_content">
             <div class="field">
@@ -221,45 +223,11 @@
             </div>
         </div>
         <div class="popup_window_buttons">
-              <input class="cancel" type="button" value="Cancel"/>
+              <input ng-click="newChannelDialogue=false" 
+                     class="cancel" type="button" value="Cancel"/>
               <input class="submit" type="button" value="Create"/>
         </div>
     </div>
 
-    <!-- Kick form -->
-    <div id="kick_window" class="popup_window">
-        <div class="popup_window_title">Kick from Channel</div>
-        <div id="kick_toolbar">
-            <input id="kick_filter" type="text" placeholder="Filter" />
-        </div>
-        <div id="kick_channel_users">
-            <div class="select_list groups">
-                <h1>Groups</h1>
-                <ul>
-                </ul>
-            </div>
-            <div class="select_list users">
-                <h1>Users</h1>
-                <ul>
-                </ul>
-            </div>
-        </div>
-        <div id="kick_selected">
-            <div class="select_list groups">
-                <h1>Selected groups</h1>
-                <ul>
-                </ul>
-            </div>
-            <div class="select_list users">
-                <h1>Selected users</h1>
-                <ul>
-                </ul>
-            </div>
-        </div>
-        <div class="popup_window_buttons">
-            <input class="cancel" type="button" value="Cancel" />
-            <input class="submit" type="button" value="Kick" />
-        </div>
-    </div>
 
 }

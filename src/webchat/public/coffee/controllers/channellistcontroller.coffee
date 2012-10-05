@@ -1,13 +1,12 @@
-angular.module('WebChat').factory '_ChannelController', 
+angular.module('WebChat').factory '_ChannelListController', 
     ['_JoinMessage', '_SendMessage', '_InviteUserMessage', '_InviteGroupMessage',
      '_ModUserMessage', '_ModGroupMessage', '_ReadonlyUserMessage', '_ReadonlyGroupMessage',
      (_JoinMessage, _SendMessage, _InviteUserMessage, _InviteGroupMessage,
       _ModUserMessage, _ModGroupMessage, _ReadonlyUserMessage, _ReadonlyGroupMessage) ->
 
-        class ChannelController
+        class ChannelListController
 
-            constructor: ($scope, @websocket, @activechannel, @channels) ->
-
+            constructor: ($scope, @websocket, @activechannel, @channelmodel) ->
                 @activeChannelId = null
 
                 @getActiveChannelId = =>
@@ -20,6 +19,8 @@ angular.module('WebChat').factory '_ChannelController',
                     if activeChannelId != null
                         message = new Msg(id, activeChannelId, value)
                         @websocket.sendJSON(message.serialize())
+
+                $scope.channels = @channelmodel.getItems()
 
                 $scope.getActiveChannelId = =>
                     return @getActiveChannelId()
@@ -55,6 +56,6 @@ angular.module('WebChat').factory '_ChannelController',
                     @simpleChannelMessage(groupId, _ReadonlyGroupMessage, value)
 
 
-        return ChannelController
+        return ChannelListController
 
     ]

@@ -37,9 +37,12 @@ angular.module('WebChat').factory '_Model', () ->
                 if item.id == id
                     return item
 
+        getItems: ->
+            return @items
 
-        canHandle: (messageTypes) ->
-            if type == @type
+
+        canHandle: (msgType) ->
+            if msgType == @type
                 return true
             else
                 return false
