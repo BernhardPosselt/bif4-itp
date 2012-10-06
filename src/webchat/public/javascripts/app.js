@@ -247,14 +247,14 @@
         function UserModel() {
           UserModel.__super__.constructor.call(this, 'user');
           this.create({
-            id: 1,
+            id: 0,
             status: 'online',
             firstname: 'john',
             lastname: 'bingo',
             groups: [0, 1]
           });
           this.create({
-            id: 2,
+            id: 1,
             status: 'offline',
             firstname: 'channel',
             lastname: 'ron',
@@ -325,6 +325,7 @@
       function _Class(type) {
         this.type = type;
         this.items = [];
+        this.hashMap = {};
       }
 
       _Class.prototype.handle = function(message) {
@@ -339,6 +340,7 @@
       };
 
       _Class.prototype.create = function(item) {
+        this.hashMap[item.id] = item;
         return this.items.push(item);
       };
 
@@ -368,19 +370,13 @@
           }
         }
         if (removeItemId >= 0) {
-          return this.items.splice(removeItemId, 1);
+          this.items.splice(removeItemId, 1);
+          return delete this.hashMap[removedItemId];
         }
       };
 
       _Class.prototype.getItemById = function(id) {
-        var item, _i, _len, _ref;
-        _ref = this.items;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          item = _ref[_i];
-          if (item.id === id) {
-            return item;
-          }
-        }
+        return this.hashMap[id];
       };
 
       _Class.prototype.getItems = function() {
@@ -888,6 +884,15 @@
           this.channelmodel = ChannelModel;
           this.groupmodel = GroupModel;
           this.usermodel = UserModel;
+          $scope.groups = this.groupmodel.getItems();
+          $scope.users = this.usermodel.getItems();
+          $scope.getActiveChannel = function() {
+            if (_this.getActiveChannelId() !== null) {
+              return _this.channelmodel.getItemById(_this.getActiveChannelId());
+            } else {
+              return null;
+            }
+          };
           $scope.inviteUser = function(userId, value) {
             return _this.simpleChannelMessage(userId, _InviteUserMessage, value);
           };
@@ -916,17 +921,28 @@
   ]);
 
   angular.module('WebChat').factory('_MessageController', [
-    '_Controller', '_SendMessage', 'GroupModel', 'UserModel', 'MessageModel', function(_Controller, _SendMessage, GroupModel, UserModel, MessageModel) {
+    '_Controller', '_SendMessage', 'GroupModel', 'UserModel', 'MessageModel', 'ChannelModel', function(_Controller, _SendMessage, GroupModel, UserModel, MessageModel, ChannelModel) {
       var MessageController;
       MessageController = (function(_super) {
 
         __extends(MessageController, _super);
 
         function MessageController($scope) {
+          var _this = this;
           MessageController.__super__.constructor.call(this, $scope);
           this.groupmodel = GroupModel;
           this.usermodel = UserModel;
           this.messagemodel = MessageModel;
+          this.channelmodel = ChannelModel;
+          $scope.channels = this.channelmodel.getItems();
+          $scope.users = this.usermodel.getItems();
+          $scope.groups = this.groupmodel.getItems();
+          $scope.messages = this.messagemodel.getItems();
+          $scope.getUserFullName = function(userId) {
+            var user;
+            user = _this.usermodel.getItemById(userId);
+            return user.getFullName();
+          };
         }
 
         return MessageController;
@@ -955,34 +971,6 @@
     }
   ]);
 
-  angular.module('WebChat').filter('userInChannel', function() {
-    return function(users, args) {
-      var result, user, _i, _len, _ref;
-      result = [];
-      for (_i = 0, _len = users.length; _i < _len; _i++) {
-        user = users[_i];
-        if (_ref = user.id, __indexOf.call(args.users, _ref) >= 0) {
-          result.push(user);
-        }
-      }
-      return result;
-    };
-  });
-
-  angular.module('WebChat').filter('groupInChannel', function() {
-    return function(groups, args) {
-      var group, result, _i, _len, _ref;
-      result = [];
-      for (_i = 0, _len = groups.length; _i < _len; _i++) {
-        group = groups[_i];
-        if (_ref = group.id, __indexOf.call(args.groups, _ref) >= 0) {
-          result.push(group);
-        }
-      }
-      return result;
-    };
-  });
-
   angular.module('WebChat').filter('userInGroup', function() {
     return function(users, groupId) {
       var result, user, userGroupId, _i, _j, _len, _len1, _ref;
@@ -995,6 +983,40 @@
           if (userGroupId === groupId) {
             result.push(user);
           }
+        }
+      }
+      return result;
+    };
+  });
+
+  angular.module('WebChat').filter('userInChannel', function() {
+    return function(users, channel) {
+      var result, user, _i, _len, _ref;
+      result = [];
+      if (channel === void 0 || channel === null || channel.users === void 0) {
+        return result;
+      }
+      for (_i = 0, _len = users.length; _i < _len; _i++) {
+        user = users[_i];
+        if (_ref = user.id, __indexOf.call(channel.users, _ref) >= 0) {
+          result.push(user);
+        }
+      }
+      return result;
+    };
+  });
+
+  angular.module('WebChat').filter('groupInChannel', function() {
+    return function(groups, channel) {
+      var group, result, _i, _len, _ref;
+      result = [];
+      if (channel === void 0 || channel === null || channel.groups === void 0) {
+        return result;
+      }
+      for (_i = 0, _len = groups.length; _i < _len; _i++) {
+        group = groups[_i];
+        if (_ref = group.id, __indexOf.call(channel.groups, _ref) >= 0) {
+          result.push(group);
         }
       }
       return result;

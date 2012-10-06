@@ -48,8 +48,33 @@
         
     </div>
 
-    <div id="stream_window" ng-controller="MessageController">
-        <div id="streams"></div>
+    <div id="stream_window" ng-controller="MessageController" ng-hide="getActiveChannelId() == null">
+        <div id="streams">
+            <div class="stream" ng-repeat="channel in channels" 
+                 ng-show="getActiveChannelId() == channel.id">
+                <div class="stream_field">
+                    <div class="stream_name">
+                        <span class="name">{{channel.name}}</span>
+                    </div>
+                    <div class="utils">
+                        <a href="" class="delete_channel">Delete</a>
+                        <a href="" class="close_channel">Close</a>
+                        <a href="" class="rename_channel">Rename</a>
+                    </div>
+                    <div class="stream_meta">
+                        Topic: <span class="topic">{{channel.topic}}</span>
+                    </div>
+                </div>
+
+                <div class="stream_chat">
+                    <div class="line" ng-repeat="message in getMessages(channel.id)">
+                        <div class="user">{{getUserFullName(message.user_id)}}</div>
+                        <div class="message">{{getMessage(message.id)}}</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
 
         <div id="input" ng-model="messageType">
             <select id="input_options">
@@ -82,28 +107,41 @@
         </div>
     </div>
 
-    <div id="info_sidebar">
-        <div id="channel_info" ng-repeat="channel in items | filter:{ id: getActiveChannelId() }">
-            <!--
+    <div id="info_sidebar" ng-hide="getActiveChannelId() == null">
+        <div id="channel_info" ng-controller="GroupsInChannelController">
             <fieldset>
                 <legend>Users</legend>
-                <div id="channel_users" ng-controller="GroupController">
-                    <div ng-repeat="group in items | groupInChannel:{ groups: channel.groups }" class="users">
+                <div id="channel_users">
+                    <div ng-repeat="group in groups | groupInChannel:getActiveChannel()" class="users">
                         <h1>{{ group.name }}
-                            <a ng-controller="ChannelController" ng-click="inviteGroup(group.id, false)" class="kick_group" title="remove group {{group.name}} from channel"></a>
+                            <a ng-click="inviteGroup(group.id, false)" 
+                               class="kick_group" 
+                               title="remove group {{group.name}} from channel"></a>
                         </h1>
-                        <ul ng-controller="UserController">
-                            <li ng-class="{true:'online', false:'offline'}[user.online]" ng-repeat="user in items | userInGroup:{groupid: group.id}">{{ user.name }}<a ng-controller="ChannelController" ng-click="inviteUser(user.id, false)"class="kick_user" title="remove user {{ user.name }} from channel"></a></li>
+                        <ul>
+                            <li ng-class="user.status" 
+                                ng-repeat="user in users | userInGroup:group.id">
+                                {{ user.getFullName() }}
+                                <a ng-click="inviteUser(user.id, false)" 
+                                   class="kick_user" 
+                                   title="remove user {{ user.getFullName() }} from channel"></a>
+                            </li>
                         </ul>
                     </div>
-                    <div class="users" ng-controller="UserController">
+                    <div class="users">
                         <h1>Other Users</h1>
-                        <ul ng-controller="UserController">
-                            <li ng-class="{true:'online', false:'offline'}[user.online]" ng-repeat="user in items | userInChannel:{ users: channel.users }">{{ user.name }}<a ng-controller="ChannelController" ng-click="inviteUser(user.id, false)"class="kick_user" title="remove user {{ user.name }} from channel"></a></li>
+                        <ul>
+                            <li ng-class="user.status" 
+                                ng-repeat="user in users | userInChannel:getActiveChannel()">
+                                {{ user.getFullName() }}
+                                <a ng-click="inviteUser(user.id, false)" 
+                                   class="kick_user" 
+                                   title="remove user {{ user.getFullName() }} from channel"></a>
+                            </li>
                         </ul>
                     </div>
                 </div>
-            </fieldset>-->
+            </fieldset>
         </div>
         <div id="file_info">
             <fieldset>

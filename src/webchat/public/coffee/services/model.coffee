@@ -4,6 +4,7 @@ angular.module('WebChat').factory '_Model', () ->
 
         constructor: (@type) ->
             @items = []
+            @hashMap = {} # hashmap for quick access via item id
 
 
         handle: (message) ->
@@ -14,6 +15,7 @@ angular.module('WebChat').factory '_Model', () ->
 
 
         create: (item) ->
+            @hashMap[item.id] = item
             @items.push(item)
 
 
@@ -30,12 +32,11 @@ angular.module('WebChat').factory '_Model', () ->
                     removeItemId = counter
             if removeItemId >= 0
                 @items.splice(removeItemId, 1)
+                delete @hashMap[removedItemId]
 
 
         getItemById: (id) ->
-            for item in @items
-                if item.id == id
-                    return item
+            return @hashMap[id]
 
         getItems: ->
             return @items
