@@ -778,23 +778,19 @@
 
         __extends(ChannelListController, _super);
 
-        function ChannelListController() {
-          return ChannelListController.__super__.constructor.apply(this, arguments);
-        }
-
-        ChannelListController.prototype.construct = function($scope) {
+        function ChannelListController($scope) {
           var _this = this;
-          ChannelListController.__super__.construct.call(this, $scope);
+          ChannelListController.__super__.constructor.call(this, $scope);
           this.channelmodel = ChannelModel;
           $scope.channels = this.channelmodel.getItems();
-          return $scope.join = function(id) {
+          $scope.join = function(id) {
             var message;
             message = new _JoinMessage(id);
             _this.sendMessage(message);
             _this.setActiveChannelId(id);
             return $scope.selected = id;
           };
-        };
+        }
 
         return ChannelListController;
 

@@ -1,10 +1,10 @@
 angular.module('WebChat').factory '_ChannelListController', 
-    ['_Controller', '_JoinMessage', 'ChannelModel'
+    ['_Controller', '_JoinMessage', 'ChannelModel',
      (_Controller, _JoinMessage, ChannelModel) ->
 
         class ChannelListController extends _Controller
 
-            construct: ($scope) ->
+            constructor: ($scope) ->
                 super($scope)
             
                 @channelmodel = ChannelModel
@@ -16,6 +16,7 @@ angular.module('WebChat').factory '_ChannelListController',
                     @sendMessage(message)
                     @setActiveChannelId(id)
                     $scope.selected = id
+
 
         return ChannelListController
 
