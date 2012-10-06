@@ -18,6 +18,11 @@ angular.module('WebChat').factory 'FileModel', ['_FileModel', (_FileModel) ->
     return filemodel
 ]
 
+angular.module('WebChat').factory 'MessageModel', ['_MessageModel', (_MessageModel) ->
+    messagemodel = new _MessageModel()
+    return messagemodel
+]
+
 
 angular.module('WebChat').factory 'WebChatWebSocket', 
     ['_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL',

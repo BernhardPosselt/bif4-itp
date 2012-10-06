@@ -62,6 +62,14 @@
     }
   ]);
 
+  angular.module('WebChat').factory('MessageModel', [
+    '_MessageModel', function(_MessageModel) {
+      var messagemodel;
+      messagemodel = new _MessageModel();
+      return messagemodel;
+    }
+  ]);
+
   angular.module('WebChat').factory('WebChatWebSocket', [
     '_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL', 'ChannelModel', 'GroupModel', 'UserModel', 'FileModel', function(_WebChatWebSocket, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL, ChannelModel, GroupModel, UserModel, FileModel) {
       var models, socket;
