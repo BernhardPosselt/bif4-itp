@@ -32,16 +32,40 @@
 
   angular.module('WebChat').factory('ChannelModel', [
     '_ChannelModel', function(_ChannelModel) {
-      var channel;
-      channel = new _ChannelModel();
-      return channel;
+      var channelmodel;
+      channelmodel = new _ChannelModel();
+      return channelmodel;
+    }
+  ]);
+
+  angular.module('WebChat').factory('GroupModel', [
+    '_GroupModel', function(_GroupModel) {
+      var groupmodel;
+      groupmodel = new _GroupModel();
+      return groupmodel;
+    }
+  ]);
+
+  angular.module('WebChat').factory('UserModel', [
+    '_UserModel', function(_UserModel) {
+      var usermodel;
+      usermodel = new _UserModel();
+      return usermodel;
+    }
+  ]);
+
+  angular.module('WebChat').factory('FileModel', [
+    '_FileModel', function(_FileModel) {
+      var filemodel;
+      filemodel = new _FileModel();
+      return filemodel;
     }
   ]);
 
   angular.module('WebChat').factory('WebChatWebSocket', [
-    '_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL', 'ChannelModel', function(_WebChatWebSocket, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL, ChannelModel) {
+    '_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL', 'ChannelModel', 'GroupModel', 'UserModel', 'FileModel', function(_WebChatWebSocket, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL, ChannelModel, GroupModel, UserModel, FileModel) {
       var models, socket;
-      models = [ChannelModel];
+      models = [ChannelModel, GroupModel, UserModel, FileModel];
       socket = new _WebChatWebSocket();
       socket.connect(WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL);
       socket.onReceive(function(message) {
@@ -160,6 +184,78 @@
     })();
     return WebChatWebSocket;
   });
+
+  angular.module('WebChat').factory('_FileModel', [
+    '_Model', function(_Model) {
+      var FileModel;
+      FileModel = (function(_super) {
+
+        __extends(FileModel, _super);
+
+        function FileModel() {
+          FileModel.__super__.constructor.call(this, 'file');
+        }
+
+        return FileModel;
+
+      })(_Model);
+      return FileModel;
+    }
+  ]);
+
+  angular.module('WebChat').factory('_GroupModel', [
+    '_Model', function(_Model) {
+      var GroupModel;
+      GroupModel = (function(_super) {
+
+        __extends(GroupModel, _super);
+
+        function GroupModel() {
+          GroupModel.__super__.constructor.call(this, 'group');
+        }
+
+        return GroupModel;
+
+      })(_Model);
+      return GroupModel;
+    }
+  ]);
+
+  angular.module('WebChat').factory('_UserModel', [
+    '_Model', function(_Model) {
+      var UserModel;
+      UserModel = (function(_super) {
+
+        __extends(UserModel, _super);
+
+        function UserModel() {
+          UserModel.__super__.constructor.call(this, 'user');
+        }
+
+        return UserModel;
+
+      })(_Model);
+      return UserModel;
+    }
+  ]);
+
+  angular.module('WebChat').factory('_MessageModel', [
+    '_Model', function(_Model) {
+      var MessageModel;
+      MessageModel = (function(_super) {
+
+        __extends(MessageModel, _super);
+
+        function MessageModel() {
+          MessageModel.__super__.constructor.call(this, 'message');
+        }
+
+        return MessageModel;
+
+      })(_Model);
+      return MessageModel;
+    }
+  ]);
 
   angular.module('WebChat').factory('_ChannelModel', [
     '_Model', function(_Model) {
@@ -497,6 +593,33 @@
     }
   ]);
 
+  angular.module('WebChat').factory('_DeleteFileMessage', [
+    '_Message', function(_Message) {
+      var DeleteFileMessage;
+      DeleteFileMessage = (function(_super) {
+
+        __extends(DeleteFileMessage, _super);
+
+        function DeleteFileMessage(fileId) {
+          this.fileId = fileId;
+          DeleteFileMessage.__super__.constructor.call(this, 'filedelete');
+        }
+
+        DeleteFileMessage.prototype.serialize = function() {
+          var data;
+          data = {
+            id: this.fileId
+          };
+          return DeleteFileMessage.__super__.serialize.call(this, data);
+        };
+
+        return DeleteFileMessage;
+
+      })(_Message);
+      return DeleteFileMessage;
+    }
+  ]);
+
   angular.module('WebChat').factory('_ModGroupMessage', [
     '_Message', function(_Message) {
       var ModGroupMessage;
@@ -563,15 +686,236 @@
     return $("#input_field").focus();
   });
 
+  angular.module('WebChat').factory('_DialogueController', [
+    '_Controller', function(_Controller) {
+      var DialogueController;
+      DialogueController = (function(_super) {
+
+        __extends(DialogueController, _super);
+
+        function DialogueController($scope, channelmodel) {
+          var _this = this;
+          this.channelmodel = channelmodel;
+          DialogueController.__super__.constructor.call(this, $scope);
+          $scope.showNewChannelDialogue = function(show) {
+            return $scope.newChannelDialogue = show;
+          };
+        }
+
+        return DialogueController;
+
+      })(_Controller);
+      return DialogueController;
+    }
+  ]);
+
+  angular.module('WebChat').factory('_GroupListController', [
+    '_Controller', '_InviteUserMessage', '_InviteGroupMessage', 'GroupModel', 'UserModel', function(_Controller, _InviteUserMessage, _InviteGroupMessage, GroupModel, UserModel) {
+      var GroupListController;
+      GroupListController = (function(_super) {
+
+        __extends(GroupListController, _super);
+
+        function GroupListController($scope) {
+          var _this = this;
+          GroupListController.__super__.constructor.call(this, $scope);
+          this.groupmodel = GroupModel;
+          this.usermodel = UserModel;
+          $scope.inviteUser = function(userId, value) {
+            return _this.simpleChannelMessage(userId, _InviteUserMessage, value);
+          };
+          $scope.inviteGroup = function(groupId, value) {
+            return _this.simpleChannelMessage(groupId, _InviteGroupMessage, value);
+          };
+        }
+
+        return GroupListController;
+
+      })(_Controller);
+      return GroupListController;
+    }
+  ]);
+
+  angular.module('WebChat').factory('_Controller', [
+    '_SendMessage', 'WebChatWebSocket', 'ActiveChannel', function(_SendMessage, WebChatWebSocket, ActiveChannel) {
+      var Controller;
+      Controller = (function() {
+
+        function Controller($scope) {
+          var _this = this;
+          this.getActiveChannelId = function() {
+            return ActiveChannel.getActiveChannelId();
+          };
+          this.setActiveChannelId = function(id) {
+            return ActiveChannel.setActiveChannelId(id);
+          };
+          this.simpleChannelMessage = function(id, Msg, value) {
+            var activeChannelId, message;
+            activeChannelId = _this.getActiveChannelId();
+            if (activeChannelId !== null) {
+              return message = new Msg(id, activeChannelId, value);
+            }
+          };
+          this.sendMessage = function(Msg) {
+            return WebChatWebSocket.sendJSON(message.serialize());
+          };
+          $scope.getActiveChannelId = function() {
+            return _this.getActiveChannelId();
+          };
+        }
+
+        return Controller;
+
+      })();
+      return Controller;
+    }
+  ]);
+
+  angular.module('WebChat').factory('_ChannelListController', [
+    '_Controller', '_JoinMessage', 'ChannelModel', function(_Controller, _JoinMessage, ChannelModel) {
+      var ChannelListController;
+      ChannelListController = (function(_super) {
+
+        __extends(ChannelListController, _super);
+
+        function ChannelListController() {
+          return ChannelListController.__super__.constructor.apply(this, arguments);
+        }
+
+        ChannelListController.prototype.construct = function($scope) {
+          var _this = this;
+          ChannelListController.__super__.construct.call(this, $scope);
+          this.channelmodel = ChannelModel;
+          $scope.channels = this.channelmodel.getItems();
+          return $scope.join = function(id) {
+            var message;
+            message = new _JoinMessage(id);
+            _this.sendMessage(message);
+            _this.setActiveChannelId(id);
+            return $scope.selected = id;
+          };
+        };
+
+        return ChannelListController;
+
+      })(_Controller);
+      return ChannelListController;
+    }
+  ]);
+
   angular.module('WebChat').controller('ChannelListController', [
-    '$scope', '_ChannelListController', 'WebChatWebSocket', 'ActiveChannel', 'ChannelModel', function($scope, _ChannelListController, WebChatWebSocket, ActiveChannel, ChannelModel) {
-      return new _ChannelListController($scope, WebChatWebSocket, ActiveChannel, ChannelModel);
+    '$scope', '_ChannelListController', function($scope, _ChannelListController) {
+      return new _ChannelListController($scope);
+    }
+  ]);
+
+  angular.module('WebChat').controller('GroupListController', [
+    '$scope', '_GroupListController', function($scope, _GroupListController) {
+      return new _GroupListController($scope);
+    }
+  ]);
+
+  angular.module('WebChat').controller('MessageController', [
+    '$scope', '_MessageController', function($scope, _MessageController) {
+      return new _MessageController($scope);
+    }
+  ]);
+
+  angular.module('WebChat').controller('GroupsInChannelController', [
+    '$scope', '_GroupsInChannelController', function($scope, _GroupsInChannelController) {
+      return new _GroupsInChannelController($scope);
+    }
+  ]);
+
+  angular.module('WebChat').controller('FilesInChannelController', [
+    '$scope', '_FilesInChannelController', function($scope, _FilesInChannelController) {
+      return new _FilesInChannelController($scope);
     }
   ]);
 
   angular.module('WebChat').controller('DialogueController', [
-    '$scope', '_DialogueController', 'ActiveChannel', 'ChannelModel', function($scope, _DialogueController, ActiveChannel, ChannelModel) {
-      return new _DialogueController($scope, ActiveChannel, ChannelModel);
+    '$scope', '_DialogueController', function($scope, _DialogueController) {
+      return new _DialogueController($scope);
+    }
+  ]);
+
+  angular.module('WebChat').factory('_GroupsInChannelController', [
+    '_Controller', '_ModUserMessage', '_ModGroupMessage', '_ReadonlyUserMessage', '_ReadonlyGroupMessage', '_InviteGroupMessage', '_InviteUserMessage', 'ChannelModel', 'GroupModel', 'UserModel', function(_Controller, _ModUserMessage, _ModGroupMessage, _ReadonlyUserMessage, _ReadonlyGroupMessage, _InviteGroupMessage, _InviteUserMessage, ChannelModel, GroupModel, UserModel) {
+      var GroupsInChannelController;
+      GroupsInChannelController = (function(_super) {
+
+        __extends(GroupsInChannelController, _super);
+
+        function GroupsInChannelController($scope) {
+          var _this = this;
+          GroupsInChannelController.__super__.constructor.call(this, $scope);
+          this.channelmodel = ChannelModel;
+          this.groupmodel = GroupModel;
+          this.usermodel = UserModel;
+          $scope.inviteUser = function(userId, value) {
+            return _this.simpleChannelMessage(userId, _InviteUserMessage, value);
+          };
+          $scope.inviteGroup = function(groupId, value) {
+            return _this.simpleChannelMessage(groupId, _InviteGroupMessage, value);
+          };
+          $scope.modUser = function(userId, value) {
+            return _this.simpleChannelMessage(userId, _ModUserMessage, value);
+          };
+          $scope.modGroup = function(groupId, value) {
+            return _this.simpleChannelMessage(groupId, _ModGroupMessage, value);
+          };
+          $scope.readonlyUser = function(userId, value) {
+            return _this.simpleChannelMessage(userId, _ReadonlyUserMessage, value);
+          };
+          $scope.readonlyGroup = function(groupId, value) {
+            return _this.simpleChannelMessage(groupId, _ReadonlyGroupMessage, value);
+          };
+        }
+
+        return GroupsInChannelController;
+
+      })(_Controller);
+      return GroupsInChannelController;
+    }
+  ]);
+
+  angular.module('WebChat').factory('_MessageController', [
+    '_Controller', '_SendMessage', 'GroupModel', 'UserModel', 'MessageModel', function(_Controller, _SendMessage, GroupModel, UserModel, MessageModel) {
+      var MessageController;
+      MessageController = (function(_super) {
+
+        __extends(MessageController, _super);
+
+        function MessageController($scope) {
+          MessageController.__super__.constructor.call(this, $scope);
+          this.groupmodel = GroupModel;
+          this.usermodel = UserModel;
+          this.messagemodel = MessageModel;
+        }
+
+        return MessageController;
+
+      })(_Controller);
+      return MessageController;
+    }
+  ]);
+
+  angular.module('WebChat').factory('_FilesInChannelController', [
+    '_Controller', '_DeleteFileMessage', 'FileModel', function(_Controller, _DeleteFileMessage, FileModel) {
+      var FilesInChannelController;
+      FilesInChannelController = (function(_super) {
+
+        __extends(FilesInChannelController, _super);
+
+        function FilesInChannelController($scope) {
+          FilesInChannelController.__super__.constructor.call(this, $scope);
+          this.filemodel = FileModel;
+        }
+
+        return FilesInChannelController;
+
+      })(_Controller);
+      return FilesInChannelController;
     }
   ]);
 
@@ -619,96 +963,6 @@
       }
       return result;
     };
-  });
-
-  angular.module('WebChat').factory('_ChannelListController', [
-    '_JoinMessage', '_SendMessage', '_InviteUserMessage', '_InviteGroupMessage', '_ModUserMessage', '_ModGroupMessage', '_ReadonlyUserMessage', '_ReadonlyGroupMessage', function(_JoinMessage, _SendMessage, _InviteUserMessage, _InviteGroupMessage, _ModUserMessage, _ModGroupMessage, _ReadonlyUserMessage, _ReadonlyGroupMessage) {
-      var ChannelListController;
-      ChannelListController = (function() {
-
-        function ChannelListController($scope, websocket, activechannel, channelmodel) {
-          var _this = this;
-          this.websocket = websocket;
-          this.activechannel = activechannel;
-          this.channelmodel = channelmodel;
-          this.activeChannelId = null;
-          this.getActiveChannelId = function() {
-            return _this.activechannel.getActiveChannelId();
-          };
-          this.setActiveChannelId = function(id) {
-            return _this.activechannel.setActiveChannelId(id);
-          };
-          this.simpleChannelMessage = function(id, Msg, value) {
-            var activeChannelId, message;
-            activeChannelId = _this.getActiveChannelId();
-            if (activeChannelId !== null) {
-              message = new Msg(id, activeChannelId, value);
-              return _this.websocket.sendJSON(message.serialize());
-            }
-          };
-          $scope.channels = this.channelmodel.getItems();
-          $scope.getActiveChannelId = function() {
-            return _this.getActiveChannelId();
-          };
-          $scope.join = function(id) {
-            var message;
-            message = new _JoinMessage(id);
-            _this.websocket.sendJSON(message.serialize());
-            _this.setActiveChannelId(id);
-            return $scope.selected = id;
-          };
-          $scope.sendMessage = function(textInput, messageType) {
-            var activeChannelId, message;
-            activeChannelId = _this.getActiveChannelId();
-            if (activeChannelId !== null) {
-              message = new _SendMessage(textInput, messageType, activeChannelId);
-              return _this.websocket.sendJSON(message.serialize());
-            }
-          };
-          $scope.inviteUser = function(userId, value) {
-            return _this.simpleChannelMessage(userId, _InviteUserMessage, value);
-          };
-          $scope.inviteGroup = function(groupId, value) {
-            return _this.simpleChannelMessage(groupId, _InviteGroupMessage, value);
-          };
-          $scope.modUser = function(userId, value) {
-            return _this.simpleChannelMessage(userId, _ModUserMessage, value);
-          };
-          $scope.modGroup = function(groupId, value) {
-            return _this.simpleChannelMessage(groupId, _ModGroupMessage, value);
-          };
-          $scope.readonlyUser = function(userId, value) {
-            return _this.simpleChannelMessage(userId, _ReadonlyUserMessage, value);
-          };
-          $scope.readonlyGroup = function(groupId, value) {
-            return _this.simpleChannelMessage(groupId, _ReadonlyGroupMessage, value);
-          };
-        }
-
-        return ChannelListController;
-
-      })();
-      return ChannelListController;
-    }
-  ]);
-
-  angular.module('WebChat').factory('_DialogueController', function() {
-    var DialogueController;
-    DialogueController = (function() {
-
-      function DialogueController($scope, activechannel, channelmodel) {
-        var _this = this;
-        this.activechannel = activechannel;
-        this.channelmodel = channelmodel;
-        $scope.showNewChannelDialogue = function(show) {
-          return $scope.newChannelDialogue = show;
-        };
-      }
-
-      return DialogueController;
-
-    })();
-    return DialogueController;
   });
 
 }).call(this);

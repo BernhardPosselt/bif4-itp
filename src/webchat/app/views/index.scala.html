@@ -18,10 +18,11 @@
                 </ul>
             </div>
             <div class="utils">
-                <a ng-click="showNewChannelDialogue(true)" class="newchannel link_button" href="#" >New channel</a>
+                <a ng-click="showNewChannelDialogue(true)" 
+                   class="newchannel link_button" href="#" >New channel</a>
             </div>
         </div>
-        <div id="groups" ng-show="tab == 1">
+        <div id="groups" ng-show="tab == 1" ng-controller="GroupListController">
             <!--
             <div ng-repeat="group in items">
                 <h1>{{group.name}}
@@ -49,6 +50,7 @@
 
         <div id="input" ng-model="messageType">
             <select id="input_options">
+                <option value="text" selected="selected">Text</option>
                 <option value="as3">ActionScript 3</option>
                 <option value="bash">Bash</option>
                 <option value="cpp">C++</option>
@@ -67,7 +69,6 @@
                 <option value="sass">SASS</option>
                 <option value="scala">Scala</option>
                 <option value="sql">SQL</option>
-                <option value="text" selected="selected">Text</option>
                 <option value="vb">Visual Basic</option>
                 <option value="xml">XML</option>
             </select>

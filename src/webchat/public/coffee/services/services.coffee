@@ -1,15 +1,35 @@
 angular.module('WebChat').factory 'ChannelModel', ['_ChannelModel', (_ChannelModel) ->
-    channel = new _ChannelModel()
-    return channel
+    channelmodel = new _ChannelModel()
+    return channelmodel
 ]
+
+angular.module('WebChat').factory 'GroupModel', ['_GroupModel', (_GroupModel) ->
+    groupmodel = new _GroupModel()
+    return groupmodel
+]
+
+angular.module('WebChat').factory 'UserModel', ['_UserModel', (_UserModel) ->
+    usermodel = new _UserModel()
+    return usermodel
+]
+
+angular.module('WebChat').factory 'FileModel', ['_FileModel', (_FileModel) ->
+    filemodel = new _FileModel()
+    return filemodel
+]
+
 
 angular.module('WebChat').factory 'WebChatWebSocket', 
     ['_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL',
-     'ChannelModel',
-    (_WebChatWebSocket, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL, ChannelModel) =>
+     'ChannelModel', 'GroupModel', 'UserModel', 'FileModel'
+    (_WebChatWebSocket, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL, 
+     ChannelModel, GroupModel, UserModel, FileModel) =>
 
         models = [
             ChannelModel
+            GroupModel
+            UserModel
+            FileModel
         ]
 
         socket = new _WebChatWebSocket()
