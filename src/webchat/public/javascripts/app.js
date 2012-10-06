@@ -212,6 +212,14 @@
 
         function GroupModel() {
           GroupModel.__super__.constructor.call(this, 'group');
+          this.create({
+            id: 0,
+            name: 'my group'
+          });
+          this.create({
+            id: 1,
+            name: 'my group 2'
+          });
         }
 
         return GroupModel;
@@ -230,7 +238,28 @@
 
         function UserModel() {
           UserModel.__super__.constructor.call(this, 'user');
+          this.create({
+            id: 1,
+            status: 'online',
+            firstname: 'john',
+            lastname: 'bingo',
+            groups: [0, 1]
+          });
+          this.create({
+            id: 2,
+            status: 'offline',
+            firstname: 'channel',
+            lastname: 'ron',
+            groups: [1]
+          });
         }
+
+        UserModel.prototype.create = function(user) {
+          user.getFullName = function() {
+            return this.firstname + " " + this.lastname;
+          };
+          return UserModel.__super__.create.call(this, user);
+        };
 
         return UserModel;
 
@@ -721,6 +750,8 @@
           GroupListController.__super__.constructor.call(this, $scope);
           this.groupmodel = GroupModel;
           this.usermodel = UserModel;
+          $scope.groups = this.groupmodel.getItems();
+          $scope.users = this.usermodel.getItems();
           $scope.inviteUser = function(userId, value) {
             return _this.simpleChannelMessage(userId, _InviteUserMessage, value);
           };
@@ -753,11 +784,12 @@
             var activeChannelId, message;
             activeChannelId = _this.getActiveChannelId();
             if (activeChannelId !== null) {
-              return message = new Msg(id, activeChannelId, value);
+              message = new Msg(id, activeChannelId, value);
+              return _this.sendMessage(message);
             }
           };
           this.sendMessage = function(Msg) {
-            return WebChatWebSocket.sendJSON(message.serialize());
+            return WebChatWebSocket.sendJSON(Msg.serialize());
           };
           $scope.getActiveChannelId = function() {
             return _this.getActiveChannelId();
@@ -944,15 +976,15 @@
   });
 
   angular.module('WebChat').filter('userInGroup', function() {
-    return function(users, args) {
-      var groupId, result, user, _i, _j, _len, _len1, _ref;
+    return function(users, groupId) {
+      var result, user, userGroupId, _i, _j, _len, _len1, _ref;
       result = [];
       for (_i = 0, _len = users.length; _i < _len; _i++) {
         user = users[_i];
         _ref = user.groups;
         for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-          groupId = _ref[_j];
-          if (args.groupid === groupId) {
+          userGroupId = _ref[_j];
+          if (userGroupId === groupId) {
             result.push(user);
           }
         }

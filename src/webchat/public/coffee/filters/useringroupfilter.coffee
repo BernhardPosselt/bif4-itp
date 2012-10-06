@@ -1,10 +1,8 @@
-#<< app
-
 angular.module('WebChat').filter 'userInGroup', ->
-    return (users, args) ->
+    return (users, groupId) ->
         result = []
         for user in users
-            for groupId in user.groups
-                if args.groupid == groupId
+            for userGroupId in user.groups
+                if userGroupId == groupId
                     result.push(user)
         return result

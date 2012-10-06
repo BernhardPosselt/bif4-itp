@@ -4,8 +4,13 @@ angular.module('WebChat').factory '_UserModel', ['_Model', (_Model) ->
 
         constructor: () ->
             super('user')
-            # @create { id: 1, name: 'channel', groups: [0], users: [0, 1]}
+            @create { id: 1, status: 'online', firstname: 'john', lastname: 'bingo', groups: [0, 1]}
+            @create { id: 2, status: 'offline',  firstname: 'channel', lastname: 'ron', groups: [1]}
 
+        create: (user) ->
+            user.getFullName = ->
+                @firstname + " " + @lastname
+            super(user)
 
     return UserModel
 ]

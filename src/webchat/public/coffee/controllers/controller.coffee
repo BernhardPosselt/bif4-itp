@@ -14,9 +14,10 @@ angular.module('WebChat').factory '_Controller',
                     activeChannelId = @getActiveChannelId()
                     if activeChannelId != null
                         message = new Msg(id, activeChannelId, value)
+                        @sendMessage(message)
 
                 @sendMessage = (Msg) =>
-                    WebChatWebSocket.sendJSON(message.serialize())
+                    WebChatWebSocket.sendJSON(Msg.serialize())
 
                 $scope.getActiveChannelId = =>
                     return @getActiveChannelId()
