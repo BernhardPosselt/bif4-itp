@@ -26,8 +26,6 @@ angular.module('WebChat').factory '_FilesInChannelController',
                         css = 'background-image: url("' + mime + '")'
                         return css
                         
-
-
                 $scope.deleteFile = (fileId) =>
                     message = new _DeleteFileMessage(fileId)
                     @sendMessage(message)

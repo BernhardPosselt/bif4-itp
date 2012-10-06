@@ -450,19 +450,15 @@
     var MimeTypes;
     MimeTypes = (function() {
 
-      function MimeTypes() {
-        this.path = "/assets/images/mimetypes/";
-        this.mimetypes = {
-          "application/pdf": "application-pdf.png",
-          "text/xml": "text-xml.png",
-          "text/x-python": "text-x-python.png"
-        };
+      function MimeTypes(path) {
+        this.path = path != null ? path : "/assets/images/mimetypes/";
       }
 
       MimeTypes.prototype.getIconPath = function(key) {
-        var full_path;
-        full_path = this.path + this.mimetypes[key];
-        return full_path;
+        var fullPath;
+        key = key.replace('/', '-');
+        fullPath = this.path + key + '.png';
+        return fullPath;
       };
 
       return MimeTypes;
