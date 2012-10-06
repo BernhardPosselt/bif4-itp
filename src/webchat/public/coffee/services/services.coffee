@@ -23,6 +23,11 @@ angular.module('WebChat').factory 'MessageModel', ['_MessageModel', (_MessageMod
     return messagemodel
 ]
 
+angular.module('WebChat').factory 'MimeTypes', ['_MimeTypes', (_MimeTypes) ->
+    mimetypes = new _MimeTypes()
+    return mimetypes
+]
+
 
 angular.module('WebChat').factory 'WebChatWebSocket', 
     ['_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL',

@@ -70,6 +70,14 @@
     }
   ]);
 
+  angular.module('WebChat').factory('MimeTypes', [
+    '_MimeTypes', function(_MimeTypes) {
+      var mimetypes;
+      mimetypes = new _MimeTypes();
+      return mimetypes;
+    }
+  ]);
+
   angular.module('WebChat').factory('WebChatWebSocket', [
     '_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL', 'ChannelModel', 'GroupModel', 'UserModel', 'FileModel', function(_WebChatWebSocket, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL, ChannelModel, GroupModel, UserModel, FileModel) {
       var models, socket;
@@ -202,7 +210,47 @@
 
         function FileModel() {
           FileModel.__super__.constructor.call(this, 'file');
+          this.create({
+            id: 0,
+            name: 'dfel',
+            mimetype: 'application/pdf',
+            size: '123123123'
+          });
+          this.create({
+            id: 1,
+            name: 'eeeed',
+            mimetype: 'application/pdf',
+            size: '123123123'
+          });
         }
+
+        FileModel.prototype.create = function(file) {
+          var _this = this;
+          file.getSize = function() {
+            return _this.kbToHumanReadable(file.size, 1);
+          };
+          return FileModel.__super__.create.call(this, file);
+        };
+
+        FileModel.prototype.kbToHumanReadable = function(bytes, precision) {
+          var gigabyte, kilobyte, megabyte, terabyte;
+          kilobyte = 1024;
+          megabyte = kilobyte * 1024;
+          gigabyte = megabyte * 1024;
+          terabyte = gigabyte * 1024;
+          if (bytes >= kilobyte && bytes < megabyte) {
+            return (bytes / kilobyte).toFixed(precision) + ' KB';
+          }
+          if (bytes >= megabyte && bytes < gigabyte) {
+            return (bytes / megabyte).toFixed(precision) + ' MB';
+          } else if (bytes >= gigabyte && bytes < terabyte) {
+            return (bytes / gigabyte).toFixed(precision) + ' GB';
+          } else if (bytes >= terabyte) {
+            return (bytes / terabyte).toFixed(precision) + ' TB';
+          } else {
+            return bytes + ' B';
+          }
+        };
 
         return FileModel;
 
@@ -307,7 +355,8 @@
             id: 1,
             name: 'channel',
             groups: [0],
-            users: [0, 1]
+            users: [0, 1],
+            files: [0, 1]
           });
         }
 
@@ -395,6 +444,31 @@
 
     })();
     return Model;
+  });
+
+  angular.module('WebChat').factory('_MimeTypes', function() {
+    var MimeTypes;
+    MimeTypes = (function() {
+
+      function MimeTypes() {
+        this.path = "/assets/images/mimetypes/";
+        this.mimetypes = {
+          "application/pdf": "application-pdf.png",
+          "text/xml": "text-xml.png",
+          "text/x-python": "text-x-python.png"
+        };
+      }
+
+      MimeTypes.prototype.getIconPath = function(key) {
+        var full_path;
+        full_path = this.path + this.mimetypes[key];
+        return full_path;
+      };
+
+      return MimeTypes;
+
+    })();
+    return MimeTypes;
   });
 
   angular.module('WebChat').factory('_InviteUserMessage', [
@@ -960,15 +1034,40 @@
   ]);
 
   angular.module('WebChat').factory('_FilesInChannelController', [
-    '_Controller', '_DeleteFileMessage', 'FileModel', function(_Controller, _DeleteFileMessage, FileModel) {
+    '_Controller', '_DeleteFileMessage', 'FileModel', 'MimeTypes', 'ChannelModel', function(_Controller, _DeleteFileMessage, FileModel, MimeTypes, ChannelModel) {
       var FilesInChannelController;
       FilesInChannelController = (function(_super) {
 
         __extends(FilesInChannelController, _super);
 
         function FilesInChannelController($scope) {
+          var _this = this;
           FilesInChannelController.__super__.constructor.call(this, $scope);
           this.filemodel = FileModel;
+          this.channelmodel = ChannelModel;
+          $scope.files = this.filemodel.getItems();
+          console.log($scope.files);
+          $scope.getActiveChannel = function() {
+            if (_this.getActiveChannelId() !== null) {
+              return _this.channelmodel.getItemById(_this.getActiveChannelId());
+            } else {
+              return null;
+            }
+          };
+          $scope.getMimeTypeImage = function(fileId) {
+            var css, file, mime;
+            file = _this.filemodel.getItemById(fileId);
+            if (file !== void 0) {
+              mime = MimeTypes.getIconPath(file.mimetype);
+              css = 'background-image: url("' + mime + '")';
+              return css;
+            }
+          };
+          $scope.deleteFile = function(fileId) {
+            var message;
+            message = new _DeleteFileMessage(fileId);
+            return _this.sendMessage(message);
+          };
         }
 
         return FilesInChannelController;
@@ -1007,6 +1106,23 @@
         user = users[_i];
         if (_ref = user.id, __indexOf.call(channel.users, _ref) >= 0) {
           result.push(user);
+        }
+      }
+      return result;
+    };
+  });
+
+  angular.module('WebChat').filter('fileInChannel', function() {
+    return function(files, channel) {
+      var file, result, _i, _len, _ref;
+      result = [];
+      if (channel === void 0 || channel === null || channel.files === void 0) {
+        return result;
+      }
+      for (_i = 0, _len = files.length; _i < _len; _i++) {
+        file = files[_i];
+        if (_ref = file.id, __indexOf.call(channel.files, _ref) >= 0) {
+          result.push(file);
         }
       }
       return result;

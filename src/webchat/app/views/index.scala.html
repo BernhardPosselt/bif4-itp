@@ -143,11 +143,23 @@
                 </div>
             </fieldset>
         </div>
-        <div id="file_info">
+        <div id="file_info" ng-controller="FilesInChannelController">
             <fieldset>
                 <legend>Files</legend>
                 <div id="channel_files">
-
+                    <div class="files">
+                        <ul >
+                            <li ng-repeat="file in files | fileInChannel:getActiveChannel()"
+                                style="{{getMimeTypeImage(file.id)}}">
+                                <a ng-href="/download/{{getActiveChannelId()}}/{{file.name}}" 
+                                   class="name" target="_blank">{{file.name}}</a>
+                                <span class="size">{{file.getSize()}}</span>
+                                <a ng-click="deleteFile(file.id)"
+                                   class="delete_file" 
+                                   title="delete file {{file.name}}"></a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
                 <div class="utils">
