@@ -691,9 +691,9 @@
 
         __extends(SendMessage, _super);
 
-        function SendMessage(text, type, channelId) {
+        function SendMessage(text, messageType, channelId) {
           this.text = text;
-          this.type = type;
+          this.messageType = messageType;
           this.channelId = channelId;
           SendMessage.__super__.constructor.call(this, 'message');
         }
@@ -702,7 +702,7 @@
           var data;
           data = {
             'message': this.text,
-            'type': this.type,
+            'type': this.messageType,
             'channel_id': this.channelId
           };
           return SendMessage.__super__.serialize.call(this, data);
@@ -938,10 +938,17 @@
           $scope.users = this.usermodel.getItems();
           $scope.groups = this.groupmodel.getItems();
           $scope.messages = this.messagemodel.getItems();
+          $scope.messageType = 'text';
           $scope.getUserFullName = function(userId) {
             var user;
             user = _this.usermodel.getItemById(userId);
             return user.getFullName();
+          };
+          $scope.sendInput = function(text, messageType, channelId) {
+            var message;
+            console.log(messageType);
+            message = new _SendMessage(text, messageType, channelId);
+            return _this.sendMessage(message);
           };
         }
 

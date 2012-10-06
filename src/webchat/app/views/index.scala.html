@@ -76,9 +76,9 @@
 
         </div>
 
-        <div id="input" ng-model="messageType">
-            <select id="input_options">
-                <option value="text" selected="selected">Text</option>
+        <div id="input">
+            <select id="input_options" ng-model="messageType">
+                <option value="text">Text</option>
                 <option value="as3">ActionScript 3</option>
                 <option value="bash">Bash</option>
                 <option value="cpp">C++</option>
@@ -103,7 +103,7 @@
             <div id="input_field_wrap">
                 <textarea id="input_field" ng-model="textInput"></textarea>
             </div>
-            <input ng-click="sendMessage(textInput, messageType)" id="input_send" type="button" value="Send" />
+            <input ng-click="sendInput(textInput, messageType, getActiveChannelId())" id="input_send" type="button" value="Send" />
         </div>
     </div>
 
