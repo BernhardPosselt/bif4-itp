@@ -9,13 +9,39 @@ import models.User;
 
 import org.codehaus.jackson.JsonNode;
 
+import websocket.message.IInMessage;
+import websocket.message.Notifyall;
+import websocket.message.WorkRoutine;
+
 import flexjson.JSONDeserializer;
 
-public class InNewChannel {
-	public String type;
+public class InNewChannel extends IInMessage {
+	
 	public InNewChannelData data;
 	
-	public static int createnewchannel(JsonNode inmessage, int userid){
+	@Override
+	public boolean canHandle(String type) {
+		if (type.equals("newchannel"))
+			return true;
+		else
+			return false;
+	}
+	@Override
+	public WorkRoutine getWorkRoutine() {
+		WorkRoutine myroutine = new WorkRoutine();
+		myroutine.inmessage = new InNewChannel();
+		myroutine.model = new models.Channel();
+		myroutine.outmessage = new websocket.json.out.Channel();
+		myroutine.dbaction = "create";
+		myroutine.sender = new Notifyall();
+		return myroutine;
+	}
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return new InNewChannel();
+	}
+	
+	/*public static int createnewchannel(JsonNode inmessage, int userid){
 		int channelid = 0;
 		try{
 			InNewChannel innewchan = new InNewChannel();
@@ -50,5 +76,5 @@ public class InNewChannel {
 			e.printStackTrace();
 		}
 		return channelid;
-	}
+	}*/
 }

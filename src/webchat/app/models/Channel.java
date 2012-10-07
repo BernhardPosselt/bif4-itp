@@ -69,17 +69,6 @@ public class Channel extends Model {
 	}
 	
 	@ManyToMany(cascade=CascadeType.ALL)
-	public List<Message> messages;
-	
-	public List<Message> getMessages() {
-		return messages;
-	}
-
-	public void setMessages(Message message) {
-		this.messages.add(message);
-	}
-	
-	@ManyToMany(cascade=CascadeType.ALL)
 	public List<File> files;
 	
 	public List<File> getFiles() {
@@ -93,6 +82,10 @@ public class Channel extends Model {
 	public static Finder<Integer,Channel> find = new Finder<Integer,Channel>(
 			Integer.class, Channel.class
 	);
+	
+	public static Channel getbyId (int id){
+		return find.byId(id);
+	}
 	
     public static List<Channel> findAll(){
         return find.all();

@@ -1,16 +1,44 @@
 package websocket.json.in;
 
 import models.Channel;
+import play.db.ebean.*;
+import websocket.message.IInMessage;
+import websocket.message.Notifyall;
+import websocket.message.WorkRoutine;
 
 import org.codehaus.jackson.JsonNode;
 
 import flexjson.JSONDeserializer;
 
-public class InChannelClose {
-	public String type;
+public class InChannelClose extends IInMessage {
+
 	public InChannelCloseData data;
 	
-	public static int closechannel (JsonNode inmessage){
+	@Override
+	public boolean canHandle(String type) {
+		if (type.equals("channelclose"))
+			return true;
+		else
+			return false;
+	}
+
+	@Override
+	public WorkRoutine getWorkRoutine() {
+		WorkRoutine myroutine = new WorkRoutine();
+		myroutine.inmessage = new InChannelClose();
+		myroutine.outmessage = new websocket.json.out.Channel();
+		myroutine.model = new models.Channel();
+		myroutine.sender = new Notifyall();
+		myroutine.dbaction = "update";
+		return myroutine;
+	}
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return new InChannelClose();
+	}
+	
+	/*public static int closechannel (JsonNode inmessage){
 		int channelid = 0;
 		try{
 			InChannelClose inchan = new InChannelClose();
@@ -25,5 +53,5 @@ public class InChannelClose {
 			e.printStackTrace();
 		}
 		return channelid;
-	}
+	}*/
 }

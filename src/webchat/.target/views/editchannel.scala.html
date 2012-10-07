@@ -1,0 +1,139 @@
+@(id: Long, channelForm: Form[Channel], username: String)
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@admin_main(username, title = "Webchat") {
+
+    <div id="admin_site">
+    <h1>Edit channel</h1>
+    
+    @form(routes.AdminController.updatechannel(id)) {
+        
+        <fieldset>
+        
+            @inputText(channelForm("name"), '_label -> "Name")
+            @inputText(channelForm("topic"), '_label -> "Topic")
+			@select(channelForm("is_public"), options("true"->"Yes", "false"->"No"), '_label -> "Public")
+			@select(channelForm("archived"), options("false"->"No", "true"->"Yes"), '_label -> "Archived")
+
+            <div class="users">
+                <div class="heading">Users:</div>
+                <div class="in">
+                    In
+                    <table class="data_table" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th><a href="#">ID</a></th>
+                                <th><a href="#">First name</a></th>
+                                <th><a href="#">Last name</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for(user <- Channel.getUsersForChannel(channelForm.get().id)) {
+                            <tr>
+                                <td>
+                                    <a href="@routes.AdminController.deleteuserchannel(user.id, channelForm.get().id)">@user.id</a>
+                                </td>
+                                <td>
+                                    <a href="@routes.AdminController.deleteuserchannel(user.id, channelForm.get().id)">@user.firstname</a>
+                                </td>
+                                <td>
+                                    <a href="@routes.AdminController.deleteuserchannel(user.id, channelForm.get().id)">@user.lastname</a>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="not_in">
+                    Not in
+                    <table class="data_table" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th><a href="#">ID</a></th>
+                                <th><a href="#">First name</a></th>
+                                <th><a href="#">Last name</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for(user <- Channel.getUsersNotForChannel(channelForm.get().id)) {
+                            <tr>
+                                <td>
+                                    <a href="@routes.AdminController.adduserchannel(user.id, channelForm.get().id)">@user.id</a>
+                                </td>
+                                <td>
+                                    <a href="@routes.AdminController.adduserchannel(user.id, channelForm.get().id)">@user.firstname</a>
+                                </td>
+                                <td>
+                                    <a href="@routes.AdminController.adduserchannel(user.id, channelForm.get().id)">@user.lastname</a>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <br style="clear:both" />
+            </div>
+            <div class="groups">
+                <div class="heading">Groups:</div>
+                <div class="in">
+                    In
+                    <table class="data_table" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th><a href="#">ID</a></th>
+                                <th><a href="#">Name</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for(group <- Channel.getGroupsForChannel(channelForm.get().id)) {
+                            <tr>
+                                <td>
+                                    <a href="@routes.AdminController.deletegroupchannel(group.id, channelForm.get().id)">@group.id</a>
+                                </td>
+                                <td>
+                                    <a href="@routes.AdminController.deletegroupchannel(group.id, channelForm.get().id)">@group.name</a>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="not_in">
+                    Not in
+                    <table class="data_table" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th><a href="#">ID</a></th>
+                                <th><a href="#">Name</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for(group <- Channel.getGroupsNotForChannel(channelForm.get().id)) {
+                            <tr>
+                                <td>
+                                    <a href="@routes.AdminController.addgroupchannel(group.id, channelForm.get().id)">@group.id</a>
+                                </td>
+                                <td>
+                                    <a href="@routes.AdminController.addgroupchannel(group.id, channelForm.get().id)">@group.name</a>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <br style="clear:both" />
+            </div>
+			
+        
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Save this channel" class="btn primary"> or 
+            <a href="@routes.AdminController.index()" class="btn">Cancel</a>
+        </div>
+        
+    }
+    </div>
+}

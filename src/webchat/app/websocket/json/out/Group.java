@@ -9,35 +9,34 @@ import org.codehaus.jackson.node.ObjectNode;
 
 
 import play.libs.Json;
+import websocket.message.IOutMessage;
 import flexjson.JSONDeserializer;
 import flexjson.JSONException;
 import flexjson.JSONSerializer;
 
 
-public class Group {
+public class Group extends IOutMessage {
 	public String type;
-	public Map<Integer,GroupData> data = new HashMap<Integer,GroupData>();
-	public Boolean init;
-	public Map<Integer,String> actions = new HashMap<Integer,String>();
+	public GroupData data = new GroupData();
+	public String action;
 	
 	public Group(){
 		this.type = "group";
 	}
 	
 	public static JsonNode geninitGroup(){
-		String json = "",action = "create";
+		String json = "";
 		Group group = new Group();
-		group.init = true;
+	
 		try{
 			for (Iterator<Groups> iterator = Groups.find.all().iterator(); iterator.hasNext();)
 			{
 				models.Groups groups= new models.Groups();
 				groups = iterator.next();
 				GroupData gdata = new GroupData();
-				gdata.modified = groups.modified;
 				gdata.name = groups.name;
-				group.actions.put(groups.id, action);
-				group.data.put(groups.id, gdata);
+				group.action = "create";
+				group.data = gdata;
 				
 			}
 			JSONSerializer gser = new JSONSerializer().include("*.actions", "*.data");

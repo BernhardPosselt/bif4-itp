@@ -46,19 +46,15 @@ public class Application extends Controller {
     		 filltestdata();
     	 }	
          if(session("userid") != null) //User logged in
-         {
-        	 /*if (!User.getUsername(userid).equals("nouserfound")){
-        		  userid = Integer.parseInt(session("userid"));
+         {	
+        	 userid = Integer.parseInt(session("userid"));
+        	 if (!User.getUsername(userid).equals("nouserfound")){
         		  return ok(index.render(User.getUsername(userid), User.find.byId(userid).admin));
         	 }
         	 else{
         		 session().clear();
         		 return redirect(routes.LoginController.login());
-        	 }*/
-      
-        	  
-        	  userid = Integer.parseInt(session("userid"));
-	   		  return ok(index.render(User.getUsername(userid), User.find.byId(userid).admin));
+        	 }
          }
          else //User doesn't logged in
          {	 
@@ -131,12 +127,12 @@ public class Application extends Controller {
             new_file.filename = unqName;
             new_file.mimetype = contentType;
             new_file.date = DateTime.now().toDate();
-            new_file.uid = User.find.byId(Integer.valueOf(session("userid")));
+            new_file.owner_id = User.find.byId(Integer.valueOf(session("userid")));
             new_file.size = file.length();
             new_file.channels.add(models.Channel.find.byId(channelid));
             new_file.save();
             new_file.saveManyToManyAssociations("channels");
-            websocket.WebsocketNotifier.notifyAllMembers(websocket.json.out.File.gennewFile(new_file));
+           // websocket.WebsocketNotifier.notifyAllMembers(websocket.json.out.File.gennewFile(new_file));
             websocket.json.in.InMessage inmessage = new websocket.json.in.InMessage();
             websocket.json.in.InMessageData indata = new websocket.json.in.InMessageData();
             
@@ -170,9 +166,9 @@ public class Application extends Controller {
             String filetype = filename.substring(filename.indexOf(".")+1);
             if (contentType.equals("application/octet-stream") && validoctettypes.contains(filetype)){
             
-             	indata.channel.add(channelid);
+             	//indata.channel.add(channelid);
                 FileInputStream filestream = new FileInputStream(file);
-	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	indata.content =  org.apache.commons.io.IOUtils.toString(filestream);
 	        	filestream.close();
 	        	if (filetype.equals("coffee"))
 	        		filetype = "js";
@@ -197,9 +193,9 @@ public class Application extends Controller {
             	
             }
             else if (contentType.equals("text/plain") && validplaintypes.contains(filetype)){
-            	indata.channel.add(channelid);
+            	//indata.channel.add(channelid);
                 FileInputStream filestream = new FileInputStream(file);
-	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	indata.content =  org.apache.commons.io.IOUtils.toString(filestream);
 	        	filestream.close();
 	        	if (filetype.equals("cs"))
 	        		filetype = "csharp";
@@ -207,41 +203,41 @@ public class Application extends Controller {
 	            inmessage.data = indata;
             }
             else if (contentType.equals("text/css")){
-            	indata.channel.add(channelid);
+            	//indata.channel.add(channelid);
                 FileInputStream filestream = new FileInputStream(file);
-	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	indata.content =  org.apache.commons.io.IOUtils.toString(filestream);
 	        	filestream.close();
 	            indata.type = filetype;
 	            inmessage.data = indata;
             }
             else if (contentType.equals("text/xml")){
-            	indata.channel.add(channelid);
+            	//indata.channel.add(channelid);
                 FileInputStream filestream = new FileInputStream(file);
-	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	indata.content =  org.apache.commons.io.IOUtils.toString(filestream);
 	        	filestream.close();
 	            indata.type = filetype;
 	            inmessage.data = indata;
             }
             else if (contentType.equals("application/x-javascript")){
-            	indata.channel.add(channelid);
+            	//indata.channel.add(channelid);
                 FileInputStream filestream = new FileInputStream(file);
-	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	indata.content =  org.apache.commons.io.IOUtils.toString(filestream);
 	        	filestream.close();
 	            indata.type = filetype;
 	            inmessage.data = indata;
             }
             else{
  
-	        	indata.channel.add(channelid);
-	        	indata.message = "http://" + request().host() + "/download/" + new_file.id + "/" + filename;
+	        	//indata.channel.add(channelid);
+	        	indata.content = "http://" + request().host() + "/download/" + new_file.id + "/" + filename;
 	            indata.type = "text";
 	            inmessage.data = indata;
             }
            
     		JSONSerializer aser = new JSONSerializer().include("*");
 			String json = aser.exclude("*.class").serialize(inmessage);
-            websocket.WebsocketNotifier.notifyAllMembers(websocket.json.out.Message.genMessage(Json.parse(json), Integer.valueOf(session("userid"))));
-            websocket.WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("update", channelid));
+           // websocket.WebsocketNotifier.notifyAllMembers(websocket.json.out.Message.genMessage(Json.parse(json), Integer.valueOf(session("userid"))));
+            //websocket.WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("update", channelid));
 
             Logger.info("File " + filename + " uploaded!");
             return ok(upload.render(form(models.File.class)));
@@ -299,6 +295,12 @@ public class Application extends Controller {
 	  	    channel.setUsers(user); 
 	  	    channel.setUsers(user1);
 	  	    channel.saveManyToManyAssociations("users");
+	  	    
+	  	    Channel channel2 = new Channel();
+	  	    channel2.archived = false;
+	  	    channel2.name = "Channel3";
+	  	    channel2.is_public = false;
+	  	    channel2.save();
 	  	   
 	  	    Groups group = new Groups();
 	  	    group.modified = new Date();

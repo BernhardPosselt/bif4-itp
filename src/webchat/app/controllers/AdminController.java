@@ -1,5 +1,6 @@
 package controllers;
 
+import java.awt.Dialog;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -103,7 +104,7 @@ public class AdminController extends Controller {
 	        	tmp.setPassword(userForm.field("password").value());
 	        }
 	        tmp.update();
-	        WebsocketNotifier.notifyAllMembers(websocket.json.out.User.genUserchanged(id.intValue(), "update"));
+	        //WebsocketNotifier.notifyAllMembers(websocket.json.out.User.genUserchanged(id.intValue(), "update"));
 	        flash("success", "User " + userForm.get().username + " has been updated");
         	Logger.info("User " + userForm.get().username + " with ID " + userForm.get().id + " has been updated");
 	        return index();
@@ -135,7 +136,7 @@ public class AdminController extends Controller {
 	        {
 	        	if(us.username.equals(userForm.field("username").value()))
 	        	{
-	    	        flash("failure", "User " + us.username + " already exists");
+	    	        flash("error", "User " + us.username + " already exists!");
 	        		Logger.error("Username " + us.username + " already exists");
 		            return badRequest(createuser.render(userForm, User.getUsername(Integer.parseInt(session("userid")))));
 	        	}
@@ -146,9 +147,9 @@ public class AdminController extends Controller {
             	channel = chaniter.next();
             	channel.users.add(userForm.get());
             	channel.saveManyToManyAssociations("users");
-            	WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("update", channel.id));
+            	//WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("update", channel.id));
             }
-            WebsocketNotifier.notifyAllMembers(websocket.json.out.User.genUserchanged(userForm.get().id, "create"));
+           // WebsocketNotifier.notifyAllMembers(websocket.json.out.User.genUserchanged(userForm.get().id, "create"));
             flash("success", "User " + userForm.get().username + " has been created");
         	Logger.info("User " + userForm.get().username + " with ID " + userForm.get().id + " has been created");
             return index();
@@ -172,7 +173,7 @@ public class AdminController extends Controller {
     		}
     		else
     		{
-    			for (Iterator<models.Message> miter = models.Message.getallUserMessages(id.intValue()).iterator(); miter.hasNext();){
+    			/*for (Iterator<models.Message> miter = models.Message.getallUserMessages(id.intValue()).iterator(); miter.hasNext();){
     				models.Message message = miter.next();
     				for (Iterator<Channel> messageiter = message.channels.iterator(); messageiter.hasNext();){
     					models.Channel chan=messageiter.next();
@@ -180,14 +181,14 @@ public class AdminController extends Controller {
     					chan.save();
     				}
     				message.delete();
-    			}
+    			}*/
     			for (Iterator<models.Channel> chaniter = models.User.getChannelsForUser(id.intValue()).iterator(); chaniter.hasNext();){
     				models.Channel channel = chaniter.next();
     				channel.users.remove(models.User.find.byId(id.intValue()));
     				channel.save();
-    				WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("update", channel.id));
+    				//WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("update", channel.id));
     			}
-    			WebsocketNotifier.notifyAllMembers(websocket.json.out.User.genUserchanged(id.intValue(), "delete"));
+    			//WebsocketNotifier.notifyAllMembers(websocket.json.out.User.genUserchanged(id.intValue(), "delete"));
     			
     			
     			List<Integer> luser=new ArrayList<Integer>();
@@ -196,7 +197,7 @@ public class AdminController extends Controller {
 				for(Map.Entry<WebSocket.Out<JsonNode>, Integer> entry: WebsocketManager.members.entrySet()) {
 					if (luser.contains(entry.getValue())){
 						out = (WebSocket.Out<JsonNode>)entry.getKey();
-						out.write(websocket.json.out.Status.genStatus("error", "Your User has been deleted by an admin! You will be redirected to Login-Page!"));
+						out.write(websocket.json.out.Status.genStatus("error", "Your Account has been deleted by an admin! You will be redirected to Login-Page!"));
 			        }	
 			    }		
     			WebsocketManager.members.entrySet().contains(id.intValue());
@@ -231,13 +232,13 @@ public class AdminController extends Controller {
 	        }
 	        channelForm.get().update(id.intValue());
 	        if (channelForm.get().archived != oldchan.archived){
-	        	if (oldchan.archived == false)
+	        	/*if (oldchan.archived == false)
 	        		WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("delete", id.intValue()));
 	        	else
-	        		WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("create", id.intValue()));
+	        		WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("create", id.intValue()));*/
 	        }
 	        else
-	        	WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("update", id.intValue()));
+	        	//WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("update", id.intValue()));
 	        flash("success", "Channel " + channelForm.get().name + " has been updated");
         	Logger.info("Channel " + channelForm.get().name + " with ID " + channelForm.get().id + " has been updated");
 	        return index();
@@ -266,6 +267,16 @@ public class AdminController extends Controller {
             }
             models.Channel chan = new models.Channel();
             chan = channelForm.get();
+            List<models.Channel> clist= models.Channel.findAll();
+            for(Channel ch : clist)
+	        {
+	        	if(ch.name.equals(chan.name))
+	        	{
+	    	        flash("error", "Channel " + chan.name + " already exists!");
+	        		Logger.error("Channelname " + chan.name + " already exists");
+		            return badRequest(createchannel.render(channelForm, User.getUsername(Integer.parseInt(session("userid")))));
+	        	}
+	        }
         	if (chan.is_public == true){
 				for (Iterator<models.User> useriter = models.User.find.all().iterator(); useriter.hasNext();){
 					chan.setUsers(useriter.next());
@@ -278,7 +289,7 @@ public class AdminController extends Controller {
 				chan.setUsers(models.User.find.byId(uid));   
             chan.save();
             if (chan.is_public == true)
-    			WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("create", chan.id));
+    			//WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("create", chan.id));
             flash("success", "Channel " + channelForm.get().name + " has been created");
         	Logger.info("Channel " + channelForm.get().name + " with ID " + channelForm.get().id + " has been created");
             return index();
@@ -295,7 +306,7 @@ public static Result deletechannel(Long id) {
     	int uid = verifyAdmin();
     	if(uid != -1)
     	{
-    		WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("delete", id.intValue()));
+    		//WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("delete", id.intValue()));
 	        Channel.find.ref(id.intValue()).delete();
 	        flash("success", "Channel " + id + " has been deleted");
 	        Logger.info("Channel " + id + " has been deleted");
@@ -319,7 +330,7 @@ public static Result deletechanneluser(Long channelid, Long userid) {
 		{
 			tmp.channels.remove(tmp2);
 			tmp.save();	
-			WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("delete", channelid.intValue()));
+			//WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("delete", channelid.intValue()));
 	        flash("success", "User " + userid + " with Channel " + channelid +  " has been deleted");
 	        Logger.info("User " + userid + " with Channel " + channelid +  " has been deleted");
 	        return edituser((long) userid);
@@ -345,7 +356,7 @@ public static Result addchanneluser(Long channelid, Long userid) {
 		{
 			tmp.channels.add(tmp2);
 			tmp.save();
-			WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("create", channelid.intValue()));
+			//WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("create", channelid.intValue()));
 	        flash("success", "User " + userid + " with Channel " + channelid +  " has been created");
 	        Logger.info("User " + userid + " with Channel " + channelid +  " has been created");
 	        return edituser((long) userid);
@@ -370,7 +381,7 @@ public static Result deletegroupuser(Long groupid, Long userid) {
 		{
 			tmp.groups.remove(tmp2);
 			tmp.save();
-			WebsocketNotifier.notifyAllMembers(websocket.json.out.User.genUserchanged(userid.intValue(), "update"));
+			//WebsocketNotifier.notifyAllMembers(websocket.json.out.User.genUserchanged(userid.intValue(), "update"));
 	        flash("success", "User " + userid + " with Group " + groupid +  " has been deleted");
 	        Logger.info("User " + userid + " with Group " + groupid +  " has been deleted");
 	        return edituser((long) userid);
@@ -395,7 +406,7 @@ public static Result addgroupuser(Long groupid, Long userid) {
 		{
 			tmp.groups.add(tmp2);
 			tmp.save();
-			WebsocketNotifier.notifyAllMembers(websocket.json.out.User.genUserchanged(userid.intValue(), "update"));
+			//WebsocketNotifier.notifyAllMembers(websocket.json.out.User.genUserchanged(userid.intValue(), "update"));
 	        flash("success", "User " + userid + " with Group " + groupid +  " has been created");
 	        Logger.info("User " + userid + " with Group " + groupid +  " has been created");
 	        return edituser((long) userid);
@@ -423,7 +434,7 @@ public static Result deletechannelgroup(Long channelid, Long groupid) {
 		{
 			tmp2.groups.remove(tmp);
 			tmp2.save();
-			WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("update",channelid.intValue()));
+			//WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("update",channelid.intValue()));
 	        flash("success", "Group " + groupid + " with Channel " + channelid +  " has been deleted");
 	        Logger.info("Group " + groupid + " with Channel " + channelid +  " has been deleted");
 	        return editgroup((long) groupid);
@@ -448,7 +459,7 @@ public static Result addchannelgroup(Long channelid, Long groupid) {
 		{
 			tmp2.groups.add(tmp);
 			tmp2.save();
-			WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("update",channelid.intValue()));
+			//WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("update",channelid.intValue()));
 	        flash("success", "Group " + groupid + " with Channel " + channelid +  " has been created");
 	        Logger.info("Group " + groupid + " with Channel " + channelid +  " has been created");
 	        return editgroup((long) groupid);
@@ -473,7 +484,7 @@ public static Result deleteusergroup(Long userid, Long groupid) {
 		{
 			tmp2.groups.remove(tmp);
 			tmp2.save();
-			WebsocketNotifier.notifyAllMembers(websocket.json.out.User.genUserchanged(userid.intValue(), "update"));
+			//WebsocketNotifier.notifyAllMembers(websocket.json.out.User.genUserchanged(userid.intValue(), "update"));
 	        flash("success", "Group " + groupid + " with User " + userid +  " has been deleted");
 	        Logger.info("Group " + groupid + " with User " + userid +  " has been deleted");
 	        return editgroup((long) groupid);
@@ -498,7 +509,7 @@ public static Result addusergroup(Long userid, Long groupid) {
 		{
 			tmp2.groups.add(tmp);
 			tmp2.save();
-			WebsocketNotifier.notifyAllMembers(websocket.json.out.User.genUserchanged(userid.intValue(), "update"));
+			//WebsocketNotifier.notifyAllMembers(websocket.json.out.User.genUserchanged(userid.intValue(), "update"));
 	        flash("success", "Group " + groupid + " with User " + userid +  " has been created");
 	        Logger.info("Group " + groupid + " with User " + userid +  " has been created");
 	        return editgroup((long) groupid);
@@ -533,8 +544,8 @@ public static Result deleteuserchannel(Long userid, Long channelid) {
 			if (!stayusers.contains(userid.intValue())){
 				users.add(userid.intValue());
 			}	
-			WebsocketNotifier.sendMessagetoUser(stayusers, channelid.intValue(), "update");
-	    	WebsocketNotifier.sendMessagetoUser(users, channelid.intValue(), "delete");
+			//WebsocketNotifier.sendMessagetoUser(stayusers, channelid.intValue(), "update");
+	    	//WebsocketNotifier.sendMessagetoUser(users, channelid.intValue(), "delete");
 	        flash("success", "Channel " + channelid + " with User " + userid +  " has been deleted");
 	        Logger.info("Channel " + channelid + " with User " + userid +  " has been deleted");
 	        return editchannel((long) channelid);
@@ -568,8 +579,8 @@ public static Result adduserchannel(Long userid, Long channelid) {
 		{
 			tmp2.channels.add(tmp);
 			tmp2.save();
-			WebsocketNotifier.sendMessagetoUser(oldusers, channelid.intValue(), "update");
-			WebsocketNotifier.sendMessagetoUser(users, channelid.intValue(), "create");
+			//WebsocketNotifier.sendMessagetoUser(oldusers, channelid.intValue(), "update");
+			//WebsocketNotifier.sendMessagetoUser(users, channelid.intValue(), "create");
 	        flash("success", "Channel " + channelid + " with User " + userid +  " has been created");
 	        Logger.info("Channel " + channelid + " with User " + userid +  " has been created");
 	        return editchannel((long) channelid);
@@ -606,8 +617,8 @@ public static Result deletegroupchannel(Long groupid, Long channelid) {
 				if (!stayusers.contains(tmpuser))
 					users.add(tmpuser);
 			}
-	      	WebsocketNotifier.sendMessagetoUser(stayusers, channelid.intValue(), "update");
-	    	WebsocketNotifier.sendMessagetoUser(users, channelid.intValue(), "delete");
+	      	//WebsocketNotifier.sendMessagetoUser(stayusers, channelid.intValue(), "update");
+	    	//WebsocketNotifier.sendMessagetoUser(users, channelid.intValue(), "delete");
 	        flash("success", "Channel " + channelid + " with Group " + groupid +  " has been deleted");
 	        Logger.info("Channel " + channelid + " with Group " + groupid +  " has been deleted");
 	        return editchannel((long) channelid);
@@ -645,8 +656,8 @@ public static Result addgroupchannel(Long groupid, Long channelid) {
 					users.add(usr.id);	
 			}
 
-			WebsocketNotifier.sendMessagetoUser(oldusers, channelid.intValue(), "update");
-			WebsocketNotifier.sendMessagetoUser(users, channelid.intValue(), "create");
+			//WebsocketNotifier.sendMessagetoUser(oldusers, channelid.intValue(), "update");
+			//WebsocketNotifier.sendMessagetoUser(users, channelid.intValue(), "create");
 	        flash("success", "Channel " + channelid + " with Group " + groupid +  " has been created");
 	        Logger.info("Channel " + channelid + " with Group " + groupid +  " has been created");
 	        return editchannel((long) channelid);
@@ -675,7 +686,7 @@ public static Result addgroupchannel(Long groupid, Long channelid) {
 	            return badRequest(editgroup.render(id, groupForm, User.getUsername(Integer.parseInt(session("userid")))));
 	        }
 	        groupForm.get().update(id.intValue());
-	        WebsocketNotifier.notifyAllMembers(websocket.json.out.Group.geninitGroup());
+	       // WebsocketNotifier.notifyAllMembers(websocket.json.out.Group.geninitGroup());
 	        flash("success", "Group " + groupForm.get().name + " has been updated");
         	Logger.info("Group " + groupForm.get().name + " with ID " + groupForm.get().id + " has been updated");
 	        return index();
@@ -703,7 +714,7 @@ public static Result addgroupchannel(Long groupid, Long channelid) {
                 return badRequest(creategroup.render(groupForm, User.getUsername(Integer.parseInt(session("userid")))));
             }
             groupForm.get().save();
-            WebsocketNotifier.notifyAllMembers(websocket.json.out.Group.geninitGroup());
+            //WebsocketNotifier.notifyAllMembers(websocket.json.out.Group.geninitGroup());
             flash("success", "Group " + groupForm.get().name + " has been created");
         	Logger.info("Group " + groupForm.get().name + " with ID " + groupForm.get().id + " has been created");
             return index();
@@ -734,7 +745,7 @@ public static Result addgroupchannel(Long groupid, Long channelid) {
     		}
     		
 	        Groups.find.ref(id.intValue()).delete();
-	        WebsocketNotifier.notifyAllMembers(websocket.json.out.Group.geninitGroup());
+	        //WebsocketNotifier.notifyAllMembers(websocket.json.out.Group.geninitGroup());
 	        flash("success", "Group " + id + " has been deleted");
 	        Logger.info("Group " + id + " has been deleted");
 	        return index();
@@ -751,8 +762,13 @@ public static Result addgroupchannel(Long groupid, Long channelid) {
     	int uid = verifyAdmin();
     	if(uid != -1)
     	{
+    		for (Iterator<Channel> chaniter=Channel.getFileChannels(id.intValue()).iterator(); chaniter.hasNext();){
+    			Channel channel = chaniter.next();
+    			channel.files.remove(models.File.find.byId(id.intValue()));
+    			channel.save();
+    			//WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("update", channel.id));
+    		}
 	        File.find.ref(id.intValue()).delete();
-	        WebsocketNotifier.notifyAllMembers(websocket.json.out.Channel.genChannel("update", models.File.find.byId(id.intValue()).channels.get(0).id));
 	        flash("success", "File " + id + " has been deleted");
 	        Logger.info("File " + id + " has been deleted");
 	        return index();

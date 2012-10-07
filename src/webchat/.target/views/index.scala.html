@@ -1,0 +1,263 @@
+@(username: String, admin: Boolean)
+
+@main(username, title = "Webchat", admin) {
+
+    <div id="channel_sidebar">
+        <div class="tabbed_navi">
+            <ul>
+                <li><a href="#" class="channels_link">Channels</a></li>
+                <li><a href="#" class="groups_link">Groups</a></li>
+            </ul>
+        </div>
+        <div id="channels">
+            <div class="channels"><ul></ul></div>
+            <div class="utils"><a class="newchannel link_button" href="#" >New channel</a></div>
+        </div>
+        <div id="groups">
+        </div>
+    </div>
+
+    <div id="stream_window">
+        <div id="streams"></div>
+
+        <div id="input">
+            <select id="input_options">
+                <option value="as3">ActionScript 3</option>
+                <option value="bash">Bash</option>
+                <option value="cpp">C++</option>
+                <option value="csharp">C#</option>
+                <option value="css">CSS</option>
+                <option value="diff">Diff</option>
+                <option value="erlang">Erlang</option>
+                <option value="groovy">Groovy</option>
+                <option value="java">Java</option>
+                <option value="js">JavaScript</option>
+                <option value="perl">Perl</option>
+                <option value="php">Php</option>
+                <option value="powershell">Powershell</option>
+                <option value="python">Python</option>
+                <option value="ruby">Ruby</option>
+                <option value="sass">SASS</option>
+                <option value="scala">Scala</option>
+                <option value="sql">SQL</option>
+                <option value="text" selected="selected">Text</option>
+                <option value="vb">Visual Basic</option>
+                <option value="xml">XML</option>
+            </select>
+            <div id="input_field_wrap"><textarea id="input_field"></textarea></div>
+            <input id="input_send" type="button" value="Send" />
+        </div>
+    </div>
+
+    <div id="info_sidebar">
+        <div id="channel_info">
+            <fieldset>
+                <legend>Users</legend>
+                <div id="channel_users"></div>
+                <div class="utils">
+                    <a class="invite link_button" href="#" >Invite</a>
+                </div>
+            </fieldset>
+        </div>
+        <div id="file_info">
+            <fieldset>
+                <legend>Files</legend>
+                <div id="channel_files">
+
+                </div>
+
+                <div class="utils">
+                    <iframe src=""></iframe>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+   <!-- Add to Channel Form -->
+    <div class="popup_wrapper"></div>
+    
+    <div id="invite_window" class="popup_window">
+        <div class="popup_window_title">Invite to Channel</div>
+        <div id="invite_toolbar">
+            <input id="invite_filter" type="text" placeholder="Filter" />
+        </div>
+        <div id="selected_preview">
+            <div class="select_list groups">
+                <h1>Groups</h1>
+                <ul>
+                </ul>
+            </div>
+            <div class="select_list users">
+                <h1>Users</h1>
+                <ul>
+                </ul>
+            </div>
+        </div>
+        <div id="invite_selected">
+            <div class="select_list groups">
+                <h1>Selected groups</h1>
+                <ul>
+                </ul>
+            </div>
+            <div class="select_list users">
+                <h1>Selected users</h1>
+                <ul>
+                </ul>
+            </div>
+        </div>    
+        <div class="popup_window_buttons">
+            <input class="cancel" type="button" value="Cancel" />
+            <input class="submit" type="button" value="Invite" />
+        </div>
+    </div>
+
+    <!-- Edit profile form form -->
+    <div id="edit_profile_window" class="popup_window">
+        <div class="popup_window_title">Edit profile</div>
+        <div class="popup_window_content">
+            <div class="field">
+                <label for="edit_profile_username">Username:</label>
+                <input type="text" id="edit_profile_username" name="edit_profile_username" />
+            </div>
+            <div class="field">
+                <label for="edit_profile_password">Password:</label>
+                <input type="password" id="edit_profile_password" name="edit_profile_password" />
+            </div>
+            <div class="field">
+                <label for="edit_profile_password_repeat">Repeat Password:</label>
+                <input type="password" id="edit_profile_password_repeat" name="edit_profile_password_repeat" />
+            </div>
+            <div class="field">
+                <label for="edit_profile_email">E-Mail:</label>
+                <input type="text" id="edit_profile_email" name="edit_profile_email" />
+            </div>         
+            <div class="field">
+                <label for="edit_profile_first_name">First Name:</label>
+                <input type="text" id="edit_profile_first_name" name="edit_profile_first_name" />
+            </div>
+            <div class="field">
+                <label for="edit_profile_last_name">Last Name:</label>
+                <input type="text" id="edit_profile_last_name" name="edit_profile_last_name" />
+            </div>               
+        </div>
+        <div class="popup_window_buttons">
+              <input class="cancel" type="button" value="Cancel"/>
+              <input class="submit" type="button" value="Save"/>
+        </div>
+    </div>
+
+    <!-- Change topic form -->
+    <div id="change_topic_window" class="popup_window">
+        <div class="popup_window_title">Change topic</div>
+        <div class="popup_window_content">
+            <div class="field">
+                <label for="change_topic">Topic:</label>
+                <textarea id="change_topic" name="change_topic" ></textarea>
+            </div>
+        </div>
+        <div class="popup_window_buttons">
+              <input class="cancel" type="button" value="Cancel"/>
+              <input class="submit" type="button" value="Change"/>
+        </div>
+    </div>
+
+    <!-- Change channelname form -->
+    <div id="change_channel_name_window" class="popup_window">
+        <div class="popup_window_title">Change channel name</div>
+        <div class="popup_window_content">
+            <div class="field">
+                <label for="change_channel_name">Name:</label>
+                <input id="change_channel_name" type="text" size="30" name="change_channel_name" />
+            </div>
+        </div>
+        <div class="popup_window_buttons">
+              <input class="cancel" type="button" value="Cancel"/>
+              <input class="submit" type="button" value="Change"/>
+        </div>
+    </div>
+
+    <!-- Delete channel form -->
+    <div id="delete_channel_window" class="popup_window">
+        <div class="popup_window_title">Delete channel</div>
+        <div class="popup_window_content">
+            <p>Do you really want to delete the channel: <span id="delete_channel"></span>?</p>
+        </div>
+        <div class="popup_window_buttons">
+              <input class="cancel" type="button" value="Cancel"/>
+              <input class="submit" type="button" value="Delete"/>
+        </div>
+    </div>
+
+    <!-- Close channel form -->
+    <div id="close_channel_window" class="popup_window">
+        <div class="popup_window_title">Delete channel</div>
+        <div class="popup_window_content">
+            <p>Do you really want to close the channel: <span id="close_channel"></span>?
+            A closed channel will be moved into the archives.</p>
+        </div>
+        <div class="popup_window_buttons">
+              <input class="cancel" type="button" value="Cancel"/>
+              <input class="submit" type="button" value="Close"/>
+        </div>
+    </div>
+
+    <!-- Create new channel form -->
+    <div id="newchannel_window" class="popup_window">
+        <div class="popup_window_title">New channel</div>
+        <div class="popup_window_content">
+            <div class="field">
+                <label for="newchannel_name">Name:</label>
+                <input id="newchannel_name" type="text" size="30" name="newchannel_name" />
+            </div>
+            <div class="field">
+                <label for="newchannel_topic">Topic:</label>
+                <input id="newchannel_topic" type="text" size="30" name="newchannel_topic" />
+            </div>
+            <div class="field">
+                <label for="newchannel_public">Public:</label>
+                <input id="newchannel_public" type="checkbox" size="30" name="newchannel_public" />
+            </div>
+        </div>
+        <div class="popup_window_buttons">
+              <input class="cancel" type="button" value="Cancel"/>
+              <input class="submit" type="button" value="Create"/>
+        </div>
+    </div>
+
+    <!-- Kick form -->
+    <div id="kick_window" class="popup_window">
+        <div class="popup_window_title">Kick from Channel</div>
+        <div id="kick_toolbar">
+            <input id="kick_filter" type="text" placeholder="Filter" />
+        </div>
+        <div id="kick_channel_users">
+            <div class="select_list groups">
+                <h1>Groups</h1>
+                <ul>
+                </ul>
+            </div>
+            <div class="select_list users">
+                <h1>Users</h1>
+                <ul>
+                </ul>
+            </div>
+        </div>
+        <div id="kick_selected">
+            <div class="select_list groups">
+                <h1>Selected groups</h1>
+                <ul>
+                </ul>
+            </div>
+            <div class="select_list users">
+                <h1>Selected users</h1>
+                <ul>
+                </ul>
+            </div>
+        </div>
+        <div class="popup_window_buttons">
+            <input class="cancel" type="button" value="Cancel" />
+            <input class="submit" type="button" value="Kick" />
+        </div>
+    </div>
+
+}

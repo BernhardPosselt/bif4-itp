@@ -4,30 +4,17 @@ package websocket;
 import java.util.*;
 
 import models.Groups;
+import models.User;
 
 import org.codehaus.jackson.JsonNode;
 
 import play.libs.F.Callback;
 import play.libs.F.Callback0;
-import play.mvc.Http.Session;
 import play.mvc.WebSocket;
-import websocket.json.in.InChannelClose;
-import websocket.json.in.InChannelDelete;
-import websocket.json.in.InChannelName;
-import websocket.json.in.InChanneltopic;
-import websocket.json.in.InFileDelete;
-import websocket.json.in.InInvite;
-import websocket.json.in.InJoin;
-import websocket.json.in.InKick;
-import websocket.json.in.InNewChannel;
-import websocket.json.in.InProfileUpdate;
-import websocket.json.out.ActiveUser;
-import websocket.json.out.Channel;
-import websocket.json.out.File;
-import websocket.json.out.Group;
-import websocket.json.out.Message;
-import websocket.json.out.Status;
-import websocket.json.out.User;
+import websocket.message.MessageFactory;
+import websocket.message.MessageHandler;
+import websocket.message.NotifyInit;
+
 
 public class WebsocketManager {
 
@@ -47,7 +34,15 @@ public class WebsocketManager {
                     public void invoke(JsonNode event) {
                         // Send a Talk message to the room.
                         try {
-                            WebsocketReceiver.getType(event, out, userId);
+                        	if(!members.containsKey(userId))
+                        		members.put(out, userId);
+                        	MessageFactory.registerMessage();
+                        	List<Integer> userlist = new ArrayList<Integer>();
+                        	userlist.add(userId);
+                        	NotifyInit.sendInit(userlist);
+                           // MessageHandler.handleMessage(event,userId);
+                        	//websocket.message.Message message = websocket.message.MessageFactory.getMessageFromType(event.findPath("type").asText());
+                        	//message.sendMessage(event, out, userId);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -61,13 +56,13 @@ public class WebsocketManager {
                         // Send a Quit message to the room.
                     	Boolean hilf = true;
                     	members.remove(out);
-                    	out.write(Status.genStatus("ok", "WebSocket Closed"));
+                    	//out.write(Status.genStatus("ok", "WebSocket Closed"));
                         if (members.values().contains(userId)){
                         	hilf = false;
                         }
                     	if (hilf.equals(true)){
                     		models.User.setUseroffline(userId);
-                    		WebsocketNotifier.notifyAllMembers(User.genUserchanged(userId, "update"));		
+                    		//WebsocketNotifier.notifyAllMembers(User.genUserchanged(userId, "update"));		
                     	}
                     }
                 });

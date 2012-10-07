@@ -47,14 +47,18 @@ public class Message extends Model {
 	public Date modified;
 	
 	@ManyToOne
-	public User user;
+	public User user_id;
 	
-	@ManyToMany(mappedBy="messages")
-	public List<Channel> channels;
+	@ManyToOne
+	public Channel channel_id;
 	
 	public static Finder<Integer,Message> find = new Finder<Integer,Message>(
 			Integer.class, Message.class
 	);
+	
+	public static Message getbyId (int id){
+		return find.byId(id);
+	}
 	
 	public static List<Message> getallChannelMessages (int channelid){
 		List<Message> mlist = new ArrayList<Message>();

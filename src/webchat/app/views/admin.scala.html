@@ -62,7 +62,7 @@
                         <td>@file.mimetype</td>
                         <td>@file.size</td>
                         <td>@file.date.format("dd-MM-yyyy HH:mm:ss")</td>
-                        <td>@file.uid</td>
+                        <td>@file.owner_id</td>
                         <td>                   
     						@form(routes.AdminController.deletefile(file.id), 'class -> "topRight") {
         						<input type="submit" value="Delete this file" class="btn danger">

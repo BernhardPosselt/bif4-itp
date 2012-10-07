@@ -1,17 +1,39 @@
 package websocket.json.in;
 
-import models.Channel;
 
-import org.codehaus.jackson.JsonNode;
-import java.util.*;
+import websocket.message.IInMessage;
+import websocket.message.Notifyall;
+import websocket.message.WorkRoutine;
 
-import flexjson.JSONDeserializer;
 
-public class InChannelName {
-	public String type;
+public class InChannelName extends IInMessage{
 	public InChannelNameData data;
 	
-	public static int changechannelname (JsonNode inmessage){
+	@Override
+	public boolean canHandle(String type) {
+		if (type.equals("channelname"))
+			return true;
+		else
+			return false;
+	}
+	@Override
+	public WorkRoutine getWorkRoutine() {
+		WorkRoutine myroutine=new WorkRoutine();
+		myroutine.inmessage = new InChannelName();
+		myroutine.outmessage = new websocket.json.out.Channel();
+		myroutine.model = new models.Channel();
+		myroutine.dbaction = "update";
+		myroutine.sender = new Notifyall();
+		return myroutine;
+	}
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return new InChannelName();
+	}
+	
+	
+	
+	/*public static int changechannelname (JsonNode inmessage){
 		int channelid = 0;
 		try{
 			InChannelName inchan = new InChannelName();
@@ -30,5 +52,5 @@ public class InChannelName {
 			e.printStackTrace();
 		}
 		return channelid;
-	}
+	}*/
 }

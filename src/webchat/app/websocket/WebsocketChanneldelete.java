@@ -4,11 +4,13 @@ import org.codehaus.jackson.JsonNode;
 
 import websocket.json.in.InChannelDelete;
 import websocket.json.out.Channel;
+import websocket.message.IMessageSender;
 
-public class WebsocketChanneldelete {
-	public static void createChanneldelete(JsonNode inmessage){
-		int channelid = inmessage.findPath("channel").asInt();
-    	WebsocketNotifier.notifyAllMembers(Channel.genChannel("delete", channelid));
-    	InChannelDelete.deletechannel(inmessage);
+public class WebsocketChanneldelete implements IMessageSender {
+
+	@Override
+	public void sendMessage(JsonNode outmessage) {
+		WebsocketNotifier.notifyAllMembers(outmessage);
+		
 	}
 }

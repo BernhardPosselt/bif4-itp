@@ -84,10 +84,24 @@ public class User extends Model {
 	public static Finder<Integer,User> find = new Finder<Integer,User>(
 			Integer.class, User.class
 	);
+	
+	public static User getbyId (int id){
+		return find.byId(id);
+	}
 
 	public static String getUsername(int id)
-    {	
-			return find.byId(id).username; 		
+    {		boolean help = false;
+			for (Iterator<User> iter=findAll().iterator(); iter.hasNext();){
+				User user=iter.next();
+				if (user.id == id){
+					help = true;
+					break;
+				}
+			}
+			if (help == true)
+				return find.byId(id).username; 	
+			else
+				return "nouserfound";
     }
 	
 	public static boolean getActive(int id)

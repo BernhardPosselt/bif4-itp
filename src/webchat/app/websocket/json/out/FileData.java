@@ -2,10 +2,13 @@ package websocket.json.out;
 
 import java.util.*;
 
-public class FileData {
+import websocket.message.IMessageData;
+
+public class FileData extends IMessageData{
+	public int id;
 	public String name;
-	public String type;
+	public String mimetype;
 	public double size;
 	public int owner_id;
-	public Date modified;
+	public Date modified = new Date();
 }

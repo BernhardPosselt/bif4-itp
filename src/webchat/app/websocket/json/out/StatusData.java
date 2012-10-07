@@ -1,6 +1,8 @@
 package websocket.json.out;
 
-public class StatusData{
+import websocket.message.IMessageData;
+
+public class StatusData extends IMessageData{
 	
 	public String level;
 	public String msg;
