@@ -34,3 +34,4 @@ angular.module('WebChat').factory '_FilesInChannelController',
         return FilesInChannelController
 
     ]
+    
