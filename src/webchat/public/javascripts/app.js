@@ -1042,7 +1042,6 @@
           this.filemodel = FileModel;
           this.channelmodel = ChannelModel;
           $scope.files = this.filemodel.getItems();
-          console.log($scope.files);
           $scope.getActiveChannel = function() {
             if (_this.getActiveChannelId() !== null) {
               return _this.channelmodel.getItemById(_this.getActiveChannelId());

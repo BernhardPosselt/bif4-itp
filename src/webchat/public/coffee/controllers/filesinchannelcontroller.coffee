@@ -11,7 +11,6 @@ angular.module('WebChat').factory '_FilesInChannelController',
                 @channelmodel = ChannelModel
 
                 $scope.files = @filemodel.getItems()
-                console.log $scope.files
 
                 $scope.getActiveChannel = () =>
                     if @getActiveChannelId() != null
