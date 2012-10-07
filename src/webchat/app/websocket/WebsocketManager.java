@@ -20,6 +20,7 @@ public class WebsocketManager {
 
     public static Map<WebSocket.Out<JsonNode>,Integer> members = new HashMap<WebSocket.Out<JsonNode>, Integer>();
 
+    static boolean init = true;
     /**
      * Creates a new Websocket class and puts it in the map
      * @return the newly intialized websocket
@@ -29,17 +30,23 @@ public class WebsocketManager {
 
 	        // Called when the Websocket Handshake is done.
 	        public void onReady(WebSocket.In<JsonNode> in, final WebSocket.Out<JsonNode> out){
+	        	if(!members.containsKey(userId))
+            		members.put(out, userId);
+	        	MessageFactory.registerMessage();
+            	if (init){
+            		List<Integer> userlist = new ArrayList<Integer>();
+            		userlist.add(userId);
+            		NotifyInit.sendInit(userlist);
+            		init = false;
+            	}
 	        	// For each event received on the socket,
                 in.onMessage(new Callback<JsonNode>() {
                     public void invoke(JsonNode event) {
                         // Send a Talk message to the room.
                         try {
-                        	if(!members.containsKey(userId))
-                        		members.put(out, userId);
-                        	MessageFactory.registerMessage();
-                        	List<Integer> userlist = new ArrayList<Integer>();
-                        	userlist.add(userId);
-                        	NotifyInit.sendInit(userlist);
+                        
+                        	
+                        	
                            // MessageHandler.handleMessage(event,userId);
                         	//websocket.message.Message message = websocket.message.MessageFactory.getMessageFromType(event.findPath("type").asText());
                         	//message.sendMessage(event, out, userId);
