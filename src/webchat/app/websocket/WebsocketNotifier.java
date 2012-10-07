@@ -17,12 +17,12 @@ public class WebsocketNotifier {
 	        }
 	    }
 	    
-	    public static void sendMessagetoUser(List<Integer>users, int channelid, String action){
+	    public static void sendMessagetoUser(List<Integer> userlist, JsonNode outmessage){
 	    	WebSocket.Out<JsonNode> out = null;
 	        for(Map.Entry<WebSocket.Out<JsonNode>, Integer> entry: WebsocketManager.members.entrySet()) {
-	            if (users.contains(entry.getValue())){
+	            if (userlist.contains(entry.getValue())){
 	            	out = (WebSocket.Out<JsonNode>)entry.getKey();
-	            	out.write(Channel.genChannel(action, channelid));
+	            	out.write(outmessage);
 	            }	
 	        }
 	    }

@@ -1,9 +1,12 @@
 package websocket.json.in;
 
-public class InProfileUpdateData {
+import websocket.message.IMessageData;
+
+public class InProfileUpdateData extends IMessageData{
+	public int id;
 	public String username;
-	public String prename;
-	public String lastname;
 	public String password;
 	public String email;
+	public String firstname;
+	public String lastname;	
 }

@@ -32,7 +32,7 @@ public class File extends Model {
 	public Date date;
 	
 	@ManyToOne
-	public User uid;
+	public User owner_id;
 	
 	@ManyToMany(mappedBy="files")
 	public List<Channel> channels;
@@ -40,6 +40,10 @@ public class File extends Model {
 	public static Finder<Integer,File> find = new Finder<Integer,File>(
 			Integer.class, File.class
 	);
+	
+	public static File getbyId (int id){
+		return find.byId(id);
+	}
 	
     public static List<File> findAll(){
         return find.all();

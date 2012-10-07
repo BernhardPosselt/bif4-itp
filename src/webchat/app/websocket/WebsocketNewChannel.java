@@ -9,7 +9,7 @@ import websocket.json.out.Status;
 
 public class WebsocketNewChannel {
 	public static void createNewChannel(JsonNode inmessage, WebSocket.Out<JsonNode> out, int userid){
-		Boolean is_public = inmessage.findPath("is_public").asBoolean();
+		/*Boolean is_public = inmessage.findPath("is_public").asBoolean();
     	int channelid = InNewChannel.createnewchannel(inmessage, userid);
     	if (channelid == -1)
     		out.write(Status.genStatus("fail", "Could not create Channel; Channelname already exists!"));
@@ -18,6 +18,6 @@ public class WebsocketNewChannel {
     			out.write(Channel.genChannel("create", channelid));
     		else
     			WebsocketNotifier.notifyAllMembers(Channel.genChannel("create", channelid));
-    	}
+    	}*/
 	}
 }

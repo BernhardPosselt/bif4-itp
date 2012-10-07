@@ -12,14 +12,38 @@ import play.mvc.WebSocket;
 
 import websocket.WebsocketManager;
 import websocket.json.out.Status;
+import websocket.message.IInMessage;
+import websocket.message.Notifyall;
+import websocket.message.WorkRoutine;
 
 import flexjson.JSONDeserializer;
 
-public class InProfileUpdate {
-	public String type;
+public class InProfileUpdate extends IInMessage {
+
 	public InProfileUpdateData data;
+	@Override
+	public boolean canHandle(String type) {
+		if (type.equals("profileupdate"))
+			return true;
+		else
+			return false;
+	}
+	@Override
+	public WorkRoutine getWorkRoutine() {
+		WorkRoutine myroutine = new WorkRoutine();
+		myroutine.inmessage = new InProfileUpdate();
+		myroutine.model = new models.User();
+		myroutine.outmessage = new websocket.json.out.User();
+		myroutine.dbaction = "update";
+		myroutine.sender = new Notifyall();
+		return null;
+	}
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return new InProfileUpdate();
+	}
 	
-	public static JsonNode updateprofile(JsonNode inmessage, int userid){
+	/*public static JsonNode updateprofile(JsonNode inmessage, int userid){
 		JsonNode error = null;
 		try{
 			InProfileUpdate inprofileupdate = new InProfileUpdate();
@@ -45,6 +69,6 @@ public class InProfileUpdate {
 			e.printStackTrace();
 		}
 		return error;
-	}
+	}*/
 
 }

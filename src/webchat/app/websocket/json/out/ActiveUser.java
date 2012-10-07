@@ -5,22 +5,20 @@ import java.util.*;
 import org.codehaus.jackson.JsonNode;
 
 import play.libs.Json;
+import websocket.message.IOutMessage;
 import flexjson.JSONException;
 import flexjson.JSONSerializer;
 
-public class ActiveUser {
+public class ActiveUser extends IOutMessage  {
 	public String type;
-	public Boolean init;
-	public Map<Integer,String> actions = new HashMap<Integer,String>();
-	public ActiveUserData data;
+	public String action;
+	public ActiveUserData data = new ActiveUserData();
 	
 	public ActiveUser(){
 		this.type = "activeuser";
-		this.init = true;
-		this.data = new ActiveUserData();
 	}
 	
-	public static JsonNode genActiveUser(int userid){
+	/*public static JsonNode genActiveUser(int userid){
 		String json = "";
 		try {
 
@@ -34,5 +32,5 @@ public class ActiveUser {
 			e.printStackTrace();
 		}
 		return Json.parse(json);
-	}
+	}*/
 }

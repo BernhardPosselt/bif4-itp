@@ -13,7 +13,7 @@ import websocket.json.out.Status;
 
 public class WebsocketReceiver {
 
-	public static void getType (JsonNode inmessage, WebSocket.Out<JsonNode> out, int userid){
+	/*public static void getType (JsonNode inmessage, WebSocket.Out<JsonNode> out, int userid){
 		if(!WebsocketManager.members.containsKey(userid))
     		WebsocketManager.members.put(out, userid);
         String type = inmessage.findPath("type").asText();
@@ -27,7 +27,7 @@ public class WebsocketReceiver {
         	WebsocketJoin.createJoin(inmessage, out);
         }
         else if (type.equals("invite")){
-        	WebsocketInvite.createInvite(inmessage);
+        //	WebsocketInvite.createInvite(inmessage);
         }
         else if (type.equals("newchannel")){
         	WebsocketNewChannel.createNewChannel(inmessage, out, userid);
@@ -36,7 +36,7 @@ public class WebsocketReceiver {
         	WebsocketChanneltopic.createChanneltopic(inmessage);
         }
         else if (type.equals("kick")){
-        	WebsocketKick.createKick(inmessage, out, userid);
+        	//WebsocketKick.createKick(inmessage, out, userid);
         }
         else if (type.equals("channelname")){
         	WebsocketChannelname.createChannelname(inmessage, out, userid);
@@ -59,5 +59,5 @@ public class WebsocketReceiver {
         else{
             out.write(Status.genStatus("critical", "Unknown type of InMessage!"));
         }
-	}
+	}*/
 }

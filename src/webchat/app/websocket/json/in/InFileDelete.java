@@ -7,13 +7,38 @@ import models.File;
 
 import org.codehaus.jackson.JsonNode;
 
+import websocket.message.IInMessage;
+import websocket.message.Notifyall;
+import websocket.message.WorkRoutine;
+
 import flexjson.JSONDeserializer;
 
-public class InFileDelete {
-	public String type;
+public class InFileDelete extends IInMessage {
 	public InFileDeleteData data;
 	
-	public static List<Integer> filedelete (JsonNode inmessage){
+	@Override
+	public boolean canHandle(String type) {
+		if (type.equals("filedelete"))
+			return true;
+		else
+			return false;
+	}
+	@Override
+	public WorkRoutine getWorkRoutine() {
+		WorkRoutine myroutine=new WorkRoutine();
+		myroutine.inmessage = new InFileDelete();
+		myroutine.outmessage=new websocket.json.out.Channel();
+		myroutine.model = new models.File();
+		myroutine.dbaction = "delete";
+		myroutine.sender = new Notifyall();
+		return null;
+	}
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return new InFileDelete();
+	}
+	
+	/*public static List<Integer> filedelete (JsonNode inmessage){
 		List<Integer> channellist = new ArrayList<Integer>();
 		try{
 			InFileDelete infile = new InFileDelete();
@@ -36,6 +61,6 @@ public class InFileDelete {
 			e.printStackTrace();
 		}
 		return channellist;
-	}
+	}*/
 	
 }

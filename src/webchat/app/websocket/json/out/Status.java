@@ -4,11 +4,12 @@ import org.codehaus.jackson.JsonNode;
 import java.util.Map;
 
 import play.libs.Json;
+import websocket.message.IOutMessage;
 import flexjson.JSONException;
 import flexjson.JSONSerializer;
 
-public class Status {
-	public final String type;
+public class Status extends IOutMessage{
+	public String type;
 	public StatusData data;
 
 	public Status() {

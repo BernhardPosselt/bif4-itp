@@ -3,8 +3,10 @@ package websocket.json.in;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InMessageData {
-	public String message;
+import websocket.message.IMessageData;
+
+public class InMessageData extends IMessageData {
+	public String content;
 	public String type;
-	public List<Integer> channel = new ArrayList<Integer>();
+	public int channel_id;
 }

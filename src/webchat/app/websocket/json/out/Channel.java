@@ -7,21 +7,21 @@ import org.codehaus.jackson.JsonNode;
 
 import play.libs.Json;
 import websocket.json.in.InMessage;
+import websocket.message.IOutMessage;
 import flexjson.JSONDeserializer;
 import flexjson.JSONException;
 import flexjson.JSONSerializer;
 
-public class Channel {
+public class Channel extends IOutMessage {
 	public String type;
-	public Map<Integer,ChannelData> data = new HashMap<Integer,ChannelData>();
-	public Boolean init;
-	public Map<Integer,String> actions = new HashMap<Integer,String>();
+	public ChannelData data = new ChannelData();
+	public String action;
 
 	public Channel(){
 		this.type = "channel";
 	}
 	
-	public static JsonNode geninitChannel(int userid){
+	/*public static JsonNode geninitChannel(int userid){
 		String json = "",action = "create";
 		try {
 			Channel channel = new Channel();
@@ -90,5 +90,5 @@ public class Channel {
 			e.printStackTrace();
 		}
 		return Json.parse(json);
-	}
+	}*/
 }

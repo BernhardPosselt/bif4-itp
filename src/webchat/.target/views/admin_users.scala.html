@@ -1,0 +1,92 @@
+@(users : List[User])
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@for(user <- users) {
+    <tr title="edit user">
+        <td><a href="@routes.AdminController.edituser(user.id)">@user.username</a></td>
+        <td>
+            @if(user.firstname == null) {
+                <em>-</em>
+            } else {
+                <a href="@routes.AdminController.edituser(user.id)">@user.firstname</a>
+            }
+        </td>
+        <td>
+            @if(user.lastname == null) {
+                <em>-</em>
+            } else {
+                <a href="@routes.AdminController.edituser(user.id)">@user.lastname</a>
+            }
+        </td>
+        <td>
+            @if(user.email == null) {
+                <em>-</em>
+            } else {
+                <a href="@routes.AdminController.edituser(user.id)">@user.email</a>
+            }
+        </td>
+        <td class="@user.admin">
+            @if(user.admin == null) {
+                <em>-</em>
+            }
+            @if(user.admin == true) {
+                <a href="@routes.AdminController.edituser(user.id)">Yes</a>
+            } else {
+                <a href="@routes.AdminController.edituser(user.id)">No</a>
+            }
+        </td>
+        <td class="@user.active">
+            @if(user.active == null) {
+                <em>-</em>
+            }
+            @if(user.active == true) {
+                <a href="@routes.AdminController.edituser(user.id)">Yes</a>
+            } else {
+                <a href="@routes.AdminController.edituser(user.id)">No</a>
+            }
+        </td>
+        <td class="@user.online">
+            @if(user.online == null) {
+                <em></em>
+            }
+            @if(user.online == true) {
+                <a href="@routes.AdminController.edituser(user.id)">Yes</a>
+            } else {
+                <a href="@routes.AdminController.edituser(user.id)">No</a>
+            }
+        </td>
+        <td>
+            @if(user.lastlogin == null) {
+                <em>-</em>
+            } else {
+                <a href="@routes.AdminController.edituser(user.id)">@user.lastlogin.format("dd-MM-yyyy HH:mm:ss")</a>
+            }
+        </td>
+        <td>
+            @form(routes.AdminController.deleteuser(user.id), 'class -> "topRight") {
+                <input type="submit" value="Delete this user" class="btn danger">
+            }
+        </td>
+        <td>
+            @if(user.groups == null) {
+                <em>-</em>
+            } else {
+                @for(group <- user.groups) {
+                    <a href="@routes.AdminController.edituser(user.id)">@group.name </a>
+                }
+            }
+        </td>
+        <td>
+            @if(user.channels == null) {
+                <em>-</em>
+            } else {
+                @for(channel <- user.channels) {
+                    <a href="@routes.AdminController.edituser(user.id)">@channel.name </a>
+                }
+            }
+        </td>
+    </tr>
+}
+

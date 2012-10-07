@@ -10,9 +10,9 @@ import websocket.json.out.Message;
 
 public class WebsocketJoin {
 	public static void createJoin(JsonNode inmessage, WebSocket.Out<JsonNode> out){
-		int channelid = InJoin.getchannel(inmessage);
+		/*int channelid = InJoin.getchannel(inmessage);
     	out.write(File.genjoinFile(channelid));
     	out.write(Channel.genChannel("update", channelid));
-    	out.write(Message.genjoinMessage(channelid));
+    	out.write(Message.genjoinMessage(channelid));*/
 	}
 }
