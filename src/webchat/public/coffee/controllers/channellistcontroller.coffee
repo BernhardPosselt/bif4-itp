@@ -9,7 +9,8 @@ angular.module('WebChat').factory '_ChannelListController',
             
                 @channelmodel = ChannelModel
 
-                $scope.channels = @channelmodel.getItems()
+                $scope.getChannels = =>
+                    return @channelmodel.getItems()
 
                 $scope.join = (id) =>
                     message = new _JoinMessage(id)

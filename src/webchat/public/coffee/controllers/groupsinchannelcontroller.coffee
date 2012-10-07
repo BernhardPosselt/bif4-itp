@@ -15,8 +15,10 @@ angular.module('WebChat').factory '_GroupsInChannelController',
                 @groupmodel = GroupModel
                 @usermodel = UserModel
 
-                $scope.groups = @groupmodel.getItems()
-                $scope.users = @usermodel.getItems()
+                $scope.getGroups = =>
+                    return @groupmodel.getItems()
+                $scope.getUsers = =>
+                    return @usermodel.getItems()
 
                 $scope.getActiveChannel = () =>
                     if @getActiveChannelId() != null

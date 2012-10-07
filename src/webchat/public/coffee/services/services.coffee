@@ -31,9 +31,9 @@ angular.module('WebChat').factory 'MimeTypes', ['_MimeTypes', (_MimeTypes) ->
 
 angular.module('WebChat').factory 'WebChatWebSocket', 
     ['_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL',
-     'ChannelModel', 'GroupModel', 'UserModel', 'FileModel'
+     'ChannelModel', 'GroupModel', 'UserModel', 'FileModel', '$rootScope',
     (_WebChatWebSocket, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL, 
-     ChannelModel, GroupModel, UserModel, FileModel) =>
+     ChannelModel, GroupModel, UserModel, FileModel, $rootScope) =>
 
         models = [
             ChannelModel
@@ -47,6 +47,7 @@ angular.module('WebChat').factory 'WebChatWebSocket',
         socket.onReceive (message) ->
             for model in models
                 if model.canHandle(message.type)
-                    model.handle(message.data)
+                    $rootScope.$apply ->
+                        model.handle(message)
         return socket
     ]

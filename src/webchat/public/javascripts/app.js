@@ -79,7 +79,7 @@
   ]);
 
   angular.module('WebChat').factory('WebChatWebSocket', [
-    '_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL', 'ChannelModel', 'GroupModel', 'UserModel', 'FileModel', function(_WebChatWebSocket, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL, ChannelModel, GroupModel, UserModel, FileModel) {
+    '_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL', 'ChannelModel', 'GroupModel', 'UserModel', 'FileModel', '$rootScope', function(_WebChatWebSocket, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL, ChannelModel, GroupModel, UserModel, FileModel, $rootScope) {
       var models, socket;
       models = [ChannelModel, GroupModel, UserModel, FileModel];
       socket = new _WebChatWebSocket();
@@ -90,7 +90,9 @@
         for (_i = 0, _len = models.length; _i < _len; _i++) {
           model = models[_i];
           if (model.canHandle(message.type)) {
-            _results.push(model.handle(message.data));
+            _results.push($rootScope.$apply(function() {
+              return model.handle(message);
+            }));
           } else {
             _results.push(void 0);
           }
@@ -210,18 +212,6 @@
 
         function FileModel() {
           FileModel.__super__.constructor.call(this, 'file');
-          this.create({
-            id: 0,
-            name: 'dfel',
-            mimetype: 'application/pdf',
-            size: '123123123'
-          });
-          this.create({
-            id: 1,
-            name: 'eeeed',
-            mimetype: 'application/pdf',
-            size: '123123123'
-          });
         }
 
         FileModel.prototype.create = function(file) {
@@ -268,14 +258,6 @@
 
         function GroupModel() {
           GroupModel.__super__.constructor.call(this, 'group');
-          this.create({
-            id: 0,
-            name: 'my group'
-          });
-          this.create({
-            id: 1,
-            name: 'my group 2'
-          });
         }
 
         return GroupModel;
@@ -294,20 +276,6 @@
 
         function UserModel() {
           UserModel.__super__.constructor.call(this, 'user');
-          this.create({
-            id: 0,
-            status: 'online',
-            firstname: 'john',
-            lastname: 'bingo',
-            groups: [0, 1]
-          });
-          this.create({
-            id: 1,
-            status: 'offline',
-            firstname: 'channel',
-            lastname: 'ron',
-            groups: [1]
-          });
         }
 
         UserModel.prototype.create = function(user) {
@@ -351,13 +319,6 @@
 
         function ChannelModel() {
           ChannelModel.__super__.constructor.call(this, 'channel');
-          this.create({
-            id: 1,
-            name: 'channel',
-            groups: [0],
-            users: [0, 1],
-            files: [0, 1]
-          });
         }
 
         return ChannelModel;
@@ -371,18 +332,18 @@
     var Model;
     Model = (function() {
 
-      function _Class(type) {
-        this.type = type;
+      function _Class(modelType) {
+        this.modelType = modelType;
         this.items = [];
         this.hashMap = {};
       }
 
       _Class.prototype.handle = function(message) {
         switch (message.action) {
-          case 'update':
-            return this.update(message.data);
           case 'create':
             return this.create(message.data);
+          case 'update':
+            return this.update(message.data);
           case 'delete':
             return this["delete"](message.data);
         }
@@ -433,7 +394,7 @@
       };
 
       _Class.prototype.canHandle = function(msgType) {
-        if (msgType === this.type) {
+        if (msgType === this.modelType) {
           return true;
         } else {
           return false;
@@ -824,8 +785,12 @@
           GroupListController.__super__.constructor.call(this, $scope);
           this.groupmodel = GroupModel;
           this.usermodel = UserModel;
-          $scope.groups = this.groupmodel.getItems();
-          $scope.users = this.usermodel.getItems();
+          $scope.getGroups = function() {
+            return _this.groupmodel.getItems();
+          };
+          $scope.getUsers = function() {
+            return _this.usermodel.getItems();
+          };
           $scope.inviteUser = function(userId, value) {
             return _this.simpleChannelMessage(userId, _InviteUserMessage, value);
           };
@@ -888,7 +853,9 @@
           var _this = this;
           ChannelListController.__super__.constructor.call(this, $scope);
           this.channelmodel = ChannelModel;
-          $scope.channels = this.channelmodel.getItems();
+          $scope.getChannels = function() {
+            return _this.channelmodel.getItems();
+          };
           $scope.join = function(id) {
             var message;
             message = new _JoinMessage(id);
@@ -954,8 +921,12 @@
           this.channelmodel = ChannelModel;
           this.groupmodel = GroupModel;
           this.usermodel = UserModel;
-          $scope.groups = this.groupmodel.getItems();
-          $scope.users = this.usermodel.getItems();
+          $scope.getGroups = function() {
+            return _this.groupmodel.getItems();
+          };
+          $scope.getUsers = function() {
+            return _this.usermodel.getItems();
+          };
           $scope.getActiveChannel = function() {
             if (_this.getActiveChannelId() !== null) {
               return _this.channelmodel.getItemById(_this.getActiveChannelId());
@@ -1004,10 +975,18 @@
           this.usermodel = UserModel;
           this.messagemodel = MessageModel;
           this.channelmodel = ChannelModel;
-          $scope.channels = this.channelmodel.getItems();
-          $scope.users = this.usermodel.getItems();
-          $scope.groups = this.groupmodel.getItems();
-          $scope.messages = this.messagemodel.getItems();
+          $scope.getChannels = function() {
+            return _this.channelmodel.getItems();
+          };
+          $scope.getUsers = function() {
+            return _this.usermodel.getItems();
+          };
+          $scope.getGroups = function() {
+            return _this.groupmodel.getItems();
+          };
+          $scope.getMessages = function() {
+            return _this.messagemodel.getItems();
+          };
           $scope.messageType = 'text';
           $scope.getUserFullName = function(userId) {
             var user;
@@ -1041,7 +1020,9 @@
           FilesInChannelController.__super__.constructor.call(this, $scope);
           this.filemodel = FileModel;
           this.channelmodel = ChannelModel;
-          $scope.files = this.filemodel.getItems();
+          $scope.getFiles = function() {
+            return _this.filemodel.getItems();
+          };
           $scope.getActiveChannel = function() {
             if (_this.getActiveChannelId() !== null) {
               return _this.channelmodel.getItemById(_this.getActiveChannelId());

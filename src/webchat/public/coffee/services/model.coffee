@@ -2,15 +2,15 @@ angular.module('WebChat').factory '_Model', () ->
 
     Model = class
 
-        constructor: (@type) ->
+        constructor: (@modelType) ->
             @items = []
             @hashMap = {} # hashmap for quick access via item id
 
 
         handle: (message) ->
             switch message.action
-                when 'update' then @update(message.data)
                 when 'create' then @create(message.data)
+                when 'update' then @update(message.data)
                 when 'delete' then @delete(message.data)
 
 
@@ -43,7 +43,7 @@ angular.module('WebChat').factory '_Model', () ->
 
 
         canHandle: (msgType) ->
-            if msgType == @type
+            if msgType == @modelType
                 return true
             else
                 return false

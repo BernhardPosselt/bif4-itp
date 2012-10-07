@@ -5,9 +5,6 @@ angular.module('WebChat').factory '_FileModel', ['_Model', (_Model) ->
         constructor: () ->
             super('file')
 
-            @create { id: 0, name: 'dfel', mimetype: 'application/pdf', size: '123123123'}
-            @create { id: 1, name: 'eeeed', mimetype: 'application/pdf', size: '123123123'}
-
 
         create: (file) ->
             file.getSize = =>

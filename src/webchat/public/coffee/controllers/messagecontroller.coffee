@@ -13,10 +13,14 @@ angular.module('WebChat').factory '_MessageController',
                 @messagemodel = MessageModel
                 @channelmodel = ChannelModel
 
-                $scope.channels = @channelmodel.getItems()
-                $scope.users = @usermodel.getItems()
-                $scope.groups = @groupmodel.getItems()
-                $scope.messages = @messagemodel.getItems()
+                $scope.getChannels = =>
+                    return @channelmodel.getItems()
+                $scope.getUsers = =>
+                    return @usermodel.getItems()
+                $scope.getGroups = =>
+                    return @groupmodel.getItems()
+                $scope.getMessages = =>
+                    return @messagemodel.getItems()
 
                 $scope.messageType = 'text'
 
