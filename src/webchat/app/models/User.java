@@ -53,7 +53,7 @@ public class User extends Model {
 	@Constraints.Required
 	public String lastname;
 
-	public Boolean online;
+	public String status;
 	
 	public Boolean active;
 
@@ -162,7 +162,7 @@ public class User extends Model {
     public static void setUseronline(int userid){
     	User user = new User();
     	user = find.byId(userid);
-    	user.online = true;
+    	user.status = "online";
     	user.lastlogin = new Date();
     	user.update();
     }
@@ -170,7 +170,7 @@ public class User extends Model {
     public static void setUseroffline(int userid){
     	User user = new User();
     	user = find.byId(userid);
-    	user.online = false;
+    	user.status = "offline";
     	user.update();
     }
     

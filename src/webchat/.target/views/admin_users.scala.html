@@ -47,14 +47,11 @@
                 <a href="@routes.AdminController.edituser(user.id)">No</a>
             }
         </td>
-        <td class="@user.online">
-            @if(user.online == null) {
+        <td class="@user.status">
+            @if(user.status == null) {
                 <em></em>
-            }
-            @if(user.online == true) {
-                <a href="@routes.AdminController.edituser(user.id)">Yes</a>
             } else {
-                <a href="@routes.AdminController.edituser(user.id)">No</a>
+                <a href="@routes.AdminController.edituser(user.id)">@user.status</a>
             }
         </td>
         <td>

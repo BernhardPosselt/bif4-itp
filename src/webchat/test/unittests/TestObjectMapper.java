@@ -140,7 +140,7 @@ public class TestObjectMapper {
 					assertEquals(data.lastname, "Huber");
 					assertEquals(data.username, "Glembo");
 					assertEquals(data.groups.size(), 2);
-					assertEquals(data.online, false);
+					assertEquals(data.status, "offline");
 					assertEquals(data.email, "a.b@aon.at");
 					assertNotNull(data.modified);
 		    	}		

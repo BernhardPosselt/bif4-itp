@@ -48,7 +48,7 @@ create table user (
   email                     varchar(255),
   firstname                 varchar(255),
   lastname                  varchar(255),
-  online                    boolean,
+  status                    varchar(255),
   active                    boolean,
   admin                     boolean,
   lastlogin                 timestamp,

@@ -14,7 +14,7 @@
                 <ul>
                     <li ng-class="{active: channel.id == selected, unread: channel.id == unread}" 
                         ng-click="join(channel.id)" 
-                        ng-repeat="channel in channels">{{ channel.name }}</li>
+                        ng-repeat="channel in getChannels()">{{ channel.name }}</li>
                 </ul>
             </div>
             <div class="utils">
@@ -24,13 +24,13 @@
         </div>
         <div id="groups" ng-show="tab == 1">
             <div ng-controller="GroupListController">
-                <div ng-repeat="group in groups">
+                <div ng-repeat="group in getGroups()">
                     <h1>{{group.name}}
                         <a ng-click="inviteGroup(group.id, true)" class="invite_group" title="invite group {{group.name}} to current channel"></a>
                     </h1>
                     <ul>
                         <li ng-class="user.status" 
-                            ng-repeat="user in users | userInGroup:group.id">
+                            ng-repeat="user in getUsers() | userInGroup:group.id">
                             {{ user.getFullName() }}
                             <a ng-click="inviteUser(user.id, true)" class="invite_user" title="invite user {{ user.getFullName() }} to current channel"></a>
                         </li>
@@ -39,7 +39,7 @@
                 <h1>All</h1>
                 <ul>
                     <li ng-class="user.status" 
-                        ng-repeat="user in users">{{ user.getFullName() }}
+                        ng-repeat="user in getUsers()">{{ user.getFullName() }}
                         <a ng-click="inviteUser(user.id, true)" class="invite_user" title="invite user {{ user.getFullName() }} to current channel"></a>
                     </li>
                 </ul>
@@ -50,7 +50,7 @@
 
     <div id="stream_window" ng-controller="MessageController" ng-hide="getActiveChannelId() == null">
         <div id="streams">
-            <div class="stream" ng-repeat="channel in channels" 
+            <div class="stream" ng-repeat="channel in getChannels()" 
                  ng-show="getActiveChannelId() == channel.id">
                 <div class="stream_field">
                     <div class="stream_name">
@@ -113,7 +113,7 @@
             <fieldset>
                 <legend>Users</legend>
                 <div id="channel_users">
-                    <div ng-repeat="group in groups | groupInChannel:getActiveChannel()" class="users">
+                    <div ng-repeat="group in getGroups() | groupInChannel:getActiveChannel()" class="users">
                         <h1>{{ group.name }}
                             <a ng-click="inviteGroup(group.id, false)" 
                                class="kick_group" 
@@ -121,7 +121,7 @@
                         </h1>
                         <ul>
                             <li ng-class="user.status" 
-                                ng-repeat="user in users | userInGroup:group.id">
+                                ng-repeat="user in getUsers() | userInGroup:group.id">
                                 {{ user.getFullName() }}
                                 <a ng-click="inviteUser(user.id, false)" 
                                    class="kick_user" 
@@ -133,7 +133,7 @@
                         <h1>Other Users</h1>
                         <ul>
                             <li ng-class="user.status" 
-                                ng-repeat="user in users | userInChannel:getActiveChannel()">
+                                ng-repeat="user in getUsers() | userInChannel:getActiveChannel()">
                                 {{ user.getFullName() }}
                                 <a ng-click="inviteUser(user.id, false)" 
                                    class="kick_user" 
@@ -150,7 +150,7 @@
                 <div id="channel_files">
                     <div class="files">
                         <ul >
-                            <li ng-repeat="file in files | fileInChannel:getActiveChannel()"
+                            <li ng-repeat="file in getFiles() | fileInChannel:getActiveChannel()"
                                 style="{{getMimeTypeImage(file.id)}}">
                                 <a ng-href="/download/{{getActiveChannelId()}}/{{file.name}}" 
                                    class="name" target="_blank">{{file.name}}</a>

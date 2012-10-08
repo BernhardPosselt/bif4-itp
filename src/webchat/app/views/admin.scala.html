@@ -332,7 +332,7 @@
                     <th><a href="#">E-Mail</a></th>
                     <th><a href="#">Admin</a></th>
                     <th><a href="#">Active</a></th>
-                    <th><a href="#">Online</a></th>
+                    <th><a href="#">Status</a></th>
                     <th><a href="#">Last Login</a></th>
                     <th><a href="#">Delete</a></th>
                     <th><a href="#">Groups</a></th>
@@ -385,14 +385,12 @@
                                 <a href="@routes.AdminController.edituser(user.id)">No</a>
                             }
                         </td>
-                        <td class="@user.online">
-                            @if(user.online == null) {
+                        <td class="@user.status">
+                            @if(user.status == null) {
                                 <em></em>
                             } 
-                            @if(user.online == true) {
-                                <a href="@routes.AdminController.edituser(user.id)">Yes</a>
-                            } else {
-                                <a href="@routes.AdminController.edituser(user.id)">No</a>
+                            else {
+                                <a href="@routes.AdminController.edituser(user.id)">@user.status</a>
                             }
                         </td>
                         <td>
