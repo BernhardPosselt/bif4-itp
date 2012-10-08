@@ -24,8 +24,8 @@ public class InJoin extends IInMessage {
 		WorkRoutine myroutine=new WorkRoutine();
 		myroutine.inmessage = new InJoin();
 		myroutine.model=null;
-		myroutine.outmessage = new websocket.json.out.Channel();
-		myroutine.dbaction = "update";
+		myroutine.outmessage = null;
+		myroutine.dbaction = "";
 		myroutine.sender = new Notifyall();
 		return myroutine;
 	}

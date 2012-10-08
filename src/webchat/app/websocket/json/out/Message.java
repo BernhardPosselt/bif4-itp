@@ -25,10 +25,11 @@ public class Message extends IOutMessage {
 	
 	public Message() {
 		this.type = "message";
+		this.action = "create";
 
 	}
 
-	public static JsonNode genMessage(JsonNode inmessage, int userid) {
+	/*public static JsonNode genMessage(JsonNode inmessage, int userid) {
 		String json = "";
 		try {
 			// Map the incomeJsonMessage to a model
@@ -38,7 +39,7 @@ public class Message extends IOutMessage {
 			models.Message dbmessage = new models.Message();
 	
 			// Create DB Message
-			dbmessage.content = StringEscapeUtils.escapeSql(im.data.content);
+			dbmessage.message = StringEscapeUtils.escapeSql(im.data.message);
 			dbmessage.date = new Date();
 			dbmessage.modified = new Date();
 			dbmessage.type = im.data.type;
@@ -53,9 +54,9 @@ public class Message extends IOutMessage {
 			MessageData md = new MessageData();
 			md.date = new Date();
 		
-			md.content = StringEscapeUtils.escapeHtml(im.data.content);
+			md.message = StringEscapeUtils.escapeHtml(im.data.message);
 			if (im.data.type.equals("text"))
-				md.content = md.content.replaceAll("\n", "<br/>");
+				md.message = md.message.replaceAll("\n", "<br/>");
 			md.type = im.data.type;
 			md.user_id = userid;
 
@@ -90,7 +91,7 @@ public class Message extends IOutMessage {
 				dbmessage = miter.next();
 				MessageData md = new MessageData();
 				md.date = dbmessage.date;
-				md.content = StringEscapeUtils.escapeHtml(dbmessage.content);
+				md.message = StringEscapeUtils.escapeHtml(dbmessage.message);
 				
 				md.type = dbmessage.type;
 				md.user_id = dbmessage.user_id.id;
@@ -108,5 +109,5 @@ public class Message extends IOutMessage {
 			e.printStackTrace();
 		}
 		return Json.parse(json);
-	}
+	}*/
 }

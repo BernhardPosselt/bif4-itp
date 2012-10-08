@@ -29,7 +29,7 @@ public class InChannelTopic extends IInMessage{
 		myroutine.model = new models.Channel();
 		myroutine.dbaction = "update";
 		myroutine.sender = new Notifyall();
-		return null;
+		return myroutine;
 	}
 
 	@Override

@@ -35,16 +35,16 @@ public class Message extends Model {
 	
 	@Constraints.Required
 	@Column(columnDefinition = "LONGTEXT")
-	public String content;
+	public String message;
 	
 	@Constraints.Required
 	public String type;
 	
 	@Formats.DateTime(pattern = "dd-MM-yyyy HH:mm:ss")
-	public Date date;
+	public Date date = new Date();
 	
 	@Formats.DateTime(pattern = "dd-MM-yyyy HH:mm:ss")
-	public Date modified;
+	public Date modified = new Date();
 	
 	@ManyToOne
 	public User user_id;

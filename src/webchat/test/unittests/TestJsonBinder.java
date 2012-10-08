@@ -102,7 +102,7 @@ public class TestJsonBinder {
 		WorkRoutine myroutine = new WorkRoutine();
 		Message outmessage = new Message();
 		MessageData data = new MessageData();
-		data.content = "mymessagecontent";
+		data.message = "mymessagecontent";
 		data.date = new Date();
 		data.id = 22;
 		data.type = "java";
@@ -111,7 +111,7 @@ public class TestJsonBinder {
 		outmessage.data = data;
 		myroutine.outmessage = outmessage;
 		JsonNode json = JsonBinder.bindtoJson(myroutine);
-		assertEquals(json.findPath("content").asText(), "mymessagecontent");
+		assertEquals(json.findPath("message").asText(), "mymessagecontent");
 		assertEquals(json.findPath("id").asInt(), 22);
 		assertEquals(json.findPath("user_id").asInt(), 2);
 	}
@@ -378,7 +378,7 @@ public class TestJsonBinder {
 			mess.data = new InMessageData();
 			InMessageData data=new InMessageData();
 			data.channel_id = 3;
-			data.content = "Hallo ich bins.";
+			data.message = "Hallo ich bins.";
 			data.type = "text";
 			mess.data = data;
 			JSONSerializer myser = new JSONSerializer().include("*.data");
@@ -391,7 +391,7 @@ public class TestJsonBinder {
 			InMessageData indata = (InMessageData)f.get(mess);
 			assertEquals(myroutine.inmessage.type, "message");
 			assertEquals(indata.channel_id, 3);
-			assertEquals(indata.content.equals("Hallo ich bins."), true);
+			assertEquals(indata.message.equals("Hallo ich bins."), true);
 			assertEquals(indata.type.equals("text"), true);
 		}catch (Exception exp){
 			exp.printStackTrace();

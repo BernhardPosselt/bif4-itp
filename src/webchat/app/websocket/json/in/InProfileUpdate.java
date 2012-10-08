@@ -36,7 +36,7 @@ public class InProfileUpdate extends IInMessage {
 		myroutine.outmessage = new websocket.json.out.User();
 		myroutine.dbaction = "update";
 		myroutine.sender = new Notifyall();
-		return null;
+		return myroutine;
 	}
 	@Override
 	protected Object clone() throws CloneNotSupportedException {

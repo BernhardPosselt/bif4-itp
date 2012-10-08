@@ -31,7 +31,7 @@ public class InFileDelete extends IInMessage {
 		myroutine.model = new models.File();
 		myroutine.dbaction = "delete";
 		myroutine.sender = new Notifyall();
-		return null;
+		return myroutine;
 	}
 	@Override
 	protected Object clone() throws CloneNotSupportedException {

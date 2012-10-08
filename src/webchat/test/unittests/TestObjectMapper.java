@@ -68,11 +68,13 @@ public class TestObjectMapper {
 		    	{
 		    		Application.filltestdata();
 			        models.Message message = new Message();
-			        message.content = "Hallo du!";
+			        message.message = "Hallo du!";
 			        message.date = new Date();
 			        message.modified = new Date();
 			        message.type = "text";
 			        message.user_id = User.find.byId(1);
+			        message.channel_id = Channel.find.byId(1);
+			        message.save();
 			        WorkRoutine myroutine = new WorkRoutine();
 			        myroutine.model = message;
 			        myroutine.outmessage = new websocket.json.out.Message();
@@ -80,7 +82,7 @@ public class TestObjectMapper {
 					websocket.json.out.Message mymessage = (websocket.json.out.Message)ObjectMapper.mapfromDB(myroutine);
 					websocket.json.out.MessageData data = new MessageData();
 					data = mymessage.data;
-					assertEquals(data.content, "Hallo du!");
+					assertEquals(data.message, "Hallo du!");
 					assertEquals(data.user_id, 1);
 					assertEquals(data.type, "text");
 		    	}		
@@ -194,7 +196,7 @@ public class TestObjectMapper {
 					websocket.json.out.File mymessage = (websocket.json.out.File)ObjectMapper.mapfromDB(myroutine);
 					websocket.json.out.FileData data = new  FileData();
 					data = mymessage.data;
-					assertEquals(data.id, 1);
+					assertEquals(data.id, myfile.id);
 					assertEquals(data.mimetype, ".pdf");
 					assertEquals(data.name, "myfile");
 					assertEquals(data.size, 233.4345,0);
@@ -247,7 +249,7 @@ public class TestObjectMapper {
 			        InMessage inmessage = new InMessage();
 			        InMessageData indata = new InMessageData();
 			        indata.channel_id = 1;
-			        indata.content = "Servus";
+			        indata.message = "Servus";
 			        indata.type = "text";
 			        inmessage.data = indata;
 			        myroutine.inmessage = inmessage;
@@ -256,9 +258,8 @@ public class TestObjectMapper {
 					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
 					models.Message mess = new models.Message();
 					mess = (models.Message)mymodel;
-					mess.save();
 					assertEquals(mess.channel_id,models.Channel.find.byId(1));
-					assertEquals(mess.content, "Servus");
+					assertEquals(mess.message, "Servus");
 					assertEquals(mess.type, "text");
 		    	}		
 			});
@@ -288,7 +289,6 @@ public class TestObjectMapper {
 					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
 					models.Channel chan = new models.Channel();
 					chan = (models.Channel)mymodel;
-					chan.update();
 				 	assertEquals(true, chan.archived);	
 				 	assertEquals(3, models.Channel.findAll().size());
 		    	}		
@@ -321,7 +321,6 @@ public class TestObjectMapper {
 					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
 					models.Channel chan = new models.Channel();
 					chan = (models.Channel)mymodel;
-					chan.update();
 					assertEquals(chan.id, 3);
 					assertEquals(chan.users.contains(models.User.find.byId(2)), true);
 					assertEquals(chan.users.size(), 1);
@@ -355,7 +354,6 @@ public class TestObjectMapper {
 					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
 					models.Channel chan = new models.Channel();
 					chan = (models.Channel)mymodel;
-					chan.update();
 					assertEquals(chan.id, 3);
 					assertEquals(chan.groups.contains(models.Groups.find.byId(1)), true);
 					assertEquals(chan.groups.size(), 1);					
@@ -387,7 +385,6 @@ public class TestObjectMapper {
 					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
 					models.Channel chan = new models.Channel();
 					chan = (models.Channel)mymodel;
-					chan.update();
 					assertEquals(chan.id, 2);
 					assertEquals(chan.topic, "newtopic");					
 		    	}		
@@ -420,7 +417,6 @@ public class TestObjectMapper {
 					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
 					models.Channel chan = new models.Channel();
 					chan = (models.Channel)mymodel;
-					chan.save();
 					assertEquals(chan.name, "newchannel");
 					assertEquals(chan.topic, "newtopic");
 					assertEquals(chan.is_public, false);
@@ -452,7 +448,6 @@ public class TestObjectMapper {
 					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
 					models.Channel chan = new models.Channel();
 					chan = (models.Channel)mymodel;
-					chan.update();
 					assertEquals(chan.name, "new name");
 					assertEquals(chan.id, 2);
 		    	}		
@@ -481,7 +476,6 @@ public class TestObjectMapper {
 					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
 					models.Channel chan = new models.Channel();
 					chan = (models.Channel)mymodel;
-					chan.delete();
 					assertEquals(models.Channel.findAll().size(), 2);
 		    	}		
 			});
@@ -518,7 +512,6 @@ public class TestObjectMapper {
 					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
 					models.File file = new models.File();
 					file = (models.File)mymodel;
-					file.delete();
 					assertEquals(File.findAll().size(), 0);
 		    	}		
 			});
@@ -550,7 +543,6 @@ public class TestObjectMapper {
 					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
 					models.User usr = new models.User();
 					usr = (models.User)mymodel;
-					usr.update();
 					assertEquals(usr.username, "newname");
 					assertEquals(usr.firstname, "karl");
 					assertEquals(usr.lastname, "maier");

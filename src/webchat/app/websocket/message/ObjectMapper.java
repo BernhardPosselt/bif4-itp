@@ -60,6 +60,12 @@ public class ObjectMapper {
 					}
 				}
 			}
+			if (myroutine.dbaction.equals("create"))
+				mymodel.save();
+			else if (myroutine.dbaction.equals("delete"))
+				mymodel.delete();
+			else 
+				mymodel.update();
 		}
 		catch (Exception e) {
 			e.printStackTrace();

@@ -32,7 +32,7 @@ create table groups (
 
 create table message (
   id                        integer not null,
-  content                   LONGTEXT,
+  message                   LONGTEXT,
   type                      varchar(255),
   date                      timestamp,
   modified                  timestamp,

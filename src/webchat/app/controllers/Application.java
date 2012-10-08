@@ -168,7 +168,7 @@ public class Application extends Controller {
             
              	//indata.channel.add(channelid);
                 FileInputStream filestream = new FileInputStream(file);
-	        	indata.content =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
 	        	filestream.close();
 	        	if (filetype.equals("coffee"))
 	        		filetype = "js";
@@ -195,7 +195,7 @@ public class Application extends Controller {
             else if (contentType.equals("text/plain") && validplaintypes.contains(filetype)){
             	//indata.channel.add(channelid);
                 FileInputStream filestream = new FileInputStream(file);
-	        	indata.content =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
 	        	filestream.close();
 	        	if (filetype.equals("cs"))
 	        		filetype = "csharp";
@@ -205,7 +205,7 @@ public class Application extends Controller {
             else if (contentType.equals("text/css")){
             	//indata.channel.add(channelid);
                 FileInputStream filestream = new FileInputStream(file);
-	        	indata.content =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
 	        	filestream.close();
 	            indata.type = filetype;
 	            inmessage.data = indata;
@@ -213,7 +213,7 @@ public class Application extends Controller {
             else if (contentType.equals("text/xml")){
             	//indata.channel.add(channelid);
                 FileInputStream filestream = new FileInputStream(file);
-	        	indata.content =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
 	        	filestream.close();
 	            indata.type = filetype;
 	            inmessage.data = indata;
@@ -221,7 +221,7 @@ public class Application extends Controller {
             else if (contentType.equals("application/x-javascript")){
             	//indata.channel.add(channelid);
                 FileInputStream filestream = new FileInputStream(file);
-	        	indata.content =  org.apache.commons.io.IOUtils.toString(filestream);
+	        	indata.message =  org.apache.commons.io.IOUtils.toString(filestream);
 	        	filestream.close();
 	            indata.type = filetype;
 	            inmessage.data = indata;
@@ -229,7 +229,7 @@ public class Application extends Controller {
             else{
  
 	        	//indata.channel.add(channelid);
-	        	indata.content = "http://" + request().host() + "/download/" + new_file.id + "/" + filename;
+	        	indata.message = "http://" + request().host() + "/download/" + new_file.id + "/" + filename;
 	            indata.type = "text";
 	            inmessage.data = indata;
             }

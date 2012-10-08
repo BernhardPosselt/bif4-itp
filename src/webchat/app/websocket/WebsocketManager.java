@@ -33,12 +33,11 @@ public class WebsocketManager {
 	        	if(!members.containsKey(userId))
             		members.put(out, userId);
 	        	MessageFactory.registerMessage();
-            	if (init){
-            		List<Integer> userlist = new ArrayList<Integer>();
-            		userlist.add(userId);
-            		NotifyInit.sendInit(userlist);
-            		init = false;
-            	}
+        		List<Integer> userlist = new ArrayList<Integer>();
+        		userlist.add(userId);
+        		NotifyInit.sendInit(userlist);
+        		init = false;
+            
 	        	// For each event received on the socket,
                 in.onMessage(new Callback<JsonNode>() {
                     public void invoke(JsonNode event) {
@@ -47,7 +46,7 @@ public class WebsocketManager {
                         
                         	
                         	
-                           // MessageHandler.handleMessage(event,userId);
+                            MessageHandler.handleMessage(event,userId);
                         	//websocket.message.Message message = websocket.message.MessageFactory.getMessageFromType(event.findPath("type").asText());
                         	//message.sendMessage(event, out, userId);
                         } catch (Exception e) {

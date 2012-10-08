@@ -20,7 +20,7 @@ public class InMessage extends IInMessage{
 		WorkRoutine myroutine = new WorkRoutine();
 		myroutine.inmessage = new InMessage();
 		myroutine.model = new models.Message();
-		myroutine.outmessage = new websocket.json.out.Channel();
+		myroutine.outmessage = new websocket.json.out.Message();
 		myroutine.dbaction = "create";
 		myroutine.sender = new Notifyall();
 		return myroutine;
