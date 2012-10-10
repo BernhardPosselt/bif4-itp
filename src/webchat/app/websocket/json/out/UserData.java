@@ -7,7 +7,7 @@ import websocket.message.IMessageData;
 public class UserData extends IMessageData{
 	public int id;
 	public String username;
-	public Boolean online;
+	public String status;
 	public String firstname;
 	public String lastname;
 	public String email;

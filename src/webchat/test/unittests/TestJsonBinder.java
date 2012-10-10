@@ -139,7 +139,7 @@ public class TestJsonBinder {
 		data.lastname = "Maier";
 		data.username = "Bond";
 		data.id = 2;
-		data.online = true;
+		data.status = "online";
 		data.modified = new Date();
 		data.groups.add(2);
 		data.groups.add(8);
@@ -150,7 +150,7 @@ public class TestJsonBinder {
 		assertEquals(json.findPath("firstname").asText(), "Karl");
 		assertEquals(json.findPath("lastname").asText(), "Maier");
 		assertEquals(json.findPath("username").asText(), "Bond");
-		assertEquals(json.findPath("online").asBoolean(), true);
+		assertEquals(json.findPath("status").asText(), "online");
 		assertEquals(json.findPath("email").asText(), "a.b@aon.at");
 		assertEquals(json.findValues("groups").toString(), "[[2,8]]");
 	}

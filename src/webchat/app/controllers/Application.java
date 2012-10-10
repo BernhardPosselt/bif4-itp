@@ -258,7 +258,7 @@ public class Application extends Controller {
 	        user.lastname = "Huber";
 	        user.firstname = "Ernst";
 	        user.admin = true;
-	        user.online = false;
+	        user.status = "offline";
 	        user.active = true;
 	        user.save();
 	        
@@ -269,7 +269,7 @@ public class Application extends Controller {
 	        user1.lastname = "Lindmaier";
 	        user1.firstname = "Christoph";
 	        user1.admin = false;
-	        user1.online = false;
+	        user1.status = "offline";
 	        user1.active = true;
 	        user1.save();
 	         
