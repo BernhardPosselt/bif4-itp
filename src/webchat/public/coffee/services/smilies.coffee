@@ -30,10 +30,10 @@ angular.module('WebChat').factory '_Smileys', [ ->
                 "Oo": "031.gif"
                 "oO": "031.gif"
             
-        get_smiley: (key) ->
+        getSmiley: (key) ->
             return @path + @smileys[key]
             
-        get_smileys: () ->
+        getSmileys: () ->
             return @smileys
 
     return Smileys

@@ -28,6 +28,11 @@ angular.module('WebChat').factory 'MimeTypes', ['_MimeTypes', (_MimeTypes) ->
     return mimetypes
 ]
 
+angular.module('WebChat').factory 'Smileys', ['_Smileys', (_Smileys) ->
+    smileys = new _Smileys()
+    return smileys
+]
+
 
 angular.module('WebChat').factory 'WebChatWebSocket', 
     ['_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL',

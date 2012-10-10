@@ -1,36 +1,48 @@
 angular.module('WebChat').factory '_MessageModel', 
-    ['_Model', '_Smileys', 
-     (_Model, _Smileys) ->
+    ['_Model', 'Smileys', 'UserModel', 'ActiveUser',
+     (_Model, Smileys, UserModel, ActiveUser) ->
 
         class MessageModel extends _Model
 
             constructor: () ->
                 super('message')
 
-
             create: (item) ->
-                item.message = @cleanXSS(item.message)
-                item.message = @decorate(item.message)
+                item = @decorate(item)
                 super(item)
 
 
             update: (item) ->
-                item.message = @cleanXSS(item.message)
-                item.message = @decorate(item.message)
+                item = @decorate(item)
                 super(item)
 
+
+            decorate: (item) ->
+                # check if we were hightlighted
+                user = UserModel.getItemById(ActiveUser.id)
+                highlightName = user.firstname + user.lastname
+                if item.message.indexOf(highlightName) != -1
+                    item.hightlighted = true
+                    document.getElementById('sounds').play()
+                else
+                    item.hightlighted = false
+
+                item.message = @cleanXSS(item.message)
+                item.message = @sugarText(item.message)
+
+                return item
 
             # wraps links in <a> tags, pictures in <img> tags
             # msg: the message we search
             # return: the final message
-            decorate: (msg) ->
+            sugarText: (msg) ->
                 # first place all urls in <a> tags
                 msg = @createLinks(msg)
                 
                 # add smileys
-                smileys = new _Smileys()
-                for key, smile of smileys.get_smileys()
-                    img = '<img width="50" height="50" alt="' + key + '" src="' + smileys.get_smiley(key) + '" />'
+                smileys = Smileys
+                for key, smile of smileys.getSmileys()
+                    img = '<img width="50" height="50" alt="' + key + '" src="' + smileys.getSmiley(key) + '" />'
                     middle_line_regex = new RegExp("(" + @escapeForRegex(key) + ")([\.\?!,;]*) ", "g")
                     msg = msg.replace(middle_line_regex, " " + img + "$2 ")
                     break_line_regex = new RegExp(@escapeForRegex(key) + "([\.\?!,;]*)<br", "g")
