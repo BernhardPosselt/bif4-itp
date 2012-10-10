@@ -264,25 +264,27 @@
 
     <!-- Create new channel form -->
     <div ng-show="newChannelDialogue==true" id="newchannel_window" class="popup_window">
-        <div class="popup_window_title">New channel</div>
-        <div class="popup_window_content">
-            <div class="field">
-                <label for="newchannel_name">Name:</label>
-                <input id="newchannel_name" type="text" size="30" name="newchannel_name" />
+        <div ng-controller="NewChannelController">
+            <div class="popup_window_title">New channel</div>
+            <div class="popup_window_content">
+                <div class="field">
+                    <label for="newchannel_name">Name:</label>
+                    <input ng-model="newChannelName" id="newchannel_name" type="text" size="30" name="newchannel_name" />
+                </div>
+                <div class="field">
+                    <label for="newchannel_topic">Topic:</label>
+                    <input ng-model="newChannelTopic" id="newchannel_topic" type="text" size="30" name="newchannel_topic" />
+                </div>
+                <div class="field">
+                    <label for="newchannel_public">Public:</label>
+                    <input ng-model="newChannelPublic" id="newchannel_public" type="checkbox" size="30" name="newchannel_public" />
+                </div>
             </div>
-            <div class="field">
-                <label for="newchannel_topic">Topic:</label>
-                <input id="newchannel_topic" type="text" size="30" name="newchannel_topic" />
+            <div class="popup_window_buttons">
+                  <input ng-click="setNewChannelDialogue(false)" 
+                         class="cancel" type="button" value="Cancel"/>
+                  <input class="submit" type="button" value="Create" ng-click="createNewChannel(newChannelName, newChannelTopic, newChannelPublic)"/>
             </div>
-            <div class="field">
-                <label for="newchannel_public">Public:</label>
-                <input id="newchannel_public" type="checkbox" size="30" name="newchannel_public" />
-            </div>
-        </div>
-        <div class="popup_window_buttons">
-              <input ng-click="newChannelDialogue=false" 
-                     class="cancel" type="button" value="Cancel"/>
-              <input class="submit" type="button" value="Create"/>
         </div>
     </div>
 

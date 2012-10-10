@@ -912,11 +912,13 @@
 
         __extends(DialogueController, _super);
 
-        function DialogueController($scope, channelmodel) {
+        function DialogueController($scope) {
           var _this = this;
-          this.channelmodel = channelmodel;
           DialogueController.__super__.constructor.call(this, $scope);
           $scope.showNewChannelDialogue = function(show) {
+            return $scope.newChannelDialogue = show;
+          };
+          $scope.setNewChannelDialogue = function(show) {
             return $scope.newChannelDialogue = show;
           };
         }
@@ -1061,6 +1063,12 @@
   angular.module('WebChat').controller('DialogueController', [
     '$scope', '_DialogueController', function($scope, _DialogueController) {
       return new _DialogueController($scope);
+    }
+  ]);
+
+  angular.module('WebChat').controller('NewChannelController', [
+    '$scope', '_NewChannelController', function($scope, _NewChannelController) {
+      return new _NewChannelController($scope);
     }
   ]);
 
@@ -1357,5 +1365,69 @@
       return result;
     };
   });
+
+  angular.module('WebChat').factory('_NewChannelMessage', [
+    '_Message', function(_Message) {
+      var NewChannelMessage;
+      NewChannelMessage = (function(_super) {
+
+        __extends(NewChannelMessage, _super);
+
+        function NewChannelMessage(name, topic, isPublic) {
+          this.name = name;
+          this.topic = topic;
+          this.isPublic = isPublic;
+          NewChannelMessage.__super__.constructor.call(this, 'newchannel');
+        }
+
+        NewChannelMessage.prototype.serialize = function() {
+          var data;
+          data = {
+            name: this.name,
+            topic: this.topic,
+            is_public: this.isPublic
+          };
+          return NewChannelMessage.__super__.serialize.call(this, data);
+        };
+
+        return NewChannelMessage;
+
+      })(_Message);
+      return NewChannelMessage;
+    }
+  ]);
+
+  angular.module('WebChat').factory('_NewChannelController', [
+    '_Controller', '_NewChannelMessage', function(_Controller, _NewChannelMessage) {
+      var NewChannelController;
+      NewChannelController = (function(_super) {
+
+        __extends(NewChannelController, _super);
+
+        function NewChannelController($scope) {
+          var _this = this;
+          NewChannelController.__super__.constructor.call(this, $scope);
+          this.resetInput($scope);
+          $scope.createNewChannel = function(name, topic, isPublic) {
+            var message;
+            _this.resetInput($scope);
+            message = new _NewChannelMessage(name, topic, isPublic);
+            _this.sendMessage(message);
+            return $scope.setNewChannelDialogue(false);
+          };
+        }
+
+        NewChannelController.prototype.resetInput = function($scope) {
+          $scope.newChannelName = '';
+          $scope.newChannelTopic = '';
+          return $scope.newChannelPublic = false;
+        };
+
+        return NewChannelController;
+
+      })(_Controller);
+      return NewChannelController;
+    }
+  ]);
 
 }).call(this);
