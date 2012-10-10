@@ -375,17 +375,24 @@
 
         MessageModel.prototype.decorate = function(item) {
           var highlightName, user;
-          user = UserModel.getItemById(ActiveUser.id);
-          highlightName = user.firstname + user.lastname;
-          if (item.message.indexOf(highlightName) !== -1) {
-            item.hightlighted = true;
-            document.getElementById('sounds').play();
-          } else {
-            item.hightlighted = false;
+          if (item.type === 'text') {
+            user = UserModel.getItemById(ActiveUser.id);
+            highlightName = user.firstname + user.lastname;
+            if (item.message.indexOf(highlightName) !== -1) {
+              item.hightlighted = true;
+              document.getElementById('sounds').play();
+            } else {
+              item.hightlighted = false;
+            }
+            item.message = this.cleanXSS(item.message);
+            item.message = this.sugarText(item.message);
+            item.message = this.convertNewLines(item.message);
           }
-          item.message = this.cleanXSS(item.message);
-          item.message = this.sugarText(item.message);
           return item;
+        };
+
+        MessageModel.prototype.cleanXSS = function(text) {
+          return $('<div>').text(text).html();
         };
 
         MessageModel.prototype.sugarText = function(msg) {
@@ -433,8 +440,8 @@
           return (text + '').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
         };
 
-        MessageModel.prototype.cleanXSS = function(text) {
-          return $('<div>').text(text).html();
+        MessageModel.prototype.convertNewLines = function(text) {
+          return text.replace('\n', '<br />');
         };
 
         return MessageModel;

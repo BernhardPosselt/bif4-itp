@@ -18,19 +18,29 @@ angular.module('WebChat').factory '_MessageModel',
 
 
             decorate: (item) ->
-                # check if we were hightlighted
-                user = UserModel.getItemById(ActiveUser.id)
-                highlightName = user.firstname + user.lastname
-                if item.message.indexOf(highlightName) != -1
-                    item.hightlighted = true
-                    document.getElementById('sounds').play()
-                else
-                    item.hightlighted = false
 
-                item.message = @cleanXSS(item.message)
-                item.message = @sugarText(item.message)
+                # only enhance text messages
+                if item.type == 'text'
+                
+                    # check if we were hightlighted
+                    user = UserModel.getItemById(ActiveUser.id)
+                    highlightName = user.firstname + user.lastname
+                    if item.message.indexOf(highlightName) != -1
+                        item.hightlighted = true
+                        document.getElementById('sounds').play()
+                    else
+                        item.hightlighted = false
+
+                    item.message = @cleanXSS(item.message)
+                    item.message = @sugarText(item.message)
+                    item.message = @convertNewLines(item.message)
 
                 return item
+
+
+            cleanXSS: (text) ->
+                return $('<div>').text(text).html();
+
 
             # wraps links in <a> tags, pictures in <img> tags
             # msg: the message we search
@@ -82,8 +92,9 @@ angular.module('WebChat').factory '_MessageModel',
                 return (text+'').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")
 
 
-            cleanXSS: (text) ->
-                return $('<div>').text(text).html();
+            convertNewLines: (text) ->
+                return text.replace('\n', '<br />')
+
 
 
         return MessageModel
