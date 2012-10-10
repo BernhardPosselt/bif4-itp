@@ -8,16 +8,14 @@ angular.module('WebChat').factory '_MessageModel',
                 super('message')
 
             create: (item) ->
-                item = @decorate(item)
-                super(item)
+                super( @enhance(item) )
 
 
             update: (item) ->
-                item = @decorate(item)
-                super(item)
+                super( @enhance(item) )
 
 
-            decorate: (item) ->
+            enhance: (item) ->
 
                 # only enhance text messages
                 if item.type == 'text'
@@ -83,7 +81,7 @@ angular.module('WebChat').factory '_MessageModel',
                 pseudo_url_regex = /(^|[^\/])(www\.[\S]+(\b|$))/gi
                 email_regex = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/gi
                 msg = msg.replace(url_regex, '<a href="$1">$1</a>')
-                msg = msg.replace(pseudo_url_regex, '$1<a href="http://$2">$2</a>')
+                msg = msg.replace(pseudo_url_regex, '$1<a target="_blank" href="http://$2">$2</a>')
                 msg = msg.replace(email_regex, '<a href="mailto:$&">$&</a>')
                 return msg
 

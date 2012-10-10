@@ -339,10 +339,18 @@
         }
 
         UserModel.prototype.create = function(user) {
+          return UserModel.__super__.create.call(this, this.enhance(user));
+        };
+
+        UserModel.prototype.update = function(user) {
+          return UserModel.__super__.update.call(this, this.enhance(user));
+        };
+
+        UserModel.prototype.enhance = function(user) {
           user.getFullName = function() {
             return this.firstname + " " + this.lastname;
           };
-          return UserModel.__super__.create.call(this, user);
+          return user;
         };
 
         return UserModel;
@@ -364,16 +372,14 @@
         }
 
         MessageModel.prototype.create = function(item) {
-          item = this.decorate(item);
-          return MessageModel.__super__.create.call(this, item);
+          return MessageModel.__super__.create.call(this, this.enhance(item));
         };
 
         MessageModel.prototype.update = function(item) {
-          item = this.decorate(item);
-          return MessageModel.__super__.update.call(this, item);
+          return MessageModel.__super__.update.call(this, this.enhance(item));
         };
 
-        MessageModel.prototype.decorate = function(item) {
+        MessageModel.prototype.enhance = function(item) {
           var highlightName, user;
           if (item.type === 'text') {
             user = UserModel.getItemById(ActiveUser.id);
@@ -431,7 +437,7 @@
           pseudo_url_regex = /(^|[^\/])(www\.[\S]+(\b|$))/gi;
           email_regex = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/gi;
           msg = msg.replace(url_regex, '<a href="$1">$1</a>');
-          msg = msg.replace(pseudo_url_regex, '$1<a href="http://$2">$2</a>');
+          msg = msg.replace(pseudo_url_regex, '$1<a target="_blank" href="http://$2">$2</a>');
           msg = msg.replace(email_regex, '<a href="mailto:$&">$&</a>');
           return msg;
         };
