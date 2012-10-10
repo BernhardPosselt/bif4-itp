@@ -9,8 +9,6 @@ angular.module('WebChat').factory '_MessageController',
             constructor: ($scope) ->
                 super($scope)
 
-                $("#input_field").focus()
-
                 $("#input_field").keydown (e) =>
                     if e.keyCode == 9 # tab
                         @autoComplete($scope)
@@ -85,9 +83,6 @@ angular.module('WebChat').factory '_MessageController',
                     if fullName.toLowerCase().indexOf(toComplete.toLowerCase()) == 0
                         $scope.$apply -> 
                             $scope.textInput = toAppend + fullName
-
-
-
 
 
         return MessageController

@@ -17,6 +17,7 @@ angular.module('WebChat').factory '_ChannelListController',
                     @sendMessage(message)
                     @setActiveChannelId(id)
                     $scope.selected = id
+                    $("#input_field").focus()
 
 
         return ChannelListController
