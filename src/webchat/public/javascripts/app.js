@@ -79,25 +79,12 @@
   ]);
 
   angular.module('WebChat').factory('WebChatWebSocket', [
-    '_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL', 'ChannelModel', 'GroupModel', 'UserModel', 'FileModel', '$rootScope', function(_WebChatWebSocket, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL, ChannelModel, GroupModel, UserModel, FileModel, $rootScope) {
-      var models, socket;
-      models = [ChannelModel, GroupModel, UserModel, FileModel];
+    '_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL', '$rootScope', function(_WebChatWebSocket, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL, $rootScope) {
+      var socket;
       socket = new _WebChatWebSocket();
       socket.connect(WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL);
       socket.onReceive(function(message) {
-        var model, _i, _len, _results;
-        _results = [];
-        for (_i = 0, _len = models.length; _i < _len; _i++) {
-          model = models[_i];
-          if (model.canHandle(message.type)) {
-            _results.push($rootScope.$apply(function() {
-              return model.handle(message);
-            }));
-          } else {
-            _results.push(void 0);
-          }
-        }
-        return _results;
+        return $rootScope.$broadcast('message', message);
       });
       return socket;
     }
@@ -303,6 +290,10 @@
           MessageModel.__super__.constructor.call(this, 'message');
         }
 
+        MessageModel.prototype.create = function(item) {
+          return MessageModel.__super__.create.call(this, item);
+        };
+
         return MessageModel;
 
       })(_Model);
@@ -328,84 +319,94 @@
     }
   ]);
 
-  angular.module('WebChat').factory('_Model', function() {
-    var Model;
-    Model = (function() {
+  angular.module('WebChat').factory('_Model', [
+    '$rootScope', function($rootScope) {
+      var Model;
+      Model = (function() {
 
-      function _Class(modelType) {
-        this.modelType = modelType;
-        this.items = [];
-        this.hashMap = {};
-      }
-
-      _Class.prototype.handle = function(message) {
-        switch (message.action) {
-          case 'create':
-            return this.create(message.data);
-          case 'update':
-            return this.update(message.data);
-          case 'delete':
-            return this["delete"](message.data);
+        function _Class(modelType) {
+          var _this = this;
+          this.modelType = modelType;
+          this.items = [];
+          this.hashMap = {};
+          $rootScope.$on('message', function(scope, message) {
+            if (_this.canHandle(message.type)) {
+              return $rootScope.$apply(function() {
+                return _this.handle(message);
+              });
+            }
+          });
         }
-      };
 
-      _Class.prototype.create = function(item) {
-        this.hashMap[item.id] = item;
-        return this.items.push(item);
-      };
+        _Class.prototype.handle = function(message) {
+          switch (message.action) {
+            case 'create':
+              return this.create(message.data);
+            case 'update':
+              return this.update(message.data);
+            case 'delete':
+              return this["delete"](message.data);
+          }
+        };
 
-      _Class.prototype.update = function(updatedItem) {
-        var counter, item, _i, _len, _ref, _results;
-        _ref = this.items;
-        _results = [];
-        for (counter = _i = 0, _len = _ref.length; _i < _len; counter = ++_i) {
-          item = _ref[counter];
-          if (item.id === updatedItem.id) {
-            _results.push(this.items[counter] = updatedItem);
+        _Class.prototype.create = function(item) {
+          this.hashMap[item.id] = item;
+          return this.items.push(item);
+        };
+
+        _Class.prototype.update = function(updatedItem) {
+          var counter, item, _i, _len, _ref, _results;
+          _ref = this.items;
+          _results = [];
+          for (counter = _i = 0, _len = _ref.length; _i < _len; counter = ++_i) {
+            item = _ref[counter];
+            if (item.id === updatedItem.id) {
+              _results.push(this.items[counter] = updatedItem);
+            } else {
+              _results.push(void 0);
+            }
+          }
+          return _results;
+        };
+
+        _Class.prototype["delete"] = function(removedItem) {
+          var counter, item, removeItemId, _i, _len, _ref;
+          removeItemId = -1;
+          _ref = this.items;
+          for (counter = _i = 0, _len = _ref.length; _i < _len; counter = ++_i) {
+            item = _ref[counter];
+            if (item.id === removedItem.id) {
+              removeItemId = counter;
+            }
+          }
+          if (removeItemId >= 0) {
+            this.items.splice(removeItemId, 1);
+            return delete this.hashMap[removedItemId];
+          }
+        };
+
+        _Class.prototype.getItemById = function(id) {
+          return this.hashMap[id];
+        };
+
+        _Class.prototype.getItems = function() {
+          return this.items;
+        };
+
+        _Class.prototype.canHandle = function(msgType) {
+          if (msgType === this.modelType) {
+            return true;
           } else {
-            _results.push(void 0);
+            return false;
           }
-        }
-        return _results;
-      };
+        };
 
-      _Class.prototype["delete"] = function(removedItem) {
-        var counter, item, removeItemId, _i, _len, _ref;
-        removeItemId = -1;
-        _ref = this.items;
-        for (counter = _i = 0, _len = _ref.length; _i < _len; counter = ++_i) {
-          item = _ref[counter];
-          if (item.id === removedItem.id) {
-            removeItemId = counter;
-          }
-        }
-        if (removeItemId >= 0) {
-          this.items.splice(removeItemId, 1);
-          return delete this.hashMap[removedItemId];
-        }
-      };
+        return _Class;
 
-      _Class.prototype.getItemById = function(id) {
-        return this.hashMap[id];
-      };
-
-      _Class.prototype.getItems = function() {
-        return this.items;
-      };
-
-      _Class.prototype.canHandle = function(msgType) {
-        if (msgType === this.modelType) {
-          return true;
-        } else {
-          return false;
-        }
-      };
-
-      return _Class;
-
-    })();
-    return Model;
-  });
+      })();
+      return Model;
+    }
+  ]);
 
   angular.module('WebChat').factory('_MimeTypes', function() {
     var MimeTypes;
@@ -747,7 +748,22 @@
   ]);
 
   $(document).ready(function() {
-    return $("#input_field").focus();
+    var KeyCodes;
+    $("#input_field").focus();
+    KeyCodes = {
+      enter: 13,
+      tab: 9,
+      escape: 27
+    };
+    return $("#input_field").keydown(function(e) {
+      if (e.keyCode === KeyCodes.tab) {
+        return false;
+      }
+      if (e.keyCode === KeyCodes.enter && !e.shiftKey) {
+        $("#input_send").trigger('click');
+        return false;
+      }
+    });
   });
 
   angular.module('WebChat').factory('_DialogueController', [
@@ -995,10 +1011,18 @@
           };
           $scope.sendInput = function(text, messageType, channelId) {
             var message;
-            message = new _SendMessage(text, messageType, channelId);
-            return _this.sendMessage(message);
+            if (text !== '') {
+              message = new _SendMessage(text, messageType, channelId);
+              _this.sendMessage(message);
+              return _this.resetInput($scope);
+            }
           };
         }
+
+        MessageController.prototype.resetInput = function($scope) {
+          $scope.messageType = 'text';
+          return $scope.textInput = '';
+        };
 
         return MessageController;
 

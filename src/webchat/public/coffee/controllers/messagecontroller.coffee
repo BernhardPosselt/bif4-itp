@@ -29,8 +29,16 @@ angular.module('WebChat').factory '_MessageController',
                     return user.getFullName()
 
                 $scope.sendInput = (text, messageType, channelId) =>
-                    message = new _SendMessage(text, messageType, channelId)
-                    @sendMessage(message)
+                    if text != ''
+                        message = new _SendMessage(text, messageType, channelId)
+                        @sendMessage(message)
+                        @resetInput($scope)
+
+
+            resetInput: ($scope) ->
+                $scope.messageType = 'text'
+                $scope.textInput = ''
+
 
         return MessageController
 

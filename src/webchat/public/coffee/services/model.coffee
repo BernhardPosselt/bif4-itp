@@ -1,10 +1,15 @@
-angular.module('WebChat').factory '_Model', () ->
+angular.module('WebChat').factory '_Model', ['$rootScope', ($rootScope) ->
 
     Model = class
 
         constructor: (@modelType) ->
             @items = []
             @hashMap = {} # hashmap for quick access via item id
+            $rootScope.$on 'message', (scope, message) =>
+                if @canHandle(message.type)
+                    $rootScope.$apply =>
+                        @handle message
+
 
 
         handle: (message) ->
@@ -49,3 +54,5 @@ angular.module('WebChat').factory '_Model', () ->
                 return false
 
     return Model
+
+]

@@ -5,5 +5,10 @@ angular.module('WebChat').factory '_MessageModel', ['_Model', (_Model) ->
         constructor: () ->
             super('message')
 
+        create: (item) ->
+            
+            super(item)
+
+
     return MessageModel
 ]
