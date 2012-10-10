@@ -747,24 +747,7 @@
     }
   ]);
 
-  $(document).ready(function() {
-    var KeyCodes;
-    $("#input_field").focus();
-    KeyCodes = {
-      enter: 13,
-      tab: 9,
-      escape: 27
-    };
-    return $("#input_field").keydown(function(e) {
-      if (e.keyCode === KeyCodes.tab) {
-        return false;
-      }
-      if (e.keyCode === KeyCodes.enter && !e.shiftKey) {
-        $("#input_send").trigger('click');
-        return false;
-      }
-    });
-  });
+  $(document).ready(function() {});
 
   angular.module('WebChat').factory('_DialogueController', [
     '_Controller', function(_Controller) {
@@ -978,7 +961,7 @@
   ]);
 
   angular.module('WebChat').factory('_MessageController', [
-    '_Controller', '_SendMessage', 'GroupModel', 'UserModel', 'MessageModel', 'ChannelModel', function(_Controller, _SendMessage, GroupModel, UserModel, MessageModel, ChannelModel) {
+    '_Controller', '_SendMessage', 'GroupModel', 'UserModel', 'MessageModel', 'ChannelModel', '$filter', function(_Controller, _SendMessage, GroupModel, UserModel, MessageModel, ChannelModel, $filter) {
       var MessageController;
       MessageController = (function(_super) {
 
@@ -987,6 +970,18 @@
         function MessageController($scope) {
           var _this = this;
           MessageController.__super__.constructor.call(this, $scope);
+          $("#input_field").focus();
+          $("#input_field").keydown(function(e) {
+            if (e.keyCode === 9) {
+              _this.autoComplete($scope);
+              return false;
+            }
+            if (e.keyCode === 13 && !e.shiftKey) {
+              $("#input_send").trigger('click');
+              return false;
+            }
+          });
+          this.resetInput($scope);
           this.groupmodel = GroupModel;
           this.usermodel = UserModel;
           this.messagemodel = MessageModel;
@@ -1003,7 +998,6 @@
           $scope.getMessages = function() {
             return _this.messagemodel.getItems();
           };
-          $scope.messageType = 'text';
           $scope.getUserFullName = function(userId) {
             var user;
             user = _this.usermodel.getItemById(userId);
@@ -1022,6 +1016,55 @@
         MessageController.prototype.resetInput = function($scope) {
           $scope.messageType = 'text';
           return $scope.textInput = '';
+        };
+
+        MessageController.prototype.autoComplete = function($scope) {
+          var bool, channel, fullName, groupId, toAppend, toComplete, user, userId, userIds, userInGroupFilter, users, words, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
+          toComplete = '';
+          toAppend = '';
+          if ($scope.textInput.length === 0) {
+            return;
+          } else {
+            words = $scope.textInput.split(' ');
+            toComplete = words[words.length - 1];
+            if (words.length >= 2) {
+              words.pop();
+              toAppend = words.join(' ');
+              toAppend += ' ';
+            }
+          }
+          userIds = {};
+          channel = this.channelmodel.getItemById(this.getActiveChannelId());
+          users = this.usermodel.getItems();
+          _ref = channel.users;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            userId = _ref[_i];
+            userIds[userId] = true;
+          }
+          userInGroupFilter = $filter('userInGroup');
+          _ref1 = channel.groups;
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            groupId = _ref1[_j];
+            _ref2 = userInGroupFilter(users, groupId);
+            for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+              user = _ref2[_k];
+              userIds[user.id] = true;
+            }
+          }
+          _results = [];
+          for (userId in userIds) {
+            bool = userIds[userId];
+            user = this.usermodel.getItemById(userId);
+            fullName = user.firstname + user.lastname;
+            if (fullName.toLowerCase().indexOf(toComplete.toLowerCase()) === 0) {
+              _results.push($scope.$apply(function() {
+                return $scope.textInput = toAppend + fullName;
+              }));
+            } else {
+              _results.push(void 0);
+            }
+          }
+          return _results;
         };
 
         return MessageController;

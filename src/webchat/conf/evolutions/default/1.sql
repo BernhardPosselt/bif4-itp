@@ -3,7 +3,6 @@
 
 # --- !Ups
 
-
 create table channel (
   id                        integer not null,
   name                      varchar(255),
