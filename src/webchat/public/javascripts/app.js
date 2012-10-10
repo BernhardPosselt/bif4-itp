@@ -995,7 +995,6 @@
           };
           $scope.sendInput = function(text, messageType, channelId) {
             var message;
-            console.log(messageType);
             message = new _SendMessage(text, messageType, channelId);
             return _this.sendMessage(message);
           };
@@ -1116,6 +1115,20 @@
         group = groups[_i];
         if (_ref = group.id, __indexOf.call(channel.groups, _ref) >= 0) {
           result.push(group);
+        }
+      }
+      return result;
+    };
+  });
+
+  angular.module('WebChat').filter('messageInChannel', function() {
+    return function(messages, channelId) {
+      var message, result, _i, _len;
+      result = [];
+      for (_i = 0, _len = messages.length; _i < _len; _i++) {
+        message = messages[_i];
+        if (message.channel_id === channelId) {
+          result.push(message);
         }
       }
       return result;

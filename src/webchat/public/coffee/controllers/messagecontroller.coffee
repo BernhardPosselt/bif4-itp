@@ -29,7 +29,6 @@ angular.module('WebChat').factory '_MessageController',
                     return user.getFullName()
 
                 $scope.sendInput = (text, messageType, channelId) =>
-                    console.log messageType
                     message = new _SendMessage(text, messageType, channelId)
                     @sendMessage(message)
 
