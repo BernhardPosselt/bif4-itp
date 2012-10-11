@@ -14,11 +14,7 @@ public class MessageHandler {
 			 WorkRoutine myroutine = MessageFactory.getMessageFromType(inmessage.findPath("type").asText());
 			 myroutine.inmessage = JsonBinder.bindfromJson(inmessage, myroutine);
 			 if (myroutine.model != null){
-				 myroutine.model = ObjectMapper.maptoDB(myroutine);
-				 models.Message message= new Message();
-				 message = (models.Message)myroutine.model;
-				 message.user_id = User.find.byId(1);
-				 message.update();
+				 myroutine.model = ObjectMapper.maptoDB(myroutine, userid);
 			 }
 			 if (myroutine.outmessage != null){
 				  myroutine.outmessage = ObjectMapper.mapfromDB(myroutine);

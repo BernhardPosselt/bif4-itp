@@ -106,14 +106,14 @@ public class TestJsonBinder {
 		data.date = new Date();
 		data.id = 22;
 		data.type = "java";
-		data.user_id = 2;
+		data.owner_id = 2;
 		data.modified = new Date();
 		outmessage.data = data;
 		myroutine.outmessage = outmessage;
 		JsonNode json = JsonBinder.bindtoJson(myroutine);
 		assertEquals(json.findPath("message").asText(), "mymessagecontent");
 		assertEquals(json.findPath("id").asInt(), 22);
-		assertEquals(json.findPath("user_id").asInt(), 2);
+		assertEquals(json.findPath("owner_id").asInt(), 2);
 	}
 	@Test
 	public void testbindtoJson_Status(){

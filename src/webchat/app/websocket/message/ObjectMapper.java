@@ -18,7 +18,7 @@ import websocket.json.in.InMessageData;
 
 
 public class ObjectMapper {
-	public static Model maptoDB (WorkRoutine myroutine) {
+	public static Model maptoDB (WorkRoutine myroutine, int owner_id) {
 		Model mymodel = (Model)myroutine.model;
 		try{	
 			IInMessage inmessage = myroutine.inmessage;
@@ -54,10 +54,11 @@ public class ObjectMapper {
 							m = helpmodel.getClass().getMethod("getbyId", int.class);
 							mfield.set(mymodel, m.invoke(indata, infield.getInt(indata)));
 						}
-						else{
+						else
 							mfield.set(mymodel,infield.get(indata));	
-						}	
 					}
+					else if (mfield.getName().equals("owner_id"))
+						mfield.set(mymodel, models.User.getbyId(owner_id));
 				}
 			}
 			if (myroutine.dbaction.equals("create"))

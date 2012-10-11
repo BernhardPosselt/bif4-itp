@@ -36,7 +36,7 @@ create table message (
   type                      varchar(255),
   date                      timestamp,
   modified                  timestamp,
-  user_id_id                integer,
+  owner_id_id               integer,
   channel_id_id             integer,
   constraint pk_message primary key (id))
 ;
@@ -91,8 +91,8 @@ create sequence user_seq;
 
 alter table file add constraint fk_file_owner_id_1 foreign key (owner_id_id) references user (id) on delete restrict on update restrict;
 create index ix_file_owner_id_1 on file (owner_id_id);
-alter table message add constraint fk_message_user_id_2 foreign key (user_id_id) references user (id) on delete restrict on update restrict;
-create index ix_message_user_id_2 on message (user_id_id);
+alter table message add constraint fk_message_owner_id_2 foreign key (owner_id_id) references user (id) on delete restrict on update restrict;
+create index ix_message_owner_id_2 on message (owner_id_id);
 alter table message add constraint fk_message_channel_id_3 foreign key (channel_id_id) references channel (id) on delete restrict on update restrict;
 create index ix_message_channel_id_3 on message (channel_id_id);
 

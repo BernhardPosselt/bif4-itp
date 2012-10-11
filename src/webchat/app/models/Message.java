@@ -47,7 +47,7 @@ public class Message extends Model {
 	public Date modified = new Date();
 	
 	@ManyToOne
-	public User user_id;
+	public User owner_id;
 	
 	@ManyToOne
 	public Channel channel_id;

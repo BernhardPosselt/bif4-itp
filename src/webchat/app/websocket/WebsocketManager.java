@@ -35,6 +35,7 @@ public class WebsocketManager {
 	        	MessageFactory.registerMessage();
         		List<Integer> userlist = new ArrayList<Integer>();
         		userlist.add(userId);
+        		models.User.setUseronline(userId);
         		NotifyInit.sendInit(userlist);
         		init = false;
             
@@ -43,8 +44,6 @@ public class WebsocketManager {
                     public void invoke(JsonNode event) {
                         // Send a Talk message to the room.
                         try {
-                        
-                        	
                         	
                             MessageHandler.handleMessage(event,userId);
                         	//websocket.message.Message message = websocket.message.MessageFactory.getMessageFromType(event.findPath("type").asText());

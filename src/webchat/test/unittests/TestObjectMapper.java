@@ -72,7 +72,7 @@ public class TestObjectMapper {
 			        message.date = new Date();
 			        message.modified = new Date();
 			        message.type = "text";
-			        message.user_id = User.find.byId(1);
+			        message.owner_id = User.find.byId(1);
 			        message.channel_id = Channel.find.byId(1);
 			        message.save();
 			        WorkRoutine myroutine = new WorkRoutine();
@@ -83,7 +83,7 @@ public class TestObjectMapper {
 					websocket.json.out.MessageData data = new MessageData();
 					data = mymessage.data;
 					assertEquals(data.message, "Hallo du!");
-					assertEquals(data.user_id, 1);
+					assertEquals(data.owner_id, 1);
 					assertEquals(data.type, "text");
 		    	}		
 			});
@@ -255,11 +255,12 @@ public class TestObjectMapper {
 			        myroutine.inmessage = inmessage;
 			        myroutine.model = new models.Message();
 			        myroutine.dbaction = "create";
-					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
+					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine, 2);
 					models.Message mess = new models.Message();
 					mess = (models.Message)mymodel;
 					assertEquals(mess.channel_id,models.Channel.find.byId(1));
 					assertEquals(mess.message, "Servus");
+					assertEquals(mess.owner_id,models.User.getbyId(2));
 					assertEquals(mess.type, "text");
 		    	}		
 			});
@@ -286,7 +287,7 @@ public class TestObjectMapper {
 			        myroutine.model = new models.Channel();
 			        myroutine.outmessage = new websocket.json.out.Channel();
 			        myroutine.dbaction = "update";
-					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
+					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine,2);
 					models.Channel chan = new models.Channel();
 					chan = (models.Channel)mymodel;
 				 	assertEquals(true, chan.archived);	
@@ -318,7 +319,7 @@ public class TestObjectMapper {
 			        myroutine.inmessage = inmessage;
 			        myroutine.model = new models.Channel();
 			        myroutine.dbaction = "update";
-					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
+					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine,2);
 					models.Channel chan = new models.Channel();
 					chan = (models.Channel)mymodel;
 					assertEquals(chan.id, 3);
@@ -351,7 +352,7 @@ public class TestObjectMapper {
 			        myroutine.inmessage = inmessage;
 			        myroutine.model = new models.Channel();
 			        myroutine.dbaction = "update";
-					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
+					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine,2);
 					models.Channel chan = new models.Channel();
 					chan = (models.Channel)mymodel;
 					assertEquals(chan.id, 3);
@@ -382,7 +383,7 @@ public class TestObjectMapper {
 			        myroutine.inmessage = inmessage;
 			        myroutine.model = new models.Channel();
 			        myroutine.dbaction = "update";
-					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
+					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine,2);
 					models.Channel chan = new models.Channel();
 					chan = (models.Channel)mymodel;
 					assertEquals(chan.id, 2);
@@ -414,7 +415,7 @@ public class TestObjectMapper {
 			        myroutine.inmessage = inmessage;
 			        myroutine.model = new models.Channel();
 			        myroutine.dbaction = "create";
-					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
+					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine,2);
 					models.Channel chan = new models.Channel();
 					chan = (models.Channel)mymodel;
 					assertEquals(chan.name, "newchannel");
@@ -445,7 +446,7 @@ public class TestObjectMapper {
 			        myroutine.inmessage = inmessage;
 			        myroutine.model = new models.Channel();
 			        myroutine.dbaction = "update";
-					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
+					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine,2);
 					models.Channel chan = new models.Channel();
 					chan = (models.Channel)mymodel;
 					assertEquals(chan.name, "new name");
@@ -473,7 +474,7 @@ public class TestObjectMapper {
 			        myroutine.inmessage = inmessage;
 			        myroutine.model = new models.Channel();
 			        myroutine.dbaction = "delete";
-					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
+					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine,2);
 					models.Channel chan = new models.Channel();
 					chan = (models.Channel)mymodel;
 					assertEquals(models.Channel.findAll().size(), 2);
@@ -509,7 +510,7 @@ public class TestObjectMapper {
 			        myroutine.inmessage = inmessage;
 			        myroutine.model = new models.File();
 			        myroutine.dbaction = "delete";
-					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
+					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine,2);
 					models.File file = new models.File();
 					file = (models.File)mymodel;
 					assertEquals(File.findAll().size(), 0);
@@ -540,7 +541,7 @@ public class TestObjectMapper {
 			        myroutine.inmessage = inmessage;
 			        myroutine.model = new models.User();
 			        myroutine.dbaction = "update";
-					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine);
+					Model mymodel = (Model)ObjectMapper.maptoDB(myroutine,2);
 					models.User usr = new models.User();
 					usr = (models.User)mymodel;
 					assertEquals(usr.username, "newname");

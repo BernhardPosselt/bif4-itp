@@ -11,14 +11,23 @@ import websocket.WebsocketNotifier;
 public class NotifyInit{
 
 	public static void sendInit(List<Integer> userlist) {
-		try{
+		try
+		{
+			WorkRoutine routine = new WorkRoutine();
+			routine.model = models.User.getbyId(userlist.get(0));
+			routine.dbaction = "create";
+			routine.outmessage = new websocket.json.out.ActiveUser();
+			routine.outmessage = ObjectMapper.mapfromDB(routine);
+			JsonNode outmessage = JsonBinder.bindtoJson(routine);	
+			WebsocketNotifier.sendMessagetoUser(userlist, outmessage);
+			
 			for (models.Groups mygroup : models.Groups.findAll()){
 				WorkRoutine myroutine = new WorkRoutine();
 				myroutine.outmessage = new websocket.json.out.Group();
 				myroutine.model = mygroup;
 				myroutine.dbaction = "create";
 				myroutine.outmessage = ObjectMapper.mapfromDB(myroutine);
-				JsonNode outmessage = JsonBinder.bindtoJson(myroutine);
+				outmessage = JsonBinder.bindtoJson(myroutine);
 				WebsocketNotifier.sendMessagetoUser(userlist, outmessage);
 			}
 			
@@ -28,7 +37,7 @@ public class NotifyInit{
 				myroutine.dbaction = "create";
 				myroutine.model = mychan;
 				myroutine.outmessage = ObjectMapper.mapfromDB(myroutine);	
-				JsonNode outmessage = JsonBinder.bindtoJson(myroutine);
+				outmessage = JsonBinder.bindtoJson(myroutine);
 				myroutine.dbaction = "create";
 				WebsocketNotifier.sendMessagetoUser(userlist, outmessage);
 			}
@@ -39,24 +48,12 @@ public class NotifyInit{
 				myroutine.model = myuser;
 				myroutine.dbaction = "create";
 				myroutine.outmessage = ObjectMapper.mapfromDB(myroutine);
-				JsonNode outmessage = JsonBinder.bindtoJson(myroutine);
+				outmessage = JsonBinder.bindtoJson(myroutine);
 				WebsocketNotifier.sendMessagetoUser(userlist, outmessage);
-			}
-			
-			
-			WorkRoutine myroutine = new WorkRoutine();
-			myroutine.model = models.User.getbyId(userlist.get(0));
-			myroutine.dbaction = "create";
-			myroutine.outmessage = new websocket.json.out.ActiveUser();
-			myroutine.outmessage = ObjectMapper.mapfromDB(myroutine);
-			JsonNode outmessage = JsonBinder.bindtoJson(myroutine);	
-			WebsocketNotifier.sendMessagetoUser(userlist, outmessage);
-			
-	  	 	//WebsocketNotifier.(User.genUserchanged(userid, "update"));
+			}		
 		}
 		catch (Exception exp){
 			exp.printStackTrace();
 		}
 	}
-
 }

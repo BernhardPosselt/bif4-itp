@@ -9,7 +9,7 @@ import models.Channel;
 
 public class MessageData extends IMessageData{
 	public int id;
-	public int user_id;
+	public int owner_id;
 	public int channel_id;
 	public String message;
 	public String type;
