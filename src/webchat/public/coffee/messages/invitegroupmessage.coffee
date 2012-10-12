@@ -8,8 +8,8 @@ angular.module('WebChat').factory '_InviteGroupMessage', ['_Message', (_Message)
 
         serialize: ->
             data = 
-                channel_id: @channelId
-                group_id: @groupId
+                id: @channelId
+                group: @groupId
                 value: @value
             return super(data)
 

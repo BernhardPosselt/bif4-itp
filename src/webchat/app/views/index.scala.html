@@ -71,7 +71,7 @@
                 <div class="stream_chat">
                     <div class="line" 
                          ng-repeat="message in getMessages() | messageInChannel:channel.id">
-                        <div class="user">{{getUserFullName(message.user_id)}}</div>
+                        <div class="user">{{getUserFullName(message.owner_id)}}</div>
                         <div class="message" ng-bind-html-unsafe="message.message"></div>
                     </div>
                 </div>
