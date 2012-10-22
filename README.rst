@@ -64,8 +64,7 @@ compiled into public/stylesheet
 
 CoffeeScript
 ------------
-CoffeeScript Files reside in the public/coffee directory and are compiled with the
-script coffeecompile.sh . The script has to be launched from the same directory it is in
+CoffeeScript Files reside in the public/coffee directory and are compiled by cake. The command has to be launched from the same directory it is in
 and automatically compiles all changes that occur in coffee files automatically.
 
 For this to work you have to install nodejs and coffeescript
@@ -76,7 +75,7 @@ For this to work you have to install nodejs and coffeescript
     
 Then launch the script with
 
-    ./coffeecompile.sh
+    cake watch
 
 Now make your changes to the coffee files and simply save to start a recompile
 
