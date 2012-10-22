@@ -14,6 +14,10 @@
 
   app.run(function($rootScope) {});
 
+  $(document).ready(function() {
+    return SyntaxHighlighter.defaults.collapse = true;
+  });
+
   app = angular.module('WebChat', []).config(function($provide) {
     $provide.value('WEBSOCKET_DOMAIN', document.location.host);
     $provide.value('WEBSOCKET_PATH', '/websocket');
@@ -21,6 +25,10 @@
   });
 
   app.run(function($rootScope) {});
+
+  $(document).ready(function() {
+    return SyntaxHighlighter.defaults.collapse = true;
+  });
 
   angular.module('WebChat').factory('ActiveChannel', [
     '$rootScope', function($rootScope) {
@@ -1475,6 +1483,13 @@
         }
       }
       return result;
+    };
+  });
+
+  angular.module('WebChat').filter('highlight', function() {
+    return function(messages) {
+      SyntaxHighlighter.highlight();
+      return messages;
     };
   });
 

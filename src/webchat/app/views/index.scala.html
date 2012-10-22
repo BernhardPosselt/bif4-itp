@@ -80,10 +80,21 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="line" 
+                        <div class="line"
+                             ng-switch on="message.type" 
                              ng-class='{line0: message.color, line1: !message.color}'>
                             <div class="user">{{getUserFullName(message.owner_id)}}</div>
-                            <div class="message" ng-bind-html-unsafe="message.message"></div>
+                            <div class="message" 
+                                 ng-switch-when="text"
+                                 ng-bind-html-unsafe="message.message">
+                             </div>
+                             <div class="message" 
+                                 ng-switch-default>
+                                 <div class="code_container">
+                                    <pre class="brush: {{message.type}}"
+                                         >{{message.message|highlight}}</pre>
+                                 </div>
+                             </div>
                         </div>
                     </div>
                 </div>

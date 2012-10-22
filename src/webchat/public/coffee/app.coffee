@@ -7,3 +7,6 @@ app = angular.module('WebChat', []).
         return
 
 app.run ($rootScope) ->
+
+$(document).ready ->
+    SyntaxHighlighter.defaults.collapse = true
