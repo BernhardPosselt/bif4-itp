@@ -69,10 +69,22 @@
                 </div>
 
                 <div class="stream_chat">
-                    <div class="line" 
-                         ng-repeat="message in getMessages() | messageInChannel:channel.id">
-                        <div class="user">{{getUserFullName(message.owner_id)}}</div>
-                        <div class="message" ng-bind-html-unsafe="message.message"></div>
+                    <div ng-repeat="message in getMessages() | messageInChannel:channel.id">
+                        <div ng-switch on="message.showDate">
+                            <div class="line date_line0"
+                                 ng-switch-when="true">
+                                <div class="user"></div>
+                                <div class="date">
+                                    <span class="year">{{ message.date | date:'yyyy-MM-dd'}}</span>
+                                    <span class="time">{{ message.date | date:'hh:mm'}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="line" 
+                             ng-class='{line0: message.color, line1: !message.color}'>
+                            <div class="user">{{getUserFullName(message.owner_id)}}</div>
+                            <div class="message" ng-bind-html-unsafe="message.message"></div>
+                        </div>
                     </div>
                 </div>
             </div>

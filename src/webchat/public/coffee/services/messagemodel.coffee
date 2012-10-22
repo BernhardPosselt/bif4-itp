@@ -2,12 +2,39 @@ angular.module('WebChat').factory '_MessageModel',
     ['_Model', 'Smileys', 'UserModel', 'ActiveUser',
      (_Model, Smileys, UserModel, ActiveUser) ->
 
+        class ChannelMessageCache
+
+            constructor: () ->
+                @channels = {}
+
+            registerChannelMessage: (item) ->
+                channel = @getChannelById(item.channel_id)
+                channel.push(item)
+
+
+            getLastMessage: (channelId) ->
+                channel = @getChannelById(channelId)
+                if channel.length == 0
+                    return null
+                else
+                    return channel[channel.length - 1]
+
+                    
+            getChannelById: (channelId) ->
+                if @channels[channelId] == undefined
+                    @channels[channelId] = []
+                return @channels[channelId]
+
+
+
         class MessageModel extends _Model
 
             constructor: () ->
                 super('message')
+                @channelCache = new ChannelMessageCache()
+                
 
-            create: (item) ->
+            create: (item) ->              
                 super( @enhance(item) )
 
 
@@ -15,7 +42,31 @@ angular.module('WebChat').factory '_MessageModel',
                 super( @enhance(item) )
 
 
+            delete: (item) ->
+                super(item)                
+
+
             enhance: (item) ->
+                # add special formatting for last message
+                lastMsg = @channelCache.getLastMessage(item.channel_id)
+                if lastMsg == null
+                    item.showDate = true
+                    item.color = 0
+                else
+                    # alternate color by author
+                    if lastMsg.owner_id != item.owner_id
+                        item.color = (lastMsg.color + 1) % 2
+                    else 
+                        item.color = lastMsg.color
+
+                    # show timestamps when last message is more than a minute
+                    # ago
+                    if (item.date - lastMsg.date)/1000 >= 60
+                        item.showDate = true
+                    else
+                        item.showDate = false 
+
+                @channelCache.registerChannelMessage(item)
 
                 # only enhance text messages
                 if item.type == 'text'

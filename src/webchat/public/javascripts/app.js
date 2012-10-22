@@ -370,13 +370,46 @@
 
   angular.module('WebChat').factory('_MessageModel', [
     '_Model', 'Smileys', 'UserModel', 'ActiveUser', function(_Model, Smileys, UserModel, ActiveUser) {
-      var MessageModel;
+      var ChannelMessageCache, MessageModel;
+      ChannelMessageCache = (function() {
+
+        function ChannelMessageCache() {
+          this.channels = {};
+        }
+
+        ChannelMessageCache.prototype.registerChannelMessage = function(item) {
+          var channel;
+          channel = this.getChannelById(item.channel_id);
+          return channel.push(item);
+        };
+
+        ChannelMessageCache.prototype.getLastMessage = function(channelId) {
+          var channel;
+          channel = this.getChannelById(channelId);
+          if (channel.length === 0) {
+            return null;
+          } else {
+            return channel[channel.length - 1];
+          }
+        };
+
+        ChannelMessageCache.prototype.getChannelById = function(channelId) {
+          if (this.channels[channelId] === void 0) {
+            this.channels[channelId] = [];
+          }
+          return this.channels[channelId];
+        };
+
+        return ChannelMessageCache;
+
+      })();
       MessageModel = (function(_super) {
 
         __extends(MessageModel, _super);
 
         function MessageModel() {
           MessageModel.__super__.constructor.call(this, 'message');
+          this.channelCache = new ChannelMessageCache();
         }
 
         MessageModel.prototype.create = function(item) {
@@ -387,8 +420,29 @@
           return MessageModel.__super__.update.call(this, this.enhance(item));
         };
 
+        MessageModel.prototype["delete"] = function(item) {
+          return MessageModel.__super__["delete"].call(this, item);
+        };
+
         MessageModel.prototype.enhance = function(item) {
-          var highlightName, user;
+          var highlightName, lastMsg, user;
+          lastMsg = this.channelCache.getLastMessage(item.channel_id);
+          if (lastMsg === null) {
+            item.showDate = true;
+            item.color = 0;
+          } else {
+            if (lastMsg.owner_id !== item.owner_id) {
+              item.color = (lastMsg.color + 1) % 2;
+            } else {
+              item.color = lastMsg.color;
+            }
+            if ((item.date - lastMsg.date) / 1000 >= 60) {
+              item.showDate = true;
+            } else {
+              item.showDate = false;
+            }
+          }
+          this.channelCache.registerChannelMessage(item);
           if (item.type === 'text') {
             user = UserModel.getItemById(ActiveUser.id);
             highlightName = user.firstname + user.lastname;
@@ -1418,6 +1472,20 @@
         group = groups[_i];
         if (_ref = group.id, __indexOf.call(channel.groups, _ref) >= 0) {
           result.push(group);
+        }
+      }
+      return result;
+    };
+  });
+
+  angular.module('WebChat').filter('messageInChannel', function() {
+    return function(messages, channelId) {
+      var message, result, _i, _len;
+      result = [];
+      for (_i = 0, _len = messages.length; _i < _len; _i++) {
+        message = messages[_i];
+        if (message.channel_id === channelId) {
+          result.push(message);
         }
       }
       return result;
