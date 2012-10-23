@@ -47,7 +47,7 @@ public class Channel extends Model {
 	public Boolean archived;
 	
 	@ManyToMany(cascade=CascadeType.ALL)
-	public List<User> users;
+	public List<User> users = new ArrayList<User>();
 	
 	public List<User> getUsers() {
 		return users;
@@ -58,7 +58,7 @@ public class Channel extends Model {
 	}
 
 	@ManyToMany(cascade=CascadeType.ALL)
-	public List<Groups> groups;
+	public List<Groups> groups = new ArrayList<Groups>();
 	
 	public List<Groups> getGroups() {
 		return groups;
@@ -69,7 +69,7 @@ public class Channel extends Model {
 	}
 	
 	@ManyToMany(cascade=CascadeType.ALL)
-	public List<File> files;
+	public List<File> files = new ArrayList<File>();
 	
 	public List<File> getFiles() {
 		return files;

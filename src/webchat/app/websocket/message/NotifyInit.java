@@ -38,7 +38,6 @@ public class NotifyInit{
 				myroutine.model = mychan;
 				myroutine.outmessage = ObjectMapper.mapfromDB(myroutine);	
 				outmessage = JsonBinder.bindtoJson(myroutine);
-				myroutine.dbaction = "create";
 				WebsocketNotifier.sendMessagetoUser(userlist, outmessage);
 			}
 			

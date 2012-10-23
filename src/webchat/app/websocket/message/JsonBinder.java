@@ -17,7 +17,7 @@ public class JsonBinder {
 		String json = "";
 		try {
 			IOutMessage outmessage = myroutine.outmessage;
-			JSONSerializer myser = new JSONSerializer().include("*.data", "*.files", "*.users", "*.groups");
+			JSONSerializer myser = new JSONSerializer().include("*.data", "*.files", "*.users", "*.groups", "*.mod", ".readonly");
 			json = myser.exclude("*.class").serialize(outmessage);
 
 		} catch (JSONException e) {

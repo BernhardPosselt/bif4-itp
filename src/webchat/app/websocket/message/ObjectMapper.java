@@ -61,8 +61,27 @@ public class ObjectMapper {
 						mfield.set(mymodel, models.User.getbyId(owner_id));
 				}
 			}
-			if (myroutine.dbaction.equals("create"))
+			if (myroutine.dbaction.equals("create")){
 				mymodel.save();
+				try {
+					if (mymodel.getClass().getField("is_public") != null){
+						if ((Boolean)mymodel.getClass().getField("is_public").get(mymodel)){
+							
+							mymodel.getClass().getField("users").set(mymodel, models.User.findAll());
+						}
+						else
+						{	
+							List<models.User> ulist = new ArrayList<models.User>();
+							ulist.add(User.find.byId(owner_id));
+							mymodel.getClass().getField("users").set(mymodel, ulist);
+						}
+						mymodel.saveManyToManyAssociations("users");
+					}
+				}
+				catch(NoSuchFieldException exp){
+				    	
+				}	
+			}
 			else if (myroutine.dbaction.equals("delete"))
 				mymodel.delete();
 			else 
@@ -87,6 +106,7 @@ public class ObjectMapper {
 						if (outfield.getType().getName().equals("java.util.List")){
 							List<Model> modellist = (List<Model>)modelfield.get(model);	
 							ArrayList<Integer> mylist= new ArrayList<Integer>();
+						
 							//Iteratate through all Listmembers
 							for (Iterator<Model> iter = modellist.iterator(); iter.hasNext();){
 								Model mid = (Model)iter.next();
