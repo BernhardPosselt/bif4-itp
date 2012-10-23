@@ -673,7 +673,7 @@
           var data;
           data = {
             id: this.channelId,
-            user: this.userId,
+            users: this.userId,
             value: this.value
           };
           return InviteUserMessage.__super__.serialize.call(this, data);
@@ -844,7 +844,7 @@
           var data;
           data = {
             id: this.channelId,
-            group: this.groupId,
+            groups: this.groupId,
             value: this.value
           };
           return InviteGroupMessage.__super__.serialize.call(this, data);
