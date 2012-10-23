@@ -418,6 +418,7 @@
         function MessageModel() {
           MessageModel.__super__.constructor.call(this, 'message');
           this.channelCache = new ChannelMessageCache();
+          this.lastShownTimestamp = {};
         }
 
         MessageModel.prototype.create = function(item) {
@@ -433,19 +434,24 @@
         };
 
         MessageModel.prototype.enhance = function(item) {
-          var highlightName, lastMsg, user;
+          var highlightName, lastMsg, minuteBefore, minuteNow, minutesPassed, user;
           lastMsg = this.channelCache.getLastMessage(item.channel_id);
           if (lastMsg === null) {
             item.showDate = true;
             item.color = 0;
+            this.lastShownTimestamp[item.channel_id] = item.date;
           } else {
             if (lastMsg.owner_id !== item.owner_id) {
               item.color = (lastMsg.color + 1) % 2;
             } else {
               item.color = lastMsg.color;
             }
-            if ((item.date - lastMsg.date) / 1000 >= 60) {
+            minuteNow = new Date(item.date);
+            minuteBefore = new Date(this.lastShownTimestamp[item.channel_id]);
+            minutesPassed = (item.date - this.lastShownTimestamp[item.channel_id]) / 60000;
+            if (minutesPassed >= 1 || minuteNow.getMinutes() !== minuteBefore.getMinutes()) {
               item.showDate = true;
+              this.lastShownTimestamp[item.channel_id] = item.date;
             } else {
               item.showDate = false;
             }
