@@ -2,19 +2,21 @@ package websocket.message;
 
 import java.util.ArrayList;
 
+import org.codehaus.jackson.JsonNode;
+
 import websocket.json.in.*;
 
 public class MessageFactory {
 
     private static ArrayList<IInMessage> messages = new ArrayList<IInMessage>();
     
-    public static WorkRoutine getMessageFromType(String type) throws InvalidMessageTypeException {
+    public static WorkRoutine getMessageFromType(JsonNode inmessage) throws InvalidMessageTypeException {
         for(IInMessage message: messages){
-            if(message.canHandle(type)){
+            if(message.canHandle(inmessage)){
                 return message.getWorkRoutine();
             }
         }
-        String errorMsg = String.format("Can not handle type %s", type);
+        String errorMsg = String.format("Can not handle type %s", inmessage.findPath("type").asText());
         throw new InvalidMessageTypeException(errorMsg);
     }
 

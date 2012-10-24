@@ -1,5 +1,7 @@
 package websocket.json.in;
 
+import org.codehaus.jackson.JsonNode;
+
 import websocket.message.IInMessage;
 import websocket.message.Notifyall;
 import websocket.message.WorkRoutine;
@@ -9,8 +11,8 @@ public class InInviteGroup extends IInMessage{
 
 	
 	@Override
-	public boolean canHandle(String type) {
-		if (type.equals("invitegroup"))
+	public boolean canHandle(JsonNode inmessage) {
+		if (inmessage.findPath("type").asText().equals("invitegroup"))
 			return true;
 		else
 			return false;

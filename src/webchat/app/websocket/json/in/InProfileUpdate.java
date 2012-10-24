@@ -22,8 +22,8 @@ public class InProfileUpdate extends IInMessage {
 
 	public InProfileUpdateData data;
 	@Override
-	public boolean canHandle(String type) {
-		if (type.equals("profileupdate"))
+	public boolean canHandle(JsonNode inmessage) {
+		if (inmessage.findPath("type").asText().equals("profileupdate"))
 			return true;
 		else
 			return false;

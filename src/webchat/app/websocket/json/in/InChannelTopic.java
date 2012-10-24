@@ -14,8 +14,8 @@ public class InChannelTopic extends IInMessage{
 	public InChannelTopicData data;
 	
 	@Override
-	public boolean canHandle(String type) {
-		if (type.equals("channeltopic"))
+	public boolean canHandle(JsonNode inmessage) {
+		if (inmessage.findPath("type").asText().equals("channeltopic"))
 			return true;
 		else
 			return false;

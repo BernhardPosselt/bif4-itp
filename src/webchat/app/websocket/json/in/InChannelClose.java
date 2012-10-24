@@ -15,8 +15,8 @@ public class InChannelClose extends IInMessage {
 	public InChannelCloseData data;
 	
 	@Override
-	public boolean canHandle(String type) {
-		if (type.equals("channelclose"))
+	public boolean canHandle(JsonNode inmessage) {
+		if (inmessage.findPath("type").asText().equals("channelclose"))
 			return true;
 		else
 			return false;

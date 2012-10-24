@@ -11,7 +11,7 @@ import websocket.json.in.InMessage;
 public class MessageHandler {
 	 public static void handleMessage(JsonNode inmessage, int userid){
 		 try{
-			 WorkRoutine myroutine = MessageFactory.getMessageFromType(inmessage.findPath("type").asText());
+			 WorkRoutine myroutine = MessageFactory.getMessageFromType(inmessage);
 			 myroutine.inmessage = JsonBinder.bindfromJson(inmessage, myroutine);
 			 if (myroutine.model != null){
 				 myroutine.model = ObjectMapper.maptoDB(myroutine, userid);
@@ -21,7 +21,6 @@ public class MessageHandler {
 				  JsonNode outmessage = JsonBinder.bindtoJson(myroutine);
 				  myroutine.sender.sendMessage(outmessage);
 			 }
-			
 		 }
 		 catch (Exception exp){
 			 exp.printStackTrace();

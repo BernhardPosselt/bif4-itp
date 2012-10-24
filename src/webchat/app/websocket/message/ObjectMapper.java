@@ -33,11 +33,12 @@ public class ObjectMapper {
 			}			
 			for (Field infield:indata.getClass().getFields()){
 				for (Field mfield:mymodel.getClass().getFields()){
-					ArrayList<Model> modellist = new ArrayList<Model>();
+					List<Model> modellist;
 					if (infield.getName().equals(mfield.getName())){
 						if (infield.getName().equals("users") || infield.getName().equals("groups")){
 							Model arraymodel = ListMapper.getmapModel(indata.getClass().getField(infield.getName()).getName());			
 							List<Model> helplist = (List<Model>)mfield.get(mymodel);
+							modellist = helplist;
 							m = arraymodel.getClass().getMethod("getbyId", int.class);
 							Model helpmodel =(Model)m.invoke(arraymodel,infield.getInt(indata));
 							if (!helplist.contains(helpmodel)){
@@ -106,7 +107,6 @@ public class ObjectMapper {
 						if (outfield.getType().getName().equals("java.util.List")){
 							List<Model> modellist = (List<Model>)modelfield.get(model);	
 							ArrayList<Integer> mylist= new ArrayList<Integer>();
-						
 							//Iteratate through all Listmembers
 							for (Iterator<Model> iter = modellist.iterator(); iter.hasNext();){
 								Model mid = (Model)iter.next();

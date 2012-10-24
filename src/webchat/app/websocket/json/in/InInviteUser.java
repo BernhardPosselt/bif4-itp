@@ -1,5 +1,7 @@
 package websocket.json.in;
 
+import org.codehaus.jackson.JsonNode;
+
 import websocket.message.IInMessage;
 import websocket.message.Notifyall;
 import websocket.message.WorkRoutine;
@@ -8,8 +10,8 @@ public class InInviteUser extends IInMessage {
 	public InInviteUserData data;
 
 	@Override
-	public boolean canHandle(String type) {
-		if (type.equals("inviteuser"))
+	public boolean canHandle(JsonNode inmessage) {
+		if (inmessage.findPath("type").asText().equals("inviteuser"))
 			return true;
 		else
 			return false;

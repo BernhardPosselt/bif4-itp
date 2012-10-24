@@ -20,8 +20,8 @@ public class InNewChannel extends IInMessage {
 	public InNewChannelData data;
 	
 	@Override
-	public boolean canHandle(String type) {
-		if (type.equals("newchannel"))
+	public boolean canHandle(JsonNode inmessage) {
+		if (inmessage.findPath("type").asText().equals("newchannel"))
 			return true;
 		else
 			return false;

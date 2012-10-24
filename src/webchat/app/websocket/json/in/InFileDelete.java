@@ -17,8 +17,8 @@ public class InFileDelete extends IInMessage {
 	public InFileDeleteData data;
 	
 	@Override
-	public boolean canHandle(String type) {
-		if (type.equals("filedelete"))
+	public boolean canHandle(JsonNode inmessage) {
+		if (inmessage.findPath("type").asText().equals("filedelete"))
 			return true;
 		else
 			return false;

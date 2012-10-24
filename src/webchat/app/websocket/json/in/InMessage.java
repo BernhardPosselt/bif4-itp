@@ -1,5 +1,7 @@
 package websocket.json.in;
 
+import org.codehaus.jackson.JsonNode;
+
 import websocket.message.IInMessage;
 import websocket.message.Notifyall;
 import websocket.message.WorkRoutine;
@@ -8,8 +10,8 @@ public class InMessage extends IInMessage{
 	public InMessageData data;
 	
 	@Override
-	public boolean canHandle(String type) {
-		if (type.equals("message"))
+	public boolean canHandle(JsonNode inmessage) {
+		if (inmessage.findPath("type").asText().equals("message"))
 			return true;
 		else
 			return false;

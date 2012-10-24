@@ -15,8 +15,8 @@ public class InChannelDelete extends IInMessage{
 	public InChannelDeleteData data;
 	
 	@Override
-	public boolean canHandle(String type) {
-		if (type.equals("channeldelete"))
+	public boolean canHandle(JsonNode inmessage) {
+		if (inmessage.findPath("type").asText().equals("channeldelete"))
 			return true;
 		else
 			return false;
