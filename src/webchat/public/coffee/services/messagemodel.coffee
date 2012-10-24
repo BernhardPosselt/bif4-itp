@@ -32,7 +32,7 @@ angular.module('WebChat').factory '_MessageModel',
             constructor: () ->
                 super('message')
                 @channelCache = new ChannelMessageCache()
-                
+                @lastShownTimestamp = {}
 
             create: (item) ->              
                 super( @enhance(item) )
@@ -52,6 +52,7 @@ angular.module('WebChat').factory '_MessageModel',
                 if lastMsg == null
                     item.showDate = true
                     item.color = 0
+                    @lastShownTimestamp[item.channel_id] = item.date
                 else
                     # alternate color by author
                     if lastMsg.owner_id != item.owner_id
@@ -61,8 +62,12 @@ angular.module('WebChat').factory '_MessageModel',
 
                     # show timestamps when last message is more than a minute
                     # ago
-                    if (item.date - lastMsg.date)/1000 >= 60
+                    minuteNow = new Date(item.date);
+                    minuteBefore = new Date(@lastShownTimestamp[item.channel_id])
+                    minutesPassed = (item.date - @lastShownTimestamp[item.channel_id])/60000
+                    if minutesPassed >= 1 or minuteNow.getMinutes() != minuteBefore.getMinutes()
                         item.showDate = true
+                        @lastShownTimestamp[item.channel_id] = item.date
                     else
                         item.showDate = false 
 
