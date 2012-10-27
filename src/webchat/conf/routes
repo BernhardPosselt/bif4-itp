@@ -80,6 +80,8 @@ GET /websocket controllers.Application.websocket()
 # Json Testmessages
 GET /Json/Auth controllers.JsonTestController.genAuth()
 
+# JabberTest
+GET /Jabber controllers.JabberTest.index()
 
 # Map static resources from the /public folder to the /assets URL path
 GET /assets/*file controllers.Assets.at(path="/public", file)

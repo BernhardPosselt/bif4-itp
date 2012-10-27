@@ -14,6 +14,11 @@ import com.google.common.io.Files;
 import flexjson.JSONSerializer;
 
 import org.h2.util.IOUtils;
+import org.jivesoftware.smack.AccountManager;
+import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
 import org.joda.time.DateTime;
 import play.Logger;
 import play.Play;
@@ -36,6 +41,8 @@ import static com.google.common.io.Files.copy;
 public class Application extends Controller {
   
 	 static int userid;
+	 public static Connection conn;
+	 
 
     /**
      * Displays the index page
@@ -44,6 +51,7 @@ public class Application extends Controller {
 	 public static Result index() {
     	 if (models.User.findAll().isEmpty()){
     		 filltestdata();
+    		 ConnectOpenFire();
     	 }	
          if(session("userid") != null) //User logged in
          {
@@ -317,6 +325,19 @@ public class Application extends Controller {
 	  	    group1.save();
 	  	    group1.saveManyToManyAssociations("channels");
 	  	    group1.saveManyToManyAssociations("users");
+	  	    
+	  	    AccountManager am = new AccountManager(conn);
+	  	    try {
+				am.createAccount("glembo", "test");
+			} catch (XMPPException e) {
+			    System.out.println("Error creating the user glembo, Error: " + e);
+			}
+	  	    
+	  	    try {
+	  	    	am.createAccount("masterlindi", "test");
+	  	    } catch (XMPPException e) {
+	  	    	System.out.println("Error creating the user masterlindi, Error: " + e);
+	  	    }
 
             Logger.info("Database filled with test data!");
 	  	    return ok(index.render("testdata", false));
@@ -331,5 +352,23 @@ public class Application extends Controller {
 	    }
 	    return null;
      }
+	 
+	 public static void ConnectOpenFire() { 
+		 //Connect
+		 ConnectionConfiguration config = new ConnectionConfiguration("localhost", 5222);
+		 conn = new XMPPConnection(config);
+		 try {
+			 conn.connect();
+		 } catch (XMPPException e) {
+		     System.out.println("Error connecting to server localhost:5222, Error: " + e);
+		 }
+			
+		 //Login
+		 try {
+		     conn.login("webchat", "test");
+		 } catch (XMPPException e) {
+		     System.out.println("Error logging in as webchat, Error: " + e);
+		 }
+	 }
 	 
 }
