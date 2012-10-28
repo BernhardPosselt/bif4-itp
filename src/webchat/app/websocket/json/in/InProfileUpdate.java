@@ -30,7 +30,9 @@ public class InProfileUpdate {
 			user.firstname = inprofileupdate.data.prename;
 			user.lastname = inprofileupdate.data.lastname;
 			for (Iterator<models.User> useriter = models.User.find.all().iterator(); useriter.hasNext();)	{
-				if (useriter.next().username.equals(inprofileupdate.data.username)){
+				models.User usr = new User();
+				usr = useriter.next();
+				if (usr.username.equals(inprofileupdate.data.username) && usr.id != userid){
 					error = Status.genStatus("fail", "Could not change Username; Username already exists!");
 					return error;
 				}	

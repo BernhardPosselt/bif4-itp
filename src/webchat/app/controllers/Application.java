@@ -50,8 +50,8 @@ public class Application extends Controller {
      */
 	 public static Result index() {
     	 if (models.User.findAll().isEmpty()){
-    		 filltestdata();
     		 ConnectOpenFire();
+    		 filltestdata();    		
     	 }	
          if(session("userid") != null) //User logged in
          {
