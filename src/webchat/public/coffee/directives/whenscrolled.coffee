@@ -1,6 +1,6 @@
 angular.module('WebChat').directive 'whenScrolled',
-['$rootScope', 'ChannelModel', 'ActiveChannel',
-($rootScope, ChannelModel, ActiveChannel) ->
+['ChannelModel', 'ActiveChannel',
+(ChannelModel, ActiveChannel) ->
 
     return (scope, elm, attr) ->
 

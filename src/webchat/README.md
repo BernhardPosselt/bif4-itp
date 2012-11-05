@@ -18,7 +18,6 @@ Open
 * Change Topic
 * Rename
 * Close
-* Send pings for idle when users moves mouse or types on keyboard
 * Display a hint when you were invited to a channel
 * Automatically change into new channel once it was created
 
@@ -26,3 +25,4 @@ Closed
 ------
 * autoscroll when message is sent
 * dont autoscroll when user scrolls up
+* Send pings for idle when users moves mouse or types on keyboard
