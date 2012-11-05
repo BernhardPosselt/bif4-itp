@@ -345,6 +345,55 @@
     }
   ]);
 
+  angular.module('WebChat').factory('ChannelMessageCache', function() {
+    var ChannelMessageCache;
+    ChannelMessageCache = (function() {
+
+      function ChannelMessageCache() {
+        this.channels = {};
+        this.earliestMessage = {};
+      }
+
+      ChannelMessageCache.prototype.registerChannelMessage = function(item) {
+        var channel;
+        channel = this.getChannelById(item.channel_id);
+        channel.push(item);
+        if (this.earliestMessage[item.channel_id] !== void 0) {
+          if (this.earliestMessage[item.channel_id].date > item.date) {
+            return this.earliestMessage[item.channel_id] = item;
+          }
+        } else {
+          return this.earliestMessage[item.channel_id] = item;
+        }
+      };
+
+      ChannelMessageCache.prototype.getEarliestMessage = function(channelId) {
+        return this.earliestMessage[channelId];
+      };
+
+      ChannelMessageCache.prototype.getLastMessage = function(channelId) {
+        var channel;
+        channel = this.getChannelById(channelId);
+        if (channel.length === 0) {
+          return null;
+        } else {
+          return channel[channel.length - 1];
+        }
+      };
+
+      ChannelMessageCache.prototype.getChannelById = function(channelId) {
+        if (this.channels[channelId] === void 0) {
+          this.channels[channelId] = [];
+        }
+        return this.channels[channelId];
+      };
+
+      return ChannelMessageCache;
+
+    })();
+    return new ChannelMessageCache();
+  });
+
   angular.module('WebChat').factory('_UserModel', [
     '_Model', function(_Model) {
       var UserModel;
@@ -379,47 +428,15 @@
   ]);
 
   angular.module('WebChat').factory('_MessageModel', [
-    '_Model', 'Smileys', 'UserModel', 'ActiveUser', function(_Model, Smileys, UserModel, ActiveUser) {
-      var ChannelMessageCache, MessageModel;
-      ChannelMessageCache = (function() {
-
-        function ChannelMessageCache() {
-          this.channels = {};
-        }
-
-        ChannelMessageCache.prototype.registerChannelMessage = function(item) {
-          var channel;
-          channel = this.getChannelById(item.channel_id);
-          return channel.push(item);
-        };
-
-        ChannelMessageCache.prototype.getLastMessage = function(channelId) {
-          var channel;
-          channel = this.getChannelById(channelId);
-          if (channel.length === 0) {
-            return null;
-          } else {
-            return channel[channel.length - 1];
-          }
-        };
-
-        ChannelMessageCache.prototype.getChannelById = function(channelId) {
-          if (this.channels[channelId] === void 0) {
-            this.channels[channelId] = [];
-          }
-          return this.channels[channelId];
-        };
-
-        return ChannelMessageCache;
-
-      })();
+    '_Model', 'Smileys', 'UserModel', 'ActiveUser', 'ChannelMessageCache', function(_Model, Smileys, UserModel, ActiveUser, ChannelMessageCache) {
+      var MessageModel;
       MessageModel = (function(_super) {
 
         __extends(MessageModel, _super);
 
         function MessageModel() {
           MessageModel.__super__.constructor.call(this, 'message');
-          this.channelCache = new ChannelMessageCache();
+          this.channelCache = ChannelMessageCache;
           this.lastShownTimestamp = {};
         }
 
@@ -463,10 +480,10 @@
             user = UserModel.getItemById(ActiveUser.id);
             highlightName = user.firstname + user.lastname;
             if (item.message.indexOf(highlightName) !== -1) {
-              item.hightlighted = true;
+              item.highlighted = true;
               document.getElementById('sounds').play();
             } else {
-              item.hightlighted = false;
+              item.highlighted = false;
             }
             item.message = this.cleanXSS(item.message);
             item.message = this.sugarText(item.message);
@@ -589,8 +606,12 @@
         };
 
         _Class.prototype.create = function(item) {
-          this.hashMap[item.id] = item;
-          return this.items.push(item);
+          if (this.hashMap[item.id] === void 0) {
+            return this.update(item);
+          } else {
+            this.hashMap[item.id] = item;
+            return this.items.push(item);
+          }
         };
 
         _Class.prototype.update = function(updatedItem) {
@@ -751,6 +772,37 @@
 
       })(_Message);
       return ModUserMessage;
+    }
+  ]);
+
+  angular.module('WebChat').factory('_LoadMessages', [
+    '_Message', function(_Message) {
+      var LoadMessages;
+      LoadMessages = (function(_super) {
+
+        __extends(LoadMessages, _super);
+
+        function LoadMessages(channelId, messageId, earliestTimestamp) {
+          this.channelId = channelId;
+          this.messageId = messageId;
+          this.earliestTimestamp = earliestTimestamp;
+          LoadMessages.__super__.constructor.call(this, 'loadmessages');
+        }
+
+        LoadMessages.prototype.serialize = function() {
+          var data;
+          data = {
+            channel_id: this.channelId,
+            message_id: this.messageId,
+            earliest_timestamp: this.earliestTimestamp
+          };
+          return LoadMessages.__super__.serialize.call(this, data);
+        };
+
+        return LoadMessages;
+
+      })(_Message);
+      return LoadMessages;
     }
   ]);
 
@@ -1076,19 +1128,24 @@
   ]);
 
   angular.module('WebChat').directive('whenScrolled', [
-    'ChannelModel', 'ActiveChannel', function(ChannelModel, ActiveChannel) {
+    'ChannelModel', 'ActiveChannel', '_LoadMessages', 'WebChatWebSocket', 'ChannelMessageCache', function(ChannelModel, ActiveChannel, _LoadMessages, WebChatWebSocket, ChannelMessageCache) {
       return function(scope, elm, attr) {
         return elm.bind('scroll', function() {
-          var channel, stream;
+          var channel, channelId, earliestMessage, msg, stream;
           stream = $(elm);
-          channel = ChannelModel.getItemById(ActiveChannel.getActiveChannelId());
+          channelId = ActiveChannel.getActiveChannelId();
+          channel = ChannelModel.getItemById(channelId);
           if ((stream.innerHeight() + stream.scrollTop()) >= stream.prop("scrollHeight")) {
             channel.autoScroll = true;
           } else {
             channel.autoScroll = false;
             channel.scrollTop = stream.prop("scrollHeight");
           }
-          console.log(channel.autoScroll);
+          if (stream.scrollTop() <= 0) {
+            earliestMessage = ChannelMessageCache.getEarliestMessage(channelId);
+            msg = new _LoadMessages(channelId, earliestMessage.id(earliestMessage.date));
+            WebChatWebSocket.sendJSON(msg.serialize());
+          }
           return scope.$apply(attr.whenScrolled);
         });
       };

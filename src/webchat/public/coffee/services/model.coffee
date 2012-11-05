@@ -20,8 +20,11 @@ angular.module('WebChat').factory '_Model', ['$rootScope', ($rootScope) ->
 
 
         create: (item) ->
-            @hashMap[item.id] = item
-            @items.push(item)
+            if @hashMap[item.id] == undefined
+                @update(item)
+            else
+                @hashMap[item.id] = item
+                @items.push(item)
 
 
         update: (updatedItem) ->

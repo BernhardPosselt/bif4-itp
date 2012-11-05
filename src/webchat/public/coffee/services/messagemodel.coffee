@@ -1,37 +1,12 @@
 angular.module('WebChat').factory '_MessageModel', 
-    ['_Model', 'Smileys', 'UserModel', 'ActiveUser',
-     (_Model, Smileys, UserModel, ActiveUser) ->
-
-        class ChannelMessageCache
-
-            constructor: () ->
-                @channels = {}
-
-            registerChannelMessage: (item) ->
-                channel = @getChannelById(item.channel_id)
-                channel.push(item)
-
-
-            getLastMessage: (channelId) ->
-                channel = @getChannelById(channelId)
-                if channel.length == 0
-                    return null
-                else
-                    return channel[channel.length - 1]
-
-                    
-            getChannelById: (channelId) ->
-                if @channels[channelId] == undefined
-                    @channels[channelId] = []
-                return @channels[channelId]
-
-
+    ['_Model', 'Smileys', 'UserModel', 'ActiveUser', 'ChannelMessageCache',
+     (_Model, Smileys, UserModel, ActiveUser, ChannelMessageCache) ->
 
         class MessageModel extends _Model
 
             constructor: () ->
                 super('message')
-                @channelCache = new ChannelMessageCache()
+                @channelCache = ChannelMessageCache
                 @lastShownTimestamp = {}
 
             create: (item) ->              
@@ -80,10 +55,10 @@ angular.module('WebChat').factory '_MessageModel',
                     user = UserModel.getItemById(ActiveUser.id)
                     highlightName = user.firstname + user.lastname
                     if item.message.indexOf(highlightName) != -1
-                        item.hightlighted = true
+                        item.highlighted = true
                         document.getElementById('sounds').play()
                     else
-                        item.hightlighted = false
+                        item.highlighted = false
 
                     item.message = @cleanXSS(item.message)
                     item.message = @sugarText(item.message)

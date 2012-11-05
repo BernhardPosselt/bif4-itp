@@ -11,7 +11,6 @@ Open
 
 * Show hint when there was a message in a channel
 * Show a hint when there was a message in a channel that highlighted you
-* Adjust backgroundcolor of highlihgted message
 * Collapse code only after X lines and show links to expand
 * Delete files
 * Show some kind of seperation for files
@@ -26,3 +25,4 @@ Closed
 * autoscroll when message is sent
 * dont autoscroll when user scrolls up
 * Send pings for idle when users moves mouse or types on keyboard
+* Adjust backgroundcolor of highlihgted message
