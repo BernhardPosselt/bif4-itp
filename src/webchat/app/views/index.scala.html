@@ -68,11 +68,11 @@
                     </div>
                 </div>
 
-                <div class="stream_chat">
-                    <div ng-repeat="message in getMessages() | messageInChannel:channel.id">
+                <div class="stream_chat" when-scrolled>
+                    <div ng-repeat="message in getMessages() | messageInChannel:channel.id" auto-scroll>
                         <div ng-switch on="message.showDate">
                             <div class="line date_line0"
-                                 ng-switch-when="true">
+                                 ng-switch-when="true" auto-scroll>
                                 <div class="user"></div>
                                 <div class="date">
                                     <span class="year">{{ message.date | date:'yyyy-MM-dd'}}</span>

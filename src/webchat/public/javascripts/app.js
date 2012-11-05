@@ -544,6 +544,11 @@
           ChannelModel.__super__.constructor.call(this, 'channel');
         }
 
+        ChannelModel.prototype.create = function(item) {
+          item.autoScroll = true;
+          return ChannelModel.__super__.create.call(this, item);
+        };
+
         return ChannelModel;
 
       })(_Model);
@@ -1011,6 +1016,49 @@
   ]);
 
   $(document).ready(function() {});
+
+  angular.module('WebChat').directive('autoScroll', [
+    'ChannelModel', 'ActiveChannel', function(ChannelModel, ActiveChannel) {
+      var autoScrollDirective;
+      autoScrollDirective = {
+        restrict: 'A',
+        link: function(scope, elm, attr) {
+          var $elem, channel, stream;
+          channel = ChannelModel.getItemById(ActiveChannel.getActiveChannelId());
+          if (channel.autoScroll) {
+            $elem = $(elm);
+            if ($elem.hasClass('line')) {
+              stream = $elem.parent().parent().parent();
+            } else {
+              stream = $elem.parent();
+            }
+            return stream.scrollTop(stream.prop("scrollHeight"));
+          }
+        }
+      };
+      return autoScrollDirective;
+    }
+  ]);
+
+  angular.module('WebChat').directive('whenScrolled', [
+    '$rootScope', 'ChannelModel', 'ActiveChannel', function($rootScope, ChannelModel, ActiveChannel) {
+      return function(scope, elm, attr) {
+        return elm.bind('scroll', function() {
+          var channel, stream;
+          stream = $(elm);
+          channel = ChannelModel.getItemById(ActiveChannel.getActiveChannelId());
+          if ((stream.innerHeight() + stream.scrollTop()) >= stream.prop("scrollHeight")) {
+            channel.autoScroll = true;
+          } else {
+            channel.autoScroll = false;
+            channel.scrollTop = stream.prop("scrollHeight");
+          }
+          console.log(channel.autoScroll);
+          return scope.$apply(attr.whenScrolled);
+        });
+      };
+    }
+  ]);
 
   angular.module('WebChat').factory('_DialogueController', [
     '_Controller', function(_Controller) {

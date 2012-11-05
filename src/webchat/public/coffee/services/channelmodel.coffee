@@ -5,6 +5,9 @@ angular.module('WebChat').factory '_ChannelModel', ['_Model', (_Model) ->
         constructor: () ->
             super('channel')
 
+        create: (item) ->
+            item.autoScroll = true
+            super(item)
 
     return ChannelModel
 ]

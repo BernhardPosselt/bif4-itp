@@ -21,8 +21,8 @@ Open
 * Send pings for idle when users moves mouse or types on keyboard
 * Display a hint when you were invited to a channel
 * Automatically change into new channel once it was created
-* autoscroll when message is sent
-* dont autoscroll when user scrolls up
 
 Closed
 ------
+* autoscroll when message is sent
+* dont autoscroll when user scrolls up
