@@ -12,6 +12,9 @@ import org.hibernate.validator.util.privilegedactions.NewInstance;
 import models.User;
 
 import play.db.ebean.Model;
+import websocket.Interfaces.IInMessage;
+import websocket.Interfaces.IMessageData;
+import websocket.Interfaces.IOutMessage;
 import websocket.json.in.InChannelClose;
 import websocket.json.in.InChannelCloseData;
 import websocket.json.in.InMessageData;
@@ -19,7 +22,7 @@ import websocket.json.in.InMessageData;
 
 public class ObjectMapper {
 	public static Model maptoDB (WorkRoutine myroutine, int owner_id) {
-		Model mymodel = (Model)myroutine.model;
+		/*Model mymodel = (Model)myroutine.model;
 		try{	
 			IInMessage inmessage = myroutine.inmessage;
 			Field field = inmessage.getClass().getField("data");
@@ -91,11 +94,12 @@ public class ObjectMapper {
 		catch (Exception e) {
 			e.printStackTrace();
 		}		
-		return mymodel;
+		return mymodel;*/
+		return null;
 	}
 
 	public static IOutMessage mapfromDB(WorkRoutine myroutine){
-		IOutMessage outMessage = (IOutMessage)myroutine.outmessage;
+		/*IOutMessage outMessage = (IOutMessage)myroutine.outmessage;
 		try{
 			Model model = (Model)myroutine.model;
 			Field field = outMessage.getClass().getField("data");
@@ -132,6 +136,7 @@ public class ObjectMapper {
 		}catch (Exception exp){
 			exp.printStackTrace();
 		}
-		return outMessage;
+		return outMessage;*/
+		return null;
 	}
 }

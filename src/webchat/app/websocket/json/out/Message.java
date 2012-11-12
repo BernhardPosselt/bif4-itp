@@ -1,24 +1,16 @@
 package websocket.json.out;
 
 import java.util.*;
+import websocket.Interfaces.IOutMessage;
+import websocket.message.JsonBinder;
+import websocket.message.WebSocketNotifier;
 
-import javax.swing.text.html.HTML;
-
-import websocket.json.in.InMessage;
-import websocket.message.IOutMessage;
-
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.node.ObjectNode;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.codehaus.jackson.JsonNode;
 
-import models.*;
-import play.libs.Json;
+import play.db.ebean.Model;
 
-import flexjson.JSONDeserializer;
-import flexjson.JSONException;
-import flexjson.JSONSerializer;
-
-public class Message extends IOutMessage {
+public class Message implements IOutMessage {
 	public String type;
 	public MessageData data = new MessageData();
 	public String action;
@@ -29,85 +21,33 @@ public class Message extends IOutMessage {
 
 	}
 
-	/*public static JsonNode genMessage(JsonNode inmessage, int userid) {
-		String json = "";
-		try {
-			// Map the incomeJsonMessage to a model
-			InMessage im = new InMessage();
-			im = new JSONDeserializer<InMessage>().deserialize(
-					inmessage.toString(), InMessage.class);
-			models.Message dbmessage = new models.Message();
-	
-			// Create DB Message
-			dbmessage.message = StringEscapeUtils.escapeSql(im.data.message);
-			dbmessage.date = new Date();
-			dbmessage.modified = new Date();
-			dbmessage.type = im.data.type;
-			dbmessage.user_id = models.User.find.byId(userid);
-		
-			// Save the Message to the DB
-			dbmessage.save();
-		
-
-			// Create JsonMessage
-			Message m = new Message();
-			MessageData md = new MessageData();
-			md.date = new Date();
-		
-			md.message = StringEscapeUtils.escapeHtml(im.data.message);
-			if (im.data.type.equals("text"))
-				md.message = md.message.replaceAll("\n", "<br/>");
-			md.type = im.data.type;
-			md.user_id = userid;
-
-			// Put the Messages in the map
-			Map<Integer, MessageData> mdata = new LinkedHashMap<Integer, MessageData>();
-			mdata.put(dbmessage.id, md);
-
-			// Fill the Action Dict; always create by messages
-			m.action = "create";
-
-			
-	
-			// Generate the Json Message
-			JSONSerializer aser = new JSONSerializer().include("*.data",
-					"*.actions");
-			json = aser.exclude("*.class").serialize(m);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return Json.parse(json);
+	@Override
+	public void sendMessage(IOutMessage outmessage) {
+		JsonNode outjson = JsonBinder.bindtoJson(outmessage);
+		WebSocketNotifier.notifyAllMembers(outjson);	
 	}
 
-	// JsonNode-Generation for sending more messages at one time
-	public static JsonNode genjoinMessage(int channelid) {
-		String json = "";
+	@Override
+	public IOutMessage genOutMessage(Model dbmodel) {
+		Message outmessage = null;
 		try {
-			Message m = new Message();
-			Map<Integer, MessageData> mdata = new LinkedHashMap<Integer, MessageData>();
-		
-			for (Iterator<models.Message> miter = models.Message.getallChannelMessages(channelid).iterator(); miter.hasNext();){
-				models.Message dbmessage = new models.Message();
-				dbmessage = miter.next();
-				MessageData md = new MessageData();
-				md.date = dbmessage.date;
-				md.message = StringEscapeUtils.escapeHtml(dbmessage.message);
-				
-				md.type = dbmessage.type;
-				md.user_id = dbmessage.user_id.id;
-				mdata.put(dbmessage.id, md);
-				m.action = "create";
-				
-			}
+			outmessage = new Message();
+			models.Message dbmessage = (models.Message) dbmodel;
+
+			MessageData mdata = new MessageData();
+			mdata.date = new Date();
+			mdata.message = StringEscapeUtils.escapeHtml(dbmessage.message);
 			
-			
-			// Generate the Json Message
-			JSONSerializer aser = new JSONSerializer().include("*.data",
-					"*.actions");
-			json = aser.exclude("*.class").serialize(m);
-		} catch (JSONException e) {
+			if (dbmessage.type.equals("text"))
+				mdata.message = mdata.message.replaceAll("\n", "<br/>");
+			mdata.type = dbmessage.type;
+			mdata.owner_id = Integer.parseInt(play.mvc.Controller.session("userid"));
+			mdata.channel_id = dbmessage.channel_id.id;
+			outmessage.data = mdata;
+			outmessage.action = "create";
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Json.parse(json);
-	}*/
+		return outmessage;
+	}
 }

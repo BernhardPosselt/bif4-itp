@@ -1,14 +1,19 @@
 package websocket.json.in;
 
 
+import java.util.Iterator;
+
 import org.codehaus.jackson.JsonNode;
 
-import websocket.message.IInMessage;
-import websocket.message.Notifyall;
+import play.db.ebean.Model;
+
+
+import websocket.Interfaces.IInMessage;
 import websocket.message.WorkRoutine;
 
 
-public class InChannelName extends IInMessage{
+public class InChannelName implements IInMessage{
+	public String type;
 	public InChannelNameData data;
 	
 	@Override
@@ -23,9 +28,6 @@ public class InChannelName extends IInMessage{
 		WorkRoutine myroutine=new WorkRoutine();
 		myroutine.inmessage = new InChannelName();
 		myroutine.outmessage = new websocket.json.out.Channel();
-		myroutine.model = new models.Channel();
-		myroutine.dbaction = "update";
-		myroutine.sender = new Notifyall();
 		return myroutine;
 	}
 	@Override
@@ -33,26 +35,22 @@ public class InChannelName extends IInMessage{
 		return new InChannelName();
 	}
 	
-	
-	
-	/*public static int changechannelname (JsonNode inmessage){
-		int channelid = 0;
+	@Override
+	public Model savetoDB(IInMessage inmessage) {
+		models.Channel chan = null;
 		try{
-			InChannelName inchan = new InChannelName();
-			inchan = new JSONDeserializer<InChannelName>().deserialize(
-					inmessage.toString(), InChannelName.class);
-			models.Channel chan = new models.Channel();
-			chan = Channel.find.byId(inchan.data.channel);
-			channelid = inchan.data.channel;
-			for (Iterator<Channel> channeliter = Channel.find.all().iterator(); channeliter.hasNext();){
+			InChannelName inchan = (InChannelName) inmessage;
+			chan = new models.Channel();
+			chan = models.Channel.find.byId(inchan.data.id);
+			for (Iterator<models.Channel> channeliter = models.Channel.find.all().iterator(); channeliter.hasNext();){
 				if (channeliter.next().name.equals(inchan.data.name.trim()))
-					return -1;
+					return null;
 			}
 			chan.name = inchan.data.name;
 			chan.update();
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		return channelid;
-	}*/
+		return chan;
+	}
 }

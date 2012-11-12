@@ -1,13 +1,9 @@
 package websocket.json.out;
 
 import java.util.Date;
-import java.util.List;
+import websocket.Interfaces.IMessageData;
 
-import websocket.message.IMessageData;
-
-import models.Channel;
-
-public class MessageData extends IMessageData{
+public class MessageData implements IMessageData{
 	public int id;
 	public int owner_id;
 	public int channel_id;

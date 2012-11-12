@@ -1,11 +1,8 @@
 package websocket.json.in;
 
-import java.util.ArrayList;
-import java.util.List;
+import websocket.Interfaces.IMessageData;
 
-import websocket.message.IMessageData;
-
-public class InMessageData extends IMessageData {
+public class InMessageData implements IMessageData {
 	public String message;
 	public String type;
 	public int channel_id;

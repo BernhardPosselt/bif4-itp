@@ -1,14 +1,11 @@
 package websocket.json.out;
 
-import org.codehaus.jackson.JsonNode;
-import java.util.Map;
-
 import play.libs.Json;
-import websocket.message.IOutMessage;
+import websocket.message.WebSocketNotifier;
 import flexjson.JSONException;
 import flexjson.JSONSerializer;
 
-public class Status extends IOutMessage{
+public class Status{
 	public String type;
 	public StatusData data;
 
@@ -17,20 +14,16 @@ public class Status extends IOutMessage{
 		this.data = new StatusData();
 	}
 
-	public static JsonNode genStatus(String level, String msg) {
-		String json = "";
+	public static void genStatus(String level, String msg) {
 		try {
-
-			Status s = new Status();
-			s.data.level = level;
-			s.data.msg = msg;
+			Status outstatus = new Status();
+			outstatus.data.level = level;
+			outstatus.data.msg = msg;
 			JSONSerializer sser = new JSONSerializer();
-			json = sser.exclude("*.class").serialize(s);
-
+			String outmessage = sser.exclude("*.class").serialize(outstatus);
+			WebSocketNotifier.notifyAllMembers(Json.parse(outmessage));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		return Json.parse(json);
 	}
-
 }

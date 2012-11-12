@@ -2,9 +2,9 @@ package websocket.json.out;
 
 import java.util.*;
 
-import websocket.message.IMessageData;
+import websocket.Interfaces.IMessageData;
 
-public class UserData extends IMessageData{
+public class UserData implements IMessageData{
 	public int id;
 	public String username;
 	public String status;

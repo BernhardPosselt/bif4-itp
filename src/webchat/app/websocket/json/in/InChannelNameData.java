@@ -1,8 +1,8 @@
 package websocket.json.in;
 
-import websocket.message.IMessageData;
+import websocket.Interfaces.IMessageData;
 
-public class InChannelNameData extends IMessageData{
+public class InChannelNameData implements IMessageData{
 	public String name;
 	public int id;
 }

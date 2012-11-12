@@ -1,8 +1,8 @@
 package websocket.json.in;
 
-import websocket.message.IMessageData;
+import websocket.Interfaces.IMessageData;
 
-public class InProfileUpdateData extends IMessageData{
+public class InProfileUpdateData implements IMessageData{
 	public int id;
 	public String username;
 	public String password;

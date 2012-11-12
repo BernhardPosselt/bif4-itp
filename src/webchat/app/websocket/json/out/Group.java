@@ -1,21 +1,14 @@
 package websocket.json.out;
 
-import java.util.*;
-
-import models.Groups;
-
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.node.ObjectNode;
+
+import play.db.ebean.Model;
+import websocket.Interfaces.IOutMessage;
+import websocket.message.JsonBinder;
+import websocket.message.WebSocketNotifier;
 
 
-import play.libs.Json;
-import websocket.message.IOutMessage;
-import flexjson.JSONDeserializer;
-import flexjson.JSONException;
-import flexjson.JSONSerializer;
-
-
-public class Group extends IOutMessage {
+public class Group implements IOutMessage {
 	public String type;
 	public GroupData data = new GroupData();
 	public String action;
@@ -24,27 +17,29 @@ public class Group extends IOutMessage {
 		this.type = "group";
 	}
 	
-	public static JsonNode geninitGroup(){
-		String json = "";
-		Group group = new Group();
-	
+
+	@Override
+	public void sendMessage(IOutMessage outmessage) {
+		JsonNode outjson = JsonBinder.bindtoJson(outmessage);
+		WebSocketNotifier.notifyAllMembers(outjson);
+	}
+
+
+	@Override
+	public IOutMessage genOutMessage(Model dbmodel) {
+		Group outgroup = null;
 		try{
-			for (Iterator<Groups> iterator = Groups.find.all().iterator(); iterator.hasNext();)
-			{
-				models.Groups groups= new models.Groups();
-				groups = iterator.next();
-				GroupData gdata = new GroupData();
-				gdata.name = groups.name;
-				group.action = "create";
-				group.data = gdata;
-				
-			}
-			JSONSerializer gser = new JSONSerializer().include("*.actions", "*.data");
-			json = gser.exclude("*.class").serialize(group);
-			} 
-		catch (JSONException e) {	 
-			 e.printStackTrace();
+			outgroup = new Group();
+			models.Groups dbgroup = (models.Groups) dbmodel;
+			GroupData gdata = new GroupData();
+			gdata.id = dbgroup.id;
+			gdata.modified = dbgroup.modified;
+			gdata.name = dbgroup.name;
+			outgroup.action ="create";
+			outgroup.data = gdata;
+		}catch(Exception e){
+			e.printStackTrace();
 		}
-		return Json.parse(json);
+		return outgroup;
 	}
 }

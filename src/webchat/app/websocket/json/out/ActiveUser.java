@@ -1,36 +1,39 @@
 package websocket.json.out;
 
-import java.util.*;
+
 
 import org.codehaus.jackson.JsonNode;
 
-import play.libs.Json;
-import websocket.message.IOutMessage;
-import flexjson.JSONException;
-import flexjson.JSONSerializer;
+import play.db.ebean.Model;
+import websocket.Interfaces.IOutMessage;
+import websocket.message.JsonBinder;
+import websocket.message.WebSocketNotifier;
 
-public class ActiveUser extends IOutMessage  {
+public class ActiveUser implements IOutMessage  {
 	public String type;
 	public String action;
 	public ActiveUserData data = new ActiveUserData();
 	
 	public ActiveUser(){
 		this.type = "activeuser";
+		this.action = "create";
 	}
-	
-	/*public static JsonNode genActiveUser(int userid){
-		String json = "";
+
+	@Override
+	public void sendMessage(IOutMessage outmessage) {
+		JsonNode outjson = JsonBinder.bindtoJson(outmessage);
+		WebSocketNotifier.notifyAllMembers(outjson);
+	}
+
+	@Override
+	public IOutMessage genOutMessage(Model dbmodel) {
+		ActiveUser acuser = null;
 		try {
-
-			ActiveUser acuser = new ActiveUser();
-			acuser.actions.put(userid, "create");
-			acuser.data.id = userid;
-			JSONSerializer acuserser = new JSONSerializer().include("*.actions");
-			json = acuserser.exclude("*.class").serialize(acuser);
-
-		} catch (JSONException e) {
+			acuser = new ActiveUser();
+			acuser.data.id = Integer.parseInt(play.mvc.Controller.session("userid"));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Json.parse(json);
-	}*/
+		return acuser;
+	}
 }

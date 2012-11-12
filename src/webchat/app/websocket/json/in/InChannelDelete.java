@@ -4,14 +4,15 @@ import models.Channel;
 
 import org.codehaus.jackson.JsonNode;
 
-import websocket.message.IInMessage;
-import websocket.message.Notifyall;
+import play.db.ebean.Model;
+
+
+import websocket.Interfaces.IInMessage;
 import websocket.message.WorkRoutine;
 
-import flexjson.JSONDeserializer;
-
-public class InChannelDelete extends IInMessage{
+public class InChannelDelete implements IInMessage{
 	
+	public String type;
 	public InChannelDeleteData data;
 	
 	@Override
@@ -27,9 +28,6 @@ public class InChannelDelete extends IInMessage{
 		WorkRoutine myroutine = new WorkRoutine();
 		myroutine.inmessage =  new InChannelDelete();
 		myroutine.outmessage = new websocket.json.out.Channel();
-		myroutine.model = new models.Channel();
-		myroutine.dbaction = "delete";
-		myroutine.sender = new Notifyall();
 		return myroutine;
 	}
 
@@ -37,17 +35,18 @@ public class InChannelDelete extends IInMessage{
 	protected Object clone() throws CloneNotSupportedException {
 		return new InChannelDelete();
 	}
-	
-	/*public static void deletechannel (JsonNode inmessage){
+
+	@Override
+	public Model savetoDB(IInMessage inmessage) {
+		models.Channel chan = null;
 		try{
-			InChannelDelete inchan = new InChannelDelete();
-			inchan = new JSONDeserializer<InChannelDelete>().deserialize(
-					inmessage.toString(), InChannelDelete.class);
-			models.Channel chan = new models.Channel();
-			chan = Channel.find.byId(inchan.data.channel);
+			InChannelDelete inchan = (InChannelDelete) inmessage;
+			chan = new models.Channel();
+			chan = Channel.find.byId(inchan.data.id);
 			chan.delete();
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-	}*/
+		return chan;
+	}
 }

@@ -1,7 +1,7 @@
 package websocket.json.in;
 
-import websocket.message.IMessageData;
+import websocket.Interfaces.IMessageData;
 
-public class InChannelDeleteData extends IMessageData{
+public class InChannelDeleteData implements IMessageData{
 	public int id;
 }

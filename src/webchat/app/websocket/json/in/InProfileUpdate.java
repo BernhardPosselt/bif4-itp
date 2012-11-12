@@ -1,26 +1,21 @@
 package websocket.json.in;
 
 import java.util.Iterator;
-import java.util.Map;
-
-import models.Channel;
-import models.User;
 
 import org.codehaus.jackson.JsonNode;
 
-import play.mvc.WebSocket;
+import play.db.ebean.Model;
 
-import websocket.WebsocketManager;
-import websocket.json.out.Status;
-import websocket.message.IInMessage;
-import websocket.message.Notifyall;
+
+import websocket.Interfaces.IInMessage;
 import websocket.message.WorkRoutine;
 
 import flexjson.JSONDeserializer;
 
-public class InProfileUpdate extends IInMessage {
-
+public class InProfileUpdate implements IInMessage {
+	public String type;
 	public InProfileUpdateData data;
+	
 	@Override
 	public boolean canHandle(JsonNode inmessage) {
 		if (inmessage.findPath("type").asText().equals("profileupdate"))
@@ -32,31 +27,27 @@ public class InProfileUpdate extends IInMessage {
 	public WorkRoutine getWorkRoutine() {
 		WorkRoutine myroutine = new WorkRoutine();
 		myroutine.inmessage = new InProfileUpdate();
-		myroutine.model = new models.User();
 		myroutine.outmessage = new websocket.json.out.User();
-		myroutine.dbaction = "update";
-		myroutine.sender = new Notifyall();
 		return myroutine;
 	}
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		return new InProfileUpdate();
 	}
-	
-	/*public static JsonNode updateprofile(JsonNode inmessage, int userid){
-		JsonNode error = null;
+	@Override
+	public Model savetoDB(IInMessage inmessage) {
+		models.User user = null;
 		try{
 			InProfileUpdate inprofileupdate = new InProfileUpdate();
 			inprofileupdate = new JSONDeserializer<InProfileUpdate>().deserialize(
 					inmessage.toString(), InProfileUpdate.class);
-			models.User user = new models.User();
-			user = User.find.byId(userid);
-			user.firstname = inprofileupdate.data.prename;
+			user = new models.User();
+			user = models.User.find.byId(Integer.parseInt(play.mvc.Controller.session("userid")));
+			user.firstname = inprofileupdate.data.firstname;
 			user.lastname = inprofileupdate.data.lastname;
 			for (Iterator<models.User> useriter = models.User.find.all().iterator(); useriter.hasNext();)	{
 				if (useriter.next().username.equals(inprofileupdate.data.username)){
-					error = Status.genStatus("fail", "Could not change Username; Username already exists!");
-					return error;
+					return null;
 				}	
 			}
 			user.username = inprofileupdate.data.username;
@@ -68,7 +59,6 @@ public class InProfileUpdate extends IInMessage {
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		return error;
-	}*/
-
+		return user;
+	}
 }

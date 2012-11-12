@@ -4,54 +4,41 @@ import java.util.List;
 
 import org.codehaus.jackson.JsonNode;
 
-import play.db.ebean.Model;
+import websocket.Interfaces.IOutMessage;
 
-import websocket.WebsocketNotifier;
-
-public class NotifyInit{
-
+public class NotifyInit {
 	public static void sendInit(List<Integer> userlist) {
-		try
-		{
+		try {
 			WorkRoutine routine = new WorkRoutine();
-			routine.model = models.User.getbyId(userlist.get(0));
-			routine.dbaction = "create";
 			routine.outmessage = new websocket.json.out.ActiveUser();
-			routine.outmessage = ObjectMapper.mapfromDB(routine);
-			JsonNode outmessage = JsonBinder.bindtoJson(routine);	
-			WebsocketNotifier.sendMessagetoUser(userlist, outmessage);
-			
-			for (models.Groups mygroup : models.Groups.findAll()){
+			IOutMessage outmessage = routine.outmessage.genOutMessage(models.User.getbyId(Integer.parseInt(play.mvc.Controller.session("userid"))));
+			JsonNode outjson = JsonBinder.bindtoJson(outmessage);
+			WebSocketNotifier.sendMessagetoUser(userlist, outjson);
+
+			for (models.Groups mygroup : models.Groups.findAll()) {
 				WorkRoutine myroutine = new WorkRoutine();
 				myroutine.outmessage = new websocket.json.out.Group();
-				myroutine.model = mygroup;
-				myroutine.dbaction = "create";
-				myroutine.outmessage = ObjectMapper.mapfromDB(myroutine);
-				outmessage = JsonBinder.bindtoJson(myroutine);
-				WebsocketNotifier.sendMessagetoUser(userlist, outmessage);
+				IOutMessage outmsg  = routine.outmessage.genOutMessage(mygroup);
+				JsonNode outjs  = JsonBinder.bindtoJson(outmsg);
+				WebSocketNotifier.sendMessagetoUser(userlist, outjs);
 			}
-			
-			for (models.Channel mychan : models.Channel.findAll()){
+
+			for (models.Channel mychan : models.Channel.findAll()) {
 				WorkRoutine myroutine = new WorkRoutine();
-				myroutine.outmessage = new websocket.json.out.Channel();
-				myroutine.dbaction = "create";
-				myroutine.model = mychan;
-				myroutine.outmessage = ObjectMapper.mapfromDB(myroutine);	
-				outmessage = JsonBinder.bindtoJson(myroutine);
-				WebsocketNotifier.sendMessagetoUser(userlist, outmessage);
+				myroutine.outmessage = new websocket.json.out.Group();
+				IOutMessage outmsg  = routine.outmessage.genOutMessage(mychan);
+				JsonNode outjs  = JsonBinder.bindtoJson(outmsg);
+				WebSocketNotifier.sendMessagetoUser(userlist, outjs);
 			}
-			
-			for (models.User myuser : models.User.findAll()){
+
+			for (models.User myuser : models.User.findAll()) {
 				WorkRoutine myroutine = new WorkRoutine();
-				myroutine.outmessage = new websocket.json.out.User();
-				myroutine.model = myuser;
-				myroutine.dbaction = "create";
-				myroutine.outmessage = ObjectMapper.mapfromDB(myroutine);
-				outmessage = JsonBinder.bindtoJson(myroutine);
-				WebsocketNotifier.sendMessagetoUser(userlist, outmessage);
-			}		
-		}
-		catch (Exception exp){
+				myroutine.outmessage = new websocket.json.out.Group();
+				IOutMessage outmsg  = routine.outmessage.genOutMessage(myuser);
+				JsonNode outjs  = JsonBinder.bindtoJson(outmsg);
+				WebSocketNotifier.sendMessagetoUser(userlist, outjs);
+			}
+		} catch (Exception exp) {
 			exp.printStackTrace();
 		}
 	}

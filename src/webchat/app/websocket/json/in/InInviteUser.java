@@ -2,11 +2,14 @@ package websocket.json.in;
 
 import org.codehaus.jackson.JsonNode;
 
-import websocket.message.IInMessage;
-import websocket.message.Notifyall;
+import play.db.ebean.Model;
+
+
+import websocket.Interfaces.IInMessage;
 import websocket.message.WorkRoutine;
 
-public class InInviteUser extends IInMessage {
+public class InInviteUser implements IInMessage {
+	public String type;
 	public InInviteUserData data;
 
 	@Override
@@ -22,9 +25,22 @@ public class InInviteUser extends IInMessage {
 		WorkRoutine myroutine = new WorkRoutine();
 		myroutine.inmessage = new InInviteUser();
 		myroutine.outmessage = new websocket.json.out.Channel();
-		myroutine.model = new models.Channel();
-		myroutine.dbaction = "update";
-		myroutine.sender = new Notifyall();
 		return myroutine;
+	}
+
+	@Override
+	public Model savetoDB(IInMessage inmessage) {
+		models.User dbuser = null;
+		try{
+			InInviteUser inuser = (InInviteUser) inmessage;
+			dbuser = models.User.getbyId(inuser.data.users);
+			models.Channel dbchan = models.Channel.getbyId(inuser.data.id);
+			dbchan.users.add(dbuser);
+			dbchan.saveManyToManyAssociations("users");
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return dbuser;
 	}
 }

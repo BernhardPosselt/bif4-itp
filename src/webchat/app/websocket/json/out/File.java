@@ -1,17 +1,14 @@
 package websocket.json.out;
 
-import java.util.*;
-
-import models.Groups;
 
 import org.codehaus.jackson.JsonNode;
 
-import play.libs.Json;
-import websocket.message.IOutMessage;
-import flexjson.JSONException;
-import flexjson.JSONSerializer;
+import play.db.ebean.Model;
+import websocket.Interfaces.IOutMessage;
+import websocket.message.JsonBinder;
+import websocket.message.WebSocketNotifier;
 
-public class File extends IOutMessage{
+public class File implements IOutMessage{
 	public String type;
 	public String action;
 	public FileData data = new FileData();
@@ -19,58 +16,31 @@ public class File extends IOutMessage{
 	public File(){
 		this.type = "file";
 	}
-	
-	/*public static JsonNode genjoinFile(int channelid){
-		String json = "", action = "create";
-		Boolean init = true;
-		File file = new File();
-		file.init = init;
-		try{
-			for (Iterator<models.File> iterator = models.File.getChannelFiles(channelid).iterator(); iterator.hasNext();)
-			{
-				models.File dbfile= new models.File();
-				dbfile = iterator.next();
-				FileData fdata = new FileData();
-				fdata.modified = dbfile.date;
-				fdata.name = dbfile.name;
-				fdata.uid = dbfile.uid.id;
-				fdata.size = dbfile.size;
-				fdata.mimetype = dbfile.mimetype;
-				file.actions.put(dbfile.id, action);
-				file.data.put(dbfile.id, fdata);
-				
-			}
-			JSONSerializer fser = new JSONSerializer().include("*.actions", "*.data");
-			json = fser.exclude("*.class").serialize(file);
-			} 
-		catch (JSONException e) {	 
-			 e.printStackTrace();
-		}
-		return Json.parse(json);
+
+	@Override
+	public void sendMessage(IOutMessage outmessage) {
+		JsonNode outjson = JsonBinder.bindtoJson(outmessage);
+		WebSocketNotifier.notifyAllMembers(outjson);
 	}
-	
-	public static JsonNode gennewFile(models.File dbfile){
-		String json = "";
-		File file = new File();
-		file.init = false;
+
+	@Override
+	public IOutMessage genOutMessage(Model dbmodel) {
+		File outfile = null;
 		try{
-			
-			
+			outfile = new File();
+			models.File dbfile = (models.File) dbmodel;
 			FileData fdata = new FileData();
 			fdata.modified = dbfile.date;
 			fdata.name = dbfile.name;
-			fdata.uid = dbfile.uid.id;
+			fdata.owner_id = dbfile.owner_id.id;
 			fdata.size = dbfile.size;
 			fdata.mimetype = dbfile.mimetype;
-			file.actions.put(dbfile.id, "create");
-			file.data.put(dbfile.id, fdata);
-				
-			JSONSerializer fser = new JSONSerializer().include("*.actions", "*.data");
-			json = fser.exclude("*.class").serialize(file);
+			outfile.action = "create";
+			outfile.data = fdata;	
 			} 
-		catch (JSONException e) {	 
+		catch (Exception e) {	 
 			 e.printStackTrace();
 		}
-		return Json.parse(json);
-	}*/
+		return outfile;
+	}
 }
