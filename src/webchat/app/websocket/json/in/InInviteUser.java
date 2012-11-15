@@ -29,7 +29,7 @@ public class InInviteUser implements IInMessage {
 	}
 
 	@Override
-	public Model savetoDB(IInMessage inmessage) {
+	public Model savetoDB(IInMessage inmessage, int userid) {
 		models.User dbuser = null;
 		try{
 			InInviteUser inuser = (InInviteUser) inmessage;

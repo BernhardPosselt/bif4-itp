@@ -11,7 +11,6 @@ import org.codehaus.jackson.JsonNode;
 import play.libs.F.Callback;
 import play.libs.F.Callback0;
 import play.mvc.WebSocket;
-import websocket.message.ListMapper;
 import websocket.message.MessageFactory;
 import websocket.message.MessageHandler;
 import websocket.message.NotifyInit;
@@ -34,12 +33,10 @@ public class WebsocketManager {
 	        	if(!members.containsKey(userId))
             		members.put(out, userId);
 	        	MessageFactory.registerMessage();
-	        	ListMapper.registerMap("users", new models.User());
-	        	ListMapper.registerMap("groups", new models.Groups());
         		List<Integer> userlist = new ArrayList<Integer>();
         		userlist.add(userId);
         		models.User.setUseronline(userId);
-        		NotifyInit.sendInit(userlist);
+        		NotifyInit.sendInit(userlist, userId);
         		init = false;
             
 	        	// For each event received on the socket,

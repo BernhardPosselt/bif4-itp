@@ -37,7 +37,7 @@ public class InChannelDelete implements IInMessage{
 	}
 
 	@Override
-	public Model savetoDB(IInMessage inmessage) {
+	public Model savetoDB(IInMessage inmessage, int userid) {
 		models.Channel chan = null;
 		try{
 			InChannelDelete inchan = (InChannelDelete) inmessage;

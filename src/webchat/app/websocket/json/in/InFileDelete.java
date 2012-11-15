@@ -37,7 +37,7 @@ public class InFileDelete implements IInMessage {
 		return new InFileDelete();
 	}
 	@Override
-	public Model savetoDB(IInMessage inmessage) {
+	public Model savetoDB(IInMessage inmessage, int userid) {
 		models.File dbfile = null;
 		try{
 			InFileDelete infile = (InFileDelete) inmessage;

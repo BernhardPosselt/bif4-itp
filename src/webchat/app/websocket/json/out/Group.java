@@ -26,7 +26,7 @@ public class Group implements IOutMessage {
 
 
 	@Override
-	public IOutMessage genOutMessage(Model dbmodel) {
+	public IOutMessage genOutMessage(Model dbmodel, int userid) {
 		Group outgroup = null;
 		try{
 			outgroup = new Group();

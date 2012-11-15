@@ -35,14 +35,14 @@ public class InProfileUpdate implements IInMessage {
 		return new InProfileUpdate();
 	}
 	@Override
-	public Model savetoDB(IInMessage inmessage) {
+	public Model savetoDB(IInMessage inmessage, int userid) {
 		models.User user = null;
 		try{
 			InProfileUpdate inprofileupdate = new InProfileUpdate();
 			inprofileupdate = new JSONDeserializer<InProfileUpdate>().deserialize(
 					inmessage.toString(), InProfileUpdate.class);
 			user = new models.User();
-			user = models.User.find.byId(Integer.parseInt(play.mvc.Controller.session("userid")));
+			user = models.User.find.byId(userid);
 			user.firstname = inprofileupdate.data.firstname;
 			user.lastname = inprofileupdate.data.lastname;
 			for (Iterator<models.User> useriter = models.User.find.all().iterator(); useriter.hasNext();)	{

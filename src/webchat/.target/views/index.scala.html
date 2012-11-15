@@ -7,7 +7,7 @@
         <div class="tabbed_navi">
             <ul>
                 <li><a ng-click="tab=false" href="#" class="channels_link">Channels</a></li>
-                <li><a ng-click="tab=1" href="#" class="groups_link">Groups</a></li>
+                <li><a ng-click="tab=1" href="#" class="groups_link">Users</a></li>
             </ul>
         </div>
         <div id="channels" ng-show="!tab" ng-controller="ChannelListController">
@@ -68,11 +68,11 @@
                     </div>
                 </div>
 
-                <div class="stream_chat">
-                    <div ng-repeat="message in getMessages() | messageInChannel:channel.id">
+                <div class="stream_chat" when-scrolled>
+                    <div ng-repeat="message in getMessages() | messageInChannel:channel.id" auto-scroll>
                         <div ng-switch on="message.showDate">
                             <div class="line date_line0"
-                                 ng-switch-when="true">
+                                 ng-switch-when="true" auto-scroll>
                                 <div class="user"></div>
                                 <div class="date">
                                     <span class="year">{{ message.date | date:'yyyy-MM-dd'}}</span>
@@ -82,7 +82,11 @@
                         </div>
                         <div class="line"
                              ng-switch on="message.type" 
-                             ng-class='{line0: message.color, line1: !message.color}'>
+                             ng-class='{
+                                highlight: message.highlighted,
+                                line0: message.color, 
+                                line1: !message.color
+                            }'>
                             <div class="user">{{getUserFullName(message.owner_id)}}</div>
                             <div class="message" 
                                  ng-switch-when="text"

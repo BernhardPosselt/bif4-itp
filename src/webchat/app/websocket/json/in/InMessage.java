@@ -35,7 +35,7 @@ public class InMessage implements IInMessage{
 	}
 
 	@Override
-	public Model savetoDB(IInMessage inmessage) {
+	public Model savetoDB(IInMessage inmessage, int userid) {
 		models.Message dbmsg = null;
 		try{
 			InMessage inmsg = (InMessage)inmessage;
@@ -43,7 +43,7 @@ public class InMessage implements IInMessage{
 			dbmsg.channel_id = models.Channel.getbyId(inmsg.data.channel_id);
 			dbmsg.date = new Date();
 			dbmsg.modified = new Date();
-			dbmsg.owner_id = models.User.getbyId(Integer.parseInt(play.mvc.Controller.session("userid")));
+			dbmsg.owner_id = models.User.getbyId(userid);
 			dbmsg.type = inmsg.data.type;
 			dbmsg.message = StringEscapeUtils.escapeSql(inmsg.data.message);
 			dbmsg.save();

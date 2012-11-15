@@ -27,7 +27,7 @@ public class InInviteGroup implements IInMessage{
 		return myroutine;
 	}
 	@Override
-	public Model savetoDB(IInMessage inmessage) {
+	public Model savetoDB(IInMessage inmessage, int userid) {
 		models.Groups dbgroup = null;
 		try{
 			InInviteGroup ingroup = (InInviteGroup) inmessage;

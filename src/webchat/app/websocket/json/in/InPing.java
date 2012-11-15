@@ -3,40 +3,34 @@ package websocket.json.in;
 import org.codehaus.jackson.JsonNode;
 
 import play.db.ebean.Model;
-
-
 import websocket.Interfaces.IInMessage;
-
 import websocket.message.WorkRoutine;
 
+public class InPing implements IInMessage {
 
-public class InJoin implements IInMessage {
-	public String type;
-	public InJoinData data;
-	
 	@Override
 	public boolean canHandle(JsonNode inmessage) {
-		if (inmessage.findPath("type").asText().equals("join")){
+		if (inmessage.findPath("type").asText().equals("ping")){
 			return true;
 		}
 		else
 			return false;
 	}
+
 	@Override
 	public WorkRoutine getWorkRoutine() {
-		WorkRoutine myroutine=new WorkRoutine();
-		myroutine.inmessage = new InJoin();
+		WorkRoutine myroutine = new WorkRoutine();
+		myroutine.inmessage = null;
+		myroutine.action = "";
+		myroutine.dbmodel = null;
 		myroutine.outmessage = null;
 		return myroutine;
-	}
-	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		return new InJoin();
 	}
 
 	@Override
 	public Model savetoDB(IInMessage inmessage, int userid) {
-		// Nothing to be done	
+		// TODO Auto-generated method stub
 		return null;
 	}
+
 }

@@ -24,7 +24,7 @@ public class File implements IOutMessage{
 	}
 
 	@Override
-	public IOutMessage genOutMessage(Model dbmodel) {
+	public IOutMessage genOutMessage(Model dbmodel, int userid) {
 		File outfile = null;
 		try{
 			outfile = new File();

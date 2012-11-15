@@ -28,7 +28,7 @@ public class Message implements IOutMessage {
 	}
 
 	@Override
-	public IOutMessage genOutMessage(Model dbmodel) {
+	public IOutMessage genOutMessage(Model dbmodel, int userid) {
 		Message outmessage = null;
 		try {
 			outmessage = new Message();
@@ -41,7 +41,7 @@ public class Message implements IOutMessage {
 			if (dbmessage.type.equals("text"))
 				mdata.message = mdata.message.replaceAll("\n", "<br/>");
 			mdata.type = dbmessage.type;
-			mdata.owner_id = Integer.parseInt(play.mvc.Controller.session("userid"));
+			mdata.owner_id = userid;
 			mdata.channel_id = dbmessage.channel_id.id;
 			outmessage.data = mdata;
 			outmessage.action = "create";

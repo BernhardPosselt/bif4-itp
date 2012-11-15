@@ -36,7 +36,7 @@ public class InChannelTopic implements IInMessage{
 	}
 
 	@Override
-	public Model savetoDB(IInMessage inmessage) {
+	public Model savetoDB(IInMessage inmessage, int userid) {
 		models.Channel chan = null;
 		try{
 			InChannelTopic inchan = (InChannelTopic) inmessage;

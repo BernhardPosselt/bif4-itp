@@ -27,7 +27,7 @@ public class User implements IOutMessage{
 	}
 	
 	@Override
-	public IOutMessage genOutMessage(Model dbmodel) {
+	public IOutMessage genOutMessage(Model dbmodel, int userid) {
 		User outuser = null;
 		try {
 			outuser = new User();	

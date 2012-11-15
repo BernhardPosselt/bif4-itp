@@ -34,5 +34,6 @@ public class MessageFactory {
     	messages.add(new InMessage());
     	messages.add(new InNewChannel());
     	messages.add(new InProfileUpdate());
+    	messages.add(new InPing());
     }
 }

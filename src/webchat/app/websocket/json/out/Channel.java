@@ -29,15 +29,15 @@ public class Channel implements IOutMessage {
 	}
 
 	@Override
-	public IOutMessage genOutMessage(Model dbmodel) {
+	public IOutMessage genOutMessage(Model dbmodel, int userid) {
 		Channel outchan = null;
 		try {
-			models.Channel dbchan = (models.Channel)dbmodel;
-					
+			models.Channel dbchan = (models.Channel)dbmodel;		
 			outchan = new Channel();
 			ChannelData chandata = new ChannelData();
 			outchan.action = "create";
 			
+			chandata.id = dbchan.id;
 			chandata.name = dbchan.name;
 			chandata.topic = dbchan.topic;
 				

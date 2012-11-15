@@ -18,6 +18,7 @@ create table file (
   filename                  varchar(255),
   mimetype                  varchar(255),
   size                      double,
+  deleted                   boolean,
   date                      timestamp,
   owner_id_id               integer,
   constraint pk_file primary key (id))

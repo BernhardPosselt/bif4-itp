@@ -26,11 +26,11 @@ public class ActiveUser implements IOutMessage  {
 	}
 
 	@Override
-	public IOutMessage genOutMessage(Model dbmodel) {
+	public IOutMessage genOutMessage(Model dbmodel, int userid) {
 		ActiveUser acuser = null;
 		try {
 			acuser = new ActiveUser();
-			acuser.data.id = Integer.parseInt(play.mvc.Controller.session("userid"));
+			acuser.data.id = userid;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -29,6 +29,7 @@ public class InNewChannel implements IInMessage {
 		WorkRoutine myroutine = new WorkRoutine();
 		myroutine.inmessage = new InNewChannel();
 		myroutine.outmessage = new websocket.json.out.Channel();
+		myroutine.action = "create";
 		return myroutine;
 	}
 	@Override
@@ -36,13 +37,15 @@ public class InNewChannel implements IInMessage {
 		return new InNewChannel();
 	}
 	@Override
-	public Model savetoDB(IInMessage inmessage) {
+	public Model savetoDB(IInMessage inmessage, int userid) {
 		models.Channel chan = null;
 		try{
 			InNewChannel innewchan = (InNewChannel) inmessage;
 			for (Iterator<models.Channel> channeliter = models.Channel.find.all().iterator(); channeliter.hasNext();){
-				if (channeliter.next().name.equals(innewchan.data.name.trim()))
+				if (channeliter.next().name.equals(innewchan.data.name.trim())){
+					websocket.json.out.Status.genStatus("error", "Channelname already exists");
 					return null;
+				}
 			}
 			
 			chan = new models.Channel();
@@ -60,11 +63,9 @@ public class InNewChannel implements IInMessage {
 				}
 			}
 			else
-				chan.setUsers(models.User.find.byId(Integer.parseInt(play.mvc.Controller.session("userid"))));
-			
-			chan.save();
-			chan.saveManyToManyAssociations("users");
-			chan.saveManyToManyAssociations("groups");
+				chan.setUsers(models.User.getbyId(userid));
+						
+			chan.save();	
 		}catch (Exception e){
 			e.printStackTrace();
 		}	

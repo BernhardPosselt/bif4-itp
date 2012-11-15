@@ -18,7 +18,7 @@ import models.*;
 
 import views.html.*;
 import websocket.WebsocketManager;
-import websocket.WebsocketNotifier;
+import websocket.message.WebSocketNotifier;
 
 
 
@@ -197,7 +197,7 @@ public class AdminController extends Controller {
 				for(Map.Entry<WebSocket.Out<JsonNode>, Integer> entry: WebsocketManager.members.entrySet()) {
 					if (luser.contains(entry.getValue())){
 						out = (WebSocket.Out<JsonNode>)entry.getKey();
-						out.write(websocket.json.out.Status.genStatus("error", "Your Account has been deleted by an admin! You will be redirected to Login-Page!"));
+						websocket.json.out.Status.genStatus("error", "Your Account has been deleted by an admin! You will be redirected to Login-Page!");
 			        }	
 			    }		
     			WebsocketManager.members.entrySet().contains(id.intValue());
