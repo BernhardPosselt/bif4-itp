@@ -182,7 +182,7 @@ public class TestJsonBinder {
 			String json =  myser.exclude("*.class", "*.workRoutine").serialize(chandel);
 			JsonNode inmessage = Json.parse(json);
 			WorkRoutine myroutine = new WorkRoutine();
-			myroutine.inmessage = new InChannelClose();
+			myroutine.inmessage = new InChannelDelete();
 			myroutine.outmessage = new Channel();
 			myroutine.inmessage = JsonBinder.bindfromJson(inmessage, myroutine.inmessage);
 			Field f = chandel.getClass().getField("data");
@@ -209,7 +209,7 @@ public class TestJsonBinder {
 			String json =  myser.exclude("*.class", "*.workRoutine").serialize(chann);
 			JsonNode inmessage = Json.parse(json);
 			WorkRoutine myroutine = new WorkRoutine();
-			myroutine.inmessage = new InChannelDelete();
+			myroutine.inmessage = new InChannelName();
 			myroutine.outmessage = new Channel();
 			myroutine.inmessage = JsonBinder.bindfromJson(inmessage, myroutine.inmessage);
 			Field f = chann.getClass().getField("data");

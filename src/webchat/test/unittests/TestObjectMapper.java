@@ -52,7 +52,6 @@ import websocket.json.out.GroupData;
 import websocket.json.out.MessageData;
 import websocket.json.out.UserData;
 import websocket.message.JsonBinder;
-import websocket.message.ListMapper;
 import websocket.message.ObjectMapper;
 import websocket.message.WorkRoutine;
 import static play.test.Helpers.*; 
