@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import com.google.common.io.Files;
@@ -19,6 +20,7 @@ import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.joda.time.DateTime;
 import play.Logger;
 import play.Play;
@@ -42,6 +44,7 @@ public class Application extends Controller {
   
 	 static int userid;
 	 public static Connection conn;
+	 public static HashMap<Integer, MultiUserChat> mucchannels = new HashMap<Integer, MultiUserChat>();
 	 
 
     /**
@@ -264,7 +267,7 @@ public class Application extends Controller {
 	 public static Result filltestdata()
 	 {
             User user = new User();
-	        user.username = "Glembo";
+	        user.username = "glembo";
             user.setPassword("test");
 	        user.email = "a.b@aon.at";
 	        user.lastname = "Huber";
@@ -275,7 +278,7 @@ public class Application extends Controller {
 	        user.save();
 	        
 	        User user1 = new User();
-	        user1.username = "MasterLindi";
+	        user1.username = "masterlindi";
             user1.setPassword("test");
 	        user1.email = "christoph.lindmaier@gmx.at";
 	        user1.lastname = "Lindmaier";
@@ -286,7 +289,7 @@ public class Application extends Controller {
 	        user1.save();
 	         
 	        Channel channel = new Channel();
-	  	    channel.name = "Channel 1";
+	  	    channel.name = "Channel1";
 	  	    channel.topic = "Webengineering";
 	  	    channel.is_public = false;
 	  	    channel.archived = false;
@@ -353,9 +356,15 @@ public class Application extends Controller {
 	    return null;
      }
 	 
+	 public static void ListenOpenFire()
+	 {
+		 
+		 
+	 }
+	 
 	 public static void ConnectOpenFire() { 
 		 //Connect
-		 ConnectionConfiguration config = new ConnectionConfiguration("localhost", 5222);
+		 ConnectionConfiguration config = new ConnectionConfiguration("204.62.14.78", 5222);
 		 conn = new XMPPConnection(config);
 		 try {
 			 conn.connect();

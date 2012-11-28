@@ -1,9 +1,21 @@
 package websocket.json.out;
 
+import jabber.MucChannel;
+
 import java.util.*;
 
 
 import org.codehaus.jackson.JsonNode;
+import org.jivesoftware.smack.PacketListener;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smackx.Form;
+import org.jivesoftware.smackx.FormField;
+import org.jivesoftware.smackx.muc.MultiUserChat;
+
+import controllers.Application;
 
 import play.libs.Json;
 import websocket.json.in.InMessage;
@@ -16,6 +28,7 @@ public class Channel {
 	public Map<Integer,ChannelData> data = new HashMap<Integer,ChannelData>();
 	public Boolean init;
 	public Map<Integer,String> actions = new HashMap<Integer,String>();
+
 
 	public Channel(){
 		this.type = "channel";
@@ -44,13 +57,16 @@ public class Channel {
 				cdata.modified = new Date();
 				channel.actions.put(c.id, action);
 				channel.data.put(c.id, cdata);
-			}
+				
+			 
+				MucChannel.createMucChannel(c.name, c.topic, userid, c.id);
+			}   
 	
 			// Generate the Json Message
 			JSONSerializer aser = new JSONSerializer().include("*.data",
 					"*.actions", "*.files", "*.users", "*.groups");
 			json = aser.exclude("*.class").serialize(channel);
-		} catch (JSONException e) {
+		} catch (JSONException  e) {
 			e.printStackTrace();
 		}
 		return Json.parse(json);

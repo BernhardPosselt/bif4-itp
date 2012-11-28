@@ -23,7 +23,7 @@ public class JabberTest extends Controller {
 	public static Result index() throws XMPPException {
 		
 		//Connect
-		ConnectionConfiguration config = new ConnectionConfiguration("localhost", 5222);
+		ConnectionConfiguration config = new ConnectionConfiguration("204.62.14.78", 5222);
 		Connection conn = new XMPPConnection(config);
 		try {
 			conn.connect();

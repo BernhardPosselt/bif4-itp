@@ -1,5 +1,7 @@
 package websocket.json.out;
 
+import jabber.MucChannel;
+
 import java.util.*;
 
 import javax.swing.text.html.HTML;
@@ -8,7 +10,11 @@ import websocket.json.in.InMessage;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.apache.commons.lang.StringEscapeUtils;
+
+import controllers.Application;
 
 import models.*;
 import play.libs.Json;
@@ -74,15 +80,78 @@ public class Message {
 			// Put the Messages in the channels
 			for (Iterator<Integer> iterator = im.data.channel.iterator(); iterator
 					.hasNext();) {
-				m.data.put(iterator.next(), mdata);
+				int chanid = iterator.next();
+				m.data.put(chanid, mdata);
+				
+				//Send to MUC
+				MucChannel.sendMucMessage(md.message, chanid);
 			}
+			
+			
 	
 			// Generate the Json Message
 			JSONSerializer aser = new JSONSerializer().include("*.data",
 					"*.actions");
 			json = aser.exclude("*.class").serialize(m);
-		} catch (JSONException e) {
+		} catch (JSONException  e) {
 			e.printStackTrace();
+		}
+		return Json.parse(json);
+	}
+	
+	public static JsonNode genJabberMessage(String content, int userid, int channelid)
+	{
+		String json = "";
+		try{
+			models.Message dbmessage = new models.Message();
+			
+			// Create DB Message
+			dbmessage.content = StringEscapeUtils.escapeSql(content);
+			dbmessage.date = new Date();
+			dbmessage.modified = new Date();
+			dbmessage.type = "text";
+			dbmessage.user = models.User.find.byId(userid);
+			dbmessage.channels.add(models.Channel.find.byId(channelid));
+			
+			// Save the Message to the DB
+			dbmessage.save();
+			dbmessage.saveManyToManyAssociations("channels");
+	
+			// Create JsonMessage
+			Message m = new Message();
+			MessageData md = new MessageData();
+			m.init = false;
+			md.date = new Date();
+		
+			md.message = StringEscapeUtils.escapeHtml(dbmessage.content);
+			md.message = md.message.replaceAll("\n", "<br/>");
+			md.modified = new Date();
+			md.type = dbmessage.type;
+		
+			md.user_id = userid;
+	
+			// Put the Messages in the map
+			Map<Integer, MessageData> mdata = new LinkedHashMap<Integer, MessageData>();
+			mdata.put(dbmessage.id, md);
+	
+			// Fill the Action Dict; always create by messages
+			m.actions.put(dbmessage.id, "create");
+	
+			// Put the Messages in the channels
+		
+			m.data.put(channelid, mdata);
+				
+				
+			
+			
+			
+	
+			// Generate the Json Message
+			JSONSerializer aser = new JSONSerializer().include("*.data",
+					"*.actions");
+			json = aser.exclude("*.class").serialize(m);
+		}catch(Exception exp){
+			exp.printStackTrace();
 		}
 		return Json.parse(json);
 	}
