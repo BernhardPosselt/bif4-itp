@@ -38,6 +38,8 @@ public class JabberTest extends Controller {
 		    System.out.println("Error logging in, Error: " + e2);
 		}
 		
+		//Bis hier ist alles schon in der Application, das mit dem User erstellen und Passwort ändern mach ich schon
+		//Ich brauch dazu nur die conn ^^
 		//Create Chatroom
 		MultiUserChat muc = new MultiUserChat(conn,"testraum@conference.webchat");
 		muc.create("testraum");
@@ -57,13 +59,18 @@ public class JabberTest extends Controller {
 	    submitForm.setAnswer("muc#roomconfig_roomowners", owners);
 	    muc.sendConfigurationForm(submitForm);
 	    
+	    //Invite users
 	    muc.invite("glembo@webchat/Smack", "testeinladung");
 	    
+	    //Send message
 	    muc.sendMessage("Servas burschn!");
+	    
+	    //Listen message
 	    muc.addMessageListener(new PacketListener() {
 	    	@Override
 			public void processPacket(Packet packet) {
 				if (packet instanceof Message) {
+					//Process incoming messages
 					System.out.println("Received message: " + (packet != null ? ((Message)packet).getFrom() + " " + ((Message)packet).getBody() : "NULL"));
 				} else if (packet instanceof Presence) {
 					System.out.println(packet);
