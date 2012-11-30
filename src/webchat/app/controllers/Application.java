@@ -267,7 +267,7 @@ public class Application extends Controller {
 	 public static Result filltestdata()
 	 {
             User user = new User();
-	        user.username = "glembo";
+	        user.username = "Glembo";
             user.setPassword("test");
 	        user.email = "a.b@aon.at";
 	        user.lastname = "Huber";
@@ -278,7 +278,7 @@ public class Application extends Controller {
 	        user.save();
 	        
 	        User user1 = new User();
-	        user1.username = "masterlindi";
+	        user1.username = "MasterLindi";
             user1.setPassword("test");
 	        user1.email = "christoph.lindmaier@gmx.at";
 	        user1.lastname = "Lindmaier";
