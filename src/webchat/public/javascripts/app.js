@@ -105,12 +105,23 @@
   ]);
 
   angular.module('WebChat').factory('WebChatWebSocket', [
-    '_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL', '$rootScope', function(_WebChatWebSocket, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL, $rootScope) {
-      var socket;
+    '_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL', 'FileModel', 'UserModel', 'GroupModel', 'ActiveUser', 'ChannelModel', 'MessageModel', function(_WebChatWebSocket, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL, FileModel, UserModel, GroupModel, ActiveUser, ChannelModel, MessageModel) {
+      var handlers, socket;
+      handlers = [FileModel, ChannelModel, GroupModel, UserModel, ActiveUser, MessageModel];
       socket = new _WebChatWebSocket();
       socket.connect(WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL);
       socket.onReceive(function(message) {
-        return $rootScope.$broadcast('message', message);
+        var handler, _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = handlers.length; _i < _len; _i++) {
+          handler = handlers[_i];
+          if (handler.canHandle(message)) {
+            _results.push(handler.handle(message));
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
       });
       return socket;
     }
@@ -166,20 +177,23 @@
     }
   ]);
 
-  angular.module('WebChat').factory('ActiveUser', [
-    '$rootScope', function($rootScope) {
-      var ActiveUser;
-      ActiveUser = {
-        id: null
-      };
-      $rootScope.$on('message', function(scope, message) {
-        if (message.type === 'activeuser') {
-          return ActiveUser.id = message.data.id;
-        }
-      });
-      return ActiveUser;
-    }
-  ]);
+  angular.module('WebChat').factory('ActiveUser', function() {
+    var ActiveUser;
+    ActiveUser = {
+      id: null
+    };
+    ActiveUser.canHandle = function(message) {
+      if (message.type === 'activeuser') {
+        return true;
+      } else {
+        return false;
+      }
+    };
+    ActiveUser.handle = function(message) {
+      return ActiveUser.id = message.data.id;
+    };
+    return ActiveUser;
+  });
 
   angular.module('WebChat').factory('_WebChatWebSocket', function() {
     var WebChatWebSocket;
@@ -609,27 +623,29 @@
           this.items = [];
           this.hashMap = {};
           $rootScope.$on('message', function(scope, message) {
+            console.log(_this);
             if (_this.canHandle(message.type)) {
-              return $rootScope.$apply(function() {
-                return _this.handle(message);
-              });
+              return _this.handle(message);
             }
           });
         }
 
         _Class.prototype.handle = function(message) {
-          switch (message.action) {
-            case 'create':
-              return this.create(message.data);
-            case 'update':
-              return this.update(message.data);
-            case 'delete':
-              return this["delete"](message.data);
-          }
+          var _this = this;
+          return $rootScope.$apply(function() {
+            switch (message.action) {
+              case 'create':
+                return _this.create(message.data);
+              case 'update':
+                return _this.update(message.data);
+              case 'delete':
+                return _this["delete"](message.data);
+            }
+          });
         };
 
         _Class.prototype.create = function(item) {
-          if (this.hashMap[item.id] === void 0) {
+          if (this.hashMap[item.id] !== void 0) {
             return this.update(item);
           } else {
             this.hashMap[item.id] = item;
@@ -676,8 +692,8 @@
           return this.items;
         };
 
-        _Class.prototype.canHandle = function(msgType) {
-          if (msgType === this.modelType) {
+        _Class.prototype.canHandle = function(message) {
+          if (message.type === this.modelType) {
             return true;
           } else {
             return false;

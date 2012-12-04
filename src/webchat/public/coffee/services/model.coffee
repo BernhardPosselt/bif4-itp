@@ -6,21 +6,23 @@ angular.module('WebChat').factory '_Model', ['$rootScope', ($rootScope) ->
             @items = []
             @hashMap = {} # hashmap for quick access via item id
             $rootScope.$on 'message', (scope, message) =>
+                console.log @
                 if @canHandle(message.type)
-                    $rootScope.$apply =>
+                    
                         @handle message
 
 
 
         handle: (message) ->
-            switch message.action
-                when 'create' then @create(message.data)
-                when 'update' then @update(message.data)
-                when 'delete' then @delete(message.data)
+            $rootScope.$apply =>
+                switch message.action
+                    when 'create' then @create(message.data)
+                    when 'update' then @update(message.data)
+                    when 'delete' then @delete(message.data)
 
 
         create: (item) ->
-            if @hashMap[item.id] == undefined
+            if @hashMap[item.id] != undefined
                 @update(item)
             else
                 @hashMap[item.id] = item
@@ -50,8 +52,8 @@ angular.module('WebChat').factory '_Model', ['$rootScope', ($rootScope) ->
             return @items
 
 
-        canHandle: (msgType) ->
-            if msgType == @modelType
+        canHandle: (message) ->
+            if message.type == @modelType
                 return true
             else
                 return false

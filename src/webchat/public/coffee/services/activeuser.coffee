@@ -1,10 +1,15 @@
-angular.module('WebChat').factory 'ActiveUser', ['$rootScope', ($rootScope) ->
+angular.module('WebChat').factory 'ActiveUser', () ->
     ActiveUser = 
         id: null
 
-    $rootScope.$on 'message', (scope, message) ->
+    ActiveUser.canHandle = (message) ->
         if message.type == 'activeuser'
-            ActiveUser.id = message.data.id
+        	return true
+        else
+        	return false
+
+    ActiveUser.handle = (message) ->
+        ActiveUser.id = message.data.id
+
 
     return ActiveUser
-]

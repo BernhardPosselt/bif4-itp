@@ -36,12 +36,25 @@ angular.module('WebChat').factory 'Smileys', ['_Smileys', (_Smileys) ->
 
 angular.module('WebChat').factory 'WebChatWebSocket', 
     ['_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL',
-     '$rootScope',
-    (_WebChatWebSocket, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL, $rootScope) =>
+     'FileModel', 'UserModel', 'GroupModel', 'ActiveUser', 'ChannelModel', 'MessageModel',
+    (_WebChatWebSocket, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL,
+        FileModel, UserModel, GroupModel, ActiveUser, ChannelModel, MessageModel) =>
+
+        handlers = [
+            FileModel
+            ChannelModel
+            GroupModel
+            UserModel
+            ActiveUser
+            MessageModel
+        ]
+
         socket = new _WebChatWebSocket()
         socket.connect(WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL)
         socket.onReceive (message) ->
-            $rootScope.$broadcast('message', message)
+            for handler in handlers
+                if handler.canHandle(message)
+                    handler.handle(message)
 
         return socket
     ]
