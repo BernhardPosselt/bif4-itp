@@ -40,6 +40,7 @@ public class Message implements IOutMessage {
 			
 			if (dbmessage.type.equals("text"))
 				mdata.message = mdata.message.replaceAll("\n", "<br/>");
+			mdata.id = dbmessage.id;
 			mdata.type = dbmessage.type;
 			mdata.owner_id = userid;
 			mdata.channel_id = dbmessage.channel_id.id;
