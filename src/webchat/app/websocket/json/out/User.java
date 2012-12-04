@@ -34,6 +34,7 @@ public class User implements IOutMessage{
 			models.User dbuser = (models.User) dbmodel;
 			
 			UserData udata = new UserData();
+			udata.id = dbuser.id;
 			udata.email = dbuser.email;
 			udata.lastname = dbuser.lastname;
 			udata.username = dbuser.username;
