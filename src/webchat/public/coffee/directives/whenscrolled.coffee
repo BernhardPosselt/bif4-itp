@@ -16,7 +16,7 @@ angular.module('WebChat').directive 'whenScrolled',
 
             if stream.scrollTop() <= 0
                 earliestMessage = ChannelMessageCache.getEarliestMessage(channelId)
-                msg = new _LoadMessages(channelId, earliestMessage.id earliestMessage.date)
+                msg = new _LoadMessages(channelId, earliestMessage.id, earliestMessage.date)
                 WebChatWebSocket.sendJSON(msg.serialize())
 
             scope.$apply attr.whenScrolled;
