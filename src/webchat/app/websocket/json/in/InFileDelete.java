@@ -30,6 +30,7 @@ public class InFileDelete implements IInMessage {
 		WorkRoutine myroutine=new WorkRoutine();
 		myroutine.inmessage = new InFileDelete();
 		myroutine.outmessage=new websocket.json.out.Channel();
+		myroutine.action = "update";
 		return myroutine;
 	}
 	@Override

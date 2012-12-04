@@ -28,6 +28,7 @@ public class InProfileUpdate implements IInMessage {
 		WorkRoutine myroutine = new WorkRoutine();
 		myroutine.inmessage = new InProfileUpdate();
 		myroutine.outmessage = new websocket.json.out.User();
+		myroutine.action = "update";
 		return myroutine;
 	}
 	@Override

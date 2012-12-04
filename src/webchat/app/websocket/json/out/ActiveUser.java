@@ -26,7 +26,7 @@ public class ActiveUser implements IOutMessage  {
 	}
 
 	@Override
-	public IOutMessage genOutMessage(Model dbmodel, int userid) {
+	public IOutMessage genOutMessage(Model dbmodel, int userid, String action) {
 		ActiveUser acuser = null;
 		try {
 			acuser = new ActiveUser();

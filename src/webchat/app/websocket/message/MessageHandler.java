@@ -14,7 +14,7 @@ public class MessageHandler {
 				 myroutine.inmessage = JsonBinder.bindfromJson(inmessage, myroutine.inmessage);
 				 myroutine.dbmodel = myroutine.inmessage.savetoDB(myroutine.inmessage, userid);
 				 if (myroutine.dbmodel != null){
-					  myroutine.outmessage = myroutine.outmessage.genOutMessage(myroutine.dbmodel, userid);
+					  myroutine.outmessage = myroutine.outmessage.genOutMessage(myroutine.dbmodel, userid, myroutine.action);
 					  myroutine.outmessage.sendMessage(myroutine.outmessage);
 				 }
 			 }

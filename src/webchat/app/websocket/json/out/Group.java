@@ -26,7 +26,7 @@ public class Group implements IOutMessage {
 
 
 	@Override
-	public IOutMessage genOutMessage(Model dbmodel, int userid) {
+	public IOutMessage genOutMessage(Model dbmodel, int userid, String action) {
 		Group outgroup = null;
 		try{
 			outgroup = new Group();
@@ -35,7 +35,7 @@ public class Group implements IOutMessage {
 			gdata.id = dbgroup.id;
 			gdata.modified = dbgroup.modified;
 			gdata.name = dbgroup.name;
-			outgroup.action ="create";
+			outgroup.action = action;
 			outgroup.data = gdata;
 		}catch(Exception e){
 			e.printStackTrace();

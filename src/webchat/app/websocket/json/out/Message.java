@@ -28,7 +28,7 @@ public class Message implements IOutMessage {
 	}
 
 	@Override
-	public IOutMessage genOutMessage(Model dbmodel, int userid) {
+	public IOutMessage genOutMessage(Model dbmodel, int userid, String action) {
 		Message outmessage = null;
 		try {
 			outmessage = new Message();
@@ -45,7 +45,7 @@ public class Message implements IOutMessage {
 			mdata.owner_id = userid;
 			mdata.channel_id = dbmessage.channel_id.id;
 			outmessage.data = mdata;
-			outmessage.action = "create";
+			outmessage.action = action;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

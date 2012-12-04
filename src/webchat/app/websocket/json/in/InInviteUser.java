@@ -25,22 +25,26 @@ public class InInviteUser implements IInMessage {
 		WorkRoutine myroutine = new WorkRoutine();
 		myroutine.inmessage = new InInviteUser();
 		myroutine.outmessage = new websocket.json.out.Channel();
+		myroutine.action = "update";
 		return myroutine;
 	}
 
 	@Override
 	public Model savetoDB(IInMessage inmessage, int userid) {
-		models.User dbuser = null;
+		models.Channel dbchan = null;
 		try{
 			InInviteUser inuser = (InInviteUser) inmessage;
-			dbuser = models.User.getbyId(inuser.data.users);
-			models.Channel dbchan = models.Channel.getbyId(inuser.data.id);
-			dbchan.users.add(dbuser);
+			models.User dbuser = models.User.getbyId(inuser.data.users);
+			dbchan = models.Channel.getbyId(inuser.data.id);
+			if (inuser.data.value == true && !dbchan.users.contains(dbuser))
+				dbchan.users.add(dbuser);
+			else
+				dbchan.users.remove(dbuser);
 			dbchan.saveManyToManyAssociations("users");
 		}catch(Exception e)
 		{
 			e.printStackTrace();
 		}
-		return dbuser;
+		return dbchan;
 	}
 }

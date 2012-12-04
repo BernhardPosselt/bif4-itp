@@ -27,6 +27,7 @@ public class InChannelTopic implements IInMessage{
 		WorkRoutine myroutine =new WorkRoutine();
 		myroutine.inmessage = new InChannelTopic();
 		myroutine.outmessage = new websocket.json.out.Channel();
+		myroutine.action = "update";
 		return myroutine;
 	}
 

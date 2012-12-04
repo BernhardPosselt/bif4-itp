@@ -27,7 +27,7 @@ public class User implements IOutMessage{
 	}
 	
 	@Override
-	public IOutMessage genOutMessage(Model dbmodel, int userid) {
+	public IOutMessage genOutMessage(Model dbmodel, int userid, String action) {
 		User outuser = null;
 		try {
 			outuser = new User();	
@@ -47,7 +47,7 @@ public class User implements IOutMessage{
 			}
 			
 			outuser.data = udata;
-			outuser.action = "create";
+			outuser.action = action;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

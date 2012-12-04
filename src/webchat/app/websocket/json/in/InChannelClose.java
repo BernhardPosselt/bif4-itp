@@ -28,6 +28,7 @@ public class InChannelClose implements IInMessage {
 		WorkRoutine myroutine = new WorkRoutine();
 		myroutine.inmessage = new InChannelClose();
 		myroutine.outmessage = new websocket.json.out.Channel();
+		myroutine.action = "delete";
 		return myroutine;
 	}
 

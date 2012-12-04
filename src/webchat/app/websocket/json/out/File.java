@@ -24,7 +24,7 @@ public class File implements IOutMessage{
 	}
 
 	@Override
-	public IOutMessage genOutMessage(Model dbmodel, int userid) {
+	public IOutMessage genOutMessage(Model dbmodel, int userid, String action) {
 		File outfile = null;
 		try{
 			outfile = new File();
@@ -35,7 +35,7 @@ public class File implements IOutMessage{
 			fdata.owner_id = dbfile.owner_id.id;
 			fdata.size = dbfile.size;
 			fdata.mimetype = dbfile.mimetype;
-			outfile.action = "create";
+			outfile.action = action;
 			outfile.data = fdata;	
 			} 
 		catch (Exception e) {	 

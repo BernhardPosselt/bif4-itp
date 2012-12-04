@@ -27,6 +27,7 @@ public class InJoin implements IInMessage {
 		WorkRoutine myroutine=new WorkRoutine();
 		myroutine.inmessage = new InJoin();
 		myroutine.outmessage = null;
+		myroutine.action = "create";
 		return myroutine;
 	}
 	@Override

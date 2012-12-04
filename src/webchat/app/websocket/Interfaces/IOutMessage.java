@@ -4,6 +4,6 @@ import play.db.ebean.*;
 
 public interface IOutMessage extends IMessage{
 
-	public abstract IOutMessage genOutMessage(Model dbmodel, int userid);
+	public abstract IOutMessage genOutMessage(Model dbmodel, int userid, String action);
 	public abstract void sendMessage(IOutMessage outmessage);
 }

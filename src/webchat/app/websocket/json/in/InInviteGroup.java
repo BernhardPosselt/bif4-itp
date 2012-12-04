@@ -24,21 +24,25 @@ public class InInviteGroup implements IInMessage{
 		WorkRoutine myroutine = new WorkRoutine();
 		myroutine.inmessage = new InInviteGroup();
 		myroutine.outmessage = new websocket.json.out.Channel();
+		myroutine.action = "update";
 		return myroutine;
 	}
 	@Override
 	public Model savetoDB(IInMessage inmessage, int userid) {
-		models.Groups dbgroup = null;
+		models.Channel dbchan = null;
 		try{
 			InInviteGroup ingroup = (InInviteGroup) inmessage;
-			dbgroup = models.Groups.getbyId(ingroup.data.groups);
-			models.Channel dbchan = models.Channel.getbyId(ingroup.data.id);
-			dbchan.groups.add(dbgroup);
+			models.Groups dbgroup = models.Groups.getbyId(ingroup.data.groups);
+			dbchan = models.Channel.getbyId(ingroup.data.id);
+			if (ingroup.data.value == true && !dbchan.groups.contains(dbgroup))
+				dbchan.groups.add(dbgroup);
+			else
+				dbchan.groups.remove(dbgroup);
 			dbchan.saveManyToManyAssociations("groups");
 		}catch(Exception e)
 		{
 			e.printStackTrace();
 		}
-		return dbgroup;
+		return dbchan;
 	}
 }

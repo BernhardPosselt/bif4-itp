@@ -27,6 +27,7 @@ public class InMessage implements IInMessage{
 		WorkRoutine myroutine = new WorkRoutine();
 		myroutine.inmessage = new InMessage();
 		myroutine.outmessage = new websocket.json.out.Message();
+		myroutine.action = "create";
 		return myroutine;
 	}
 	@Override
