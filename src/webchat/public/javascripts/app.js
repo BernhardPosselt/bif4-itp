@@ -186,6 +186,8 @@
     WebChatWebSocket = (function() {
 
       function WebChatWebSocket() {
+        this._initialized = false;
+        this._shelvedQueries = [];
         this._callbacks = {
           onOpen: function() {
             return console.info('websocket is open');
@@ -221,9 +223,11 @@
           this._connection = new Socket(url);
           this._connection.onopen = function() {
             _this._callbacks.onOpen();
-            return window.onbeforeunload = function() {
+            window.onbeforeunload = function() {
               return _this.close();
             };
+            _this._initialized = true;
+            return _this._runShelvedQueries();
           };
           this._connection.onmessage = function(event) {
             var json, msg;
@@ -248,6 +252,21 @@
         }
       };
 
+      WebChatWebSocket.prototype._shelveMessage = function(msg) {
+        console.info('saving message to send on connect: ' + msg);
+        return this._shelvedQueries.push(msg);
+      };
+
+      WebChatWebSocket.prototype._runShelvedQueries = function() {
+        var query, _i, _len, _ref;
+        _ref = this._shelvedQueries;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          query = _ref[_i];
+          this.send(query);
+        }
+        return this._shelvedQueries = [];
+      };
+
       WebChatWebSocket.prototype.onOpen = function(callback) {
         return this._callbacks.onOpen = callback;
       };
@@ -265,8 +284,12 @@
       };
 
       WebChatWebSocket.prototype.send = function(msg) {
-        this._connection.send(msg);
-        return console.info("Sending " + msg);
+        if (!this._initialized) {
+          return this._shelveMessage(msg);
+        } else {
+          this._connection.send(msg);
+          return console.info("Sending " + msg);
+        }
       };
 
       WebChatWebSocket.prototype.sendJSON = function(json_object) {

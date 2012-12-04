@@ -3,6 +3,8 @@ angular.module('WebChat').factory '_WebChatWebSocket', () ->
     class WebChatWebSocket
 
         constructor: ->
+            @_initialized = false
+            @_shelvedQueries = []
             @_callbacks = 
                 onOpen: -> 
                     console.info('websocket is open')
@@ -32,6 +34,8 @@ angular.module('WebChat').factory '_WebChatWebSocket', () ->
                     @_callbacks.onOpen()
                     window.onbeforeunload = =>
                         @close()
+                    @_initialized = true
+                    @_runShelvedQueries()
                 
                 @_connection.onmessage = (event) =>
                     msg = event.data
@@ -53,6 +57,17 @@ angular.module('WebChat').factory '_WebChatWebSocket', () ->
                 console.error("Cant connect to #{url}")
 
 
+        _shelveMessage: (msg) ->
+            console.info 'saving message to send on connect: ' + msg
+            @_shelvedQueries.push(msg)
+
+
+        _runShelvedQueries: ->
+            for query in @_shelvedQueries
+                @send(query)
+            @_shelvedQueries = []
+
+
         # register callbacks
         onOpen: (callback) ->
             @_callbacks.onOpen = callback
@@ -71,8 +86,11 @@ angular.module('WebChat').factory '_WebChatWebSocket', () ->
 
 
         send: (msg) ->
-            @_connection.send(msg)
-            console.info("Sending #{msg}")
+            if not @_initialized
+                @_shelveMessage(msg)
+            else
+                @_connection.send(msg)
+                console.info("Sending #{msg}")
 
 
         # sends a json object to the webserver
