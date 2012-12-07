@@ -1692,18 +1692,4 @@
     };
   });
 
-  angular.module('WebChat').filter('messageInChannel', function() {
-    return function(messages, channelId) {
-      var message, result, _i, _len;
-      result = [];
-      for (_i = 0, _len = messages.length; _i < _len; _i++) {
-        message = messages[_i];
-        if (message.channel_id === channelId) {
-          result.push(message);
-        }
-      }
-      return result;
-    };
-  });
-
 }).call(this);
