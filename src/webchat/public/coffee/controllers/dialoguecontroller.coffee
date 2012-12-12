@@ -62,6 +62,7 @@ angular.module('WebChat').factory '_DialogueController', ['_Controller', (_Contr
                 message = new _ChangeTopicMessage(id, channelTopic)
                 @sendMessage(message)
                 $scope.showChangeTopicDialogue(false) 
+                $scope.channelTopic = ''
 
 
         resetNewChannelInput: ($scope) ->

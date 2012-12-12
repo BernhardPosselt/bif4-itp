@@ -1385,7 +1385,8 @@
             id = _this.activeChannel.getActiveChannelId();
             message = new _ChangeTopicMessage(id, channelTopic);
             _this.sendMessage(message);
-            return $scope.showChangeTopicDialogue(false);
+            $scope.showChangeTopicDialogue(false);
+            return $scope.channelTopic = '';
           };
         }
 
