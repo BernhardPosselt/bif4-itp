@@ -109,6 +109,15 @@
     }
   ]);
 
+  angular.module('WebChat').factory('ActiveUser', [
+    '_ActiveUser', 'WebSocketPublisher', function(_ActiveUser, WebSocketPublisher) {
+      var model;
+      model = new _ActiveUser();
+      WebSocketPublisher.subscribe(model.getModelType(), model);
+      return model;
+    }
+  ]);
+
   angular.module('WebChat').factory('ActiveChannel', [
     '_ActiveChannel', function(_ActiveChannel) {
       var model;
@@ -195,21 +204,25 @@
     }
   ]);
 
-  angular.module('WebChat').factory('ActiveUser', function() {
+  angular.module('WebChat').factory('_ActiveUser', function() {
     var ActiveUser;
-    ActiveUser = {
-      id: null
-    };
-    ActiveUser.canHandle = function(message) {
-      if (message.type === 'activeuser') {
-        return true;
-      } else {
-        return false;
+    ActiveUser = (function() {
+
+      function ActiveUser() {
+        this.id = null;
       }
-    };
-    ActiveUser.handle = function(message) {
-      return ActiveUser.id = message.data.id;
-    };
+
+      ActiveUser.prototype.getModelType = function() {
+        return 'activeuser';
+      };
+
+      ActiveUser.prototype.handle = function(message) {
+        return this.id = message.data.id;
+      };
+
+      return ActiveUser;
+
+    })();
     return ActiveUser;
   });
 

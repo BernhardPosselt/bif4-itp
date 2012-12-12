@@ -38,6 +38,13 @@ angular.module('WebChat').factory 'MessageModel', ['_MessageModel', 'WebSocketPu
     return model
 ]
 
+angular.module('WebChat').factory 'ActiveUser', ['_ActiveUser', 'WebSocketPublisher', 
+(_ActiveUser, WebSocketPublisher) ->
+    model = new _ActiveUser()
+    WebSocketPublisher.subscribe(model.getModelType(), model)
+    return model
+]
+
 angular.module('WebChat').factory 'ActiveChannel', ['_ActiveChannel', (_ActiveChannel) ->
     model = new _ActiveChannel()
     return model

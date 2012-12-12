@@ -1,15 +1,16 @@
-angular.module('WebChat').factory 'ActiveUser', () ->
-    ActiveUser = 
-        id: null
+angular.module('WebChat').factory '_ActiveUser', () ->
+    
+    class ActiveUser
 
-    ActiveUser.canHandle = (message) ->
-        if message.type == 'activeuser'
-        	return true
-        else
-        	return false
+        constructor: ->
+            @id = null
 
-    ActiveUser.handle = (message) ->
-        ActiveUser.id = message.data.id
+
+        getModelType: ->
+            return 'activeuser'
+
+        handle: (message) ->
+            @id = message.data.id
 
 
     return ActiveUser
