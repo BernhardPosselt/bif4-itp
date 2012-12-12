@@ -35,7 +35,7 @@ public class Message implements IOutMessage {
 			models.Message dbmessage = (models.Message) dbmodel;
 
 			MessageData mdata = new MessageData();
-			mdata.date = new Date();
+			mdata.date = dbmessage.date;
 			mdata.message = StringEscapeUtils.escapeHtml(dbmessage.message);
 			
 			if (dbmessage.type.equals("text"))
@@ -43,6 +43,7 @@ public class Message implements IOutMessage {
 			mdata.id = dbmessage.id;
 			mdata.type = dbmessage.type;
 			mdata.owner_id = userid;
+			mdata.modified = dbmessage.modified;
 			mdata.channel_id = dbmessage.channel_id.id;
 			outmessage.data = mdata;
 			outmessage.action = action;

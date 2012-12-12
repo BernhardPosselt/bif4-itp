@@ -7,6 +7,7 @@ import play.db.ebean.Model;
 
 import websocket.Interfaces.IInMessage;
 
+import websocket.json.out.JoinMessage;
 import websocket.message.WorkRoutine;
 
 
@@ -26,6 +27,7 @@ public class InJoin implements IInMessage {
 	public WorkRoutine getWorkRoutine() {
 		WorkRoutine myroutine=new WorkRoutine();
 		myroutine.inmessage = new InJoin();
+		myroutine.dbmodel = new models.Message();
 		myroutine.outmessage = null;
 		myroutine.action = "create";
 		return myroutine;
@@ -37,7 +39,15 @@ public class InJoin implements IInMessage {
 
 	@Override
 	public Model savetoDB(IInMessage inmessage, int userid) {
-		// Nothing to be done	
+		try{
+			
+			InJoin ijoin = (InJoin) inmessage;
+			JoinMessage.genOutMessage(userid, ijoin.data.id, "create");
+			
+		}catch (Exception exp)
+		{
+			exp.printStackTrace();
+		}		
 		return null;
 	}
 }
