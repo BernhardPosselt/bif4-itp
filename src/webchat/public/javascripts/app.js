@@ -941,6 +941,43 @@
     }
   ]);
 
+  angular.module('WebChat').factory('_EditProfileMessage', [
+    '_Message', function(_Message) {
+      var EditProfileMessage;
+      EditProfileMessage = (function(_super) {
+
+        __extends(EditProfileMessage, _super);
+
+        function EditProfileMessage(id, username, prename, lastname, password, email) {
+          this.id = id;
+          this.username = username;
+          this.prename = prename;
+          this.lastname = lastname;
+          this.password = password;
+          this.email = email;
+          EditProfileMessage.__super__.constructor.call(this, 'profileupdate');
+        }
+
+        EditProfileMessage.prototype.serialize = function() {
+          var data;
+          data = {
+            id: this.id,
+            username: this.username,
+            prename: this.prename,
+            lastname: this.lastname,
+            password: this.password,
+            email: this.email
+          };
+          return EditProfileMessage.__super__.serialize.call(this, data);
+        };
+
+        return EditProfileMessage;
+
+      })(_Message);
+      return EditProfileMessage;
+    }
+  ]);
+
   angular.module('WebChat').factory('_ChangeChannelNameMessage', [
     '_Message', function(_Message) {
       var ChangeChannelNameMessage;
@@ -1321,10 +1358,11 @@
 
         __extends(DialogueController, _super);
 
-        function DialogueController($scope, activeChannel, channelModel, _NewChannelMessage, _ChangeTopicMessage, _CloseChannelMessage, _ChangeChannelNameMessage) {
+        function DialogueController($scope, activeChannel, channelModel, _NewChannelMessage, _ChangeTopicMessage, _CloseChannelMessage, _ChangeChannelNameMessage, _EditProfileMessage, activeUser) {
           var _this = this;
           this.activeChannel = activeChannel;
           this.channelModel = channelModel;
+          this.activeUser = activeUser;
           DialogueController.__super__.constructor.call(this, $scope);
           this.resetNewChannelInput($scope);
           $scope.showNewChannelDialogue = function(show) {
@@ -1338,6 +1376,9 @@
           };
           $scope.showChangeTopicDialogue = function(show) {
             return $scope.changeTopicDialogue = show;
+          };
+          $scope.showEditProfileDialogue = function(show) {
+            return $scope.editProfileDialogue = show;
           };
           $scope.getActiveChannelName = function() {
             var channel, id;
@@ -1387,6 +1428,13 @@
             _this.sendMessage(message);
             $scope.showChangeTopicDialogue(false);
             return $scope.channelTopic = '';
+          };
+          $scope.changeProfile = function(username, prename, lastname, password, email) {
+            var id, message;
+            id = _this.activeUser.id;
+            message = new _EditProfileMessage(id, username, prename, lastname, password, email);
+            _this.sendMessage(message);
+            return $scope.showEditProfileDialogue(false);
           };
         }
 
@@ -1534,8 +1582,8 @@
   ]);
 
   angular.module('WebChat').controller('DialogueController', [
-    '$scope', '_DialogueController', 'ActiveChannel', 'ChannelModel', '_NewChannelMessage', '_ChangeTopicMessage', '_CloseChannelMessage', '_ChangeChannelNameMessage', function($scope, _DialogueController, ActiveChannel, ChannelModel, _NewChannelMessage, _ChangeTopicMessage, _CloseChannelMessage, _ChangeChannelNameMessage) {
-      return new _DialogueController($scope, ActiveChannel, ChannelModel, _NewChannelMessage, _ChangeTopicMessage, _CloseChannelMessage, _ChangeChannelNameMessage);
+    '$scope', '_DialogueController', 'ActiveChannel', 'ChannelModel', '_NewChannelMessage', '_ChangeTopicMessage', '_CloseChannelMessage', '_ChangeChannelNameMessage', '_EditProfileMessage', 'ActiveUser', function($scope, _DialogueController, ActiveChannel, ChannelModel, _NewChannelMessage, _ChangeTopicMessage, _CloseChannelMessage, _ChangeChannelNameMessage, _EditProfileMessage, ActiveUser) {
+      return new _DialogueController($scope, ActiveChannel, ChannelModel, _NewChannelMessage, _ChangeTopicMessage, _CloseChannelMessage, _ChangeChannelNameMessage, _EditProfileMessage, ActiveUser);
     }
   ]);
 
