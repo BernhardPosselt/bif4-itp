@@ -1,13 +1,16 @@
-angular.module('WebChat').factory 'ActiveChannel', ['$rootScope', ($rootScope) ->
-    ActiveChannel = {}
-    ActiveChannel.activeChannelId = null
+angular.module('WebChat').factory '_ActiveChannel', ['$rootScope', ($rootScope) ->
+    
+    class ActiveChannel
 
-    ActiveChannel.setActiveChannelId = (id) ->
-        @activeChannelId = id
-        $rootScope.$broadcast 'changed_channel'
+        constructor: ->
+            @activeChannelId = null
 
-    ActiveChannel.getActiveChannelId = ->
-        return @activeChannelId
+        setActiveChannelId: (id) ->
+            @activeChannelId = id
+            $rootScope.$broadcast 'changed_channel'
+
+        getActiveChannelId: ->
+            return @activeChannelId
 
     return ActiveChannel
 ]
