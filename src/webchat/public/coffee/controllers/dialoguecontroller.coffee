@@ -4,7 +4,7 @@ angular.module('WebChat').factory '_DialogueController', ['_Controller', (_Contr
 
         constructor: ($scope, @activeChannel, @channelModel, _NewChannelMessage
                     _ChangeTopicMessage, _CloseChannelMessage, 
-                    _ChangeChannelNameMessage) ->
+                    _ChangeChannelNameMessage, _EditProfileMessage, @activeUser) ->
             super($scope)
             @resetNewChannelInput($scope)
 
@@ -19,6 +19,10 @@ angular.module('WebChat').factory '_DialogueController', ['_Controller', (_Contr
 
             $scope.showChangeTopicDialogue = (show) =>
                 $scope.changeTopicDialogue = show
+
+            $scope.showEditProfileDialogue = (show) =>
+                $scope.editProfileDialogue = show
+
 
             $scope.getActiveChannelName = =>
                 id = @activeChannel.getActiveChannelId()
@@ -63,6 +67,13 @@ angular.module('WebChat').factory '_DialogueController', ['_Controller', (_Contr
                 @sendMessage(message)
                 $scope.showChangeTopicDialogue(false) 
                 $scope.channelTopic = ''
+
+            $scope.changeProfile = (username, prename, lastname, password, email) =>
+                id = @activeUser.id
+                message = new _EditProfileMessage(id, username, prename, lastname,
+                    password, email)
+                @sendMessage(message)
+                $scope.showEditProfileDialogue(false)
 
 
         resetNewChannelInput: ($scope) ->

@@ -31,9 +31,11 @@ angular.module('WebChat').controller 'FilesInChannelController',
 angular.module('WebChat').controller 'DialogueController', 
     ['$scope', '_DialogueController', 'ActiveChannel', 'ChannelModel',
      '_NewChannelMessage', '_ChangeTopicMessage', '_CloseChannelMessage',
-     '_ChangeChannelNameMessage',
+     '_ChangeChannelNameMessage', '_EditProfileMessage', 'ActiveUser',
     ($scope, _DialogueController, ActiveChannel, ChannelModel, _NewChannelMessage
-        _ChangeTopicMessage, _CloseChannelMessage, _ChangeChannelNameMessage) -> 
+        _ChangeTopicMessage, _CloseChannelMessage, _ChangeChannelNameMessage,
+        _EditProfileMessage, ActiveUser) ->
         return new _DialogueController($scope, ActiveChannel, ChannelModel, _NewChannelMessage
-        _ChangeTopicMessage, _CloseChannelMessage, _ChangeChannelNameMessage)
+        _ChangeTopicMessage, _CloseChannelMessage, _ChangeChannelNameMessage,
+        _EditProfileMessage, ActiveUser)
     ]
