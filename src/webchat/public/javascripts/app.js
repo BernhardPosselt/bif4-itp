@@ -722,7 +722,7 @@
           }
           if (removeItemId >= 0) {
             this.items.splice(removeItemId, 1);
-            return delete this.hashMap[removedItemId];
+            return delete this.hashMap[removedItem.id];
           }
         };
 
@@ -911,6 +911,62 @@
 
       })(_Message);
       return ReadonlyUserMessage;
+    }
+  ]);
+
+  angular.module('WebChat').factory('_CloseChannelMessage', [
+    '_Message', function(_Message) {
+      var CloseChannelMessage;
+      CloseChannelMessage = (function(_super) {
+
+        __extends(CloseChannelMessage, _super);
+
+        function CloseChannelMessage(id) {
+          this.id = id;
+          CloseChannelMessage.__super__.constructor.call(this, 'channelclose');
+        }
+
+        CloseChannelMessage.prototype.serialize = function() {
+          var data;
+          data = {
+            id: this.id
+          };
+          return CloseChannelMessage.__super__.serialize.call(this, data);
+        };
+
+        return CloseChannelMessage;
+
+      })(_Message);
+      return CloseChannelMessage;
+    }
+  ]);
+
+  angular.module('WebChat').factory('_ChangeChannelNameMessage', [
+    '_Message', function(_Message) {
+      var ChangeChannelNameMessage;
+      ChangeChannelNameMessage = (function(_super) {
+
+        __extends(ChangeChannelNameMessage, _super);
+
+        function ChangeChannelNameMessage(id, name) {
+          this.id = id;
+          this.name = name;
+          ChangeChannelNameMessage.__super__.constructor.call(this, 'channelname');
+        }
+
+        ChangeChannelNameMessage.prototype.serialize = function() {
+          var data;
+          data = {
+            id: this.id,
+            name: this.name
+          };
+          return ChangeChannelNameMessage.__super__.serialize.call(this, data);
+        };
+
+        return ChangeChannelNameMessage;
+
+      })(_Message);
+      return ChangeChannelNameMessage;
     }
   ]);
 
@@ -1146,6 +1202,35 @@
     }
   ]);
 
+  angular.module('WebChat').factory('_ChangeTopicMessage', [
+    '_Message', function(_Message) {
+      var ChangeTopicMessage;
+      ChangeTopicMessage = (function(_super) {
+
+        __extends(ChangeTopicMessage, _super);
+
+        function ChangeTopicMessage(id, topic) {
+          this.id = id;
+          this.topic = topic;
+          ChangeTopicMessage.__super__.constructor.call(this, 'channeltopic');
+        }
+
+        ChangeTopicMessage.prototype.serialize = function() {
+          var data;
+          data = {
+            id: this.id,
+            topic: this.topic
+          };
+          return ChangeTopicMessage.__super__.serialize.call(this, data);
+        };
+
+        return ChangeTopicMessage;
+
+      })(_Message);
+      return ChangeTopicMessage;
+    }
+  ]);
+
   $(document).ready(function() {});
 
   pingTimout = true;
@@ -1236,16 +1321,79 @@
 
         __extends(DialogueController, _super);
 
-        function DialogueController($scope) {
+        function DialogueController($scope, activeChannel, channelModel, _NewChannelMessage, _ChangeTopicMessage, _CloseChannelMessage, _ChangeChannelNameMessage) {
           var _this = this;
+          this.activeChannel = activeChannel;
+          this.channelModel = channelModel;
           DialogueController.__super__.constructor.call(this, $scope);
+          this.resetNewChannelInput($scope);
           $scope.showNewChannelDialogue = function(show) {
             return $scope.newChannelDialogue = show;
           };
-          $scope.setNewChannelDialogue = function(show) {
-            return $scope.newChannelDialogue = show;
+          $scope.showCloseChannelDialogue = function(show) {
+            return $scope.closeChannelDialogue = show;
+          };
+          $scope.showChangeChannelNameDialogue = function(show) {
+            return $scope.changeChannelNameDialogue = show;
+          };
+          $scope.showChangeTopicDialogue = function(show) {
+            return $scope.changeTopicDialogue = show;
+          };
+          $scope.getActiveChannelName = function() {
+            var channel, id;
+            id = _this.activeChannel.getActiveChannelId();
+            channel = _this.channelModel.getItemById(id);
+            if (channel === void 0) {
+              return '';
+            } else {
+              return channel.name;
+            }
+          };
+          $scope.getActiveChannelTopic = function() {
+            var channel, id;
+            id = _this.activeChannel.getActiveChannelId();
+            channel = _this.channelModel.getItemById(id);
+            if (channel === void 0) {
+              return '';
+            } else {
+              return channel.topic;
+            }
+          };
+          $scope.createNewChannel = function(name, topic, isPublic) {
+            var message;
+            _this.resetNewChannelInput($scope);
+            message = new _NewChannelMessage(name, topic, isPublic);
+            _this.sendMessage(message);
+            return $scope.showNewChannelDialogue(false);
+          };
+          $scope.closeChannel = function() {
+            var id, message;
+            id = _this.activeChannel.getActiveChannelId();
+            message = new _CloseChannelMessage(id);
+            _this.sendMessage(message);
+            return $scope.showCloseChannelDialogue(false);
+          };
+          $scope.changeChannelName = function(channelName) {
+            var id, message;
+            id = _this.activeChannel.getActiveChannelId();
+            message = new _ChangeChannelNameMessage(id, channelName);
+            _this.sendMessage(message);
+            return $scope.showChangeChannelNameDialogue(false);
+          };
+          $scope.changeChannelTopic = function(channelTopic) {
+            var id, message;
+            id = _this.activeChannel.getActiveChannelId();
+            message = new _ChangeTopicMessage(id, channelTopic);
+            _this.sendMessage(message);
+            return $scope.showChangeTopicDialogue(false);
           };
         }
+
+        DialogueController.prototype.resetNewChannelInput = function($scope) {
+          $scope.newChannelName = '';
+          $scope.newChannelTopic = '';
+          return $scope.newChannelPublic = false;
+        };
 
         return DialogueController;
 
@@ -1385,14 +1533,8 @@
   ]);
 
   angular.module('WebChat').controller('DialogueController', [
-    '$scope', '_DialogueController', function($scope, _DialogueController) {
-      return new _DialogueController($scope);
-    }
-  ]);
-
-  angular.module('WebChat').controller('NewChannelController', [
-    '$scope', '_NewChannelController', function($scope, _NewChannelController) {
-      return new _NewChannelController($scope);
+    '$scope', '_DialogueController', 'ActiveChannel', 'ChannelModel', '_NewChannelMessage', '_ChangeTopicMessage', '_CloseChannelMessage', '_ChangeChannelNameMessage', function($scope, _DialogueController, ActiveChannel, ChannelModel, _NewChannelMessage, _ChangeTopicMessage, _CloseChannelMessage, _ChangeChannelNameMessage) {
+      return new _DialogueController($scope, ActiveChannel, ChannelModel, _NewChannelMessage, _ChangeTopicMessage, _CloseChannelMessage, _ChangeChannelNameMessage);
     }
   ]);
 
@@ -1446,39 +1588,6 @@
 
       })(_Controller);
       return GroupsInChannelController;
-    }
-  ]);
-
-  angular.module('WebChat').factory('_NewChannelController', [
-    '_Controller', '_NewChannelMessage', function(_Controller, _NewChannelMessage) {
-      var NewChannelController;
-      NewChannelController = (function(_super) {
-
-        __extends(NewChannelController, _super);
-
-        function NewChannelController($scope) {
-          var _this = this;
-          NewChannelController.__super__.constructor.call(this, $scope);
-          this.resetInput($scope);
-          $scope.createNewChannel = function(name, topic, isPublic) {
-            var message;
-            _this.resetInput($scope);
-            message = new _NewChannelMessage(name, topic, isPublic);
-            _this.sendMessage(message);
-            return $scope.setNewChannelDialogue(false);
-          };
-        }
-
-        NewChannelController.prototype.resetInput = function($scope) {
-          $scope.newChannelName = '';
-          $scope.newChannelTopic = '';
-          return $scope.newChannelPublic = false;
-        };
-
-        return NewChannelController;
-
-      })(_Controller);
-      return NewChannelController;
     }
   ]);
 

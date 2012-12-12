@@ -37,7 +37,7 @@ angular.module('WebChat').factory '_Model', ['$rootScope', ($rootScope) ->
                     removeItemId = counter
             if removeItemId >= 0
                 @items.splice(removeItemId, 1)
-                delete @hashMap[removedItemId]
+                delete @hashMap[removedItem.id]
 
 
         getItemById: (id) ->
