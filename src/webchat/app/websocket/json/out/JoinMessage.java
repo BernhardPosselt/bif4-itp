@@ -31,8 +31,8 @@ public class JoinMessage{
 			for (Iterator<models.Message> miter = models.Message.getallChannelMessages(channelid).iterator(); miter.hasNext(); )
 			{
 				models.Message dbmessage = (models.Message) miter.next();
-				if (!mlist.contains(dbmessage.id))
-				{
+				//if (!mlist.contains(dbmessage.id))
+				//{
 					mlist.add(dbmessage.id);
 					
 					outmessage = new Message();
@@ -50,7 +50,7 @@ public class JoinMessage{
 					outmessage.data = mdata;
 					outmessage.action = action;		
 					JoinMessage.sendMessage(outmessage);
-				}
+				//}
 			}
 			joinMessages.put(userid, mlist);
 
