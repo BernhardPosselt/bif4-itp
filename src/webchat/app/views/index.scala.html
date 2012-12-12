@@ -204,23 +204,23 @@
         <div class="popup_window_content">
             <div class="field">
                 <label for="edit_profile_username">Username:</label>
-                <input type="text" id="edit_profile_username" name="edit_profile_username" ng-model="username"/>
+                <input type="text" id="edit_profile_username" name="edit_profile_username" ng-model="username" value="{{getUserName()}}"/>
             </div>
             <div class="field">
                 <label for="edit_profile_password">Password:</label>
-                <input type="password" id="edit_profile_password" name="edit_profile_password" ng-model="password" value=""/>
+                <input type="password" id="edit_profile_password" name="edit_profile_password" ng-model="password" value="{{getPassword()}}"/>
             </div>
             <div class="field">
                 <label for="edit_profile_email">E-Mail:</label>
-                <input type="text" id="edit_profile_email" name="edit_profile_email" ng-model="email"/>
+                <input type="text" id="edit_profile_email" name="edit_profile_email" ng-model="email" value="{{getEmail()}}"/>
             </div>         
             <div class="field">
                 <label for="edit_profile_first_name">First Name:</label>
-                <input type="text" id="edit_profile_first_name" name="edit_profile_first_name" ng-model="firstname"/>
+                <input type="text" id="edit_profile_first_name" name="edit_profile_first_name" ng-model="firstname" value="{{getFirstName()}}"/>
             </div>
             <div class="field">
                 <label for="edit_profile_last_name">Last Name:</label>
-                <input type="text" id="edit_profile_last_name" name="edit_profile_last_name" ng-model="lastname"/>
+                <input type="text" id="edit_profile_last_name" name="edit_profile_last_name" ng-model="lastname" value="{{getLastName()}}"/>
             </div>               
         </div>
         <div class="popup_window_buttons">

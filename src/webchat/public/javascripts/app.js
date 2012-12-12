@@ -1371,11 +1371,12 @@
 
         __extends(DialogueController, _super);
 
-        function DialogueController($scope, activeChannel, channelModel, _NewChannelMessage, _ChangeTopicMessage, _CloseChannelMessage, _ChangeChannelNameMessage, _EditProfileMessage, activeUser) {
+        function DialogueController($scope, activeChannel, channelModel, _NewChannelMessage, _ChangeTopicMessage, _CloseChannelMessage, _ChangeChannelNameMessage, _EditProfileMessage, activeUser, userModel) {
           var _this = this;
           this.activeChannel = activeChannel;
           this.channelModel = channelModel;
           this.activeUser = activeUser;
+          this.userModel = userModel;
           DialogueController.__super__.constructor.call(this, $scope);
           this.resetNewChannelInput($scope);
           $scope.showNewChannelDialogue = function(show) {
@@ -1397,21 +1398,36 @@
             var channel, id;
             id = _this.activeChannel.getActiveChannelId();
             channel = _this.channelModel.getItemById(id);
-            if (channel === void 0) {
-              return '';
-            } else {
-              return channel.name;
-            }
+            return _this.returnNullIfUndefined(channel, 'name');
           };
           $scope.getActiveChannelTopic = function() {
             var channel, id;
             id = _this.activeChannel.getActiveChannelId();
             channel = _this.channelModel.getItemById(id);
-            if (channel === void 0) {
-              return '';
-            } else {
-              return channel.topic;
-            }
+            return _this.returnNullIfUndefined(channel, 'topic');
+          };
+          $scope.getUserName = function() {
+            var user;
+            user = _this.getActiveUser();
+            return _this.returnNullIfUndefined(user, 'username');
+          };
+          $scope.getFirstName = function() {
+            var user;
+            user = _this.getActiveUser();
+            return _this.returnNullIfUndefined(user, 'firstname');
+          };
+          $scope.getLastName = function() {
+            var user;
+            user = _this.getActiveUser();
+            return _this.returnNullIfUndefined(user, 'lastname');
+          };
+          $scope.getEmail = function() {
+            var user;
+            user = _this.getActiveUser();
+            return _this.returnNullIfUndefined(user, 'email');
+          };
+          $scope.getPassword = function() {
+            return '';
           };
           $scope.createNewChannel = function(name, topic, isPublic) {
             var message;
@@ -1429,25 +1445,30 @@
           };
           $scope.changeChannelName = function(channelName) {
             var id, message;
-            id = _this.activeChannel.getActiveChannelId();
-            message = new _ChangeChannelNameMessage(id, channelName);
-            _this.sendMessage(message);
+            if (channelName) {
+              id = _this.activeChannel.getActiveChannelId();
+              message = new _ChangeChannelNameMessage(id, channelName);
+              _this.sendMessage(message);
+            }
             return $scope.showChangeChannelNameDialogue(false);
           };
           $scope.changeChannelTopic = function(channelTopic) {
             var id, message;
-            id = _this.activeChannel.getActiveChannelId();
-            message = new _ChangeTopicMessage(id, channelTopic);
-            _this.sendMessage(message);
-            $scope.showChangeTopicDialogue(false);
-            return $scope.channelTopic = '';
+            if (channelTopic) {
+              id = _this.activeChannel.getActiveChannelId();
+              message = new _ChangeTopicMessage(id, channelTopic);
+              _this.sendMessage(message);
+              $scope.channelTopic = '';
+            }
+            return $scope.showChangeTopicDialogue(false);
           };
           $scope.changeProfile = function(username, prename, lastname, password, email) {
             var id, message;
             id = _this.activeUser.id;
             message = new _EditProfileMessage(id, username, prename, lastname, password, email);
             _this.sendMessage(message);
-            return $scope.showEditProfileDialogue(false);
+            $scope.showEditProfileDialogue(false);
+            return $scope.password = '';
           };
         }
 
@@ -1455,6 +1476,20 @@
           $scope.newChannelName = '';
           $scope.newChannelTopic = '';
           return $scope.newChannelPublic = false;
+        };
+
+        DialogueController.prototype.getActiveUser = function() {
+          var id;
+          id = this.activeUser.id;
+          return this.userModel.getItemById(id);
+        };
+
+        DialogueController.prototype.returnNullIfUndefined = function(object, attribute) {
+          if (object === void 0) {
+            return '';
+          } else {
+            return object[attribute];
+          }
         };
 
         return DialogueController;
@@ -1595,8 +1630,8 @@
   ]);
 
   angular.module('WebChat').controller('DialogueController', [
-    '$scope', '_DialogueController', 'ActiveChannel', 'ChannelModel', '_NewChannelMessage', '_ChangeTopicMessage', '_CloseChannelMessage', '_ChangeChannelNameMessage', '_EditProfileMessage', 'ActiveUser', function($scope, _DialogueController, ActiveChannel, ChannelModel, _NewChannelMessage, _ChangeTopicMessage, _CloseChannelMessage, _ChangeChannelNameMessage, _EditProfileMessage, ActiveUser) {
-      return new _DialogueController($scope, ActiveChannel, ChannelModel, _NewChannelMessage, _ChangeTopicMessage, _CloseChannelMessage, _ChangeChannelNameMessage, _EditProfileMessage, ActiveUser);
+    '$scope', '_DialogueController', 'ActiveChannel', 'ChannelModel', '_NewChannelMessage', '_ChangeTopicMessage', '_CloseChannelMessage', '_ChangeChannelNameMessage', '_EditProfileMessage', 'ActiveUser', 'UserModel', function($scope, _DialogueController, ActiveChannel, ChannelModel, _NewChannelMessage, _ChangeTopicMessage, _CloseChannelMessage, _ChangeChannelNameMessage, _EditProfileMessage, ActiveUser, UserModel) {
+      return new _DialogueController($scope, ActiveChannel, ChannelModel, _NewChannelMessage, _ChangeTopicMessage, _CloseChannelMessage, _ChangeChannelNameMessage, _EditProfileMessage, ActiveUser, UserModel);
     }
   ]);
 

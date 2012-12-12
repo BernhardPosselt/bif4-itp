@@ -4,7 +4,8 @@ angular.module('WebChat').factory '_DialogueController', ['_Controller', (_Contr
 
         constructor: ($scope, @activeChannel, @channelModel, _NewChannelMessage
                     _ChangeTopicMessage, _CloseChannelMessage, 
-                    _ChangeChannelNameMessage, _EditProfileMessage, @activeUser) ->
+                    _ChangeChannelNameMessage, _EditProfileMessage, @activeUser,
+                    @userModel) ->
             super($scope)
             @resetNewChannelInput($scope)
 
@@ -27,18 +28,32 @@ angular.module('WebChat').factory '_DialogueController', ['_Controller', (_Contr
             $scope.getActiveChannelName = =>
                 id = @activeChannel.getActiveChannelId()
                 channel = @channelModel.getItemById(id)
-                if channel == undefined
-                    return ''
-                else
-                    return channel.name
+                return @returnNullIfUndefined(channel, 'name')
 
             $scope.getActiveChannelTopic = =>
                 id = @activeChannel.getActiveChannelId()
                 channel = @channelModel.getItemById(id)
-                if channel == undefined
-                    return ''
-                else
-                    return channel.topic
+                return @returnNullIfUndefined(channel, 'topic')
+
+            $scope.getUserName = =>
+                user = @getActiveUser()
+                return @returnNullIfUndefined(user, 'username')
+
+            $scope.getFirstName = =>
+                user = @getActiveUser()
+                return @returnNullIfUndefined(user, 'firstname')
+
+            $scope.getLastName = =>
+                user = @getActiveUser()
+                return @returnNullIfUndefined(user, 'lastname')
+
+            $scope.getEmail = =>
+                user = @getActiveUser()
+                return @returnNullIfUndefined(user, 'email')
+
+            $scope.getPassword = =>
+                return ''
+
 
             $scope.createNewChannel = (name, topic, isPublic) =>
                 @resetNewChannelInput($scope)
@@ -55,18 +70,21 @@ angular.module('WebChat').factory '_DialogueController', ['_Controller', (_Contr
 
 
             $scope.changeChannelName = (channelName) =>
-                id = @activeChannel.getActiveChannelId()
-                message = new _ChangeChannelNameMessage(id, channelName)
-                @sendMessage(message)
+                if channelName
+                    id = @activeChannel.getActiveChannelId()
+                    message = new _ChangeChannelNameMessage(id, channelName)
+                    @sendMessage(message)
                 $scope.showChangeChannelNameDialogue(false)                
 
 
             $scope.changeChannelTopic = (channelTopic) =>
-                id = @activeChannel.getActiveChannelId()
-                message = new _ChangeTopicMessage(id, channelTopic)
-                @sendMessage(message)
+                if channelTopic
+                    id = @activeChannel.getActiveChannelId()
+                    message = new _ChangeTopicMessage(id, channelTopic)
+                    @sendMessage(message)
+                    $scope.channelTopic = ''
                 $scope.showChangeTopicDialogue(false) 
-                $scope.channelTopic = ''
+                    
 
             $scope.changeProfile = (username, prename, lastname, password, email) =>
                 id = @activeUser.id
@@ -74,12 +92,27 @@ angular.module('WebChat').factory '_DialogueController', ['_Controller', (_Contr
                     password, email)
                 @sendMessage(message)
                 $scope.showEditProfileDialogue(false)
+                $scope.password = ''
+
+
 
 
         resetNewChannelInput: ($scope) ->
             $scope.newChannelName = ''
             $scope.newChannelTopic = ''
             $scope.newChannelPublic = false
+
+        getActiveUser: () ->
+            id = @activeUser.id
+            return @userModel.getItemById(id)
+
+
+        returnNullIfUndefined: (object, attribute) ->
+            if object == undefined
+                return ''
+            else
+                return object[attribute]
+
 
     return DialogueController
 
