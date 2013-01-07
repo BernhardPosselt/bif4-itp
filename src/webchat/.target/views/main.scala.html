@@ -42,17 +42,16 @@
 
     </head>
     <body activity>
-        <div id="site">
+        <div id="site" ng-controller="DialogueController">
             <nav>
                 <ul class="left_navi_links">
                     @if(username != "") {
                         <li>Hi, @username</li>
                     }
-                    <li><a href="#" id="edit_profile_link">Profile</a> </li>
+                    <li><a href="#" id="edit_profile_link" ng-click="showEditProfileDialogue(true)">Profile</a> </li>
                 </ul>
                 <ul class="right_navi_links">
                     <li><a href="@routes.Application.index">Stream</a></li>
-                    <li><a href="@routes.AdminController.index">Archives</a></li>
                     @if(admin == true) {
                         <li><a href="@routes.AdminController.index">Admin &amp; Settings</a></li>
                     }
@@ -61,7 +60,7 @@
                     }
                 </ul>
             </nav>
-            <div id="content" ng-controller="DialogueController">
+            <div id="content" >
                 @content
             </div>
         </div>

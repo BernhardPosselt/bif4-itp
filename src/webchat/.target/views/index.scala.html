@@ -57,10 +57,9 @@
                     <div class="stream_name">
                         <span class="name">{{channel.name}}</span>
                         <div class="utils">
-                            <a href="" class="delete_channel">Delete</a>
-                            <a href="" class="close_channel">Close</a>
-                            <a href="" class="change_channel_name">Rename</a>
-                            <a href="" class="change_topic">Topic</a>
+                            <a href="" ng-click="showCloseChannelDialogue(true)" class="close_channel">Close</a>
+                            <a href="" ng-click="showChangeChannelNameDialogue(true)" class="change_channel_name">Rename</a>
+                            <a href="" ng-click="showChangeTopicDialogue(true)" class="change_topic">Topic</a>
                         </div>
                     </div>
                     <div class="stream_meta">
@@ -205,32 +204,28 @@
         <div class="popup_window_content">
             <div class="field">
                 <label for="edit_profile_username">Username:</label>
-                <input type="text" id="edit_profile_username" name="edit_profile_username" />
+                <input type="text" id="edit_profile_username" name="edit_profile_username" ng-model="username" value="{{getUserName()}}"/>
             </div>
             <div class="field">
                 <label for="edit_profile_password">Password:</label>
-                <input type="password" id="edit_profile_password" name="edit_profile_password" />
-            </div>
-            <div class="field">
-                <label for="edit_profile_password_repeat">Repeat Password:</label>
-                <input type="password" id="edit_profile_password_repeat" name="edit_profile_password_repeat" />
+                <input type="password" id="edit_profile_password" name="edit_profile_password" ng-model="password" value="{{getPassword()}}"/>
             </div>
             <div class="field">
                 <label for="edit_profile_email">E-Mail:</label>
-                <input type="text" id="edit_profile_email" name="edit_profile_email" />
+                <input type="text" id="edit_profile_email" name="edit_profile_email" ng-model="email" value="{{getEmail()}}"/>
             </div>         
             <div class="field">
                 <label for="edit_profile_first_name">First Name:</label>
-                <input type="text" id="edit_profile_first_name" name="edit_profile_first_name" />
+                <input type="text" id="edit_profile_first_name" name="edit_profile_first_name" ng-model="firstname" value="{{getFirstName()}}"/>
             </div>
             <div class="field">
                 <label for="edit_profile_last_name">Last Name:</label>
-                <input type="text" id="edit_profile_last_name" name="edit_profile_last_name" />
+                <input type="text" id="edit_profile_last_name" name="edit_profile_last_name" ng-model="lastname" value="{{getLastName()}}"/>
             </div>               
         </div>
         <div class="popup_window_buttons">
-              <input class="cancel" type="button" value="Cancel"/>
-              <input class="submit" type="button" value="Save"/>
+              <input class="cancel" ng-click="showEditProfileDialogue(false)" type="button" value="Cancel"/>
+              <input class="submit" ng-click="changeProfile(username, prename, lastname, password, email)" type="button" value="Save"/>
         </div>
     </div>
 
@@ -240,12 +235,13 @@
         <div class="popup_window_content">
             <div class="field">
                 <label for="change_topic">Topic:</label>
-                <textarea id="change_topic" name="change_topic" ></textarea>
+                <textarea id="change_topic" name="change_topic" ng-model="channelTopic"></textarea>
             </div>
         </div>
         <div class="popup_window_buttons">
-              <input class="cancel" type="button" value="Cancel"/>
-              <input class="submit" type="button" value="Change"/>
+              <input ng-click="showChangeTopicDialogue(false)" class="cancel" type="button" value="Cancel"/>
+              <input class="submit" type="button" value="Change"
+              ng-click="changeChannelTopic(channelTopic)"/>
         </div>
     </div>
 
@@ -255,24 +251,13 @@
         <div class="popup_window_content">
             <div class="field">
                 <label for="change_channel_name">Name:</label>
-                <input id="change_channel_name" type="text" size="30" name="change_channel_name" />
+                <input id="change_channel_name" type="text" size="30" name="change_channel_name" value="{{getActiveChannelName()}}"
+                ng-model="channelName"/>
             </div>
         </div>
         <div class="popup_window_buttons">
-              <input class="cancel" type="button" value="Cancel"/>
-              <input class="submit" type="button" value="Change"/>
-        </div>
-    </div>
-
-    <!-- Delete channel form -->
-    <div ng-show="deleteChannelDialogue==true" id="delete_channel_window" class="popup_window">
-        <div class="popup_window_title">Delete channel</div>
-        <div class="popup_window_content">
-            <p>Do you really want to delete the channel: <span id="delete_channel"></span>?</p>
-        </div>
-        <div class="popup_window_buttons">
-              <input class="cancel" type="button" value="Cancel"/>
-              <input class="submit" type="button" value="Delete"/>
+              <input ng-click="showChangeChannelNameDialogue(false)" class="cancel" type="button" value="Cancel"/>
+              <input ng-click="changeChannelName(channelName)" class="submit" type="button" value="Change"/>
         </div>
     </div>
 
@@ -280,18 +265,17 @@
     <div ng-show="closeChannelDialogue==true" id="close_channel_window" class="popup_window">
         <div class="popup_window_title">Delete channel</div>
         <div class="popup_window_content">
-            <p>Do you really want to close the channel: <span id="close_channel"></span>?
-            A closed channel will be moved into the archives.</p>
+            <p>Do you really want to close the channel: <span id="close_channel">{{getActiveChannelName()}}</span>?
         </div>
         <div class="popup_window_buttons">
-              <input class="cancel" type="button" value="Cancel"/>
-              <input class="submit" type="button" value="Close"/>
+              <input ng-click="showCloseChannelDialogue(false)"  class="cancel" type="button" value="Cancel"/>
+              <input class="submit" ng-click="closeChannel()" type="button" value="Close"/>
         </div>
     </div>
 
     <!-- Create new channel form -->
     <div ng-show="newChannelDialogue==true" id="newchannel_window" class="popup_window">
-        <div ng-controller="NewChannelController">
+        <div>
             <div class="popup_window_title">New channel</div>
             <div class="popup_window_content">
                 <div class="field">
@@ -308,7 +292,7 @@
                 </div>
             </div>
             <div class="popup_window_buttons">
-                  <input ng-click="setNewChannelDialogue(false)" 
+                  <input ng-click="showNewChannelDialogue(false)" 
                          class="cancel" type="button" value="Cancel"/>
                   <input class="submit" type="button" value="Create" ng-click="createNewChannel(newChannelName, newChannelTopic, newChannelPublic)"/>
             </div>
