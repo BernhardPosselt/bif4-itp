@@ -98,6 +98,20 @@ public class Channel extends Model {
         tmp =  find.setQuery(query).setParameter("userid", userid).findList();
         return tmp;
     }
+	
+	public static List<Channel> getUserallChannels(int userid)
+    {
+		List<Channel> tmp = new ArrayList<Channel>();
+		String query = "find channel where archived = false and (users.id =:userid or is_public=true)";
+        tmp =  find.setQuery(query).setParameter("userid", userid).findList();
+        for (Groups group : models.User.getGroupsForUser(userid)){
+        	for (models.Channel chan : group.channels){
+        		if (!tmp.contains(chan))
+        			tmp.add(chan);
+        	}
+        }
+        return tmp;
+    }
 
 	public static List<Channel> getFileChannels(int fileid)
     {
@@ -118,6 +132,20 @@ public class Channel extends Model {
 		for (Iterator<User> iterator= find.byId(channelid).users.iterator(); iterator.hasNext();){
 			users.add(iterator.next().id);
 		}
+		return users;
+	}
+	
+	public static List<Integer> getallChannelUsers(int channelid) {
+		List<Integer> users = new ArrayList<Integer>();
+		for (Iterator<User> iterator= find.byId(channelid).users.iterator(); iterator.hasNext();){
+			users.add(iterator.next().id);
+		}
+		for (Groups group : models.Channel.getGroupsForChannel(channelid)){
+        	for (models.User usr : group.users){
+        		if (!users.contains(usr.id))
+        			users.add(usr.id);
+        	}
+        }
 		return users;
 	}
 	

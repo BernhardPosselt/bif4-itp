@@ -25,14 +25,15 @@ public class NotifyInit {
 				JsonNode outjs  = JsonBinder.bindtoJson(outmsg);
 				WebSocketNotifier.sendMessagetoUser(userlist, outjs);
 			}
-
-			for (models.Channel mychan : models.Channel.findAll()) {
+			
+			for (models.Channel mychan : models.Channel.getUserallChannels(userid)) {
 				WorkRoutine myroutine = new WorkRoutine();
 				myroutine.outmessage = new websocket.json.out.Channel();
 				IOutMessage outmsg  = myroutine.outmessage.genOutMessage(mychan, userid, action);
 				JsonNode outjs  = JsonBinder.bindtoJson(outmsg);
 				WebSocketNotifier.sendMessagetoUser(userlist, outjs);
 			}
+			
 
 			for (models.User myuser : models.User.findAll()) {
 				WorkRoutine myroutine = new WorkRoutine();

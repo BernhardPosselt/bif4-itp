@@ -9,11 +9,11 @@ import play.mvc.WebSocket;
 import websocket.WebsocketManager;
 
 public class WebSocketNotifier {
-	public static void notifyAllMembers(JsonNode inmessage) {
+	public static void notifyAllMembers(JsonNode outmessage) {
 		WebSocket.Out<JsonNode> out = null;
 		for(Map.Entry<WebSocket.Out<JsonNode>, Integer> entry: WebsocketManager.members.entrySet()) {
 			out = (WebSocket.Out<JsonNode>)entry.getKey();
-			out.write(inmessage);
+			out.write(outmessage);
 		}
 	}
 		

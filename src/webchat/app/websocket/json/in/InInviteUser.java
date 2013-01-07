@@ -1,5 +1,10 @@
 package websocket.json.in;
 
+import java.util.Iterator;
+
+
+import models.Groups;
+
 import org.codehaus.jackson.JsonNode;
 
 import play.db.ebean.Model;
@@ -32,15 +37,45 @@ public class InInviteUser implements IInMessage {
 	@Override
 	public Model savetoDB(IInMessage inmessage, int userid) {
 		models.Channel dbchan = null;
+	    boolean hilf = false;
 		try{
 			InInviteUser inuser = (InInviteUser) inmessage;
 			models.User dbuser = models.User.getbyId(inuser.data.users);
 			dbchan = models.Channel.getbyId(inuser.data.id);
-			if (inuser.data.value == true && !dbchan.users.contains(dbuser))
-				dbchan.users.add(dbuser);
-			else
+			if (inuser.data.value == true){
+				if (!dbchan.users.contains(dbuser)){
+					for(Iterator<models.Groups> groupiter = Groups.getChannelGroups(dbchan.id).iterator(); groupiter.hasNext();){
+						Groups group = groupiter.next();
+						for (Iterator<models.User> useriter = models.Groups.getUsersForGroup(group.id).iterator(); useriter.hasNext();){
+							if (useriter.next().id == dbuser.id){
+								hilf = true;
+							}
+						}
+					}
+					dbchan.users.add(dbuser);
+					dbchan.saveManyToManyAssociations("users");
+					if (hilf == false){
+						websocket.json.out.Channel mychan = new websocket.json.out.Channel();
+						mychan.sendMessagetoUser(mychan.genOutMessage(dbchan, userid, "create"), dbuser.id);
+					}
+				}
+			}
+			else{
 				dbchan.users.remove(dbuser);
-			dbchan.saveManyToManyAssociations("users");
+				dbchan.saveManyToManyAssociations("users");
+				for(Iterator<models.Groups> groupiter = Groups.getChannelGroups(dbchan.id).iterator(); groupiter.hasNext();){
+					Groups group = groupiter.next();
+					for (Iterator<models.User> useriter = models.Groups.getUsersForGroup(group.id).iterator(); useriter.hasNext();){
+						if (useriter.next().id == dbuser.id){
+							hilf = true;
+						}
+					}
+				}
+				if (hilf == false){
+					websocket.json.out.Channel mychan = new websocket.json.out.Channel();
+					mychan.sendMessagetoUser(mychan.genOutMessage(dbchan, userid, "delete"), dbuser.id);
+				}
+			}
 		}catch(Exception e)
 		{
 			e.printStackTrace();

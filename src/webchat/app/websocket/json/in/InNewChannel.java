@@ -42,7 +42,8 @@ public class InNewChannel implements IInMessage {
 		try{
 			InNewChannel innewchan = (InNewChannel) inmessage;
 			for (Iterator<models.Channel> channeliter = models.Channel.find.all().iterator(); channeliter.hasNext();){
-				if (channeliter.next().name.equals(innewchan.data.name)){
+				models.Channel hilfchan = channeliter.next();
+				if (hilfchan.name.equals(innewchan.data.name)){
 					websocket.json.out.Status.genStatus("error", "Channelname already exists");
 					return null;
 				}

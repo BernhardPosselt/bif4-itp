@@ -24,8 +24,16 @@ public class Channel implements IOutMessage {
 
 	@Override
 	public void sendMessage(IOutMessage outmessage) {
+		Channel chn = (Channel) outmessage;
 		JsonNode outjson = JsonBinder.bindtoJson(outmessage);
-		WebSocketNotifier.notifyAllMembers(outjson);
+		WebSocketNotifier.sendMessagetoUser(models.Channel.getallChannelUsers(chn.data.id),outjson);
+	}
+	
+	public void sendMessagetoUser(IOutMessage outmessage, int userid){
+		JsonNode outjson = JsonBinder.bindtoJson(outmessage);
+		List<Integer> userlist = new ArrayList<Integer>();
+		userlist.add(userid);
+		WebSocketNotifier.sendMessagetoUser(userlist,outjson);
 	}
 
 	@Override
