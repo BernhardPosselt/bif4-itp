@@ -3,6 +3,7 @@ package websocket;
 import java.util.Iterator;
 import java.util.List;
 
+import chatbot.ChatbotManager;
 import models.Groups;
 
 import org.codehaus.jackson.JsonNode;
@@ -12,6 +13,8 @@ import websocket.json.out.Status;
 
 
 public class WebsocketReceiver {
+
+
 
 	public static void getType (JsonNode inmessage, WebSocket.Out<JsonNode> out, int userid){
 		if(!WebsocketManager.members.containsKey(userid))

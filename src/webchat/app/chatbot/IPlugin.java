@@ -1,5 +1,7 @@
 package chatbot;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Daniel
@@ -8,6 +10,6 @@ package chatbot;
  * To change this template use File | Settings | File Templates.
  */
 public interface IPlugin {
-    boolean check();
-    void execute();
+    boolean check(String term);
+    String execute(String term) throws ParserConfigurationException;
 }

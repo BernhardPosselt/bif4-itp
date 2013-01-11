@@ -1,10 +1,12 @@
 package websocket.json.out;
 
+import chatbot.ChatbotManager;
 import jabber.MucChannel;
 
 import java.util.*;
 
 import javax.swing.text.html.HTML;
+import javax.xml.parsers.ParserConfigurationException;
 
 import websocket.json.in.InMessage;
 
@@ -18,6 +20,8 @@ import controllers.Application;
 
 import models.*;
 import play.libs.Json;
+import chatbot.*;
+import play.Logger;
 
 import flexjson.JSONDeserializer;
 import flexjson.JSONException;
@@ -28,6 +32,9 @@ public class Message {
 	public Map<Integer, Map<Integer, MessageData>> data = new LinkedHashMap<Integer, Map<Integer, MessageData>>();
 	public Boolean init;
 	public Map<Integer, String> actions = new LinkedHashMap<Integer, String>();
+
+    //create chatbot manager
+    private static ChatbotManager cbm = new ChatbotManager();
 
 	public Message() {
 		this.type = "message";
@@ -42,9 +49,20 @@ public class Message {
 			im = new JSONDeserializer<InMessage>().deserialize(
 					inmessage.toString(), InMessage.class);
 			models.Message dbmessage = new models.Message();
+
+            //chatbot manager
+            //select and execute plugin if possible
+            ChatbotResult result = cbm.executePlugin(im.data.message);
 	
 			// Create DB Message
-			dbmessage.content = StringEscapeUtils.escapeSql(im.data.message);
+            if(result.isSuccess())
+            {
+                dbmessage.content = result.getOut();
+            }
+            else
+            {
+			    dbmessage.content = StringEscapeUtils.escapeSql(im.data.message);
+            }
 			dbmessage.date = new Date();
 			dbmessage.modified = new Date();
 			dbmessage.type = im.data.type;
@@ -57,13 +75,14 @@ public class Message {
 			dbmessage.save();
 			dbmessage.saveManyToManyAssociations("channels");
 
+
+
 			// Create JsonMessage
 			Message m = new Message();
 			MessageData md = new MessageData();
 			m.init = false;
 			md.date = new Date();
-		
-			md.message = StringEscapeUtils.escapeHtml(im.data.message);
+			md.message = dbmessage.content;
 			if (im.data.type.equals("text"))
 				md.message = md.message.replaceAll("\n", "<br/>");
 			md.modified = new Date();
@@ -95,8 +114,10 @@ public class Message {
 			json = aser.exclude("*.class").serialize(m);
 		} catch (JSONException  e) {
 			e.printStackTrace();
-		}
-		return Json.parse(json);
+		} catch (ParserConfigurationException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return Json.parse(json);
 	}
 	
 	public static JsonNode genJabberMessage(String content, int userid, int channelid)
