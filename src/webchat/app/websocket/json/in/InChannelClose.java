@@ -1,29 +1,54 @@
 package websocket.json.in;
 
-import models.Channel;
+import websocket.Interfaces.IInMessage;
+import websocket.message.WorkRoutine;
 
 import org.codehaus.jackson.JsonNode;
 
-import flexjson.JSONDeserializer;
+import play.db.ebean.Model;
 
-public class InChannelClose {
+
+
+
+public class InChannelClose implements IInMessage {
+
 	public String type;
 	public InChannelCloseData data;
 	
-	public static int closechannel (JsonNode inmessage){
-		int channelid = 0;
+	@Override
+	public boolean canHandle(JsonNode inmessage) {
+		if (inmessage.findPath("type").asText().equals("channelclose"))
+			return true;
+		else
+			return false;
+	}
+
+	@Override
+	public WorkRoutine getWorkRoutine() {
+		WorkRoutine myroutine = new WorkRoutine();
+		myroutine.inmessage = new InChannelClose();
+		myroutine.outmessage = new websocket.json.out.Channel();
+		myroutine.action = "delete";
+		return myroutine;
+	}
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return new InChannelClose();
+	}
+
+	@Override
+	public Model savetoDB(IInMessage inmessage, int userid) {
+		models.Channel chan = null;
 		try{
-			InChannelClose inchan = new InChannelClose();
-			inchan = new JSONDeserializer<InChannelClose>().deserialize(
-					inmessage.toString(), InChannelClose.class);
-			models.Channel chan = new models.Channel();
-			chan = Channel.find.byId(inchan.data.channel);
+			InChannelClose inchan = (InChannelClose)inmessage;
+			chan = new models.Channel();
+			chan = models.Channel.find.byId(inchan.data.id);
 			chan.archived = true;
-			channelid = chan.id;
 			chan.update();
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		return channelid;
+		return chan;
 	}
 }

@@ -53,7 +53,7 @@ public class User extends Model {
 	@Constraints.Required
 	public String lastname;
 
-	public Boolean online;
+	public String status;
 	
 	public Boolean active;
 
@@ -84,10 +84,24 @@ public class User extends Model {
 	public static Finder<Integer,User> find = new Finder<Integer,User>(
 			Integer.class, User.class
 	);
+	
+	public static User getbyId (int id){
+		return find.byId(id);
+	}
 
 	public static String getUsername(int id)
-    {	
-			return find.byId(id).username; 		
+    {		boolean help = false;
+			for (Iterator<User> iter=findAll().iterator(); iter.hasNext();){
+				User user=iter.next();
+				if (user.id == id){
+					help = true;
+					break;
+				}
+			}
+			if (help == true)
+				return find.byId(id).username; 	
+			else
+				return "nouserfound";
     }
 	
 	public static boolean getActive(int id)
@@ -138,7 +152,7 @@ public class User extends Model {
 
     public static int getUserID(String name)
     {
-        User tmp = find.where().ieq("username", name).findUnique();
+        User tmp = find.where().eq("username", name).findUnique();
         if(tmp != null)
             return tmp.id;
 
@@ -148,7 +162,7 @@ public class User extends Model {
     public static void setUseronline(int userid){
     	User user = new User();
     	user = find.byId(userid);
-    	user.online = true;
+    	user.status = "online";
     	user.lastlogin = new Date();
     	user.update();
     }
@@ -156,7 +170,7 @@ public class User extends Model {
     public static void setUseroffline(int userid){
     	User user = new User();
     	user = find.byId(userid);
-    	user.online = false;
+    	user.status = "offline";
     	user.update();
     }
     

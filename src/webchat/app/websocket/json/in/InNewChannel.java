@@ -1,54 +1,75 @@
 package websocket.json.in;
 
-import java.util.Iterator;
-import java.util.Map;
 
-import models.Channel;
-import models.Groups;
-import models.User;
+
+import java.util.Iterator;
 
 import org.codehaus.jackson.JsonNode;
 
-import flexjson.JSONDeserializer;
+import play.db.ebean.Model;
 
-public class InNewChannel {
+
+import websocket.Interfaces.IInMessage;
+import websocket.message.WorkRoutine;
+
+
+public class InNewChannel implements IInMessage {
 	public String type;
 	public InNewChannelData data;
 	
-	public static int createnewchannel(JsonNode inmessage, int userid){
-		int channelid = 0;
+	@Override
+	public boolean canHandle(JsonNode inmessage) {
+		if (inmessage.findPath("type").asText().equals("newchannel"))
+			return true;
+		else
+			return false;
+	}
+	@Override
+	public WorkRoutine getWorkRoutine() {
+		WorkRoutine myroutine = new WorkRoutine();
+		myroutine.inmessage = new InNewChannel();
+		myroutine.outmessage = new websocket.json.out.Channel();
+		myroutine.action = "create";
+		return myroutine;
+	}
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return new InNewChannel();
+	}
+	@Override
+	public Model savetoDB(IInMessage inmessage, int userid) {
+		models.Channel chan = null;
 		try{
-			InNewChannel innewchan = new InNewChannel();
-			innewchan = new JSONDeserializer<InNewChannel>().deserialize(
-					inmessage.toString(), InNewChannel.class);
-			for (Iterator<Channel> channeliter = Channel.find.all().iterator(); channeliter.hasNext();){
-				if (channeliter.next().name.equals(innewchan.data.name.trim()))
-					return -1;
+			InNewChannel innewchan = (InNewChannel) inmessage;
+			for (Iterator<models.Channel> channeliter = models.Channel.find.all().iterator(); channeliter.hasNext();){
+				models.Channel hilfchan = channeliter.next();
+				if (hilfchan.name.equals(innewchan.data.name)){
+					websocket.json.out.Status.genStatus("error", "Channelname already exists");
+					return null;
+				}
 			}
-			Channel chan = new Channel();
 			
+			chan = new models.Channel();
 			chan.name = innewchan.data.name;
 			chan.topic = innewchan.data.topic;
 			chan.is_public = innewchan.data.is_public;
 			chan.archived = false;
+			
 			if (chan.is_public == true){
 				for (Iterator<models.User> useriter = models.User.find.all().iterator(); useriter.hasNext();){
 					chan.setUsers(useriter.next());
 				}
-				for (Iterator<Groups> groupiter = models.Groups.find.all().iterator(); groupiter.hasNext();){
+				for (Iterator<models.Groups> groupiter = models.Groups.find.all().iterator(); groupiter.hasNext();){
 					chan.setGroups(groupiter.next());
 				}
 			}
 			else
-				chan.setUsers(models.User.find.byId(userid));
-			
-			chan.save();
-			chan.saveManyToManyAssociations("users");
-			chan.saveManyToManyAssociations("groups");
-			channelid = chan.id;
+				chan.setUsers(models.User.getbyId(userid));
+						
+			chan.save();	
 		}catch (Exception e){
 			e.printStackTrace();
-		}
-		return channelid;
+		}	
+		return chan;
 	}
 }

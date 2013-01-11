@@ -47,7 +47,7 @@ public class Channel extends Model {
 	public Boolean archived;
 	
 	@ManyToMany(cascade=CascadeType.ALL)
-	public List<User> users;
+	public List<User> users = new ArrayList<User>();
 	
 	public List<User> getUsers() {
 		return users;
@@ -58,7 +58,7 @@ public class Channel extends Model {
 	}
 
 	@ManyToMany(cascade=CascadeType.ALL)
-	public List<Groups> groups;
+	public List<Groups> groups = new ArrayList<Groups>();
 	
 	public List<Groups> getGroups() {
 		return groups;
@@ -69,18 +69,7 @@ public class Channel extends Model {
 	}
 	
 	@ManyToMany(cascade=CascadeType.ALL)
-	public List<Message> messages;
-	
-	public List<Message> getMessages() {
-		return messages;
-	}
-
-	public void setMessages(Message message) {
-		this.messages.add(message);
-	}
-	
-	@ManyToMany(cascade=CascadeType.ALL)
-	public List<File> files;
+	public List<File> files = new ArrayList<File>();
 	
 	public List<File> getFiles() {
 		return files;
@@ -94,6 +83,10 @@ public class Channel extends Model {
 			Integer.class, Channel.class
 	);
 	
+	public static Channel getbyId (int id){
+		return find.byId(id);
+	}
+	
     public static List<Channel> findAll(){
         return find.all();
     }
@@ -103,6 +96,20 @@ public class Channel extends Model {
 		List<Channel> tmp = new ArrayList<Channel>();
 		String query = "find channel where archived = false and (users.id =:userid or is_public=true)";
         tmp =  find.setQuery(query).setParameter("userid", userid).findList();
+        return tmp;
+    }
+	
+	public static List<Channel> getUserallChannels(int userid)
+    {
+		List<Channel> tmp = new ArrayList<Channel>();
+		String query = "find channel where archived = false and (users.id =:userid or is_public=true)";
+        tmp =  find.setQuery(query).setParameter("userid", userid).findList();
+        for (Groups group : models.User.getGroupsForUser(userid)){
+        	for (models.Channel chan : group.channels){
+        		if (!tmp.contains(chan))
+        			tmp.add(chan);
+        	}
+        }
         return tmp;
     }
 
@@ -125,6 +132,20 @@ public class Channel extends Model {
 		for (Iterator<User> iterator= find.byId(channelid).users.iterator(); iterator.hasNext();){
 			users.add(iterator.next().id);
 		}
+		return users;
+	}
+	
+	public static List<Integer> getallChannelUsers(int channelid) {
+		List<Integer> users = new ArrayList<Integer>();
+		for (Iterator<User> iterator= find.byId(channelid).users.iterator(); iterator.hasNext();){
+			users.add(iterator.next().id);
+		}
+		for (Groups group : models.Channel.getGroupsForChannel(channelid)){
+        	for (models.User usr : group.users){
+        		if (!users.contains(usr.id))
+        			users.add(usr.id);
+        	}
+        }
 		return users;
 	}
 	

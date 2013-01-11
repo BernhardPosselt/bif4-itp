@@ -1,8 +1,8 @@
 package websocket.json.in;
 
-import java.util.*;
+import websocket.Interfaces.IMessageData;
 
-public class InNewChannelData {
+public class InNewChannelData implements IMessageData{
 	public String name;
 	public String topic;
 	public Boolean is_public;

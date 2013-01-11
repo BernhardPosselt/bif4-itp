@@ -1,110 +1,72 @@
 package websocket.json.out;
 
-import jabber.MucChannel;
-
 import java.util.*;
 
-
+import org.apache.commons.lang.StringEscapeUtils;
 import org.codehaus.jackson.JsonNode;
-import org.jivesoftware.smack.PacketListener;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Packet;
-import org.jivesoftware.smack.packet.Presence;
-import org.jivesoftware.smackx.Form;
-import org.jivesoftware.smackx.FormField;
-import org.jivesoftware.smackx.muc.MultiUserChat;
 
-import controllers.Application;
-
-import play.libs.Json;
-import websocket.json.in.InMessage;
-import flexjson.JSONDeserializer;
-import flexjson.JSONException;
 import flexjson.JSONSerializer;
 
-public class Channel {
-	public String type;
-	public Map<Integer,ChannelData> data = new HashMap<Integer,ChannelData>();
-	public Boolean init;
-	public Map<Integer,String> actions = new HashMap<Integer,String>();
 
+
+import play.db.ebean.Model;
+import play.libs.Json;
+import websocket.Interfaces.IOutMessage;
+import websocket.message.JsonBinder;
+import websocket.message.WebSocketNotifier;
+
+
+
+public class Channel implements IOutMessage {
+	public String type;
+	public ChannelData data = new ChannelData();
+	public String action;
 
 	public Channel(){
 		this.type = "channel";
 	}
-	
-	public static JsonNode geninitChannel(int userid){
-		String json = "",action = "create";
-		try {
-			Channel channel = new Channel();
-			channel.init = true;
-			for (Iterator<models.Channel> iterator = models.Channel.getUserChannels(userid).iterator(); iterator.hasNext();){
-				ChannelData cdata = new ChannelData();
-				models.Channel c = new models.Channel();
-				c = iterator.next();
-				for (Iterator<models.File> itfile = c.files.iterator(); itfile.hasNext();){
-					cdata.files.add(itfile.next().id);
-				}
-				for (Iterator<models.Groups> itgroup = c.groups.iterator(); itgroup.hasNext();){
-					cdata.groups.add(itgroup.next().id);
-				}
-				for (Iterator<models.User> ituser = c.users.iterator(); ituser.hasNext();){
-					cdata.users.add(ituser.next().id);
-				}
-				cdata.name = c.name;
-				cdata.topic = c.topic;
-				cdata.modified = new Date();
-				channel.actions.put(c.id, action);
-				channel.data.put(c.id, cdata);
-				
-			 
-				MucChannel.createMucChannel(c.name, c.topic, userid, c.id);
-			}   
-	
-			// Generate the Json Message
-			JSONSerializer aser = new JSONSerializer().include("*.data",
-					"*.actions", "*.files", "*.users", "*.groups");
-			json = aser.exclude("*.class").serialize(channel);
-		} catch (JSONException  e) {
-			e.printStackTrace();
-		}
-		return Json.parse(json);
+
+	@Override
+	public void sendMessage(IOutMessage outmessage) {
+		Channel chn = (Channel) outmessage;
+		JsonNode outjson = JsonBinder.bindtoJson(outmessage);
+		WebSocketNotifier.sendMessagetoUser(models.Channel.getallChannelUsers(chn.data.id),outjson);
 	}
 	
-	public static JsonNode genChannel(String action, int channelid){
-		String json = "";
+	public void sendMessagetoUser(IOutMessage outmessage, int userid){
+		JsonNode outjson = JsonBinder.bindtoJson(outmessage);
+		List<Integer> userlist = new ArrayList<Integer>();
+		userlist.add(userid);
+		WebSocketNotifier.sendMessagetoUser(userlist,outjson);
+	}
+
+
+	@Override
+	public IOutMessage genOutMessage(Model dbmodel, int userid, String action) {
+		Channel outchan = null;
 		try {
-			models.Channel mchan = new models.Channel();
-			mchan = models.Channel.find.byId(channelid);
+			models.Channel dbchan = (models.Channel)dbmodel;		
+			outchan = new Channel();
+			ChannelData chandata = new ChannelData();
+			outchan.action = action;
 			
-			Channel channel = new Channel();
-			ChannelData cdata = new ChannelData();
-			channel.actions.put(channelid, action);
-			channel.init = false;
-			
-			cdata.name = mchan.name;
-			cdata.topic = mchan.topic;
-			cdata.modified = new Date();
-			
-			for (Iterator<models.File> itfile = mchan.files.iterator(); itfile.hasNext();){
-				cdata.files.add(itfile.next().id);
+			chandata.id = dbchan.id;
+			chandata.name = dbchan.name;
+			chandata.topic = dbchan.topic;
+				
+			for (Iterator<models.File> itfile = dbchan.files.iterator(); itfile.hasNext();){
+				chandata.files.add(itfile.next().id);
 			}
-			for (Iterator<models.Groups> itgroup = mchan.groups.iterator(); itgroup.hasNext();){
-				cdata.groups.add(itgroup.next().id);
+			for (Iterator<models.Groups> itgroup = dbchan.groups.iterator(); itgroup.hasNext();){
+				chandata.groups.add(itgroup.next().id);
 			}
-			for (Iterator<models.User> ituser = mchan.users.iterator(); ituser.hasNext();){
-				cdata.users.add(ituser.next().id);
+			for (Iterator<models.User> ituser = dbchan.users.iterator(); ituser.hasNext();){
+				chandata.users.add(ituser.next().id);
 			}
-			channel.data.put(channelid, cdata);
-			
-			// Generate the Json Message
-			JSONSerializer aser = new JSONSerializer().include("*.data",
-					"*.actions", "*.files", "*.users", "*.groups");
-			json = aser.exclude("*.class").serialize(channel);
-		} catch (JSONException e) {
+			outchan.data = chandata;
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Json.parse(json);
+		return outchan;
 	}
 }

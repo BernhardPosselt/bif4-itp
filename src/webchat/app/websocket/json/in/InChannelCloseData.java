@@ -1,5 +1,8 @@
 package websocket.json.in;
 
-public class InChannelCloseData {
-	public int channel;
+import websocket.Interfaces.IMessageData;
+
+public class InChannelCloseData implements IMessageData{
+	public int id;
+	public boolean archived;
 }

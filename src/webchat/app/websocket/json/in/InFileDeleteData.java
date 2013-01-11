@@ -1,5 +1,7 @@
 package websocket.json.in;
 
-public class InFileDeleteData {
-	public int file;
+import websocket.Interfaces.IMessageData;
+
+public class InFileDeleteData implements IMessageData {
+	public int id;
 }

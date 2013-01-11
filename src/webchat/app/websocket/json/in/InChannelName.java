@@ -1,34 +1,57 @@
 package websocket.json.in;
 
-import models.Channel;
+
+import java.util.Iterator;
 
 import org.codehaus.jackson.JsonNode;
-import java.util.*;
 
-import flexjson.JSONDeserializer;
+import play.db.ebean.Model;
 
-public class InChannelName {
+
+import websocket.Interfaces.IInMessage;
+import websocket.message.WorkRoutine;
+
+
+public class InChannelName implements IInMessage{
 	public String type;
 	public InChannelNameData data;
 	
-	public static int changechannelname (JsonNode inmessage){
-		int channelid = 0;
+	@Override
+	public boolean canHandle(JsonNode inmessage) {
+		if (inmessage.findPath("type").asText().equals("channelname"))
+			return true;
+		else
+			return false;
+	}
+	@Override
+	public WorkRoutine getWorkRoutine() {
+		WorkRoutine myroutine=new WorkRoutine();
+		myroutine.inmessage = new InChannelName();
+		myroutine.outmessage = new websocket.json.out.Channel();
+		myroutine.action = "update";
+		return myroutine;
+	}
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return new InChannelName();
+	}
+	
+	@Override
+	public Model savetoDB(IInMessage inmessage, int userid) {
+		models.Channel chan = null;
 		try{
-			InChannelName inchan = new InChannelName();
-			inchan = new JSONDeserializer<InChannelName>().deserialize(
-					inmessage.toString(), InChannelName.class);
-			models.Channel chan = new models.Channel();
-			chan = Channel.find.byId(inchan.data.channel);
-			channelid = inchan.data.channel;
-			for (Iterator<Channel> channeliter = Channel.find.all().iterator(); channeliter.hasNext();){
+			InChannelName inchan = (InChannelName) inmessage;
+			chan = new models.Channel();
+			chan = models.Channel.find.byId(inchan.data.id);
+			for (Iterator<models.Channel> channeliter = models.Channel.find.all().iterator(); channeliter.hasNext();){
 				if (channeliter.next().name.equals(inchan.data.name.trim()))
-					return -1;
+					return null;
 			}
 			chan.name = inchan.data.name;
 			chan.update();
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		return channelid;
+		return chan;
 	}
 }

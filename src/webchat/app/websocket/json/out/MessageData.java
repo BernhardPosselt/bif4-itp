@@ -1,13 +1,12 @@
 package websocket.json.out;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import websocket.Interfaces.IMessageData;
 
-import models.Channel;
-
-public class MessageData{
-	public int user_id;
+public class MessageData implements IMessageData{
+	public int id;
+	public int owner_id;
+	public int channel_id;
 	public String message;
 	public String type;
 	public Date date;

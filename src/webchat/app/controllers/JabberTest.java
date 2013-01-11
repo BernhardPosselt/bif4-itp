@@ -150,3 +150,4 @@ public class JabberTest extends Controller {
 		return ok();
     }
 }
+

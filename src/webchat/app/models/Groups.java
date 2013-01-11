@@ -41,6 +41,10 @@ public class Groups extends Model {
         return find.all();
     }
     
+	public static Groups getbyId (int id){
+		return find.byId(id);
+	}
+    
 	public static List<Groups> getChannelGroups(int channelid){
 		List<Groups> tmp = new ArrayList<Groups>();
 		tmp = find.where().eq("channels.id", channelid).findList();

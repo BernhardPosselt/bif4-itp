@@ -1,5 +1,7 @@
 package websocket.json.out;
 
-public class ActiveUserData {
+import websocket.Interfaces.IMessageData;
+
+public class ActiveUserData implements IMessageData {
 	public int id;
 }

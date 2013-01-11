@@ -2,10 +2,13 @@ package websocket.json.out;
 
 import java.util.*;
 
-public class UserData {
+import websocket.Interfaces.IMessageData;
+
+public class UserData implements IMessageData{
+	public int id;
 	public String username;
-	public Boolean online;
-	public String prename;
+	public String status;
+	public String firstname;
 	public String lastname;
 	public String email;
 	public List<Integer> groups = new ArrayList<Integer>();

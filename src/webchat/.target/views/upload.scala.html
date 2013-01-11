@@ -1,0 +1,29 @@
+@(uploadForm : Form[File])
+
+@import helper._
+@import helper.twitterBootstrap._
+
+<html>
+    <head>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/style.css")" />
+        <script src="@routes.Assets.at("vendors/jquery.js")" type="text/javascript"></script>
+        <script>
+            $(document).ready(function(){
+                $(".fake_file_input").click(function(){
+                    $(this).siblings("input[type=file]").trigger("click");
+                });
+                $("input[type=file]").bind("change", function(){
+                    var value = $(this).val();
+                    $(this).siblings(".fake_file_input").text(value);
+                });
+            })
+        </script>
+    </head>
+    <body id="upload">
+    @helper.form(action = routes.Application.upload, 'enctype -> "multipart/form-data") {
+            <div class="fake_file_input"></div>
+            <input type="file" size="5" name="uploaded_file" />
+            <input type="submit" value="Upload" />
+    }
+    </body>
+</html>

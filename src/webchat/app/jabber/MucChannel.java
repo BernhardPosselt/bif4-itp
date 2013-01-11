@@ -13,7 +13,6 @@ import org.jivesoftware.smackx.Form;
 import org.jivesoftware.smackx.FormField;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
-import websocket.WebsocketNotifier;
 
 import controllers.Application;
 
@@ -58,7 +57,7 @@ public class MucChannel {
 							{
 								System.out.println("Received user: " + models.User.getUserID(temp[1]));
 							
-								WebsocketNotifier.notifyAllMembers(websocket.json.out.Message.genJabberMessage(((Message)packet).getBody() , models.User.getUserID(temp[1]), chanid));
+								websocket.message.WebSocketNotifier.notifyAllMembers(websocket.json.out.Message.genJabberMessage(((Message)packet).getBody() , models.User.getUserID(temp[1]), chanid));
 							}
 						} else if (packet instanceof Presence) {
 							System.out.println(packet);

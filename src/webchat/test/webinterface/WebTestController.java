@@ -44,7 +44,7 @@ public class WebTestController extends FluentTest {
 
 
 
-	@Test
+	/*@Test
 	public void runInBrowser() {
 	    running(testServer(3333), HTMLUNIT, new Callback<TestBrowser>() {
 	        public void invoke(TestBrowser browser) {
@@ -82,5 +82,5 @@ public class WebTestController extends FluentTest {
 
 	        }
 	    });
-	}
+	}*/
 }

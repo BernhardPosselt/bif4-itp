@@ -18,8 +18,9 @@ create table file (
   filename                  varchar(255),
   mimetype                  varchar(255),
   size                      double,
+  deleted                   boolean,
   date                      timestamp,
-  uid_id                    integer,
+  owner_id_id               integer,
   constraint pk_file primary key (id))
 ;
 
@@ -32,11 +33,12 @@ create table groups (
 
 create table message (
   id                        integer not null,
-  content                   LONGTEXT,
+  message                   LONGTEXT,
   type                      varchar(255),
   date                      timestamp,
   modified                  timestamp,
-  user_id                   integer,
+  owner_id_id               integer,
+  channel_id_id             integer,
   constraint pk_message primary key (id))
 ;
 
@@ -47,7 +49,7 @@ create table user (
   email                     varchar(255),
   firstname                 varchar(255),
   lastname                  varchar(255),
-  online                    boolean,
+  status                    varchar(255),
   active                    boolean,
   admin                     boolean,
   lastlogin                 timestamp,
@@ -65,12 +67,6 @@ create table channel_groups (
   channel_id                     integer not null,
   groups_id                      integer not null,
   constraint pk_channel_groups primary key (channel_id, groups_id))
-;
-
-create table channel_message (
-  channel_id                     integer not null,
-  message_id                     integer not null,
-  constraint pk_channel_message primary key (channel_id, message_id))
 ;
 
 create table channel_file (
@@ -94,10 +90,12 @@ create sequence message_seq;
 
 create sequence user_seq;
 
-alter table file add constraint fk_file_uid_1 foreign key (uid_id) references user (id) on delete restrict on update restrict;
-create index ix_file_uid_1 on file (uid_id);
-alter table message add constraint fk_message_user_2 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_message_user_2 on message (user_id);
+alter table file add constraint fk_file_owner_id_1 foreign key (owner_id_id) references user (id) on delete restrict on update restrict;
+create index ix_file_owner_id_1 on file (owner_id_id);
+alter table message add constraint fk_message_owner_id_2 foreign key (owner_id_id) references user (id) on delete restrict on update restrict;
+create index ix_message_owner_id_2 on message (owner_id_id);
+alter table message add constraint fk_message_channel_id_3 foreign key (channel_id_id) references channel (id) on delete restrict on update restrict;
+create index ix_message_channel_id_3 on message (channel_id_id);
 
 
 
@@ -108,10 +106,6 @@ alter table channel_user add constraint fk_channel_user_user_02 foreign key (use
 alter table channel_groups add constraint fk_channel_groups_channel_01 foreign key (channel_id) references channel (id) on delete restrict on update restrict;
 
 alter table channel_groups add constraint fk_channel_groups_groups_02 foreign key (groups_id) references groups (id) on delete restrict on update restrict;
-
-alter table channel_message add constraint fk_channel_message_channel_01 foreign key (channel_id) references channel (id) on delete restrict on update restrict;
-
-alter table channel_message add constraint fk_channel_message_message_02 foreign key (message_id) references message (id) on delete restrict on update restrict;
 
 alter table channel_file add constraint fk_channel_file_channel_01 foreign key (channel_id) references channel (id) on delete restrict on update restrict;
 
@@ -130,8 +124,6 @@ drop table if exists channel;
 drop table if exists channel_user;
 
 drop table if exists channel_groups;
-
-drop table if exists channel_message;
 
 drop table if exists channel_file;
 
