@@ -11,6 +11,7 @@ import java.util.*;
  * To change this template use File | Settings | File Templates.
  */
 public class ChatbotManager {
+
     private ArrayList<IPlugin> plugins;
     private IPlugin plugin;
 
