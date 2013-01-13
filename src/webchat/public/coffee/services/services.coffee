@@ -63,7 +63,8 @@ angular.module('WebChat').factory 'Smileys', ['_Smileys', (_Smileys) ->
 
 angular.module('WebChat').factory 'WebChatWebSocket', 
 ['_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL',
-'WebSocketPublisher',
+'WebSocketPublisher', 'FileModel', 'MessageModel', 'ActiveUser', 'UserModel',
+'ChannelModel', 'GroupModel',
 (_WebChatWebSocket, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL,
 WebSocketPublisher) ->
 

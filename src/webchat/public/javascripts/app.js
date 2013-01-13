@@ -143,7 +143,7 @@
   ]);
 
   angular.module('WebChat').factory('WebChatWebSocket', [
-    '_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL', 'WebSocketPublisher', function(_WebChatWebSocket, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL, WebSocketPublisher) {
+    '_WebChatWebSocket', 'WEBSOCKET_DOMAIN', 'WEBSOCKET_PATH', 'WEBSOCKET_SSL', 'WebSocketPublisher', 'FileModel', 'MessageModel', 'ActiveUser', 'UserModel', 'ChannelModel', 'GroupModel', function(_WebChatWebSocket, WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL, WebSocketPublisher) {
       var socket;
       socket = new _WebChatWebSocket();
       socket.connect(WEBSOCKET_DOMAIN, WEBSOCKET_PATH, WEBSOCKET_SSL);
@@ -1919,20 +1919,6 @@
     return function(messages) {
       SyntaxHighlighter.highlight();
       return messages;
-    };
-  });
-
-  angular.module('WebChat').filter('messageInChannel', function() {
-    return function(messages, channelId) {
-      var message, result, _i, _len;
-      result = [];
-      for (_i = 0, _len = messages.length; _i < _len; _i++) {
-        message = messages[_i];
-        if (message.channel_id === channelId) {
-          result.push(message);
-        }
-      }
-      return result;
     };
   });
 
