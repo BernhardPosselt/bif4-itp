@@ -2,6 +2,8 @@ package websocket.json.out;
 
 import java.util.*;
 
+import chatbot.ChatbotManager;
+import chatbot.ChatbotResult;
 import websocket.Interfaces.IOutMessage;
 import websocket.message.JsonBinder;
 import websocket.message.WebSocketNotifier;
@@ -18,6 +20,7 @@ public class Message implements IOutMessage {
 	public String type;
 	public MessageData data = new MessageData();
 	public String action;
+    private ChatbotManager cbm = new ChatbotManager();
 	
 	public Message() {
 		this.type = "message";
@@ -37,6 +40,8 @@ public class Message implements IOutMessage {
 		String json = "";
 		try{
 			models.Message dbmessage = new models.Message();
+
+
 			
 			// Create DB Message
 			dbmessage.message = StringEscapeUtils.escapeSql(content);
@@ -85,9 +90,19 @@ public class Message implements IOutMessage {
 			outmessage = new Message();
 			models.Message dbmessage = (models.Message) dbmodel;
 
+            ChatbotResult result = cbm.executePlugin(dbmessage.message);
+
 			MessageData mdata = new MessageData();
 			mdata.date = dbmessage.date;
-			mdata.message = StringEscapeUtils.escapeHtml(dbmessage.message);
+
+            if(result.isSuccess())
+            {
+                mdata.message = result.getOut();
+            }
+            else
+            {
+			    mdata.message = StringEscapeUtils.escapeHtml(dbmessage.message);
+            }
 			
 			if (dbmessage.type.equals("text"))
 				mdata.message = mdata.message.replaceAll("\n", "<br/>");
