@@ -8,6 +8,8 @@ import play.db.ebean.Model;
 
 
 import websocket.Interfaces.IInMessage;
+import websocket.message.JsonBinder;
+import websocket.message.WebSocketNotifier;
 import websocket.message.WorkRoutine;
 
 public class InInviteGroup implements IInMessage{
@@ -48,7 +50,7 @@ public class InInviteGroup implements IInMessage{
 					for (models.User groupusr : dbgroup.users){
 						if (!allusers.contains(groupusr)){
 							websocket.json.out.Channel mychan = new websocket.json.out.Channel();
-							mychan.sendMessagetoUser(mychan.genOutMessage(dbchan, userid, "create"), groupusr.id);
+							WebSocketNotifier.sendMessagetoUser(JsonBinder.bindtoJson(mychan.genOutMessage(dbchan, userid, "create")), groupusr.id);
 						}
 					}
 					dbchan.groups.add(dbgroup);
@@ -68,7 +70,7 @@ public class InInviteGroup implements IInMessage{
 				for (models.User groupusr : dbgroup.users){
 					if (!allusers.contains(groupusr)){
 						websocket.json.out.Channel mychan = new websocket.json.out.Channel();
-						mychan.sendMessagetoUser(mychan.genOutMessage(dbchan, userid, "delete"), groupusr.id);
+						WebSocketNotifier.sendMessagetoUser(JsonBinder.bindtoJson(mychan.genOutMessage(dbchan, userid, "delete")), groupusr.id);
 					}
 				}
 				

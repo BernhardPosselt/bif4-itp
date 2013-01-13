@@ -2,15 +2,8 @@ package websocket.json.out;
 
 import java.util.*;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.codehaus.jackson.JsonNode;
-
-import flexjson.JSONSerializer;
-
-
-
 import play.db.ebean.Model;
-import play.libs.Json;
 import websocket.Interfaces.IOutMessage;
 import websocket.message.JsonBinder;
 import websocket.message.WebSocketNotifier;
@@ -30,16 +23,8 @@ public class Channel implements IOutMessage {
 	public void sendMessage(IOutMessage outmessage) {
 		Channel chn = (Channel) outmessage;
 		JsonNode outjson = JsonBinder.bindtoJson(outmessage);
-		WebSocketNotifier.sendMessagetoUser(models.Channel.getallChannelUsers(chn.data.id),outjson);
+		WebSocketNotifier.sendMessagetoUsers(models.Channel.getallChannelUsers(chn.data.id),outjson);
 	}
-	
-	public void sendMessagetoUser(IOutMessage outmessage, int userid){
-		JsonNode outjson = JsonBinder.bindtoJson(outmessage);
-		List<Integer> userlist = new ArrayList<Integer>();
-		userlist.add(userid);
-		WebSocketNotifier.sendMessagetoUser(userlist,outjson);
-	}
-
 
 	@Override
 	public IOutMessage genOutMessage(Model dbmodel, int userid, String action) {
@@ -62,6 +47,9 @@ public class Channel implements IOutMessage {
 			}
 			for (Iterator<models.User> ituser = dbchan.users.iterator(); ituser.hasNext();){
 				chandata.users.add(ituser.next().id);
+			}
+			for (Iterator<Integer> itmod = dbchan.mods.iterator(); itmod.hasNext();){
+				chandata.mod.add(itmod.next());
 			}
 			outchan.data = chandata;
 		} catch (Exception e) {

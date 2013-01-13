@@ -27,8 +27,9 @@ public class Message implements IOutMessage {
 
 	@Override
 	public void sendMessage(IOutMessage outmessage) {
+		Message msg = (Message) outmessage;
 		JsonNode outjson = JsonBinder.bindtoJson(outmessage);
-		WebSocketNotifier.notifyAllMembers(outjson);	
+		WebSocketNotifier.sendMessagetoUsers(models.Channel.getallChannelUsers(msg.data.channel_id), outjson);	
 	}
 	
 	public static JsonNode genJabberMessage(String content, int userid, int channelid)

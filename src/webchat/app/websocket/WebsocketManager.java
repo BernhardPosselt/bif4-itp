@@ -14,6 +14,7 @@ import play.mvc.WebSocket;
 import websocket.message.MessageFactory;
 import websocket.message.MessageHandler;
 import websocket.message.NotifyInit;
+import websocket.message.WebSocketNotifier;
 
 
 public class WebsocketManager {
@@ -35,7 +36,9 @@ public class WebsocketManager {
 	        	MessageFactory.registerMessage();
         		List<Integer> userlist = new ArrayList<Integer>();
         		userlist.add(userId);
-        		models.User.setUseronline(userId);
+        		models.User.setUseronline(userId);   
+                websocket.json.out.User usrnot = new websocket.json.out.User();
+                usrnot.sendMessage(usrnot.genOutMessage(models.User.getbyId(userId), userId, "update"));
         		NotifyInit.sendInit(userlist, userId);
         		init = false;
             
@@ -46,8 +49,6 @@ public class WebsocketManager {
                         try {
                         	
                             MessageHandler.handleMessage(event,userId);
-                        	//websocket.message.Message message = websocket.message.MessageFactory.getMessageFromType(event.findPath("type").asText());
-                        	//message.sendMessage(event, out, userId);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -67,7 +68,8 @@ public class WebsocketManager {
                         }
                     	if (hilf.equals(true)){
                     		models.User.setUseroffline(userId);
-                    		//WebsocketNotifier.notifyAllMembers(User.genUserchanged(userId, "update"));		
+                    		websocket.json.out.User usrnot = new websocket.json.out.User();
+                            usrnot.sendMessage(usrnot.genOutMessage(models.User.getbyId(userId), userId, "update"));	
                     	}
                     }
                 });

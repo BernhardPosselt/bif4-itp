@@ -44,7 +44,7 @@ public class InNewChannel implements IInMessage {
 			for (Iterator<models.Channel> channeliter = models.Channel.find.all().iterator(); channeliter.hasNext();){
 				models.Channel hilfchan = channeliter.next();
 				if (hilfchan.name.equals(innewchan.data.name)){
-					websocket.json.out.Status.genStatus("error", "Channelname already exists");
+					websocket.json.out.Status.genStatus("error", "Channelname already exists", userid);
 					return null;
 				}
 			}
@@ -54,6 +54,7 @@ public class InNewChannel implements IInMessage {
 			chan.topic = innewchan.data.topic;
 			chan.is_public = innewchan.data.is_public;
 			chan.archived = false;
+			chan.setMods(userid);
 			
 			if (chan.is_public == true){
 				for (Iterator<models.User> useriter = models.User.find.all().iterator(); useriter.hasNext();){
@@ -66,7 +67,7 @@ public class InNewChannel implements IInMessage {
 			else
 				chan.setUsers(models.User.getbyId(userid));
 						
-			chan.save();	
+			chan.save();
 		}catch (Exception e){
 			e.printStackTrace();
 		}	

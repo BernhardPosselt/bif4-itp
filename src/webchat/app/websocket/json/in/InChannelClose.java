@@ -1,6 +1,7 @@
 package websocket.json.in;
 
 import websocket.Interfaces.IInMessage;
+import websocket.message.AccessControl;
 import websocket.message.WorkRoutine;
 
 import org.codehaus.jackson.JsonNode;
@@ -42,10 +43,15 @@ public class InChannelClose implements IInMessage {
 		models.Channel chan = null;
 		try{
 			InChannelClose inchan = (InChannelClose)inmessage;
-			chan = new models.Channel();
-			chan = models.Channel.find.byId(inchan.data.id);
-			chan.archived = true;
-			chan.update();
+			if (AccessControl.IsAdmin(userid) || AccessControl.IsMod(userid, inchan.data.id))
+			{
+				chan = new models.Channel();
+				chan = models.Channel.find.byId(inchan.data.id);
+				chan.archived = true;
+				chan.update();
+			}
+			else
+				websocket.json.out.Status.genStatus("error", "Not allowed to close channel!", userid);
 		}catch (Exception e){
 			e.printStackTrace();
 		}

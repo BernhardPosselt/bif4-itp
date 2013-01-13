@@ -15,9 +15,9 @@ public class JoinMessage{
 	static HashMap<Integer,ArrayList<Integer>> joinMessages = new HashMap<Integer,ArrayList<Integer>>();
 	
 	
-	public static void sendMessage(IOutMessage outmessage) {
+	public static void sendMessage(IOutMessage outmessage, int userid) {
 		JsonNode outjson = JsonBinder.bindtoJson(outmessage);
-		WebSocketNotifier.notifyAllMembers(outjson);	
+		WebSocketNotifier.sendMessagetoUser(outjson, userid);
 	}
 
 	public static IOutMessage genOutMessage(int userid, int channelid, String action) {
@@ -49,7 +49,7 @@ public class JoinMessage{
 					mdata.channel_id = dbmessage.channel_id.id;
 					outmessage.data = mdata;
 					outmessage.action = action;		
-					JoinMessage.sendMessage(outmessage);
+					JoinMessage.sendMessage(outmessage, userid);
 				//}
 			}
 			joinMessages.put(userid, mlist);

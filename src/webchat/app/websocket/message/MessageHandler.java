@@ -2,8 +2,6 @@ package websocket.message;
 
 import org.codehaus.jackson.JsonNode;
 
-import play.db.ebean.Model;
-
 public class MessageHandler {
 	
 	 public static void handleMessage(JsonNode inmessage, int userid){

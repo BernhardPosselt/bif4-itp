@@ -11,6 +11,8 @@ import play.db.ebean.Model;
 
 
 import websocket.Interfaces.IInMessage;
+import websocket.message.JsonBinder;
+import websocket.message.WebSocketNotifier;
 import websocket.message.WorkRoutine;
 
 public class InInviteUser implements IInMessage {
@@ -56,7 +58,7 @@ public class InInviteUser implements IInMessage {
 					dbchan.saveManyToManyAssociations("users");
 					if (hilf == false){
 						websocket.json.out.Channel mychan = new websocket.json.out.Channel();
-						mychan.sendMessagetoUser(mychan.genOutMessage(dbchan, userid, "create"), dbuser.id);
+						WebSocketNotifier.sendMessagetoUser(JsonBinder.bindtoJson(mychan.genOutMessage(dbchan, userid, "create")), dbuser.id);
 					}
 				}
 			}
@@ -73,7 +75,7 @@ public class InInviteUser implements IInMessage {
 				}
 				if (hilf == false){
 					websocket.json.out.Channel mychan = new websocket.json.out.Channel();
-					mychan.sendMessagetoUser(mychan.genOutMessage(dbchan, userid, "delete"), dbuser.id);
+					WebSocketNotifier.sendMessagetoUser(JsonBinder.bindtoJson(mychan.genOutMessage(dbchan, userid, "delete")), dbuser.id);
 				}
 			}
 		}catch(Exception e)

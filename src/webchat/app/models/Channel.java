@@ -46,6 +46,28 @@ public class Channel extends Model {
 	@Constraints.Required
 	public Boolean archived;
 	
+	
+	public List<Integer> mods = new ArrayList<Integer>();
+	
+	public List<Integer> getMods(){
+		return mods;
+	}
+	
+	public void setMods(int mod){
+		this.mods.add(mod);
+	}
+	
+	
+	public List<Integer> readonly = new ArrayList<Integer>();
+	
+	public List<Integer> getReadonly(){
+		return readonly;
+	}
+	
+	public void setReadonly(int rouser){
+		readonly.add(rouser);
+	}
+	
 	@ManyToMany(cascade=CascadeType.ALL)
 	public List<User> users = new ArrayList<User>();
 	
