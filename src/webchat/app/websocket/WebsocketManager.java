@@ -37,9 +37,9 @@ public class WebsocketManager {
         		List<Integer> userlist = new ArrayList<Integer>();
         		userlist.add(userId);
         		models.User.setUseronline(userId);   
+        		NotifyInit.sendInit(userlist, userId);
                 websocket.json.out.User usrnot = new websocket.json.out.User();
                 usrnot.sendMessage(usrnot.genOutMessage(models.User.getbyId(userId), userId, "update"));
-        		NotifyInit.sendInit(userlist, userId);
         		init = false;
             
 	        	// For each event received on the socket,
