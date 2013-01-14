@@ -1,15 +1,11 @@
 package websocket.json.in;
 
 import java.util.Iterator;
-
-
 import models.Groups;
 
 import org.codehaus.jackson.JsonNode;
 
 import play.db.ebean.Model;
-
-
 import websocket.Interfaces.IInMessage;
 import websocket.message.JsonBinder;
 import websocket.message.WebSocketNotifier;
