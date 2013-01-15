@@ -53,7 +53,7 @@ public class Application extends Controller {
      */
 	 public static Result index() {
     	 if (models.User.findAll().isEmpty()){
-    		 //ConnectOpenFire();
+    		 ConnectOpenFire();
     		 filltestdata();
     	 }	
          if(session("userid") != null) //User logged in
