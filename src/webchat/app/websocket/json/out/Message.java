@@ -1,5 +1,7 @@
 package websocket.json.out;
 
+import jabber.MucChannel;
+
 import java.util.*;
 
 import chatbot.ChatbotManager;
@@ -114,7 +116,7 @@ public class Message implements IOutMessage {
 			outmessage.data = mdata;
 			outmessage.action = action;
 			//Send to MUC
-			//MucChannel.sendMucMessage(md.message, chanid);
+			MucChannel.sendMucMessage(mdata.message, mdata.channel_id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

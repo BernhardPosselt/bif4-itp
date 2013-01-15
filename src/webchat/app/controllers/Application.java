@@ -285,7 +285,7 @@ public class Application extends Controller {
 	        user1.save();
 	         
 	        Channel channel = new Channel();
-	  	    channel.name = "Channel 1";
+	  	    channel.name = "Channel1";
 	  	    channel.topic = "Webengineering";
 	  	    channel.is_public = false;
 	  	    channel.archived = false;
