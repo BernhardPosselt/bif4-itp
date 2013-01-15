@@ -1,5 +1,7 @@
 package controllers;
 
+import jabber.MucChannel;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -348,8 +350,9 @@ public class Application extends Controller {
 	  	    } catch (XMPPException e) {
 	  	    	System.out.println("Error creating the user masterlindi, Error: " + e);
 	  	    }
-
 	  	    
+	  	    MucChannel.createMucChannel(channel.name, channel.topic, user.id, channel.id);
+	  	    MucChannel.createMucChannel(channel1.name, channel1.topic, user1.id, channel1.id);
             Logger.info("Database filled with test data!");
 	  	    return ok(index.render("testdata", false));
 	 }
