@@ -1,10 +1,10 @@
 angular.module('WebChat').factory '_GroupsInChannelController', 
     ['_Controller', '_ModUserMessage', '_ModGroupMessage', '_ReadonlyUserMessage', 
      '_ReadonlyGroupMessage', '_InviteGroupMessage', '_InviteUserMessage', 
-     'ChannelModel', 'GroupModel', 'UserModel',
+     'ChannelModel', 'GroupModel', 'UserModel', 'ActiveUser',
      (_Controller, _ModUserMessage, _ModGroupMessage, _ReadonlyUserMessage, 
       _ReadonlyGroupMessage, _InviteGroupMessage, _InviteUserMessage, ChannelModel, 
-      GroupModel, UserModel) ->
+      GroupModel, UserModel, ActiveUser) ->
 
         class GroupsInChannelController extends _Controller
 
@@ -43,6 +43,29 @@ angular.module('WebChat').factory '_GroupsInChannelController',
 
                 $scope.readonlyGroup = (groupId, value) =>
                     @simpleChannelMessage(groupId, _ReadonlyGroupMessage, value)
+
+                $scope.userIsMod = () =>
+                    channel = @channelmodel.getItemById(@getActiveChannelId())
+                    return channel.isUserMod(ActiveUser.id)
+
+                $scope.isMod = (userId) =>
+                    channel = @channelmodel.getItemById(@getActiveChannelId())
+                    user = @usermodel.getItemById(userId)
+                    return channel.isUserMod(user.id)
+
+                $scope.userHasVoice = () =>
+                    channel = @channelmodel.getItemById(@getActiveChannelId())
+                    return channel.isHasVoice(ActiveUser.id)
+
+                $scope.makeMod = (userId) =>
+                    channel = @channelmodel.getItemById(@getActiveChannelId())
+                    if channel.isUserMod(userId)
+                        mod = false
+                    else
+                        mod = true
+                    message = new _ModUserMessage(userId, channel.id, mod)
+                    @sendMessage(message)
+
 
 
         return GroupsInChannelController

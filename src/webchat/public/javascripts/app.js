@@ -663,8 +663,28 @@
         }
 
         ChannelModel.prototype.create = function(item) {
+          return ChannelModel.__super__.create.call(this, this.enhance(item));
+        };
+
+        ChannelModel.prototype.update = function(item) {
+          return ChannelModel.__super__.update.call(this, this.enhance(item));
+        };
+
+        ChannelModel.prototype.enhance = function(item) {
+          item.mod = [1];
           item.autoScroll = true;
-          return ChannelModel.__super__.create.call(this, item);
+          item.isUserMod = function(userId) {
+            var id, _i, _len, _ref;
+            _ref = this.mod;
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              id = _ref[_i];
+              if (id === userId) {
+                return true;
+              }
+            }
+            return false;
+          };
+          return item;
         };
 
         return ChannelModel;
@@ -1636,7 +1656,7 @@
   ]);
 
   angular.module('WebChat').factory('_GroupsInChannelController', [
-    '_Controller', '_ModUserMessage', '_ModGroupMessage', '_ReadonlyUserMessage', '_ReadonlyGroupMessage', '_InviteGroupMessage', '_InviteUserMessage', 'ChannelModel', 'GroupModel', 'UserModel', function(_Controller, _ModUserMessage, _ModGroupMessage, _ReadonlyUserMessage, _ReadonlyGroupMessage, _InviteGroupMessage, _InviteUserMessage, ChannelModel, GroupModel, UserModel) {
+    '_Controller', '_ModUserMessage', '_ModGroupMessage', '_ReadonlyUserMessage', '_ReadonlyGroupMessage', '_InviteGroupMessage', '_InviteUserMessage', 'ChannelModel', 'GroupModel', 'UserModel', 'ActiveUser', function(_Controller, _ModUserMessage, _ModGroupMessage, _ReadonlyUserMessage, _ReadonlyGroupMessage, _InviteGroupMessage, _InviteUserMessage, ChannelModel, GroupModel, UserModel, ActiveUser) {
       var GroupsInChannelController;
       GroupsInChannelController = (function(_super) {
 
@@ -1679,6 +1699,33 @@
           $scope.readonlyGroup = function(groupId, value) {
             return _this.simpleChannelMessage(groupId, _ReadonlyGroupMessage, value);
           };
+          $scope.userIsMod = function() {
+            var channel;
+            channel = _this.channelmodel.getItemById(_this.getActiveChannelId());
+            return channel.isUserMod(ActiveUser.id);
+          };
+          $scope.isMod = function(userId) {
+            var channel, user;
+            channel = _this.channelmodel.getItemById(_this.getActiveChannelId());
+            user = _this.usermodel.getItemById(userId);
+            return channel.isUserMod(user.id);
+          };
+          $scope.userHasVoice = function() {
+            var channel;
+            channel = _this.channelmodel.getItemById(_this.getActiveChannelId());
+            return channel.isHasVoice(ActiveUser.id);
+          };
+          $scope.makeMod = function(userId) {
+            var channel, message, mod;
+            channel = _this.channelmodel.getItemById(_this.getActiveChannelId());
+            if (channel.isUserMod(userId)) {
+              mod = false;
+            } else {
+              mod = true;
+            }
+            message = new _ModUserMessage(userId, channel.id, mod);
+            return _this.sendMessage(message);
+          };
         }
 
         return GroupsInChannelController;
@@ -1689,7 +1736,7 @@
   ]);
 
   angular.module('WebChat').factory('_MessageController', [
-    '_Controller', '_SendMessage', 'GroupModel', 'UserModel', 'MessageModel', 'ChannelModel', '$filter', function(_Controller, _SendMessage, GroupModel, UserModel, MessageModel, ChannelModel, $filter) {
+    '_Controller', '_SendMessage', 'GroupModel', 'UserModel', 'MessageModel', 'ChannelModel', '$filter', 'ActiveUser', function(_Controller, _SendMessage, GroupModel, UserModel, MessageModel, ChannelModel, $filter, ActiveUser) {
       var MessageController;
       MessageController = (function(_super) {
 
@@ -1737,6 +1784,11 @@
               _this.sendMessage(message);
               return _this.resetInput($scope);
             }
+          };
+          $scope.userIsMod = function(channelId) {
+            var channel;
+            channel = _this.channelmodel.getItemById(channelId);
+            return channel.isUserMod(ActiveUser.id);
           };
         }
 
@@ -1919,6 +1971,20 @@
     return function(messages) {
       SyntaxHighlighter.highlight();
       return messages;
+    };
+  });
+
+  angular.module('WebChat').filter('messageInChannel', function() {
+    return function(messages, channelId) {
+      var message, result, _i, _len;
+      result = [];
+      for (_i = 0, _len = messages.length; _i < _len; _i++) {
+        message = messages[_i];
+        if (message.channel_id === channelId) {
+          result.push(message);
+        }
+      }
+      return result;
     };
   });
 

@@ -1,8 +1,8 @@
 angular.module('WebChat').factory '_MessageController', 
     ['_Controller', '_SendMessage', 'GroupModel', 'UserModel', 'MessageModel',
-     'ChannelModel', '$filter'
+     'ChannelModel', '$filter', 'ActiveUser',
      (_Controller, _SendMessage, GroupModel, UserModel, MessageModel, 
-      ChannelModel, $filter) ->
+      ChannelModel, $filter, ActiveUser) ->
 
         class MessageController extends _Controller
 
@@ -42,6 +42,10 @@ angular.module('WebChat').factory '_MessageController',
                         message = new _SendMessage(text, messageType, channelId)
                         @sendMessage(message)
                         @resetInput($scope)
+
+                $scope.userIsMod = (channelId) =>
+                    channel = @channelmodel.getItemById(channelId)
+                    return channel.isUserMod(ActiveUser.id)
 
 
             resetInput: ($scope) ->

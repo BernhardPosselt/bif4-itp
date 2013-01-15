@@ -17,6 +17,7 @@ angular.module('WebChat').factory '_UserModel', ['_Model', (_Model) ->
         enhance: (user) ->
             user.getFullName = ->
                 @firstname + " " + @lastname
+
             return user
 
     return UserModel
