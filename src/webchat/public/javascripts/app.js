@@ -671,7 +671,6 @@
         };
 
         ChannelModel.prototype.enhance = function(item) {
-          item.mod = [1];
           item.autoScroll = true;
           item.isUserMod = function(userId) {
             var id, _i, _len, _ref;

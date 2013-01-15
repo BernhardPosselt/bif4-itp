@@ -148,3 +148,4 @@ drop sequence if exists groups_seq;
 drop sequence if exists message_seq;
 
 drop sequence if exists user_seq;
+

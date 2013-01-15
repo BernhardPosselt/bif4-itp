@@ -14,7 +14,6 @@ angular.module('WebChat').factory '_ChannelModel', ['_Model', (_Model) ->
 
 
         enhance: (item) ->
-            item.mod = [1]
             item.autoScroll = true
             item.isUserMod = (userId) ->
                 for id in @mod
