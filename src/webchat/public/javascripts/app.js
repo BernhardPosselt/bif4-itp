@@ -671,7 +671,6 @@
         };
 
         ChannelModel.prototype.enhance = function(item) {
-          item.mod = [1];
           item.autoScroll = true;
           item.isUserMod = function(userId) {
             var id, _i, _len, _ref;
@@ -871,8 +870,8 @@
         ModUserMessage.prototype.serialize = function() {
           var data;
           data = {
-            channel_id: this.channelId,
-            user_id: this.userId,
+            id: this.channelId,
+            users: this.userId,
             value: this.value
           };
           return ModUserMessage.__super__.serialize.call(this, data);
