@@ -35,12 +35,13 @@ public class InInviteReadOnlyUser implements IInMessage {
 			models.User dbuser = models.User.getbyId(inmoduser.data.users);
 			dbchan = models.Channel.getbyId(inmoduser.data.id);
 			if (inmoduser.data.value == true){
-				if (!dbchan.readonly.contains(dbuser.id)){
-					dbchan.readonly.add(dbuser.id);
+				if (!dbchan.readonly.contains(dbuser)){
+					dbchan.readonly.add(dbuser);
 				}
 			}
 			else{
-				dbchan.readonly.remove(dbuser.id);
+				if(dbchan.readonly.contains(dbuser))
+					dbchan.readonly.remove(dbuser);
 			}
 			dbchan.save();
 		}catch(Exception e)

@@ -54,7 +54,7 @@ public class InNewChannel implements IInMessage {
 			chan.topic = innewchan.data.topic;
 			chan.is_public = innewchan.data.is_public;
 			chan.archived = false;
-			chan.setMods(userid);
+			chan.setMods(models.User.getbyId(userid));
 			
 			if (chan.is_public == true){
 				for (Iterator<models.User> useriter = models.User.find.all().iterator(); useriter.hasNext();){

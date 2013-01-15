@@ -35,12 +35,13 @@ public class InInviteModUser implements IInMessage {
 			models.User dbuser = models.User.getbyId(inmoduser.data.users);
 			dbchan = models.Channel.getbyId(inmoduser.data.id);
 			if (inmoduser.data.value == true){
-				if (!dbchan.mods.contains(dbuser.id)){
-					dbchan.mods.add(dbuser.id);
+				if (!dbchan.mods.contains(dbuser)){
+					dbchan.mods.add(dbuser);
 				}
 			}
 			else{
-				dbchan.mods.remove(dbuser.id);
+				if (dbchan.mods.contains(dbuser))
+						dbchan.mods.remove(dbuser);
 			}
 			dbchan.save();
 		}catch(Exception e)

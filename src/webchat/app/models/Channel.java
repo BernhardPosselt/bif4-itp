@@ -46,25 +46,27 @@ public class Channel extends Model {
 	@Constraints.Required
 	public Boolean archived;
 	
+	@ManyToMany(cascade=CascadeType.ALL)
+	@JoinTable(name = "ModChannel")
+	public List<User> mods = new ArrayList<User>();
 	
-	public List<Integer> mods = new ArrayList<Integer>();
-	
-	public List<Integer> getMods(){
+	public List<User> getMods(){
 		return mods;
 	}
 	
-	public void setMods(int mod){
+	public void setMods(User mod){
 		this.mods.add(mod);
 	}
 	
+	@ManyToMany(cascade=CascadeType.ALL)
+	@JoinTable(name = "ReadOnlyChannel")
+	public List<User> readonly = new ArrayList<User>();
 	
-	public List<Integer> readonly = new ArrayList<Integer>();
-	
-	public List<Integer> getReadonly(){
+	public List<User> getReadonly(){
 		return readonly;
 	}
 	
-	public void setReadonly(int rouser){
+	public void setReadonly(User rouser){
 		readonly.add(rouser);
 	}
 	

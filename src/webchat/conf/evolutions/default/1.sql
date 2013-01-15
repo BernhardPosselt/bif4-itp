@@ -57,6 +57,18 @@ create table user (
 ;
 
 
+create table ModChannel (
+  channel_id                     integer not null,
+  user_id                        integer not null,
+  constraint pk_ModChannel primary key (channel_id, user_id))
+;
+
+create table ReadOnlyChannel (
+  channel_id                     integer not null,
+  user_id                        integer not null,
+  constraint pk_ReadOnlyChannel primary key (channel_id, user_id))
+;
+
 create table channel_user (
   channel_id                     integer not null,
   user_id                        integer not null,
@@ -99,6 +111,14 @@ create index ix_message_channel_id_3 on message (channel_id_id);
 
 
 
+alter table ModChannel add constraint fk_ModChannel_channel_01 foreign key (channel_id) references channel (id) on delete restrict on update restrict;
+
+alter table ModChannel add constraint fk_ModChannel_user_02 foreign key (user_id) references user (id) on delete restrict on update restrict;
+
+alter table ReadOnlyChannel add constraint fk_ReadOnlyChannel_channel_01 foreign key (channel_id) references channel (id) on delete restrict on update restrict;
+
+alter table ReadOnlyChannel add constraint fk_ReadOnlyChannel_user_02 foreign key (user_id) references user (id) on delete restrict on update restrict;
+
 alter table channel_user add constraint fk_channel_user_channel_01 foreign key (channel_id) references channel (id) on delete restrict on update restrict;
 
 alter table channel_user add constraint fk_channel_user_user_02 foreign key (user_id) references user (id) on delete restrict on update restrict;
@@ -120,6 +140,10 @@ alter table user_groups add constraint fk_user_groups_groups_02 foreign key (gro
 SET REFERENTIAL_INTEGRITY FALSE;
 
 drop table if exists channel;
+
+drop table if exists ModChannel;
+
+drop table if exists ReadOnlyChannel;
 
 drop table if exists channel_user;
 
@@ -148,3 +172,4 @@ drop sequence if exists groups_seq;
 drop sequence if exists message_seq;
 
 drop sequence if exists user_seq;
+

@@ -57,8 +57,9 @@
                     <div class="stream_name">
                         <span class="name">{{channel.name}}</span>
                         <div class="utils">
-                            <a href="" ng-click="showCloseChannelDialogue(true)" class="close_channel">Close</a>
-                            <a href="" ng-click="showChangeChannelNameDialogue(true)" class="change_channel_name">Rename</a>
+                            <a href="" ng-click="showCloseChannelDialogue(true)" class="close_channel"
+                            ng-show="userIsMod(channel.id)">Close</a>
+                            <a href="" ng-click="showChangeChannelNameDialogue(true)" ng-show="userIsMod(channel.id)" class="change_channel_name">Rename</a>
                             <a href="" ng-click="showChangeTopicDialogue(true)" class="change_topic">Topic</a>
                         </div>
                     </div>
@@ -145,6 +146,7 @@
                         <h1>{{ group.name }}
                             <a ng-click="inviteGroup(group.id, false)" 
                                class="kick_group" 
+                               ng-show="userIsMod()"
                                title="remove group {{group.name}} from channel"></a>
                         </h1>
                         <ul>
@@ -153,7 +155,12 @@
                                 {{ user.getFullName() }}
                                 <a ng-click="inviteUser(user.id, false)" 
                                    class="kick_user" 
+                                   ng-class="{make_mod: userIsMod()}"
                                    title="remove user {{ user.getFullName() }} from channel"></a>
+                                <a ng-click="makeMod(user.id)"
+                                   class="mod"
+                                   ng-class="{make_mod: userIsMod(), is_mod: isMod(user.id)}"
+                                   title="Make user {{ user.getFullName() }} a moderator of this channel"></a>
                             </li>
                         </ul>
                     </div>
@@ -165,7 +172,12 @@
                                 {{ user.getFullName() }}
                                 <a ng-click="inviteUser(user.id, false)" 
                                    class="kick_user" 
+                                   ng-class="{make_mod: userIsMod()}"
                                    title="remove user {{ user.getFullName() }} from channel"></a>
+                                <a ng-click="makeMod(user.id)"
+                                   class="mod"
+                                   ng-class="{make_mod: userIsMod(), is_mod: isMod(user.id)}"
+                                   title="Make user {{ user.getFullName() }} a moderator of this channel"></a>
                             </li>
                         </ul>
                     </div>

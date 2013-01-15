@@ -43,7 +43,7 @@ public class User extends Model {
 			return false;
 		}
 	}
-	
+
 	@Constraints.Required
 	public String email;	
 	
@@ -59,11 +59,18 @@ public class User extends Model {
 
 	public Boolean admin;
 	
+		
 	@Formats.DateTime(pattern = "dd-MM-yyyy HH:mm:ss")
 	public Date lastlogin;
 
 	@ManyToMany(mappedBy="users", cascade=CascadeType.ALL)
 	public List<Channel> channels;
+	
+	@ManyToMany(mappedBy="mods", cascade=CascadeType.ALL)
+	public List<Channel> modchannels;
+	
+	@ManyToMany(mappedBy="readonly", cascade=CascadeType.ALL)
+	public List<Channel> readonlychannels;
 	
 	@ManyToMany(cascade=CascadeType.ALL)
 	public List<Groups> groups;

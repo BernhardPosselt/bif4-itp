@@ -48,8 +48,11 @@ public class Channel implements IOutMessage {
 			for (Iterator<models.User> ituser = dbchan.users.iterator(); ituser.hasNext();){
 				chandata.users.add(ituser.next().id);
 			}
-			for (Iterator<Integer> itmod = dbchan.mods.iterator(); itmod.hasNext();){
-				chandata.mod.add(itmod.next());
+			for (Iterator<models.User> itmod = dbchan.mods.iterator(); itmod.hasNext();){
+				chandata.mod.add(itmod.next().id);
+			}
+			for (Iterator<models.User> itreadonly = dbchan.readonly.iterator(); itreadonly.hasNext();){
+				chandata.readonly.add(itreadonly.next().id);
 			}
 			outchan.data = chandata;
 		} catch (Exception e) {

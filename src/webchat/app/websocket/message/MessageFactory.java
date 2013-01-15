@@ -35,5 +35,7 @@ public class MessageFactory {
     	messages.add(new InNewChannel());
     	messages.add(new InProfileUpdate());
     	messages.add(new InPing());
+    	messages.add(new InInviteModUser());
+    	messages.add(new InInviteReadOnlyUser());
     }
 }

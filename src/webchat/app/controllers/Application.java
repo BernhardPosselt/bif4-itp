@@ -294,12 +294,19 @@ public class Application extends Controller {
 	  	    channel1.topic = "Softwareengineering";
 	  	    channel1.archived = false;
 	  	    channel1.is_public= true;
-	  	  
+	  	    /*
+	  	    channel1.setReadonly(user);*/
+	  	    
 	  	    channel1.save();
 	  	    
+	  	    channel1.setMods(user1);
+	  	    channel1.saveManyToManyAssociations("mods");
 	  	    channel1.setUsers(user);
 	  	    channel1.setUsers(user1);
 	  	    channel1.saveManyToManyAssociations("users");
+	  	    
+	  	 
+	  	 
 	  	   
 	  	    channel.setUsers(user); 
 	  	    channel.setUsers(user1);
