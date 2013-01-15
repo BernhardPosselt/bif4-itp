@@ -8,8 +8,8 @@ angular.module('WebChat').factory '_ModUserMessage', ['_Message', (_Message)->
 
         serialize: ->
             data = 
-                channel_id: @channelId
-                user_id: @userId
+                id: @channelId
+                users: @userId
                 value: @value
             return super(data)
 
